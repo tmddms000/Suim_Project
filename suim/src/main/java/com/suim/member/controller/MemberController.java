@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.suim.member.model.vo.SignUp;
 
 @Controller
+@RequestMapping("/member")
 public class MemberController {
 	
 	@RequestMapping("/join")
@@ -23,7 +24,7 @@ public class MemberController {
 	}
 	
 	
-	@RequestMapping("/processForm")
+	@RequestMapping("/joinSuccess")
 	public String processForm(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult) {
 
 		if (theBindingResult.hasErrors()) {
