@@ -9,11 +9,14 @@
 	</settings>
 	
 	<typeAliases>
+	<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
+	<typeAlias type="com.suim.house.model.vo.House" alias="house" />
 	</typeAliases>
 	    
 	    
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
+	    	<mapper resource="/mappers/house/house-mapper.xml"/>
 	    </mappers>
 	    
 </configuration>
