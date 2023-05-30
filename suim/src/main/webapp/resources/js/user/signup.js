@@ -101,6 +101,7 @@
     	        }
 
     	    //희망지역(주소) 유효성 검사
+
     	    const areaInputEl = document.querySelector('#area');
     	    
     	    //만약 address가 비어있다면
@@ -108,6 +109,7 @@
     	        // alert("희망지역을 다시 확인해주세요");
     	        toastr.error("희망지역을 다시 확인해주세요");
     	        areaInputEl.focus();
+
     	        return false;
     	    }
     	  
@@ -429,6 +431,7 @@
     	                if(extraAddr !== ''){
     	                    extraAddr = ' (' + extraAddr + ')';
     	                }
+
     	                document.getElementById("area").value = extraAddr;
 
     	            } else {
@@ -438,6 +441,7 @@
     	            //document.getElementById('zipCode').value = data.zonecode;
     	            document.getElementById("area").value = addr;
     	            document.getElementById("area").focus();
+
 
     			}
     	        , theme: themeObj

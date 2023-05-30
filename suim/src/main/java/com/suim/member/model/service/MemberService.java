@@ -3,10 +3,12 @@ package com.suim.member.model.service;
 import java.util.ArrayList;
 import java.util.Set;
 
+
 import javax.validation.Valid;
 
 import com.suim.member.model.vo.Member;
 import com.suim.member.model.vo.SignUp;
+
 
 public interface MemberService {
 

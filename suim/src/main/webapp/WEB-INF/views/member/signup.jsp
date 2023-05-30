@@ -24,12 +24,15 @@
 				<h2 class="text-center mb-4" style="margin-left: 60px;">회원가입</h2>
 				<form:form action="/member/joinSuccess" modelAttribute="member"
 					method="POST" onsubmit="return validate()">
+
 					<div class="form-group row">
 						<label for="id" class="col-sm-4 col-form-label text-end">아이디<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
+
 							<form:input type="text" autocomplete="on" class="form-control"
 								id="id" placeholder="아이디를 입력해주세요" path="memberId" />
+              
 							<p class="error-text error-msg" id="info_id"></p>
 						</div>
 						<div class="col-sm-3 p-0">
@@ -41,8 +44,10 @@
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
 							<form:input type="password" autocomplete="new-password"
+                          
 								class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
 								path="memberPwd" />
+
 							<!-- <p class="error-text">최소 10자 이상 입력</p> -->
 							<p class="error-text" id="info_pw"></p>
 						</div>
@@ -151,8 +156,10 @@
 									</select>
 								</div>
 								<div class="error-msg"></div>
+                
 								<form:input type="hidden" name="birthDate" id="birth-date-input"
 									path="birth" />
+
 							</div>
 						</div>
 					</div>
@@ -162,14 +169,124 @@
 
 
 					<div class="text-center mt-4">
+
 						<button type="submit" class="btn btn-primary btn-block submit-btn"
 							disabled>가입하기</button>
+
 					</div>
 				</form:form>
 				<br> <br> <br>
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	// Function to enable/disable the duplicateButton
+	function setDuplicateButtonState(enabled, field) {
+	  $("#" + field + "DuplicateButton").prop("disabled", !enabled);
+	}
+
+	// Function to enable/disable the submit button
+	function setSubmitButtonState(enabled) {
+	  $(".submit-btn").prop("disabled", !enabled);
+	}
+
+	// Function to handle ID changes
+	function handleIdChange() {
+	  var id = $("#id").val();
+	  var isValidId = /^[a-z0-9]{6,20}$/.test(id);
+
+	  setDuplicateButtonState(isValidId, "id"); // Enable/disable duplicateButton based on ID validity
+	  setSubmitButtonState(false); // Disable the submit button when ID changes
+	}
+
+	// Function to handle email changes
+	function handleEmailChange() {
+	  var email = $("#email").val();
+	  var isValidEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
+
+	  setDuplicateButtonState(isValidEmail, "email"); // Enable/disable duplicateButton based on email validity
+	  setSubmitButtonState(false); // Disable the submit button when email changes
+	}
+
+	// Function to handle ID duplicateButton clicks
+	function handleIdDuplicateButtonClick() {
+	  var id = $("#id").val();
+
+	  if (id) {
+	    checkIdDuplicate(id);
+	  }
+	}
+
+	// Function to handle email duplicateButton clicks
+	function handleEmailDuplicateButtonClick() {
+	  var email = $("#email").val();
+
+	  if (email) {
+	    checkEmailDuplicate(email);
+	  }
+	}
+
+	// Function to check ID duplication
+	function checkIdDuplicate(id) {
+	  $.ajax({
+	    url: "/member/idCheck",
+	    type: "post",
+	    data: {
+	      id: id
+	    },
+	    success: function(data) {
+	      console.log(data);
+	      if (data === 'Duplicate') {
+	        toastr.error("이미 사용중인 아이디입니다.");
+	        setSubmitButtonState(true); // Enable the submit button when ID is not duplicate
+	        setDuplicateButtonState(true, "id"); // Disable ID duplicateButton
+	      } else {
+	        toastr.success("사용 가능한 아이디입니다.");
+	        setDuplicateButtonState(false, "id"); // Enable ID duplicateButton
+	      }
+	    }
+	  });
+	}
+
+	// Function to check email duplication
+	function checkEmailDuplicate(email) {
+	  $.ajax({
+	    url: "/member/emailCheck",
+	    type: "post",
+	    data: {
+	      email: email
+	    },
+	    success: function(data) {
+	      console.log(data);
+	      if (data === 'Duplicate') {
+	        toastr.error("이미 사용중인 이메일입니다.");
+	        setSubmitButtonState(true); // Enable the submit button when email is not duplicate
+	        setDuplicateButtonState(true, "email"); // Disable email duplicateButton
+	      } else {
+	        toastr.success("사용 가능한 이메일입니다.");
+	        setDuplicateButtonState(false, "email"); // Enable email duplicateButton
+	      }
+	    }
+	  });
+	}
+
+	// Event handler for ID changes
+	$("#id").on("input", handleIdChange);
+
+	// Event handler for email changes
+	$("#email").on("input", handleEmailChange);
+
+	// Event handler for ID duplicateButton clicks
+	$("#idDuplicateButton").on("click", handleIdDuplicateButtonClick);
+
+	// Event handler for email duplicateButton clicks
+	$("#emailDuplicateButton").on("click", handleEmailDuplicateButtonClick);
+
+	// Initialize button states
+	setDuplicateButtonState(false, "id");
+	setDuplicateButtonState(false, "email");
+	setSubmitButtonState(false);
 
 	<script>
 
@@ -303,7 +420,6 @@
 	<script src="/resources/js/user/signup.js"></script>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
 
 </body>
 </html>

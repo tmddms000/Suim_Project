@@ -8,6 +8,7 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.vo.Member;
+
 import com.suim.member.model.vo.SignUp;
 
 @Controller
@@ -36,6 +37,7 @@ public class MemberController {
 
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
+
 
 	@GetMapping("/login")
 	public String loginForm() {
@@ -73,10 +75,18 @@ public class MemberController {
 		session.setAttribute("alertMsg", "로그아웃 되었습니다.");
 		session.removeAttribute("loginUser");
 		return "redirect:/";
+
 	}
 	
-	
-	
+	@ResponseBody
+	@RequestMapping(value = "/emailCheck", produces = "text/html; charset=UTF-8")
+	public String emailCheck(String email) {
+		
+		int count = memberService.emailCheck(email);
+		
+		return (count > 0) ? "Duplicate" : "Available";
+		
+	}
 	
 	
 	
@@ -182,6 +192,42 @@ public class MemberController {
 		} finally {
 			urlConnection.disconnect();
 		}
+	}
+
+	public String generateUniqueNickname() throws IOException {
+	    String nickname = randomNickName();
+	    int nicknameCount = memberService.nickCheck(nickname);
+
+	    System.out.println(nicknameCount);
+	    if (nicknameCount > 1) {
+	        System.out.println("닉네임 " + nickname + " 이미 존재하는 닉네임입니다.");
+	        return generateUniqueNickname();
+	    }
+
+
+	    System.out.println(nickname);
+	    return nickname;
+	}
+
+	public String randomNickName() throws IOException {
+	    String url = "https://nickname.hwanmoo.kr/?format=text&max_length=6";
+
+	    URL requestURL = new URL(url);
+	    HttpURLConnection urlConnection = (HttpURLConnection) requestURL.openConnection();
+	    urlConnection.setRequestMethod("GET");
+
+	    try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
+	        String line;
+	        StringBuilder responseText = new StringBuilder();
+
+	        while ((line = br.readLine()) != null) {
+	            responseText.append(line);
+	        }
+
+	        return responseText.toString();
+	    } finally {
+	        urlConnection.disconnect();
+	    }
 	}
 
 }
