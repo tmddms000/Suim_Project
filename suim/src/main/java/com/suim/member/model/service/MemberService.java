@@ -1,9 +1,16 @@
 package com.suim.member.model.service;
 
 import java.util.ArrayList;
-import java.util.Set;
+
+
+import javax.validation.Valid;
+
+
+import javax.validation.Valid;
 
 import com.suim.member.model.vo.Member;
+import com.suim.member.model.vo.SignUp;
+
 
 public interface MemberService {
 
@@ -11,7 +18,7 @@ public interface MemberService {
 	Member loginMember(Member m);
 	
 	// 회원가입 서비스 (insert)
-	int insertMember(Member m);
+	int insertMember(@Valid SignUp member);
 	
 	// 회원정보수정 서비스 (update)
 	int updateMember(Member m);

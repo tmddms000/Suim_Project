@@ -3,10 +3,15 @@ package com.suim.member.model.dao;
 import java.util.ArrayList;
 import java.util.Set;
 
+
+import javax.validation.Valid;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.suim.member.model.vo.Member;
+
+import com.suim.member.model.vo.SignUp;
 
 @Repository
 public class MemberDao {
@@ -17,8 +22,9 @@ public class MemberDao {
 		return sqlSession.selectOne("memberMapper.loginMember", m);
 	}
 	
-	public int insertMember(SqlSessionTemplate sqlSession, Member m) {
-		return sqlSession.insert("memberMapper.insertMember", m);
+	public int insertMember(SqlSessionTemplate sqlSession, @Valid SignUp member) {
+		return sqlSession.insert("memberMapper.insertMember", member);
+
 	}
 	
 	public int updateMember(SqlSessionTemplate sqlSession, Member m) {

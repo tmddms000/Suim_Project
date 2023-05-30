@@ -101,13 +101,15 @@
     	        }
 
     	    //희망지역(주소) 유효성 검사
-    	    const addressInputEl = document.querySelector('#address');
+
+    	    const areaInputEl = document.querySelector('#area');
     	    
     	    //만약 address가 비어있다면
-    	    if(addressInputEl.value == "") {
+    	    if(areaInputEl.value == "") {
     	        // alert("희망지역을 다시 확인해주세요");
     	        toastr.error("희망지역을 다시 확인해주세요");
-    	        addressInputEl.focus();
+    	        areaInputEl.focus();
+
     	        return false;
     	    }
     	  
@@ -429,15 +431,17 @@
     	                if(extraAddr !== ''){
     	                    extraAddr = ' (' + extraAddr + ')';
     	                }
-    	                document.getElementById("address").value = extraAddr;
+
+    	                document.getElementById("area").value = extraAddr;
 
     	            } else {
-    	                document.getElementById("address").value = '';
+    	                document.getElementById("area").value = '';
     	            }
 
     	            //document.getElementById('zipCode').value = data.zonecode;
-    	            document.getElementById("address").value = addr;
-    	            document.getElementById("address").focus();
+    	            document.getElementById("area").value = addr;
+    	            document.getElementById("area").focus();
+
 
     			}
     	        , theme: themeObj
