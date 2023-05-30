@@ -3,12 +3,18 @@ package com.suim.member.model.service;
 import java.util.ArrayList;
 import java.util.Set;
 
+
+import javax.validation.Valid;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.suim.member.model.dao.MemberDao;
 import com.suim.member.model.vo.Member;
+
+import com.suim.member.model.vo.SignUp;
+
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -36,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
 			
 			// 2. 만들어진 SqlSessionTemplate 객체와 전달값을 Dao 로 넘기면서 요청 후 결과 받기
 			Member loginUser = memberDao.loginMember(sqlSession, m);
-			
+
 			// 3. 트랜잭션 처리 => 자동커밋을 이용할 예정
 			// 어차피 지금은 select 문이기 때문에 패스하는게 맞음
 			
@@ -47,11 +53,6 @@ public class MemberServiceImpl implements MemberService {
 			
 			// 5. 결과 반환
 			return loginUser;
-		}
-
-		@Override
-		public int insertMember(Member m) {
-			return memberDao.insertMember(sqlSession, m);
 		}
 
 		@Override
@@ -85,4 +86,9 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 
+
+		@Override
+		public int insertMember(@Valid SignUp member) {
+			return memberDao.insertMember(sqlSession, member);
+		}
 }

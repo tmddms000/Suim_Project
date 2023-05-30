@@ -23,7 +23,7 @@
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="MEMBER_PWD" property="memberPwd" />
 		<result column="MEMBER_NAME" property="memberName" />
-		<result column="NICKNAME" property="nickname" />
+		<result column="NICKNAME" property="nickName" />
 		<result column="PHONE" property="phone" />
 		<result column="EMAIL" property="email" />
 		<result column="GENDER" property="gender" />
@@ -44,23 +44,25 @@
 	</select>
 
 	<!-- 회원가입용 쿼리문 -->
-	<insert id="insertMember" parameterType="member">
-		INSERT INTO MEMBER(USER_ID
-						 , USER_PWD
-						 , USER_NAME
+	<insert id="insertMember" parameterType="com.suim.member.model.vo.SignUp">
+		INSERT INTO MEMBER(MEMBER_ID
+						 , MEMBER_PWD
+						 , MEMBER_NAME
+						 , NICKNAME
+						 , PHONE
 						 , EMAIL
 						 , GENDER
-						 , AGE
-						 , PHONE
-						 , ADDRESS)
-					VALUES(#{userId}
-						 , #{userPwd}
-						 , #{userName}
+						 , AREA
+						 , BIRTH)
+					VALUES(#{memberId}
+						 , #{memberPwd}
+						 , #{memberName}
+						 , #{nickName}
+						 , #{phone}
 						 , #{email}
 						 , #{gender}
-						 , #{age}
-						 , #{phone}
-						 , #{address})
+						 , #{area}
+						 , #{birth})
 	</insert>
 
 <!-- 로그인용 쿼리문 -->

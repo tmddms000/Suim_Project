@@ -11374,3 +11374,16 @@ body{
 .text-red {
   color : red;
 }
+
+.toast-center-center {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.toast-top-center { 
+    top: -50px;   
+    margin: 0 auto;  
+    left: 50%;   
+    margin-left: -150px;
+}
