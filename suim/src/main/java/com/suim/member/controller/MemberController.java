@@ -8,7 +8,6 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.vo.Member;
-
 import com.suim.member.model.vo.SignUp;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/member")
+@Slf4j
 public class MemberController {
 
 	@Autowired
@@ -67,7 +68,7 @@ public class MemberController {
 		return mv;
 	}
 
-	@RequestMapping("/logout")
+	@PostMapping("/logout")
 	public String logoutMember(HttpSession session) {
 
 		session.setAttribute("alertMsg", "로그아웃 되었습니다.");
@@ -104,15 +105,40 @@ public class MemberController {
 
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/phoneCheck", produces = "text/html; charset=UTF-8")
+	public String phoneCheck(String phone) {
+
+		int count = memberService.phoneCheck(phone);
+
+		return (count > 0) ? "Duplicate" : "Available";
+
+	}
+
 	// 회원가입 성공
 	@RequestMapping("/joinSuccess")
 	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult,
 			Model model, HttpSession session) throws IOException {
 
 		if (theBindingResult.hasErrors()) {
-			System.out.println(theBindingResult);
 			return "member/signup";
 		} else {
+
+			// id, email, phone 중복 체크
+			int id = memberService.idCheck(member.getMemberId());
+			int email = memberService.emailCheck(member.getEmail());
+			int phone = memberService.phoneCheck(member.getPhone());
+
+			if (id > 0) {
+				session.setAttribute("alertMsg", "중복된 아이디가 존재합니다.");
+				return "member/signup";
+			} else if (email > 0) {
+				session.setAttribute("alertMsg", "중복된 이메일이 존재합니다.");
+				return "member/signup";
+			} else if (phone > 0) {
+				session.setAttribute("alertMsg", "중복된  번호가 존재합니다.");
+				return "member/signup";
+			}
 
 			String nickName = generateUniqueNickname();
 			String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
