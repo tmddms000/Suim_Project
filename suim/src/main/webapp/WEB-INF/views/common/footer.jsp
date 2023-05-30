@@ -36,6 +36,6 @@
         </footer>
         <!-- footer 끝 -->
 
-        
+        <script src="/resources/js/common/header.js"></script>
       
           

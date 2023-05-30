@@ -15,7 +15,7 @@
 	<header>
 	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
 	            <div class="header container px-4 px-lg-5">
-	                <a class="navbar-brand" href="#page-top"><img class="logo" src="/resources/img/common/sim5.png"></a>
+	                <a class="navbar-brand" href="/"><img class="logo" src="/resources/img/common/sim5.png"></a>
 	                
 	                <ul class="nav nav-pills navi">
 	                    
@@ -47,7 +47,14 @@
 	                            		<a href="#" class="nav-link nav-text">${ loginUser.memberName }님</a>
 		                            	<ul>
 			                                <li><a href="">마이페이지</a></li>
-			                                <li><a href="/member/logout">로그아웃</a></li>
+			                                
+			                                
+			                                <li>
+			                                <form id="logout-form" action="/member/logout" method="post">
+			                                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">로그아웃</a>
+			                                </form>
+			                                </li>
+			                                
 		                            	</ul>
 	                        		</li>
 				                </c:otherwise>
@@ -68,21 +75,59 @@
 	                    </button>
 	                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 	                        <div class="offcanvas-header">
+	                        <c:choose>
+				            	<c:when test="${ empty loginUser }">
 	                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">&nbsp;&nbsp;&nbsp;&nbsp;로그인 해주세요.</h5>
+	                           	</c:when>
+	                       </c:choose>
 	                            <button type="button" class="btn-close text-reset"
 	                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	                        </div>
 	                        <div class="offcanvas-body">
-	
-	                            <div class="user-button">
+	                        
+	                        
+	                        <c:choose>
+				            	<c:when test="${ empty loginUser }">
+					                 <div class="user-button">
 	                                <button type="button"
 	                                    style="width: 150px; margin-right: 20px; margin-left: 20px;"
-	                                    class="btn btn-success btn-lg">로그인</button>
+	                                    class="btn btn-success btn-lg" onclick="location.href='/member/login'">로그인</button>
 	                                <button type="button" style="width: 150px;"
-	                                    class="btn btn-outline-success btn-lg">회원가입</button>
-	                            </div>
+	                                    class="btn btn-outline-success btn-lg" onclick="location.href='/member/join'">회원가입</button>
+	                            	</div>
+				                </c:when>
+				            </c:choose>
+	                        
+	                        
+	
+	                           
 	
 	                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 pb-2">
+	                            
+									<c:choose>
+									  <c:when test="${not empty loginUser}">
+									    <c:choose>
+									      <c:when test="${empty loginUser.changeName}">
+									        <img src="/resources/img/common/default_profile.png" style="width: 200px; height: 200px; margin-left: 25px;">
+									      </c:when>
+									      <c:otherwise>
+									        <img src="${loginUser.changeName}"/>
+									      </c:otherwise>
+									    </c:choose>
+									  </c:when>
+									</c:choose>
+									
+								<c:choose>
+								  <c:when test="${not empty loginUser}">
+								    <li class="nav-item dropdown m-4">
+								      <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">${loginUser.memberName}님</a>
+								      <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown1">
+								        <li><a class="dropdown-item" href="#">마이페이지</a></li>
+								        <li><a class="dropdown-item" href="#">로그아웃</a></li>
+								      </ul>   
+								    </li>
+								  </c:when>
+								</c:choose>
 	                                <li class="nav-item offcanvas-text m-4">
 	                                    <a class="side-black" aria-current="page" href="#">방 찾기</a>
 	                                </li>
