@@ -63,6 +63,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
+	
 	<!-- 
 		해당 SqlSessionFactoryBean 객체가 필요할 때마다 내부적으로 이 코드가 실행됨
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();

@@ -12,6 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Member {
+	//회원의 정보를 받아오기 위한 VO 입니다
 
 	private String memberId;
 	private String memberPwd;

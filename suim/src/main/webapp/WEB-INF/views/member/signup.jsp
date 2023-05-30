@@ -7,6 +7,13 @@
 <title>쉐어하우스 쉼</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
+		
+	<style>
+	.error {
+	color: red;
+}
+	
+	</style>
 </head>	
 
 <body>	    
@@ -16,25 +23,25 @@
 		<div class="row justify-content-center">
 			<div class="col">
 				<h2 class="text-center mb-4" style="margin-left: 60px;">회원가입</h2>
-				<form:form modelAttribute="formData">
+				<form:form action="/member/joinSuccess" modelAttribute="member" method="POST" onsubmit="return validate()">
 					<div class="form-group row">
 						<label for="id" class="col-sm-4 col-form-label text-end">아이디<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
-							<input type="text" autocomplete="on" class="form-control" id="id"
-								placeholder="아이디를 입력해주세요">
+							<form:input type="text" autocomplete="on" class="form-control" id="id"
+								placeholder="아이디를 입력해주세요" path="memberId"/>
 							<p class="error-text error-msg" id="info_id"></p>
 						</div>
 						<div class="col-sm-3 p-0">
-							<button type="button" class="join-btn">중복확인</button>
+							<button type="button" class="join-btn" id="idDuplicateButton">중복확인</button>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="password" class="col-sm-4 col-form-label text-end">비밀번호<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
-							<input type="password" autocomplete="new-password"
-								class="form-control" id="password" placeholder="비밀번호를 입력해주세요">
+							<form:input type="password" autocomplete="new-password"
+								class="form-control" id="password" placeholder="비밀번호를 입력해주세요" path="memberPwd" />
 							<!-- <p class="error-text">최소 10자 이상 입력</p> -->
 							<p class="error-text" id="info_pw"></p>
 						</div>
@@ -55,8 +62,8 @@
 						<label for="name" class="col-sm-4 col-form-label text-end">이름<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
-							<input type="text" autocomplete="off" class="form-control"
-								id="name" placeholder="이름을 입력해주세요">
+							<form:input type="text" autocomplete="off" class="form-control"
+								id="name" placeholder="이름을 입력해주세요" path="memberName" />
 							<p class="error-text" id="info_name"></p>
 						</div>
 					</div>
@@ -65,9 +72,12 @@
 						<label for="email" class="col-sm-4 col-form-label text-end">이메일<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
-							<input type="email" class="form-control" id="email"
-								placeholder="이메일을 입력해주세요">
+							<form:input type="email" class="form-control" id="email"
+								placeholder="이메일을 입력해주세요" path="email" />
 							<p class="error-text" id="info_email"></p>
+						</div>
+						<div class="col-sm-3 p-0">
+							<button type="button" class="join-btn" id="emailDuplicateButton">중복확인</button>
 						</div>
 					</div>
 
@@ -75,8 +85,8 @@
 						<label for="phone" class="col-sm-4 col-form-label text-end">휴대폰<span
 							class="text-red">*</span></label>
 						<div class="col-sm-5">
-							<input type="text" class="form-control" id="phone"
-								placeholder="번호를 입력해주세요">
+							<form:input type="text" class="form-control" id="phone"
+								placeholder="번호를 입력해주세요" path="phone" />
 							<p class="error-text" id="info_phone"></p>
 						</div>
 						<div class="col-sm-3 p-0">
@@ -140,7 +150,7 @@
 									</select>
 								</div>
 								<div class="error-msg"></div>
-								<input type="hidden" name="birthDate" id="birth-date-input">
+								<form:input type="hidden" name="birthDate" id="birth-date-input" path="birth" />
 							</div>
 						</div>
 					</div>
@@ -150,8 +160,8 @@
 
 
 					<div class="text-center mt-4">
-						<button type="button" class="btn btn-primary btn-block submit-btn"
-							onclick="validate();">가입하기</button>
+						<button type="submit" class="btn btn-primary btn-block submit-btn" disabled
+							>가입하기</button>
 					</div>
 				</form:form>
 				<br>
@@ -160,8 +170,122 @@
 			</div>
 		</div>
 	</div>
+	
+	<script>
+	// Function to enable/disable the duplicateButton
+	function setDuplicateButtonState(enabled, field) {
+	  $("#" + field + "DuplicateButton").prop("disabled", !enabled);
+	}
+
+	// Function to enable/disable the submit button
+	function setSubmitButtonState(enabled) {
+	  $(".submit-btn").prop("disabled", !enabled);
+	}
+
+	// Function to handle ID changes
+	function handleIdChange() {
+	  var id = $("#id").val();
+	  var isValidId = /^[a-z0-9]{6,20}$/.test(id);
+
+	  setDuplicateButtonState(isValidId, "id"); // Enable/disable duplicateButton based on ID validity
+	  setSubmitButtonState(false); // Disable the submit button when ID changes
+	}
+
+	// Function to handle email changes
+	function handleEmailChange() {
+	  var email = $("#email").val();
+	  var isValidEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
+
+	  setDuplicateButtonState(isValidEmail, "email"); // Enable/disable duplicateButton based on email validity
+	  setSubmitButtonState(false); // Disable the submit button when email changes
+	}
+
+	// Function to handle ID duplicateButton clicks
+	function handleIdDuplicateButtonClick() {
+	  var id = $("#id").val();
+
+	  if (id) {
+	    checkIdDuplicate(id);
+	  }
+	}
+
+	// Function to handle email duplicateButton clicks
+	function handleEmailDuplicateButtonClick() {
+	  var email = $("#email").val();
+
+	  if (email) {
+	    checkEmailDuplicate(email);
+	  }
+	}
+
+	// Function to check ID duplication
+	function checkIdDuplicate(id) {
+	  $.ajax({
+	    url: "/member/idCheck",
+	    type: "post",
+	    data: {
+	      id: id
+	    },
+	    success: function(data) {
+	      console.log(data);
+	      if (data === 'Duplicate') {
+	        toastr.error("이미 사용중인 아이디입니다.");
+	        setSubmitButtonState(true); // Enable the submit button when ID is not duplicate
+	        setDuplicateButtonState(true, "id"); // Disable ID duplicateButton
+	      } else {
+	        toastr.success("사용 가능한 아이디입니다.");
+	        setDuplicateButtonState(false, "id"); // Enable ID duplicateButton
+	      }
+	    }
+	  });
+	}
+
+	// Function to check email duplication
+	function checkEmailDuplicate(email) {
+	  $.ajax({
+	    url: "/member/emailCheck",
+	    type: "post",
+	    data: {
+	      email: email
+	    },
+	    success: function(data) {
+	      console.log(data);
+	      if (data === 'Duplicate') {
+	        toastr.error("이미 사용중인 이메일입니다.");
+	        setSubmitButtonState(true); // Enable the submit button when email is not duplicate
+	        setDuplicateButtonState(true, "email"); // Disable email duplicateButton
+	      } else {
+	        toastr.success("사용 가능한 이메일입니다.");
+	        setDuplicateButtonState(false, "email"); // Enable email duplicateButton
+	      }
+	    }
+	  });
+	}
+
+	// Event handler for ID changes
+	$("#id").on("input", handleIdChange);
+
+	// Event handler for email changes
+	$("#email").on("input", handleEmailChange);
+
+	// Event handler for ID duplicateButton clicks
+	$("#idDuplicateButton").on("click", handleIdDuplicateButtonClick);
+
+	// Event handler for email duplicateButton clicks
+	$("#emailDuplicateButton").on("click", handleEmailDuplicateButtonClick);
+
+	// Initialize button states
+	setDuplicateButtonState(false, "id");
+	setDuplicateButtonState(false, "email");
+	setSubmitButtonState(false);
 
 
+	</script>
+	
+	<script src="/resources/js/user/signup.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
         
 
