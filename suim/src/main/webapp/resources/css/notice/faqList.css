@@ -1,0 +1,96 @@
+#container, #content{
+    position:relative;
+    /* height: 1200px */
+}
+
+.page_aticle button, .page_aticle input, .page_aticle select, .page_aticle * {}
+/* 아래의 css 는 하나라도 건드리면 영역이 깨지므로 건들지 말 것 */
+
+#faq {
+    display : block;
+}
+
+/*
+2023.05.27 메모 : common/styles.css 에 있는 css 인데 이거 주석 처리해도 되는 지 물어볼 것.
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+.container {
+    flex: 1; 
+  }
+
+footer {
+    margin-top: auto;
+  }
+*/
+
+#faq_header {
+    color: #d63384;
+    font-size : 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.table-header {
+    text-align: center;
+}
+
+#noticeDetailTable {
+    
+    border-top: 1px solid green;
+    border-bottom: 1px solid green;
+}
+
+/* 공지사항 검색 영역 */
+.search-box {
+    padding-right: 0px;
+    float : right;
+}
+
+/* faq 웹페이지의 faq 목록 번호 */
+/*
+#faqNo {
+    visibility: hidden;
+    color: aqua;
+    border-style: solid;
+    width : 10%;   
+}
+*/
+
+
+.createDate {
+    width: 10%;
+}
+
+/*  검색용 css => 우측에 검색영역이 떠야 함 */
+#nListSearch {
+    float:right;
+}
+
+
+/* 공지사항리스트페이지의 제목과 작성일에 초록색 테두리를 줌으로써 구분감을 주면서 강조함 */
+#faqDetailTable> .createDate {
+    border-bottom-color: green;
+}
+
+/* 공지사항 상세테이블의 theader 안의 것들 */
+.contentHeader {
+    border-bottom-color: #d63384;
+    height: 20%;
+    font-weight: bold;
+    border-bottom: 2px solid blue;
+}
+
+/* 그냥 영역용css(공지사항 상세내용 영역을 가운데 두기 위한 목적이므로 지우면 안 됨) */
+.onlyForArea {
+    visibility: hidden;
+};
+
+.faqTitle {
+    padding-left: 20%;
+}
+.detail_faq {
+    border : 1px solid pink;
+}

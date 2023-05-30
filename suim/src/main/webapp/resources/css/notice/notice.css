@@ -1,0 +1,54 @@
+#noticeDiv {
+    display : block;
+    text-align: center;
+}
+
+#noticeBold {
+    color: #d63384;
+    font-size : 20px;
+    font-weight: bold;
+}
+
+
+
+/* 공지사항 검색 영역 */
+.search-box {
+    padding-right: 0px;
+    float : right;
+}
+
+/* 공지사항 웹페이지의 공지사항 목록 번호 */
+.nListNo {
+   
+    color: aqua;
+    border-style: solid;
+    width : 10%;
+    text-align: center;
+}
+
+.title {
+    
+    font-weight: bold;
+   width: 80%;
+   padding-right: 10%;
+}
+
+.createDate {
+    width: 10%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 공지사항 검색용 css => 우측에 검색영역이 떠야 함 */
+#nListSearch {
+    float:right;
+}
+
+/* 공지사항리스트페이지의 제목과 작성일에 초록색 테두리를 줌으로써 구분감을 주면서 강조함 */
+#notice-table .title, .createDate {
+    border-bottom-color: green;
+}

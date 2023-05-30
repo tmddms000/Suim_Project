@@ -1,10 +1,12 @@
+<!-- 공지사항 링크 추가 -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
 	<header>
 	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
 	            <div class="header container px-4 px-lg-5">
-	                <a class="navbar-brand" href="#page-top"><img class="logo" src="/resources/img/common/sim5.png"></a>
+	                <a class="navbar-brand" href=""><img class="logo" src="/resources/img/common/sim5.png"></a>
 	                
 	                <ul class="nav nav-pills navi">
 	                    
@@ -29,8 +31,8 @@
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">고객센터</a>
 	                            <ul>
-	                                <li><a href="">공지사항</a></li>
-	                                <li><a href="">자주 묻는 질문</a></li>
+	                                <li><a href="/notice">공지사항</a></li>
+	                                <li><a href="/notice/faqList">자주 묻는 질문</a></li>
 	                            </ul>
 	                        </li>
 	                </ul>
@@ -74,8 +76,8 @@
 	                                </li>
 	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>
 	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown3">
-	                                        <li><a class="dropdown-item" href="#">공지사항</a></li>
-	                                        <li><a class="dropdown-item" href="#">자주 묻는 질문</a></li>                        
+	                                        <li><a class="dropdown-item" href="/notice">공지사항</a></li>
+	                                        <li><a class="dropdown-item" href="/notice.faqList.html">자주 묻는 질문</a></li>                        
 	                                    </ul>
 	                                </li>
 	                            </ul>
