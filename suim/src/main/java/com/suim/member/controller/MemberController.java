@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +39,6 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-
 	@GetMapping("/login")
 	public String loginForm() {
 		return "member/login";
@@ -46,11 +46,9 @@ public class MemberController {
 	}
 
 	@PostMapping("/login")
-	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv,
-			HttpServletResponse response) {
-		
+	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv, HttpServletResponse response) {
+
 		Member loginUser = memberService.loginMember(m);
-		
 
 		if (loginUser != null && bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 
@@ -68,7 +66,7 @@ public class MemberController {
 
 		return mv;
 	}
-	
+
 	@RequestMapping("/logout")
 	public String logoutMember(HttpSession session) {
 
@@ -77,24 +75,6 @@ public class MemberController {
 		return "redirect:/";
 
 	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/emailCheck", produces = "text/html; charset=UTF-8")
-	public String emailCheck(String email) {
-		
-		int count = memberService.emailCheck(email);
-		
-		return (count > 0) ? "Duplicate" : "Available";
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 	// 회원가입 페이지 이동
 	@RequestMapping("/join")
@@ -126,8 +106,8 @@ public class MemberController {
 
 	// 회원가입 성공
 	@RequestMapping("/joinSuccess")
-	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult, Model model, HttpSession session)
-			throws IOException {
+	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult,
+			Model model, HttpSession session) throws IOException {
 
 		if (theBindingResult.hasErrors()) {
 			System.out.println(theBindingResult);
@@ -139,20 +119,19 @@ public class MemberController {
 			member.setNickName(nickName);
 			member.setMemberPwd(encPwd);
 			System.out.println(member);
-			
+
 			int result = memberService.insertMember(member);
 
 			if (result > 0) {
-				
+
 				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
-				
-				//이메일 인증 받아야함
+
+				// 이메일 인증 받아야함
 				return "member/sign-success";
-				
-				
+
 			} else {
-				
-				model.addAttribute("errorMsg", "회원가입 실패");				
+
+				model.addAttribute("errorMsg", "회원가입 실패");
 				return "common/errorPage";
 
 			}
@@ -192,42 +171,6 @@ public class MemberController {
 		} finally {
 			urlConnection.disconnect();
 		}
-	}
-
-	public String generateUniqueNickname() throws IOException {
-	    String nickname = randomNickName();
-	    int nicknameCount = memberService.nickCheck(nickname);
-
-	    System.out.println(nicknameCount);
-	    if (nicknameCount > 1) {
-	        System.out.println("닉네임 " + nickname + " 이미 존재하는 닉네임입니다.");
-	        return generateUniqueNickname();
-	    }
-
-
-	    System.out.println(nickname);
-	    return nickname;
-	}
-
-	public String randomNickName() throws IOException {
-	    String url = "https://nickname.hwanmoo.kr/?format=text&max_length=6";
-
-	    URL requestURL = new URL(url);
-	    HttpURLConnection urlConnection = (HttpURLConnection) requestURL.openConnection();
-	    urlConnection.setRequestMethod("GET");
-
-	    try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
-	        String line;
-	        StringBuilder responseText = new StringBuilder();
-
-	        while ((line = br.readLine()) != null) {
-	            responseText.append(line);
-	        }
-
-	        return responseText.toString();
-	    } finally {
-	        urlConnection.disconnect();
-	    }
 	}
 
 }
