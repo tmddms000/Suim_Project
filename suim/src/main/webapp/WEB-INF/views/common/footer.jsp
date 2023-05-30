@@ -37,6 +37,5 @@
         <!-- footer 끝 -->
 
         
-        <!-- 자체 header script -->
-          <script src="/resources/js/common/header.js"></script>
+      
           

@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+	
+
+	<c:if test="${ not empty alertMsg }">
+		<script>
+			alert("${ alertMsg }");
+		</script>
+		<c:remove var="alertMsg" scope="session" />
+	</c:if>
+	
+	
 	<header>
 	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
 	            <div class="header container px-4 px-lg-5">
@@ -23,9 +34,25 @@
 	                                <li><a href="">사람구해요</a></li>
 	                            </ul>
 	                        </li>
-	                        <li class="nav-item">
-	                            <a href="#" class="nav-link nav-text">로그인</a>
-	                        </li>
+	                        
+	                        <c:choose>
+				            	<c:when test="${ empty loginUser }">
+					                <!-- 로그인 전 -->
+					                 <li class="nav-item">
+	                            		<a href="/member/login" class="nav-link nav-text">로그인</a>
+	                        		</li>
+				                </c:when>
+				                <c:otherwise>
+					                <li class="nav-item">
+	                            		<a href="#" class="nav-link nav-text">${ loginUser.memberName }님</a>
+		                            	<ul>
+			                                <li><a href="">마이페이지</a></li>
+			                                <li><a href="/member/logout">로그아웃</a></li>
+		                            	</ul>
+	                        		</li>
+				                </c:otherwise>
+				            </c:choose>    
+	                        
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">고객센터</a>
 	                            <ul>
@@ -84,3 +111,6 @@
 	            </div>
 	        </nav>
 	    </header>
+	    
+	    
+	    

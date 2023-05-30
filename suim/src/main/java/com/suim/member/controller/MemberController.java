@@ -15,7 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,17 +37,20 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-	@RequestMapping("/login")
-	public ModelAndView loginMember(Member m,
-			HttpSession session,
-			ModelAndView mv,
-			String saveId,
-			HttpServletResponse response){
+	@GetMapping("/login")
+	public String loginForm() {
+		return "member/login";
 
+	}
+
+	@PostMapping("/login")
+	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv,
+			HttpServletResponse response) {
+		
 		Member loginUser = memberService.loginMember(m);
+		
 
 		if (loginUser != null && bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-																												
 
 			session.setAttribute("loginUser", loginUser);
 			session.setAttribute("alertMsg", "로그인에 성공했습니다.");
@@ -61,6 +66,25 @@ public class MemberController {
 
 		return mv;
 	}
+	
+	@RequestMapping("/logout")
+	public String logoutMember(HttpSession session) {
+
+		session.setAttribute("alertMsg", "로그아웃 되었습니다.");
+		session.removeAttribute("loginUser");
+		return "redirect:/";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	// 회원가입 페이지 이동
 	@RequestMapping("/join")
@@ -92,7 +116,7 @@ public class MemberController {
 
 	// 회원가입 성공
 	@RequestMapping("/joinSuccess")
-	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult)
+	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult, Model model, HttpSession session)
 			throws IOException {
 
 		if (theBindingResult.hasErrors()) {
@@ -101,9 +125,27 @@ public class MemberController {
 		} else {
 
 			String nickName = generateUniqueNickname();
+			String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
 			member.setNickName(nickName);
+			member.setMemberPwd(encPwd);
 			System.out.println(member);
-			return "member/sign-success";
+			
+			int result = memberService.insertMember(member);
+
+			if (result > 0) {
+				
+				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
+				
+				//이메일 인증 받아야함
+				return "member/sign-success";
+				
+				
+			} else {
+				
+				model.addAttribute("errorMsg", "회원가입 실패");				
+				return "common/errorPage";
+
+			}
 		}
 	}
 
