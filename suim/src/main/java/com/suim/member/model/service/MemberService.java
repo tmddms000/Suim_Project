@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import javax.validation.Valid;
 
+
+import javax.validation.Valid;
+
 import com.suim.member.model.vo.Member;
 import com.suim.member.model.vo.SignUp;
 
