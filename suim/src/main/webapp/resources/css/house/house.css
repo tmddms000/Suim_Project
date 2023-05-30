@@ -1,0 +1,233 @@
+  
+  /* 프로필 css 설정 */
+  #peopleExplain {
+    text-align: center;
+  }
+
+  .peopleList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileImage {
+    margin-bottom: 20px;
+  }
+
+  #profilepic {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .userId {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .actionButton {
+    margin-bottom: 10px;
+  }
+
+  .q_btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 150px; /* 버튼의 고정된 너비값 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .q_btn.green {
+    background-color: rgb(250,107,111);
+    color: #fff;
+  }
+
+  .q_btn.white {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+
+  .q_btn.white:hover {
+    background-color: #f0f0f0;
+  }
+
+  .fa-heart {
+    font-size: 1rem;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  
+    #btnDiv {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  #btnDiv a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  #btnDiv a.reportBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #btnDiv a.white {
+    background-color: #fff;
+    color: #333;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #btnDiv a.white:hover {
+    background-color: #f5f5f5;
+  }
+
+#btnDiv a.reportBtn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+/* 하우스 소개 css 설정 */
+#middle_Div {
+  padding: 20px;
+  margin-left: 50px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+  padding-bottom: 50px;
+}
+
+.middle_houseInfo {
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0;
+}
+
+.s_title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.middle_houseInfo div {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 480px) {
+  .middle_houseInfo {
+    padding: 10px;
+  }
+
+  .s_title {
+    font-size: 18px;
+  }
+}
+  
+  
+/* 테이블 스타일 */
+.middle_RoomInfo {
+  padding: 20px;
+  margin-left: 50px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+  padding-bottom: 75px;
+}
+
+.tb {
+  border-collapse: collapse;
+}
+
+.tb th,
+.tb td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.tb th:first-child {
+  text-align: left;
+}
+
+.tb th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* 가운데 정렬 스타일 */
+.tb th:first-child,
+.tb td:first-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* 룸 정보 제목 스타일 */
+.r_title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+
+
+
+
+
+/* 시설 */
+.middle_FacInfo {
+  padding: 20px;
+  margin-left: 15px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+  padding-bottom: 75px;
+}
+
+
+.facility-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.facility-list li {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  margin-right: 10px; /* 이미지 사이의 간격을 조절할 수 있습니다 */
+}
+
+.facility-list img {
+  order: -1; /* 이미지를 텍스트 앞에 배치합니다 */
+}
+
+.f_title {
+  margin-left: 30px;
+  font-size: 18px;
+  font-weight: bold;
+}
