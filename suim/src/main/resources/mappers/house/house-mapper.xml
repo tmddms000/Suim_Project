@@ -2,5 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="houseMapper">
   
+<resultMap id="houseResultMap" type="house">
+	<result column="HOUSE_NO" property="houseNo"/>
+	<result column="HOUSE_NAME" property="houseName"/>
+	<result column="HOUSE_ADDRESS" property="houseAddress"/>
+	<result column="DEPOSIT" property="deposit"/>
+	<result column="RENT" property="rent"/>
+	<result column="ENTER_DATE" property="enterDate"/>
+	<result column="MIN_STAY" property="minStay"/>
+	<result column="MAX_STAY" property="maxStay"/>
+	<result column="ROOM_PEOPLE" property="roomPeople"/>
+	<result column="INC_FURNITURE" property="incFurniture"/>
+	<result column="HOUSE_CONTENT" property="houseContent"/>
+	<result column="RES_GENDER" property="resGender"/>
+	<result column="RES_TYPE" property="resType"/>
+	<result column="FLOOR" property="floor"/>
+	<result column="HOUSE_STATUS" property="houseStatus"/>
+	<result column="HOUSE_DATE" property="houseDate"/>
+	<result column="MEMBER_ID" property="memberId"/>
+</resultMap>
+
+<resultMap id="wishResultMap" type="wish">
+	<result column="MEMBER_ID" property="Id"/>
+	<result column="HOUSE_NO" property="hno"/>
+</resultMap>
+
+<!-- 하우스 상세 조회용 쿼리문 -->
+<select id="selectHouse" parameterType="int" resultMap="houseResultMap">
+	SELECT * FROM HOUSE
+	WHERE HOUSE_NO = #{hno}
+</select>
+
+<select id="checkHeart" parameterType="_int" resultMap="wishResultMap">
+	SELECT * FROM WISH
+	WHERE HOUSE_NO = #{hno}
+</select>
+
+<insert id="addHeart">
+        INSERT INTO WISH (MEMBER_ID, HOUSE_NO)
+        VALUES (#{id}, #{hno})
+    </insert>
+    
+    <delete id="removeHeart">
+        DELETE FROM WISH
+        WHERE MEMBER_ID = #{id} AND HOUSE_NO = #{hno}
+    </delete>
   
 </mapper>
