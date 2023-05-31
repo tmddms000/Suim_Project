@@ -1,7 +1,7 @@
 package com.suim.member.model.service;
 
 import java.util.ArrayList;
-import java.util.Map;
+
 
 import javax.validation.Valid;
 
@@ -40,13 +40,6 @@ public interface MemberService {
 
 	// 번호 중복체크 서비스
 	int phoneCheck(String phone);
-
-	// 네이버로그인 계정 체크
-	Map<String, Object> naverConnectionCheck(String email);
-
-	int setNaverConnection(Map<String, Object> apiJson);
-
-	Map<String, Object> userNaverLoginPro(Map<String, Object> apiJson);
 
 	
 }

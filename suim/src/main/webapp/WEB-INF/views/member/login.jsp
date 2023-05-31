@@ -76,8 +76,13 @@
                     </div>
                     <div class="row justify-content-center mt-2">
                         <div class="col-sm-4">
-                            <div id="naver_id_login" style="text-align:center"><a href="${url}">
-						<img width="300px" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/></a></div>
+                            <div class="text-center mt-2">
+                              <button class="image-button" onclick="location.href='${urlNaver}'">
+                            
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/KakaoTalk_logo.svg/240px-KakaoTalk_logo.svg.png" alt="Button Image">
+                                &nbsp;&nbsp;&nbsp;네이버계정으로 로그인
+                            </button>
+                            </div>
                         </div>
                     </div>
                     <br>

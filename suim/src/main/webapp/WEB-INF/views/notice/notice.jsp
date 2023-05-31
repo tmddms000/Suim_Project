@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,58 +80,26 @@
                     <tbody>
                     	<c:forEach var="n" items="${ list }">
 	                        <tr class="table-row" style="background-color:none;">
-	                            <td class="nListNo nno">${ n.noticeNo }</td>
+	                            <td class="nListNo">${ n.noticeNo }</td>
 	                            <td class="title">
-	                                ${ n.noticeTitle }
+	                                <a href="/notices/20">${ n.noticeTitle }</a>
 	                            </td>
-	                            <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${n.noticeDate }" /></td>
+	                            <td class="createDate">${ n.noticeDate }</td>
 	                        </tr>
                     	</c:forEach>
                     </tbody>
                 </table>
                 
-                <br/>
-                
-                <!-- 공지사항 상세조회 함수 -->
-                 <script>
-            	$(function() {
-            		$("#notice-table>tbody> tr").click(function() {
-            			
-            			let nno = $(this).children(".nno").text();
-            			location.href = "detail.no?nno=" + nno;
-            			// location.href = "detail.no/" + nno; // path Variable 방식(tistory 방식)
-            		});
-            	});
-            </script>
-                
                 <!-- 페이지네이션 영역 시작 -->
-                <div id="pagingArea">
-                <ul class="pagination">
-                
-                	<c:choose>
-                		<c:when test="${ pi.currentPage eq 1 }">
-                			<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                		</c:when>
-                		<c:otherwise>
-                			<li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }">Previous</a></li>
-                		</c:otherwise>
-                	</c:choose>
-                    
-                    <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="list.no?cPage=${ p }">${ p }</a></li>
-                    </c:forEach>
-                    
-                    <c:choose>
-                    	<c:when test="${ pi.currentPage eq pi.maxPage }">
-                    		<li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-                    	</c:when>
-                    	
-                    	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }">Next</a></li>
-                    	</c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
+                <div class="pagination" >
+                    <a href="#" class="previous">이전</a>
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link">4</a>
+                    <a href="#" class="page-link">5</a>
+                    <a href="#" class="next">다음</a>
+                </div>
                 
                 <!-- 페이지네이션 영역 끝 -->
 

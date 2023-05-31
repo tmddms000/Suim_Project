@@ -1,5 +1,4 @@
-  
-  /* 프로필 css 설정 */
+/* 프로필 css 설정 */
   #peopleExplain {
     text-align: center;
   }
@@ -157,7 +156,7 @@
 /* 테이블 스타일 */
 .middle_RoomInfo {
   padding: 20px;
-  margin-left: 50px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+  margin-left: 60px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
   padding-bottom: 75px;
 }
 
@@ -204,7 +203,7 @@
 /* 시설 */
 .middle_FacInfo {
   padding: 20px;
-  margin-left: 15px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+  margin-left: 25px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
   padding-bottom: 75px;
 }
 
@@ -227,7 +226,21 @@
 }
 
 .f_title {
-  margin-left: 30px;
+  margin-left: 40px;
   font-size: 18px;
   font-weight: bold;
+}
+
+
+
+/* 지도 */
+.middle_MapInfo {
+  padding: 20px;
+  margin-left: 50px; /* 여기에 값을 조정하여 오른쪽으로 이동시킴 */
+}
+
+.m_title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
