@@ -1,14 +1,8 @@
 #freeboard tr:hover td {
   color: rgb(250, 107, 111);
   cursor: pointer;
+  font-size: large;
 }    
-#bestboard tr:hover td {
-cursor: pointer;
-color:  rgb(250,107,111);
-font-size: large;
-
-
-}
 
 
 #bestboardList td {
