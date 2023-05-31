@@ -48,7 +48,7 @@
             <h2>자유게시판 작성하기</h2>
             <br><br>
 
-            <form id="enrollForm" method="post" action="insert.bo" enctype="">
+            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>

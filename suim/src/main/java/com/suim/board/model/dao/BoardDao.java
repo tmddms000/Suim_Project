@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
+import com.suim.board.model.vo.Reply;
 import com.suim.common.model.vo.PageInfo;
 
 
@@ -28,8 +29,11 @@ public class BoardDao {
 		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
 	}
 	
-	public int insertBoard(SqlSessionTemplate sqlSession, Board b, Battachment ba) {
+	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {
 		return sqlSession.insert("boardMapper.insertBoard", b);
+	}
+	public int insertBattachment(SqlSessionTemplate sqlSession, Battachment ba) {
+		return sqlSession.insert("boardMapper.battachment", ba);
 	}
 	
 	public ArrayList<Board> selectbList(SqlSessionTemplate sqlSession) {
@@ -44,5 +48,15 @@ public class BoardDao {
 	}
 	public int deleteBoard(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.update("boardMapper.deleteBoard", boardNo);
+	}
+	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession, int boardNo) {
+		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList", boardNo);
+	}
+	
+	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
+		return sqlSession.insert("boardMapper.insertReply", r);
+	}
+	public int ReplyCount(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.ReplyCount", boardNo);
 	}
 }

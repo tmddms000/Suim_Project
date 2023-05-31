@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
  
 <head>
 <meta charset="UTF-8">
@@ -96,13 +97,31 @@
                 </tr>
             </table>
             <br>
-
+			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq b.memberId) }">
             <div align="center">
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 		                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
 		                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
             </div>
             <br><br>
+            
+         		<form id="postForm" action="" method="post">
+	            	<input type="hidden" name="bno" value="${ b.boardNo }">
+	            	<input type="hidden" name="filePath" value="${ b.changeName }">
+	            </form>
+	            <script>
+	            	// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
+	            	function postFormSubmit(num) {
+	            		
+	            		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
+	            		if(num == 1) { // 수정하기 버튼을 클릭했을 경우
+	            			$("#postForm").attr("action", "updateForm.bo").submit();
+	            		} else { // 삭제하기 버튼을 클릭했을 경우
+	            			$("#postForm").attr("action", "delete.bo").submit();
+	            		}
+	            	}
+	            </script>
+            </c:if>
 
             <!-- 댓글 기능은 나중에 ajax 배우고 나서 구현할 예정! 우선은 화면구현만 해놓음 -->
 		            <table id="replyArea" class="table" align="center">
@@ -138,21 +157,74 @@
         <br><br>
 
       </div>
-    	       <form id="postForm" action="" method="post">
-	            	<input type="hidden" name="bno" value="${ b.boardNo }">
-	            	<input type="hidden" name="filePath" value="${ b.changeName }">
-	            </form>
     
     <script>
-    function postFormSubmit(num) {
-    	
-    	// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-    	if(num == 1) { // 수정하기 버튼을 클릭했을 경우
-    		$("#postForm").attr("action", "updateForm.bo").submit();
-    	} else { // 삭제하기 버튼을 클릭했을 경우
-    		$("#postForm").attr("action", "delete.bo").submit();
-    	}
-    }
+
+	$(function() {
+		// 댓글 리스트 조회용 함수 호출
+		selectReplyList(); // setInterval 로 마찬가지로 실시간 조회 효과를 줄 수 있다.
+	});
+	
+	function addReply() { // 댓글 작성용 ajax
+		
+
+		
+		if($("#content").val().trim().length != 0) {
+			// 즉, 유효한 내용이 한자라도 있을 경우
+			
+			$.ajax({
+				url : "rinsert.bo",
+				data : {
+					boardNo : ${ b.boardNo },
+					breContent : $("#content").val(),
+					memberId : "${ loginUser.memberId }"
+				},
+				type : "post", 
+				success : function(result) {
+					
+					if(result == "success") {
+						selectReplyList();
+						$("#content").val("");
+					}
+				},
+				error : function() {
+					console.log("댓글 작성용 ajax 통신 실패!");
+				}
+			});
+			
+		} else {
+			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");
+		}
+	}
+	
+	function selectReplyList() { // 해당 게시글에 딸린 댓글리스트 조회용 ajax
+		
+		$.ajax({
+			url : "rlist.bo",
+			data : {bno : ${ b.boardNo }},
+			type : "get",
+			success : function(result) {
+				
+				
+				
+				let resultStr = "";
+				
+				for(let i = 0; i < result.length; i++) {
+					resultStr += "<tr>"
+							   + 	"<td>" + result[i].breId + "</td>"
+							   + 	"<td>" + result[i].breContent + "</td>"
+							   + 	"<td>" + result[i].breDate + "</td>"
+							   + "</tr>";
+				}
+				
+				$("#replyArea>tbody").html(resultStr);
+				$("#rcount").text(result.length);
+			},
+			error : function() {
+				console.log("댓글리스트 조회용 ajax 통신 실패!");
+			}
+		});
+	}
     
     </script>
     

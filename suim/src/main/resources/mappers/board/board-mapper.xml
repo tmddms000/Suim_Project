@@ -13,6 +13,16 @@
 		
 		<result column="BOARD_COTENT" property="boardContent" />
 		<result column="CHANGE_NAME" property="changeName" />
+		<result column="BOARD_REPLY_COUNT" property="replyCount" />
+	</resultMap>
+	
+		<!-- REPLY 테이블로부터 조회된 ResultSet 을 Reply 객체로 가공해주는 resultMap -->
+	<resultMap id="replyResultSet" type="reply">
+		<result column="BRE_NO" property="breNo" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="BRE_COTENT" property="breContent" />
+		<result column="BRE_DATE" property="breDate" />
+		<result column="BRE_ID" property="breId" />
 	</resultMap>
 	
 		<!-- 게시글 총 갯수 구하는 쿼리문 -->
@@ -25,47 +35,66 @@
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 		<select id="selectList" resultMap="boardResultSet">
 
-		    SELECT 
-		        B.BOARD_NO,
-		        B.BOARD_TITLE,
-		        B.BOARD_COTENT,
-		        B.BOARD_VIEW,
-		        B.BOARD_DATE,
-		        B.STATUS,
-		        B.MEMBER_ID,
-		        BA.ORIGIN_NAME,
-		        BA.CHANGE_NAME
-		    FROM BOARD B
-		    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
-		    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
-		    WHERE B.STATUS = 'Y'
-		    ORDER BY B.BOARD_NO DESC
+			SELECT
+			    B.BOARD_NO,
+			    B.BOARD_TITLE,
+			    B.BOARD_COTENT,
+			    B.BOARD_VIEW,
+			    B.BOARD_DATE,
+			    B.STATUS,
+			    B.MEMBER_ID,
+			    BA.ORIGIN_NAME,
+			    BA.CHANGE_NAME,
+			    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
+			FROM BOARD B
+			JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+			LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+			LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
+			WHERE B.STATUS = 'Y'
+			GROUP BY
+			    B.BOARD_NO,
+			    B.BOARD_TITLE,
+			    B.BOARD_COTENT,
+			    B.BOARD_VIEW,
+			    B.BOARD_DATE,
+			    B.STATUS,
+			    B.MEMBER_ID,
+			    BA.ORIGIN_NAME,
+			    BA.CHANGE_NAME
+			ORDER BY B.BOARD_NO DESC
 
 		</select>
 		
 			<!-- 베스트 게시글 리스트를 구해주는 쿼리문 -->
 		<select id="selectbList" resultMap="boardResultSet">
 
-			    SELECT *
-				FROM (
-			    SELECT
-			        B.BOARD_NO,
-			        B.BOARD_TITLE,
-			        B.BOARD_COTENT,
-			        B.BOARD_VIEW,
-			        B.BOARD_DATE,
-			        B.STATUS,
-			        B.MEMBER_ID,
-			        BA.ORIGIN_NAME,
-			        BA.CHANGE_NAME,
-			        ROWNUM AS RN
-			    FROM BOARD B
-			    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
-			    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
-			    WHERE B.STATUS = 'Y'
-			    ORDER BY BOARD_VIEW DESC
-			)
-			WHERE RN BETWEEN 1 AND 6
+				SELECT
+				    B.BOARD_NO,
+				    B.BOARD_TITLE,
+				    B.BOARD_COTENT,
+				    B.BOARD_VIEW,
+				    B.BOARD_DATE,
+				    B.STATUS,
+				    B.MEMBER_ID,
+				    BA.ORIGIN_NAME,
+				    BA.CHANGE_NAME,
+				    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
+				FROM BOARD B
+				JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+				LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+				LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
+				WHERE B.STATUS = 'Y'
+				GROUP BY
+				    B.BOARD_NO,
+				    B.BOARD_TITLE,
+				    B.BOARD_COTENT,
+				    B.BOARD_VIEW,
+				    B.BOARD_DATE,
+				    B.STATUS,
+				    B.MEMBER_ID,
+				    BA.ORIGIN_NAME,
+				    BA.CHANGE_NAME
+				ORDER BY B.BOARD_VIEW DESC
 	
 		</select>
 		
@@ -90,20 +119,21 @@
 				   		, #{memberId}
 	</insert>
 	
-		<insert id="battachment" parameterType="battachment">
-					INSERT INTO BATTACHMENT (BAT_NO, 
-					                        ORIGIN_NAME, 
-					                        CHANGE_NAME, 
-					                        CREATE_DATE, 
-					                        FILE_STATUS, 
-					                        BOARD_NO)
-					VALUES (SEQ_BAT_NO.NEXTVAL, 
-					        #{originName}, 
-					        #{changeName},
-					        DEFAULT, 
-					        DEFAULT, 
-					        #{boardNo})
-		</insert>
+		<!-- 게시글 파일첨부 쿼리문 -->
+	<insert id="battachment" parameterType="battachment">
+		INSERT INTO BATTACHMENT (BAT_NO, 
+		                        ORIGIN_NAME, 
+		                        CHANGE_NAME, 
+		                        CREATE_DATE, 
+		                        FILE_STATUS, 
+		                        BOARD_NO)
+		VALUES (SEQ_BAT_NO.NEXTVAL, 
+		        #{originName}, 
+		        #{changeName},
+		        DEFAULT, 
+		        DEFAULT, 
+		        #{boardNo})
+	</insert>
 		
 	<select id="selectBoard" parameterType="_int" resultMap="boardResultSet">
 			SELECT 
@@ -134,6 +164,40 @@
 		   SET STATUS = 'N'
 		 WHERE BOARD_NO = #{boardNo}
 	</update>
+	
+	
+		
+
+ 	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
+		         SELECT *
+		          FROM BOARD_REPLY
+		         WHERE STATUS = 'Y'
+		         AND BOARD_NO = #{boardNo}
+		         ORDER BY BRE_NO DESC
+	</select>
+
+
+	<insert id="insertReply" parameterType="reply">
+		INSERT INTO BOARD_REPLY(BRE_NO
+						, BRE_COTENT
+						, BOARD_NO
+						, BRE_ID
+						)
+				   VALUES(SEQ_BRE_NO.NEXTVAL
+				   		, #{breContent}
+				   		, #{boardNo}
+				   		, #{memberId}
+				   		)
+	</insert> 
+	
+	<select id="ReplyCount" resultType="_int">
+			  SELECT COUNT(*)
+			  FROM BOARD_REPLY
+			 WHERE STATUS = 'Y'
+	         AND BOARD_NO = #{boardNo}
+	</select>
+	
+
 	
 	
   
