@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="boardMapper">
+
+	<!-- BOARD 테이블로부터 조회된 ResultSet 을 Board 객체로 가공해주는 resultMap -->
+	<resultMap id="boardResultSet" type="board">
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="BOARD_TITLE" property="boardTitle" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="BOARD_VIEW" property="boardView" />
+		<result column="BOARD_DATE" property="boardDate" />
+		<result column="ORIGIN_NAME" property="originName" />
+		
+		<result column="BOARD_COTENT" property="boardContent" />
+		<result column="CHANGE_NAME" property="changeName" />
+	</resultMap>
+	
+		<!-- 게시글 총 갯수 구하는 쿼리문 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM BOARD
+		 WHERE STATUS = 'Y'
+	</select>
+	
+	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+		<select id="selectList" resultMap="boardResultSet">
+
+		    SELECT 
+		        B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_COTENT,
+		        B.BOARD_VIEW,
+		        B.BOARD_DATE,
+		        B.STATUS,
+		        B.MEMBER_ID,
+		        BA.ORIGIN_NAME,
+		        BA.CHANGE_NAME
+		    FROM BOARD B
+		    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+		    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+		    WHERE B.STATUS = 'Y'
+		    ORDER BY B.BOARD_NO DESC
+
+		</select>
+		
+			<!-- 베스트 게시글 리스트를 구해주는 쿼리문 -->
+		<select id="selectbList" resultMap="boardResultSet">
+
+			    SELECT *
+				FROM (
+			    SELECT
+			        B.BOARD_NO,
+			        B.BOARD_TITLE,
+			        B.BOARD_COTENT,
+			        B.BOARD_VIEW,
+			        B.BOARD_DATE,
+			        B.STATUS,
+			        B.MEMBER_ID,
+			        BA.ORIGIN_NAME,
+			        BA.CHANGE_NAME,
+			        ROWNUM AS RN
+			    FROM BOARD B
+			    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+			    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+			    WHERE B.STATUS = 'Y'
+			    ORDER BY BOARD_VIEW DESC
+			)
+			WHERE RN BETWEEN 1 AND 6
+	
+		</select>
+		
+		
+		
+	
+		<!-- 게시글 작성용 쿼리문 -->
+	<insert id="insertBoard" parameterType="board">
+		INSERT INTO BOARD (BOARD_NO, 
+		                   BOARD_TITLE, 
+		                   BOARD_COTENT, 
+		                   BOARD_VIEW, 
+		                   BOARD_DATE, 
+		                   STATUS,
+		                   MEMBER_ID)
+				   VALUES(SEQ_BNO.NEXTVAL
+				   		, #{boardTitle}
+				   		, #{boardContent})
+				   		, #{boardView}
+				   		, DEFAULT
+				   		, DEFAULT
+				   		, #{memberId}
+	</insert>
+	
+		<insert id="battachment" parameterType="battachment">
+					INSERT INTO BATTACHMENT (BAT_NO, 
+					                        ORIGIN_NAME, 
+					                        CHANGE_NAME, 
+					                        CREATE_DATE, 
+					                        FILE_STATUS, 
+					                        BOARD_NO)
+					VALUES (SEQ_BAT_NO.NEXTVAL, 
+					        #{originName}, 
+					        #{changeName},
+					        DEFAULT, 
+					        DEFAULT, 
+					        #{boardNo})
+		</insert>
+		
+	<select id="selectBoard" parameterType="_int" resultMap="boardResultSet">
+			SELECT 
+		        B.BOARD_NO,
+		        B.BOARD_TITLE,
+		        B.BOARD_COTENT,
+		        B.BOARD_VIEW,
+		        B.BOARD_DATE,
+		        B.STATUS,
+		        B.MEMBER_ID,
+		        BA.ORIGIN_NAME,
+		        BA.CHANGE_NAME
+		    FROM BOARD B
+		    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+		    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+		    WHERE B.BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="increaseCount" parameterType="_int">
+		UPDATE BOARD
+		   SET BOARD_VIEW = BOARD_VIEW + 1
+		 WHERE BOARD_NO = #{boardNo}
+		   AND STATUS = 'Y'
+	</update>
+	
+	<update id="deleteBoard" parameterType="_int">
+		UPDATE BOARD
+		   SET STATUS = 'N'
+		 WHERE BOARD_NO = #{boardNo}
+	</update>
+	
+	
+  
+  
+</mapper>

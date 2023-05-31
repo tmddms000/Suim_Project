@@ -16,12 +16,12 @@
                             <h2 class="text-white mb-4" id="text" style="font-size : 24px">내가 잘 지낼 수 있을까..?</h2>
                             <div class="search-box">
                                 <!-- 지도 검색 부분 (홍재님) -->
-                                <form>
-                                    <input type="text" placeholder="지역명, 주변명 입력">
-                                    <button type="submit">
-                                        <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                                    </button>
-                                </form>
+                                <form method="get" action="list.ho">
+                                <input type="text" name="searchKeyword" placeholder="지역명, 주변명 입력">
+                                <button type="submit">
+                                    <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
+                                </button>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -32,8 +32,7 @@
                 <source src="/resources/video/city.mp4" type="video/mp4">
             </video>
         </div>
-
-
+	<a href="/notice/faqList.html">링크</a>
 
         <!-- 캐러셀(슬라이드쇼) -->
         <section class="bg-light text-center" id="about">

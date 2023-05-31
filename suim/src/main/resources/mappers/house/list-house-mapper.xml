@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="listHouseMapper">
+  	
+  	<resultMap id="houseResultMap" type="house">
+		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="HOUSE_NAME" property="houseName"/>
+		<result column="HOUSE_ADDRESS" property="houseAddress"/>
+		<result column="DEPOSIT" property="deposit"/>
+		<result column="RENT" property="rent"/>
+		<result column="ENTER_DATE" property="enterDate"/>
+		<result column="MIN_STAY" property="minStay"/>
+		<result column="MAX_STAY" property="maxStay"/>
+		<result column="ROOM_PEOPLE" property="roomPeople"/>
+		<result column="INC_FURNITURE" property="incFurniture"/>
+		<result column="HOUSE_CONTENT" property="houseContent"/>
+		<result column="RES_GENDER" property="resGender"/>
+		<result column="RES_TYPE" property="resType"/>
+		<result column="FLOOR" property="floor"/>
+		<result column="HOUSE_STATUS" property="houseStatus"/>
+		<result column="HOUSE_DATE" property="houseDate"/>
+		<result column="MEMBER_ID" property="memberId"/>
+	</resultMap>
+	
+	<resultMap id="regionResultMap" type="com.suim.house.model.vo.Region">
+		<result column="LATITUDE" property="latitude"/>
+		<result column="LONGITUDE" property="longitude"/>
+	</resultMap>
+	
+	
+	<select id="selectList" resultMap="houseResultMap">
+		SELECT *
+		 FROM HOUSE
+		 ORDER BY HOUSE_NO DESC
+	</select>
+	
+	<select id="regionSelectList" resultMap="regionResultMap">
+		SELECT LATITUDE,
+				LONGITUDE
+		FROM REGION
+		WHERE REGION_NAME LIKE '%' || #{searchKeyword} || '%' AND ROWNUM = 1
+
+		
+	</select>
+</mapper>

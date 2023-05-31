@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="noticeMapper">
+
+	<!-- NOTICE 테이블로부터 조회된 ResultSet 을 NOTICE 객체로 가공해주는 resultMap 만듬 -->
+	<!-- type="NOTICE" 는 Notice타입으로 가공할 껀데? 라는 의미이고 이걸 typeAliases 에서 지정한 별칭인 notice 로 씀 -->
+	<!-- resultMap의 id 복사해서 밑에 붙여넣기 -->
+	<resultMap id="noticeResultSet" type="notice">
+		<result column="NOTICE_NO" property="noticeNo" />
+		<result column="NOTICE_TITLE" property="noticeTitle" />
+		<result column="NOTICE_CONTENT" property="noticeContent" />
+		<result column="NOTICE_DATE" property="noticeDate" />
+		<result column="NOTICE_VIEW" property="noticeView" />
+		<result column="NOTICE_STATUS" property="noticeStatus" />
+	</resultMap>
+	
+
+	<!-- 게시글 총 갯수 구하는 쿼리문 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM NOTICE
+		 WHERE NOTICE_STATUS = 'Y'
+	</select>
+	
+	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+		<!-- 참고 : 구간별로 끊는 건 RowBounds 가 알아서 해줌 -->
+		<!-- 작성일은 DB에는 DATE타입이지만 VO에는 STRING 타입이므로 TO_CHAR형식을 씀 -->
+		<!-- CREATE_DATE 로 별칭 부여 -->
+	<select id="selectList" resultMap="noticeResultSet">
+		SELECT NOTICE_NO
+			 , NOTICE_TITLE
+			 , NOTICE_CONTENT
+			 , NOTICE_DATE
+			 , NOTICE_VIEW
+			 , NOTICE_STATUS
+		  FROM NOTICE
+		 WHERE NOTICE_STATUS = 'Y'
+		 ORDER BY NOTICE_NO DESC
+	</select>
+
+	
+	<!-- 공지사항 상세조회용 쿼리문 -->
+	<select id="selectNotice" parameterType="_int" resultMap="noticeResultSet">
+		SELECT NOTICE_NO
+			 , NOTICE_TITLE
+			 , NOTICE_CONTENT
+			 , NOTICE_DATE
+			 , NOTICE_VIEW
+			 , NOTICE_STATUS
+		  FROM NOTICE
+		 WHERE NOTICE_NO = {#noticeNo}
+	</select>
+	
+	
+	
+	
+	
+</mapper>
