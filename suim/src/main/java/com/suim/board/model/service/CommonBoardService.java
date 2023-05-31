@@ -4,5 +4,4 @@ import com.suim.board.model.vo.Board;
 
 public interface CommonBoardService {
 
-	Board insertBoard(Board b);
 }

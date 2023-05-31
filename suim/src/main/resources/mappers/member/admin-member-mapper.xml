@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminMemberMapper">
+
+	<!-- MEMBER 테이블로부터 조회된 ResultSet 에 들은 데이터를 Member VO 로 가공해주는 용도 -->
+	<resultMap id="adminMemberResultSet" type="member">
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="MEMBER_PWD" property="memberPwd" />
+		<result column="MEMBER_NAME" property="memberName" />
+		<result column="NICKNAME" property="nickName" />
+		<result column="PHONE" property="phone" />
+		<result column="EMAIL" property="email" />
+		<result column="GENDER" property="gender" />
+		<result column="AREA" property="area" />
+		<result column="BIRTH" property="birth" />
+		<result column="ENROLL_DATE" property="enrollDate" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+		<result column="LOGIN_DATE" property="loginDate" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+
+	<!-- 총 갯수 구하는 쿼리문 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+	</select>
+	
+	<!-- 리스트를 구해주는 쿼리문 -->
+	<select id="selectList" resultMap="adminMemberResultSet">
+		SELECT MEMBER_ID
+			 , MEMBER_NAME
+			 , NICKNAME
+			 , PHONE
+			 , EMAIL
+			 , GENDER
+			 , AREA
+			 , BIRTH
+			 , ENROLL_DATE
+			 , LOGIN_DATE
+			 , STATUS
+		  FROM MEMBER
+		 ORDER BY ENROLL_DATE DESC
+	</select>
+	
+	<!-- 블랙리스트 처리용 쿼리문 -->
+	<select id="selectBlackList">
+		SELECT MEMBER_ID
+		  FROM REPORT
+	</select>
+	
+	<!-- 등록용 쿼리문 -->
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER(MEMBER_ID
+						, MEMBER_TITLE
+						, MEMBER_WRITER
+						, MEMBER_CONTENT
+						, ORIGIN_NAME
+						, CHANGE_NAME)
+				   VALUES(SEQ_BNO.NEXTVAL
+				   		, #{boardTitle}
+				   		, #{boardWriter}
+				   		, #{boardContent}
+				   		, #{originName}
+				   		, #{changeName})
+	</insert>
+	
+	<!-- 회원 상세 조회용 쿼리문 -->
+	<select id="selectMember" parameterType="string" resultMap="adminMemberResultSet">
+		SELECT MEMBER_ID
+			 , MEMBER_NAME
+			 , NICKNAME
+			 , PHONE
+			 , EMAIL
+			 , GENDER
+			 , AREA
+			 , BIRTH
+			 , ENROLL_DATE
+			 , LOGIN_DATE
+			 , CHANGE_NAME
+			 , STATUS
+		  FROM MEMBER
+		 WHERE MEMBER_ID = #{memberId}
+	</select>
+
+	<!-- 게시글 삭제용 쿼리문 -->
+	<update id="deleteMember" parameterType="_int">
+		UPDATE MEMBER
+		   SET STATUS = 'N'
+		 WHERE MEMBER_ID = #{memberId}
+	</update>
+	
+	<!-- 게시글 수정용 쿼리문 -->
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER
+		   SET MEMBER_TITLE = #{boardTitle}
+		     , MEMBER_CONTENT = #{boardContent}
+		     , ORIGIN_NAME = #{originName}
+		     , CHANGE_NAME = #{changeName}
+		 WHERE MEMBER_ID = #{memberId}
+	</update>
+	
+	<!-- 조회수 top5 게시글 조회용 쿼리문 -->
+	<select id="selectTopMemberList" resultMap="adminMemberResultSet">
+		SELECT ROWNUM, B.*
+		FROM (SELECT MEMBER_ID
+		           , MEMBER_TITLE
+		           , MEMBER_WRITER
+		           , COUNT
+		           , TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS "CREATE_DATE"
+		           , ORIGIN_NAME
+		        FROM MEMBER
+		       WHERE STATUS = 'Y'
+		       ORDER BY COUNT DESC) B
+		WHERE ROWNUM BETWEEN 1 AND 5
+	</select>
+
+</mapper>

@@ -29,7 +29,7 @@
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">커뮤니티</a>
 	                            <ul>
-	                                <li><a href="">자유게시판</a></li>
+	                                <li><a href="list.bo">자유게시판</a></li>
 	                                <li><a href="">입주후기</a></li>
 	                                <li><a href="">사람구해요</a></li>
 	                            </ul>

@@ -1,10 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 		<link rel="icon" type="image/x-icon" href="/resources/img/common/favicon.png" />
+		<script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- 부트스트랩 -->
         <link href="/resources/css/common/styles.css" rel="stylesheet" />
-        <!-- 폰트어썸 icon -->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <!-- reset.css  -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
         <!-- 부트스트랩 자바스크립트 -->
