@@ -40,11 +40,11 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-	@GetMapping("/login")
-	public String loginForm() {
-		return "member/login";
-
-	}
+//	@GetMapping("/login")
+//	public String loginForm() {
+//		return "member/login";
+//
+//	}
 
 	@PostMapping("/login")
 	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv, HttpServletResponse response) {
