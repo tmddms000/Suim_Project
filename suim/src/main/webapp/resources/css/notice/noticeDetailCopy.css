@@ -1,0 +1,94 @@
+/* 아래의 css 는 하나라도 건드리면 영역이 깨지므로 건들지 말 것 */
+
+#noticeDiv {
+    display : block;
+    text-align: center;
+}
+
+#noticeBold {
+    color: #d63384;
+    font-size : 20px;
+    font-weight: bold;
+}
+
+#noticeDetailTable {
+    
+    border-top: 1px solid green;
+    border-bottom: 1px solid green;
+}
+
+/* 공지사항 검색 영역 */
+.search-box {
+    padding-right: 0px;
+    float : right;
+}
+
+/* 공지사항 웹페이지의 공지사항 목록 번호 */
+#noticeNo {
+    
+    color: aqua;
+    border-style: solid;
+    
+    
+}
+
+.title {
+    color : green;
+    font-weight: bold;
+   width: 60%;
+    text-align: center;
+    margin-top: 10%;
+    
+}
+
+/* 엔터키를 누르고 작성했던 것들에 줄바꾸기 효과를 주고, 글자 굵기는 보통으로 함 */
+.noticeContent {
+    
+    font-weight: normal;
+    border: none;
+    width: 100%;
+    
+}
+table {
+	width: 100%;
+}
+.createDate {
+    width: 20%;
+    border:1px solid black;
+}
+
+/* 공지사항 검색용 css => 우측에 검색영역이 떠야 함 */
+#nListSearch {
+    float:right;
+}
+
+
+/* 공지사항리스트페이지의 제목과 작성일에 초록색 테두리를 줌으로써 구분감을 주면서 강조함 */
+#noticeDetailTable> .createDate {
+    border-bottom-color: green;
+}
+
+/* 공지사항 상세테이블의 theader 안의 것들 */
+.contentHeader {
+    border-bottom-color: #d63384;
+    height: 20%;
+    font-weight: bold;
+    border-bottom: 2px solid blue;
+}
+
+/* 그냥 영역용css(공지사항 상세내용 영역을 가운데 두기 위한 목적이므로 지우면 안 됨) */
+.onlyForArea {
+    display: none;
+}
+
+/* 해당 영역 안에서 글자를 위아래로 가운데 정렬 */
+tr.table-header td {
+    vertical-align: middle;
+  }
+
+/* 조회수 */
+.page_views {
+    text-align: center;
+    flex-direction: row;
+    width : 10%;
+}
