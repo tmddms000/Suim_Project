@@ -40,11 +40,11 @@ public class MemberController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
-//	@GetMapping("/login")
-//	public String loginForm() {
-//		return "member/login";
-//
-//	}
+	@GetMapping("/login")
+	public String loginForm() {
+		return "member/login";
+
+	}
 
 	@PostMapping("/login")
 	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv, HttpServletResponse response) {
@@ -144,7 +144,6 @@ public class MemberController {
 			String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
 			member.setNickName(nickName);
 			member.setMemberPwd(encPwd);
-			System.out.println(member);
 
 			int result = memberService.insertMember(member);
 

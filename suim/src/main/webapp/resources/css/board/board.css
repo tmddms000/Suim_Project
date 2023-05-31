@@ -1,0 +1,228 @@
+#freeboard tr:hover td {
+  color: rgb(250, 107, 111);
+  cursor: pointer;
+}    
+#bestboard tr:hover td {
+cursor: pointer;
+color:  rgb(250,107,111);
+font-size: large;
+
+
+}
+
+
+#bestboardList td {
+  font-size: x-large;
+}
+.btn-secondary.hovered {
+transform: scale(0.8);
+animation: shake 0.5s ease-in-out infinite;
+}
+.btn-secondary2.hovered {
+  transform: scale(0.8);
+  animation: shake 0.5s ease-in-out infinite;
+  }
+
+
+@keyframes shake {
+0% { transform: translateX(0); }
+25% { transform: translateX(-5px) rotate(-5deg); }
+75% { transform: translateX(5px) rotate(5deg); }
+100% { transform: translateX(0); }
+}
+@font-face {
+  font-family: 'maplestory';
+  src: url(/resources/css/fonts/maple_light.ttf) format('truetype');
+}
+body{
+  font-family: 'maplestory';
+}
+.layout-pagination {
+  text-align: center;
+}
+.layout-pagination-number {
+  font-weight: 700;
+  color: #333;
+  line-height: 34px;
+}
+
+.page_aticle .layout-pagination-first-page:first-child{
+  border-left: 1px solid #ddd;
+}
+
+.page_aticle .layout-pagination-button:first-child{
+  border-left: 0;
+}
+
+.page_aticle .layout-pagination a{
+  cursor: pointer;
+}
+
+.page_aticle .layout-pagination a, .page_aticle .layout-pagination strong{
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.layout-pagination-button:first-child{
+  border-left: 1px solid #ddd;
+}
+
+.page_aticle button, .page_aticle input, .page_aticle select, .page_aticle * {
+  font-family: noto sans;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.layout-pagination-first-page {
+  background-image: url(https://res.kurly.com/pc/etc/old/images/common/icon-pagination-first.png);
+}
+
+.layout-pagination-first-page, .layout-pagination-prev-page, .layout-pagination-next-page, .layout-pagination-last-page {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  text-indent: -9999px;
+}
+
+.layout-pagination-button {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ddd;
+  border-left: 0;
+  vertical-align: top;
+}
+
+
+.layout-pagination-prev-page {
+  background-image: url(https://res.kurly.com/pc/etc/old/images/common/icon-pagination-prev.png);
+}
+
+.layout-pagination-number:hover, .layout-pagination-number.__active {
+  background-color: #f7f7f7;
+  color: rgb(250, 107, 111);
+  cursor: pointer;
+}
+
+
+.layout-pagination-next-page {
+  background-image: url(https://res.kurly.com/pc/etc/old/images/common/icon-pagination-next.png);
+}
+
+
+.layout-pagination-last-page {
+  background-image: url(https://res.kurly.com/pc/etc/old/images/common/icon-pagination-last.png);
+}
+
+
+
+.layout-pagination .pagediv span strong{
+  width: 33px;
+  height: 32px;
+}
+
+.content {
+  width:80%;
+  margin:auto;
+}
+.innerOuter { 
+  width:100%;
+  margin:auto;
+  padding:5% 10%;
+  background-color:white;
+}
+
+#enrollForm>table {width:100%;}
+#enrollForm>table * {margin:5px;}
+
+.tab-content{
+  width:80%;
+  margin:auto;
+}
+.gnb_search {
+  position: relative;
+  display: inline-block;
+}
+
+.inp_search {
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn_search {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 5px;
+  border: none;
+  background: none;
+}
+
+.btn_delete {
+  background-color: #ffcccc;
+  border: none;
+  color: #333;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn_delete:hover {
+  background-color: #ff9999;
+  cursor: pointer;
+}
+
+.gnb_search .init .btn_delete {
+  display: flex;
+  position: absolute;
+  overflow: hidden;
+  left: 148px;
+  top: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: url(https://res.kurly.com/pc/ico/2010/ico_search_del.svg) no-repeat 50% 50%;
+  background-size: 12px 12px;
+  font-size: 0;
+  line-height: 0;
+  /* opacity: 0; */
+}
+
+.search-find {
+  position: fixed;
+  top: 240px;
+  left: 0;
+  width: 270px;
+  background-color: #fff;
+  margin-left: 295px;
+}
+
+.search-find form {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 10px 20px;
+}
+
+.search-find input[type="text"] {
+  border: none;
+  background: none;
+  outline: none;
+  margin-right: 10px;
+}
+
+.search-find button[type="submit"] {
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #777;
+}
+
+

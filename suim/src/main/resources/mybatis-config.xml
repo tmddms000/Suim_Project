@@ -7,17 +7,25 @@
 	</settings>
 	
 	<typeAliases>
+
 	<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
 	<typeAlias type="com.suim.house.model.vo.House" alias="house" />
-	<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
+	<typeAlias type="com.suim.house.model.vo.Wish" alias="wish" />
+
+		<typeAlias type="com.suim.board.model.vo.Board" alias="board" />
+		<typeAlias type="com.suim.board.model.vo.Battachment" alias="battachment" />
+
+		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
 	</typeAliases>
 	    
 	    
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
+	    	<mapper resource="/mappers/board/board-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
 	    	<mapper resource="/mappers/house/list-house-mapper.xml" />
-	    	<mapper resource="/mappers/notice/notice-mapper.xml" />
+	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
+	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    </mappers>
 	    
 </configuration>
