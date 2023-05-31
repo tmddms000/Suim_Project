@@ -28,6 +28,16 @@ public class NoticeServiceImpl implements NoticeService {
 	public ArrayList<Notice> selectList(PageInfo pi) {
 		return noticeDao.selectList(sqlSession, pi);
 	}
+
+	@Override
+	public int increaseCount(int noticeNo) {
+		return noticeDao.increseCount(sqlSession, noticeNo);
+	}
+
+	@Override
+	public Notice selectBoard(int noticeNo) {
+		return noticeDao.selectBoard(sqlSession, noticeNo);
+	}
 	
 
 }

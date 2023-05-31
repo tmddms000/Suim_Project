@@ -19,7 +19,7 @@ public class NoticeDao {
 	}
 												// 마이바티스의 SqlSession 과 같은 역할을 하는 스프링 전용 sqlSession이다.
 	
-	/* notice 전용 공지사항 목록 조회 이지환 */
+	/* notice 게시글 목록 조회 이지환 */
 	public ArrayList<Notice> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); 
@@ -34,11 +34,14 @@ public class NoticeDao {
 									// selectList("namespace", 해당 쿼리문의 id", xx, rouwBounds);
 	}
 	
-	///////////////////////////
 	/* 게시판 상세조회 이지환 */
-	
 	public Notice selectBoard(SqlSessionTemplate sqlSession, int noticeNo) {
-		return sqlSession.selectOne("noticeMapper.selectList", noticeNo);
+		return sqlSession.selectOne("noticeMapper.selectBoard", noticeNo);
+	}
+
+	/* 공지사항 게시글 상세조회 시 해당 공지사항 게시글 증가 */
+	public int increseCount(SqlSessionTemplate sqlSession, int noticeNo) {
+		return sqlSession.update("noticeMapper.increaseCount", noticeNo);
 	}
 	
 	
