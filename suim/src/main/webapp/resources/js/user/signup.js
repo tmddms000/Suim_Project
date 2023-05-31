@@ -1,34 +1,5 @@
-    const errMsg = {
-    	    id: { 
-    	        invalid: "6~20자의 영문 소문자와 숫자만 사용 가능합니다",
-    	        success: "사용 가능한 아이디입니다",
-    	        fail: "사용할 수 없는 아이디입니다"
-    	    },
-    	    pw: "8~20자의 영문, 숫자, 특수문자를 모두 포함한 비밀번호를 입력해주세요",
-    	    pwRe: {
-    	        success: "비밀번호가 일치합니다",
-    	        fail: "비밀번호가 일치하지 않습니다",
-    	        check: "비밀번호를 다시 확인해주세요"
-    	    },
-    	    name : {
-    	        success : "사용 가능한 이름입니다",
-    	        fail : "이름을 다시 확인해주세요",
-    	    },
-
-    	    email : {
-    	        success : "사용 가능한 이메일입니다",
-    	        fail : "이메일을 다시 확인해주세요",
-    	    },
-
-    	    phone : {
-    	        success : "사용 가능한 휴대폰번호입니다",
-    	        fail : "휴대폰번호를 다시 확인해주세요",
-    	    },
-    	    birth: "생년월일을 다시 확인해주세요",
-    	    mobile: "‘-’ 제외 11자리를 입력해주세요"
-    	    };
-
-    	    function validate() {
+  
+   	    function validate() {
 
     	        //아이디 유효성 검사
     	        const idInputEl = document.querySelector('#id');
@@ -123,139 +94,74 @@
     	        };
 
     	        
-    	        toastr.success("회원가입이 완료되었습니다.");
     	        return true;
     	    };
+    	    
+		    //비밀번호 유효성 검사
+		    let pwVal = "", pwReVal = "", isPwValid = false
+		    const pwInputEl = document.querySelector('#password')
+		    const pwErrorMsgEl = document.querySelector('#info_pw')
+		    pwInputEl.addEventListener('change', () => {
+		    const pwRegExp = /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/
+		    pwVal = pwInputEl.value
+		    if(pwRegExp.test(pwVal)) { // 정규식 조건 만족 O
+		        isPwValid = true
+		        pwErrorMsgEl.textContent = ""
+		    } 
+		    else { // 정규식 조건 만족 X
+		        isPwValid = false
+		        pwErrorMsgEl.textContent = errMsg.pw;
+		    }
+		    checkPwValid();
+		    });
+		
+		    // 비밀번호 체크 섹션
+		    const pwReInputEl = document.querySelector('#password-check')
+		    const pwReErrorMsgEl = document.querySelector('#info_pw_check')
+		    pwReInputEl.addEventListener('change', () => {
+		    pwReVal = pwReInputEl.value
+		    checkPwValid();
+		    });
+		
+		    function checkPwValid() {
+		  if(pwReVal === "") { // 미입력
+		    pwReErrorMsgEl.textContent = ""
+		  }
+		  else if(pwVal === pwReVal) { // 비밀번호 재입력 일치
+		    if(isPwValid) {
+		    pwReErrorMsgEl.style.color = 'rgb(113, 197, 98)';
+		    pwReErrorMsgEl.textContent = errMsg.pwRe.success;
+		    } else {
+		    pwReErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
+		    pwReErrorMsgEl.textContent = errMsg.pwRe.check;
+		    }
+		    
+		  } 
+		  else { // 비밀번호 재입력 불일치
+		    pwReErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
+		    pwReErrorMsgEl.textContent = errMsg.pwRe.fail
+		  }
+		}
+		    // 이름 유효성 검사
+		    const nameInputEl = document.querySelector('#name');
+		    const nameErrorMsgEl = document.querySelector('#info_name');
+		    
+		    nameInputEl.addEventListener('change', () => {
+		    //한글, 영어 이름 가능하게 
+		    const nameRegExp = /^(?:(?!.*\s{2})[가-힣]|[a-zA-Z])[\s가-힣a-zA-Z]*[가-힣a-zA-Z](?<!\s)$/;
+		    
+		
+		    if(nameRegExp.test(nameInputEl.value)) {
+		        nameErrorMsgEl.style.color = 'rgb(113, 197, 98)';
+		        nameErrorMsgEl.textContent = errMsg.name.success;
+		    } else {
+		        nameErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
+		        nameErrorMsgEl.textContent = errMsg.name.fail;
+		    }
+		
+		    });
 
     	    
-    	    // 아이디 유효성 검사
-    	    const idInputEl = document.querySelector('#id');
-    	    const idErrorMsgEl = document.querySelector('#info_id');
-    	    idInputEl.addEventListener('change', () => {
-    	    const idRegExp = /^[a-zA-Z0-9]{6,20}$/; // 6 to 20 lowercase letters and numbers
-    	    if (idRegExp.test(idInputEl.value)) { // Validation succeeded
-    	        idErrorMsgEl.style.color = 'rgb(113, 197, 98)';
-    	        idErrorMsgEl.textContent = errMsg.id.success;
-    	    } else { // Validation failed
-    	        idErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	        idErrorMsgEl.textContent = errMsg.id.invalid;
-    	    }
-    	    });
-
-    	    //비밀번호 유효성 검사
-    	    let pwVal = "", pwReVal = "", isPwValid = false
-    	    const pwInputEl = document.querySelector('#password')
-    	    const pwErrorMsgEl = document.querySelector('#info_pw')
-    	    pwInputEl.addEventListener('change', () => {
-    	    const pwRegExp = /^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/
-    	    pwVal = pwInputEl.value
-    	    if(pwRegExp.test(pwVal)) { // 정규식 조건 만족 O
-    	        isPwValid = true
-    	        pwErrorMsgEl.textContent = ""
-    	    } 
-    	    else { // 정규식 조건 만족 X
-    	        isPwValid = false
-    	        pwErrorMsgEl.textContent = errMsg.pw;
-    	    }
-    	    checkPwValid();
-    	    });
-
-    	    // 비밀번호 체크 섹션
-    	    const pwReInputEl = document.querySelector('#password-check')
-    	    const pwReErrorMsgEl = document.querySelector('#info_pw_check')
-    	    pwReInputEl.addEventListener('change', () => {
-    	    pwReVal = pwReInputEl.value
-    	    checkPwValid();
-    	    });
-
-    	    function checkPwValid() {
-    	  if(pwReVal === "") { // 미입력
-    	    pwReErrorMsgEl.textContent = ""
-    	  }
-    	  else if(pwVal === pwReVal) { // 비밀번호 재입력 일치
-    	    if(isPwValid) {
-    	    pwReErrorMsgEl.style.color = 'rgb(113, 197, 98)';
-    	    pwReErrorMsgEl.textContent = errMsg.pwRe.success;
-    	    } else {
-    	    pwReErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	    pwReErrorMsgEl.textContent = errMsg.pwRe.check;
-    	    }
-    	    
-    	  } 
-    	  else { // 비밀번호 재입력 불일치
-    	    pwReErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	    pwReErrorMsgEl.textContent = errMsg.pwRe.fail
-    	  }
-    	}
-    	    // 이름 유효성 검사
-    	    const nameInputEl = document.querySelector('#name');
-    	    const nameErrorMsgEl = document.querySelector('#info_name');
-    	    
-    	    nameInputEl.addEventListener('change', () => {
-    	    //한글, 영어 이름 가능하게 
-    	    const nameRegExp = /^(?:(?!.*\s{2})[가-힣]|[a-zA-Z])[\s가-힣a-zA-Z]*[가-힣a-zA-Z](?<!\s)$/;
-    	    
-
-    	    if(nameRegExp.test(nameInputEl.value)) {
-    	        nameErrorMsgEl.style.color = 'rgb(113, 197, 98)';
-    	        nameErrorMsgEl.textContent = errMsg.name.success;
-    	    } else {
-    	        nameErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	        nameErrorMsgEl.textContent = errMsg.name.fail;
-    	    }
-
-    	    });
-
-    	    //이메일 정규식 검사
-    	    const emailInputEl = document.querySelector('#email');
-    	    const emailErrorMsgEl = document.querySelector('#info_email');
-
-    	    emailInputEl.addEventListener('change', () => {
-    	        const regEmail = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
-    	        if(regEmail.test(emailInputEl.value)) {
-    	            emailErrorMsgEl.style.color = 'rgb(113, 197, 98)';
-    	            emailErrorMsgEl.textContent = errMsg.email.success;
-    	        } else {
-    	            emailErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	            emailErrorMsgEl.textContent = errMsg.email.fail;
-    	        }
-    	    });
-
-    	    // 핸드폰 정규식 검사
-    	    const phoneInputEl = document.querySelector('#phone');
-    	    const phoneErrorMsgEl = document.querySelector('#info_phone');
-
-    	    phoneInputEl.addEventListener('change', () => {
-    	        const regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
-
-    	        //핸드폰번호가 12글자를넘어서면
-    	        if(phoneInputEl.value.length > 11) {
-    	            phoneErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	            alert("휴대폰 번호를 다시 확인해주세요");
-    	            //11글자전까지 다 지운다
-    	            phoneInputEl.value = phoneInputEl.value.slice(0,11);
-    	            phoneInputEl.focus();
-    	            //숫자 이외에 다른 문자가 들어오면
-    	        } 
-    	        
-    	        if(isNaN(phoneInputEl.value)) {
-    	            phoneErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	            alert("숫자만 입력해주세요");
-    	            phoneInputEl.value = "";
-    	            phoneInputEl.focus();
-    	        }
-
-    	        if(regPhone.test(phoneInputEl.value)) {
-    	            phoneErrorMsgEl.style.color = 'rgb(113, 197, 98)';
-    	            phoneErrorMsgEl.textContent = errMsg.phone.success;
-    	        } else {
-    	            phoneErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
-    	            phoneErrorMsgEl.textContent = errMsg.phone.fail;
-    	        }
-    	        
-    	    });
-
     	    // 주소 유효성 검사
     	    const birthYearEl = document.querySelector('#birth-year');
     	    const birthMonthEl = document.querySelector('#birth-month');
@@ -315,6 +221,7 @@
     	            if(isBirthValid) { // 유효한 날짜
     	            birthErrorMsgEl.textContent = "";
     	            } else { // 유효하지 않은 날짜
+    	            birthErrorMsgEl.style.color = 'rgba(255,0,0, 0.8)';
     	            birthErrorMsgEl.textContent = "생년월일을 다시 확인해주세요";
     	            }
     	         }

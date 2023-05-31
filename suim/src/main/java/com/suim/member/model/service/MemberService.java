@@ -38,5 +38,8 @@ public interface MemberService {
 	// 메일 중복체크 서비스
 	int emailCheck(String email);
 
+	// 번호 중복체크 서비스
+	int phoneCheck(String phone);
+
 	
 }

@@ -9,14 +9,13 @@
 	<typeAliases>
 	<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
 	<typeAlias type="com.suim.house.model.vo.House" alias="house" />
-	<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 	</typeAliases>
 	    
 	    
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
-	    	<mapper resource="/mappers/notice/notice-mapper.xml"/>
+	    	<mapper resource="/mappers/house/list-house-mapper.xml" />
 	    </mappers>
 	    
 </configuration>

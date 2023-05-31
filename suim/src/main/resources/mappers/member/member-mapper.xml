@@ -86,7 +86,11 @@
 	</select>
 	
 
-
+	<select id="phoneCheck" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE PHONE = #{phone}
+	</select>
 
 
 

@@ -7,6 +7,7 @@
 <title>로그인 페이지</title>
 <%@ include file="/WEB-INF/views/common/include.jsp" %>
 <link rel="stylesheet" href="/resources/css/user/login.css">
+<script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -20,16 +21,19 @@
                 <br>
                 <div class="text-center mb-4"><span style="font-size : 40px; font-weight : bold;">로그인</span></div>
 
-                <form action="./login" method="post">
+                <form action="./login" method="post" onsubmit="return validateForm()">
+           
                     <div class="form-group row justify-content-center">
-                        <div class="col-sm-4">
-                            <input type="text" autocomplete="on" class="form-control" id="id" name="memberId" placeholder="아이디">
+                        <div class="form-floating col-sm-4">
+                            <input type="text" autocomplete="on" class="form-control" id="floatingInput" name="memberId" placeholder="아이디">
+                            <label for="floatingInput">아이디</label>
                         </div>
                     </div>
                     
-                    <div class="form-group row justify-content-center mt-2">
-                        <div class="col-sm-4">
-                            <input type="password" autocomplete="new-password" class="form-control" id="pw" name="memberPwd" placeholder="비밀번호">
+                    <div class="form-group form-floating row justify-content-center mt-2">
+                        <div class="form-floating col-sm-4">
+                            <input type="password" autocomplete="new-password" class="form-control" id="floatingInput" name="memberPwd" placeholder="비밀번호">
+                        	<label for="floatingInput">비밀번호</label>
                         </div>
                     </div>
                
@@ -73,16 +77,38 @@
                     <div class="row justify-content-center mt-2">
                         <div class="col-sm-4">
                             <div class="text-center mt-2">
-                            <button class="image-button">
+                              <button class="image-button" onclick="location.href='${urlNaver}'">
+                            
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/KakaoTalk_logo.svg/240px-KakaoTalk_logo.svg.png" alt="Button Image">
-                                &nbsp;&nbsp;&nbsp;카카오계정으로 로그인
+                                &nbsp;&nbsp;&nbsp;네이버계정으로 로그인
                             </button>
                             </div>
                         </div>
                     </div>
+                    <br>
             </div>
         </div>
     </div>
+    
+    
+    <script>
+    function validateForm() {
+        var memberId = document.forms[0].memberId.value;
+        var memberPwd = document.forms[0].memberPwd.value;
+
+        if (memberId === "") {
+            alert("아이디를 입력해주세요.");
+            return false;
+        }
+
+        if (memberPwd === "") {
+            alert("비밀번호를 입력해주세요.");
+            return false;
+        }
+
+        return true;
+    }
+	</script>
 	
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
