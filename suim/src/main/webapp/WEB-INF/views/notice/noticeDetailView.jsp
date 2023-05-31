@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,39 +69,26 @@
                 <table id="noticeDetailTable" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td id="noticeNo" class="nListNo contentHeader" hidden>No</td>
-                            <td class="title contentHeader">
-                                <div>${n.noticeTitle}</div>
+                            <td id="noticeNo" class="nListNo contentHeader" hidden colspan="2">No</td>
+                            <td class="title contentHeader" colspan="2">
+                                <div style = "padding-left : 10% ">${n.noticeTitle}</div>
                             </td>              
                             <td class="createDate contentHeader">
                                 <div class="text-center">작성일자</div>
-                                <div>2023-05-23</div>
+                                <div><fmt:formatDate pattern="yyyy-MM-dd" value="${n.noticeDate }" /></div>
                             </td>
-                            <td class="page_views">
+                            <td class="page_views" colspan="2">
                                 <div>조회수</div>
-                                <div>조회수 26회</div>
+                                <div>${ n.noticeView }</div>
                             </td>
                         </tr>
                     </thead>
                     <tbody>
                         
-                        <tr style="width: 100%;">
+                        <tr style="width: 100%;" rowspan="3">
                             
                             <td class="noticeContent" style="height: 100px;">
-                                날이 좋아서 
-                                수요일이라서 
-                                그냥 그래서 
-                                피곤하다.
-                                공지사항 작성 시
-                                엔터키 누를 때마다
-                                실제 줄바꿈됨
-                                br 태그 안 써도 됨.         
-                                동해물과 백두산이 폭발하게 생겼네. 한화에어로스페이스 주식 저점매수했더니 m&a, 그룹지배 구조개편으로 3배 가까이 오름. 민수형님이 얘기하신 제라드의 we go norich                          
-
-d
-
-                                d
-                                d
+                               ${ n.noticeContent }
                             </td>
                             
                         </tr>
