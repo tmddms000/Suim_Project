@@ -144,7 +144,6 @@ public class MemberController {
 			String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
 			member.setNickName(nickName);
 			member.setMemberPwd(encPwd);
-			System.out.println(member);
 
 			int result = memberService.insertMember(member);
 
