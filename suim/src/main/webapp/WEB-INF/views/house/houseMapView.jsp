@@ -262,8 +262,7 @@
 		                    cardDiv.id = '${m.houseNo}';
 		                    
 		                    var cardLink = document.createElement('a');
-		                    var hno = ${m.houseNo};
-		                    cardLink.href = 'detail.ho?hno=' + hno;
+		                    cardLink.href = '';
 		                    cardLink.className = '';
 		                    
 		                    var card = document.createElement('div');
