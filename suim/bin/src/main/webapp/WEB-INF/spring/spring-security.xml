@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.5.xsd">
+
+
+
+	<!-- 
+		* NEW - Spring Bean Configuration File 로
+		내 입맛에 맞는 bean 등록용 xml 파일로 만들 수 있다.
+		=> 항상 내가 만든 xml 파일은 서버 구동시 함께 읽혀질 수 있게끔 web.xml에
+		해당 파일을 읽을 수 있게끔 작성해야함
+	 -->
+	 
+	 <bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" 
+	 				id="bcryptPasswordEncoder"/>
+	<!--
+		내부적으로 해당 이 객체가 필요할 때 마다
+		BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
+	  -->
+</beans>

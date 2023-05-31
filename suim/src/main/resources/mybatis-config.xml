@@ -15,6 +15,7 @@
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
+	    	<mapper resource="/mappers/house/list-house-mapper.xml" />
 	    </mappers>
 	    
 </configuration>
