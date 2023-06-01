@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,7 +39,7 @@ public class NoticeController {
 		  .addObject("list", list)
 		  .setViewName("notice/notice");
 		System.out.println("리스트는 " + list);
-		System.out.println(mv); 
+		System.out.println(mv);
 		System.out.println("11");
 		return mv;
 	}

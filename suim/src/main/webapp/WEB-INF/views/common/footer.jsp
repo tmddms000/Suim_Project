@@ -4,6 +4,7 @@
         <footer class="footer">
             <div class="container">
               <div class="row">
+                <div class="col-md-1"></div>
                     <div class="col-md-8">
                         <div class="col-md-12 footer-menu">
                             <img src="/resources/img/common/sim4.png" style="width : 30%"/>
@@ -19,7 +20,7 @@
                             상담 가능시간 : 평일 10:00 ~ 18:00 (점심시간 12:30~13:30)
                         </div>
                     </div>
-					<div class="col-md-2"></div>
+
                     <div class="col-md-2">
                         <div style="margin-left:20px;">
                             <a href="#" style="border : 1px solid white; text-decoration : none; color : white; padding: 1;">쉼 가입하기</a>

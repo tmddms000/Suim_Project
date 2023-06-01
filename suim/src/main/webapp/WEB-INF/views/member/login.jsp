@@ -21,7 +21,7 @@
                 <br>
                 <div class="text-center mb-4"><span style="font-size : 40px; font-weight : bold;">로그인</span></div>
 
-                <form action="./doLogin" method="post" onsubmit="return validateForm()">
+                <form action="./login" method="post" onsubmit="return validateForm()">
            
                     <div class="form-group row justify-content-center">
                         <div class="form-floating col-sm-4">
