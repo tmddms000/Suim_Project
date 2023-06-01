@@ -30,14 +30,29 @@
 			 , REPORT_DATE
 			 , REPORT_STATUS
 		  FROM REPORT
-		 ORDER BY REPORT_NO DESC
+         ORDER BY REPORT_DATE DESC
+	</select>
+	
+	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
+	<select id="selectCategoryList" parameterType="string" resultMap="adminReportResultSet">
+		SELECT REPORT_NO
+			 , REPORT_TITLE
+			 , REPORT_CONTENT
+			 , REPORT_TYPE
+			 , REPORT_ID
+			 , REPORT_DATE
+			 , REPORT_STATUS
+		  FROM REPORT
+         WHERE REPORT_STATUS = #{category}         
+         ORDER BY REPORT_DATE DESC
+         
 	</select>
 	
 	<!-- 블랙리스트 처리용 쿼리문 -->
 	<select id="selectBlackList">
 		SELECT MEMBER_ID, COUNT(*)
 		  FROM REPORT
-		 WHERE MEMBER_ID = 'admin'
+		 WHERE MEMBER_ID = #{memberId}
 		 GROUP BY MEMBER_ID
 		HAVING REPORT_COUNT(*) >= 3
 	</select>
