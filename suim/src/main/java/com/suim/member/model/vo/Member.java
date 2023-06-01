@@ -30,4 +30,5 @@ public class Member {
 	private String status;
 	
 	private String memberComment;
+	private String naverLogin;
 }
