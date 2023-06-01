@@ -68,4 +68,12 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.setNaverConnection", apiJson);
 	}
 
+	public Member userNaverLoginPro(SqlSessionTemplate sqlSession, Map<String, Object> apiJson) {
+		return sqlSession.selectOne("memberMapper.userNaverLoginPro", apiJson);
+	}
+
+	public int insertApiMember(SqlSessionTemplate sqlSession, Member member) {
+		return sqlSession.insert("memberMapper.insertApiMember", member);
+	}
+
 }

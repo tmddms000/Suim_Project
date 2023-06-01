@@ -28,4 +28,6 @@ public class Member {
 	private Date loginDate;
 	private String changeName;
 	private String status;
+	
+	private String memberComment;
 }
