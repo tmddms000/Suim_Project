@@ -668,6 +668,33 @@ select.form-control:not([size]):not([multiple]) {
   color: white;
 }
 
+.input_block .input_form {
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.input_block input {
+    border: none;
+    box-shadow: none;
+    padding: 12px 16px;
+    width: 100%;
+    line-height: 1.2;
+}
+
+.form-group {
+margin-bottom : 25px;
+}
+
+.input_block label.mini-tit {
+	
+	font-weight: normal;
+    font-size: 12px;
+    color: #212121;
+}
+
 
 
 </style>
@@ -699,12 +726,12 @@ select.form-control:not([size]):not([multiple]) {
 									<h4 class="m-t-10 m-b-5">${ loginUser.nickName }</h4>
 									<p class="m-b-10">${ loginUser.memberComment }</p>
 									
-									<button style="margin-bottom : 18.3px;">편집하기</button>
+									<button type="button" data-bs-toggle="modal" data-bs-target="#myModal" style="color : white; height : 40px; background : transparent;">편집하기</button>
 									</c:when>
 									<c:otherwise>
 									<h4 class="m-t-10 m-b-5">손님</h4>
 									<p class="m-b-10">로그인 후 이용가능합니다.</p>
-									<button style="margin-bottom : 18.3px;">로그인</button>
+									<button style="color : white; height : 40px; background : transparent;">로그인</button>
 									</c:otherwise>
 									</c:choose>
 									
@@ -748,58 +775,112 @@ select.form-control:not([size]):not([multiple]) {
 	</div>
 	
 	
-	<script>
-	var nameElement = document.querySelector('.profile-header-info h4');
-	var descriptionElement = document.querySelector('.profile-header-info p');
+	
+	
+	
+	<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel" style="margin-left : 150px">정보 수정</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="text-align : left">
+        <div id="fileupload_profile_img2" class="fileupload_profile_img">
+					<div id="profile_img2" class="profile"></div>
+					<span class="over"><i class="fa-solid fa-camera"
+						style="color: #f2f2f2; margin-top: 7px;"></i></span>
+					<div id="drop_profile_img2" class="drop_profile_img">
+						<input title="프로필 업로드" type="file" name="file"
+							style="width: 100%; height: 100%; cursor: pointer;"
+							accept="image/jpeg, image/jpg, image/png, image/gif, image/svg+xml">
+					</div>
+		</div>
+		<input class="form-control" type="text" name="name" placeholder="닉네임" value="${ loginUser.nickName }" style="width: 150px; margin: 0 auto; text-align: center;">
 
-	// 편집하기 버튼 클릭 이벤트 리스너 추가
-	var editButton = document.querySelector('.profile-header-info button');
-	editButton.addEventListener('click', function() {
-	    // 이름과 설명을 입력할 수 있는 입력 필드로 변경
-	    nameElement.innerHTML = '<input type="text" class="inputField" placeholder="입력하세요" value="' + nameElement.innerText + '">';
-	    descriptionElement.innerHTML = '<input type="text" class="inputField" placeholder="입력하세요"  style="margin-bottom:16px" value="' + descriptionElement.innerText + '">';
+				<!-- border로 800px 정도의 input태그가 들어갈수있는 공간 만들기(회원정보수정용) -->
+				<div class="input-border" style="height: 800px; width: 349px; margin: 20px auto;">
+				
+				<div class="input_block form-group">
+					<div class="input_form _item _uid">
+					<input title="이메일" type="email" name="uid" readonly="readonly" value="dunghs@naver.com" placeholder="이메일" required="required"><i aria-hidden="true" class="zmdi zmdi-check"></i>
+					<div class="alert-block _msg"></div>
+				</div>
+								<div class="input_form brt _item _passwd_org">
+						<input title="기본 비밀번호 입력" type="password" name="passwd_org" autocomplete="off" placeholder="기본 비밀번호 입력">
+						<i aria-hidden="true" class="zmdi zmdi-check"></i>
+						<div class="alert-block _msg"></div>
+					</div>
+													<div class="input_form brt _item _passwd">
+						<input title="비밀번호" type="password" name="passwd" autocomplete="off" placeholder="비밀번호를 변경 하는 경우 입력하세요">
+						<i aria-hidden="true" class="zmdi zmdi-check"></i>
+						<div class="alert-block first-letter-uppercase _msg"></div>
+					</div>
+					<div class="input_form brt _item _passwd_confirm">
+						<input title="비밀번호 확인" type="password" name="passwd_confirm" autocomplete="off" placeholder="비밀번호 확인">
+						<i aria-hidden="true" class="zmdi zmdi-check"></i>
+						<div class="alert-block _msg"></div>
+					</div>
+				</div>
+				<div class="input_block form-group">
+						<label class="mini-tit" for="join_name">이름을 입력해주세요<span style="color : red">*</span></label>
+						<div class="input_form _item _name">
+										<input title="이름을 입력하세요" type="text" id="join_name" name="name" placeholder="이름을 입력하세요" value="최명진" required="required">
+							<i aria-hidden="true" class="zmdi zmdi-check"></i>
+							<div class="alert-block _msg"></div>
+						</div>
+				</div>
+				<div class="input_block form-group">	
+					<label class="mini-tit" for="join_name">성별</label>
+					<select title="생년월일" class="form-select" id="birth_y" name="birth_y">
+						<option value="M">남자</option>
+						<option value="F">여자</option>
+					</select>
+				</div>
+				<div class="input_block form-group">
+					<label class="mini-tit" for="join_name">연락처</label>
+					<input class="input_form" type="tel" id="join_callnum" name="callnum" placeholder="연락처" value="01066814733" required="required">
+				</div>
+				
+				<div class="form-group row">
+						<label for="birth-year" class="col-sm-4 col-form-label text-end">생년월일<span
+							class="text-red">*</span></label>
+						<div class="col-sm-5 d-flex align-items-center offset-1">
+							<div class="info" id="info__birth" align="center">
+								<div style="display: inline-block">
+									<select class="form-select" id="birth-year">
+										<option disabled selected>출생 연도</option>
+									</select>
+								</div>
+								<div style="display: inline-block">
+									<select class="form-select" id="birth-month">
+										<option disabled selected>월</option>
+									</select>
+								</div>
+								<div style="display: inline-block">
+									<select class="form-select" id="birth-day">
+										<option disabled selected>일</option>
+									</select>
+								</div>
+								<div class="error-msg"></div>
+                
+								<input type="hidden" name="birthDate" id="birth-date-input" />
+							
 
-	    // 수정하기 버튼 생성
-	    var saveButton = document.createElement('button');
-	    saveButton.innerHTML = '저장하기';
-	    var brElement = document.createElement('br');
-	    descriptionElement.appendChild(brElement);
-	    descriptionElement.appendChild(saveButton);
-
-	    // 편집하기 버튼 감추기
-	    editButton.style.display = 'none';
-
-	    // 수정하기 버튼 클릭 이벤트 리스너 추가
-	    saveButton.addEventListener('click', function() {
-	        // 수정된 내용을 서버로 전송하는 Ajax 요청
-	        var newName = nameElement.querySelector('input').value;
-	        var newDescription = descriptionElement.querySelector('input').value;
-
-
-	        // 변경된 내용을 화면에 반영
-	        nameElement.innerHTML = newName;
-	        descriptionElement.innerHTML = newDescription;
-
-	        // 편집하기 버튼 다시 표시
-	        editButton.style.display = 'block';
-	    });
-	});
-
-
-	var inputFields = document.getElementsByClassName('inputField');
-
-	// 입력 필드에 포커스가 생기면 커서 깜빡임 클래스 추가
-	for (var i = 0; i < inputFields.length; i++) {
-	    inputFields[i].addEventListener('focus', function() {
-	        this.classList.add('cursor-blink');
-	    });
-
-	    // 입력 필드에서 포커스가 벗어나면 커서 깜빡임 클래스 제거
-	    inputFields[i].addEventListener('blur', function() {
-	        this.classList.remove('cursor-blink');
-	    });
-	}
-	</script>
+							</div>
+						</div>
+					</div>
+				
+			</div>
+	      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" style="width : 250px;" disabled>확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
+	
 
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
