@@ -37,8 +37,7 @@ import com.suim.member.model.vo.SignUp;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/member")
-@Slf4j
+@RequestMapping("member")
 public class AuthController {
 
 	@Autowired
