@@ -2,6 +2,7 @@ package com.suim.report.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.common.model.vo.PageInfo;
@@ -17,13 +19,14 @@ import com.suim.common.template.Pagination;
 import com.suim.report.model.service.AdminReportService;
 import com.suim.report.model.vo.Report;
 
+@RequestMapping("/admin")
 @Controller
 public class AdminReportController {
 
 	@Autowired
 	private AdminReportService adminReportService;
 	
-	
+	// 신고 리스트 조회 포워딩용
 	@RequestMapping("list.re")
 	public ModelAndView selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
@@ -46,9 +49,42 @@ public class AdminReportController {
 		return mv;
 	}
 	
+	
+	@ResponseBody
+	// 카테고리용 전체 조회용
+	@RequestMapping(value = "list.re", produces = "application/json; charset=UTF-8")
+	public HashMap<String, Object> selectList(
+			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
+			ModelAndView mv,
+			String category) {
+		
+		// 페이징처리를 위한 PageInfo 객체 얻어내기
+		int listCount = adminReportService.selectListCount();
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Report> list = new ArrayList<>();
+		
+		if(category == null || category.equals("전체")) {
+			list = adminReportService.selectList(pi);
+		} else {
+			list = adminReportService.selectList(pi, category);
+		}
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("pi", pi);
+		map.put("list", list);
+		
+		return map;
+	}
+
+	
 	@RequestMapping("detail.re")
 	public ModelAndView selectReport(ModelAndView mv,
-									@RequestParam("id") int reportNo) {
+									@RequestParam(value="rno") int reportNo) {
 			Report r = adminReportService.selectReport(reportNo);
 			
 			// 조회된 데이터를 mv 에 담아서 포워딩 페이지 경로를 잡아주기

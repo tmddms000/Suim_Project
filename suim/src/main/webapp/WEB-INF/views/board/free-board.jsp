@@ -31,14 +31,46 @@
         <script src="/resources/js/common/chatbot.js"></script>
         <!-- 나중에 한번에 include 할 부분 -->
 <style>
-	.boardTableLeft{
-		display: inline-block;
-		float: left;
-	}
-	.boardTableLeft{
-		display: inline-block;
-		float: right;	
-	}
+
+	    .bestcontainer {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+        }
+
+        .item {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        
+        .item .title:hover {
+		 color: rgb(250, 107, 111);
+		  cursor: pointer;
+		  font-size: x-large;
+		}
+		#rcount {
+		color: rgb(250, 107, 111);
+		}
+		#pagingArea {
+		  display: flex;
+		  justify-content: center;
+		}
+		
+		.pagination {
+		  display: flex;
+		  list-style: none;
+		  padding: 0;
+		  justify-content: center;
+
+		}
+		
+		.page-item {
+		  margin: 0 5px;
+
+		}
+
+
+
 </style>        
         
         
@@ -59,63 +91,27 @@
 	
 	 <div class="container" style="margin-top: 120px;">
         <h1>자유게시판</h1>
-        <br><br><br><br>
+        <br><br>
 
 
         <h2>베스트</h2>
         
 			
-							<!-- 테이블 시작 -->
-				<div class="container-fluid pt-4 px-4">
-	                <div class="row g-4">
-		                <div class="col-12">
-	                        <div class="bg-light rounded h-100 p-4">
-	                            <div class="table-responsive">
-	                            
-						<!-- 왼쪽 테이블 -->
-						<div class="col-sm-12 col-xl-6 boardTableLeft">
-						
-						<table class="table" id="bestboard">
-						    <tbody>
-						
-						            <tr>
-						              
-						                <td class="bno">${blist[i].boardNo}</td>
-						                <td>${blist[i].boardContent}</td>
-						            </tr>
-					
-						    </tbody>
-						</table>
-												
-						</div>
-					
-					<!-- 오른쪽 테이블 -->
-					<div class="col-sm-12 col-xl-6 boardTableLeft">
-					<tbody>
-					    <table class="table" id="bestboard">
-					         <tbody>
-					        <c:forEach begin="1" end="3" var="i">
-					        
-							        <tr>
-						                <th scope="col"><c:out value="${i}" /></th>
-						                <td>${blist[i-1].boardTitle}</td>
-						                <td class="bno">${blist[i].boardNo}</td>
-						            </tr>
-					            
-					        </c:forEach>
-					        	</tbody>
-					    </table>
-					  </tbody>
-					</div>
-			                        	
-	                            </div>
-	                        </div>
-	                    </div>
-                	</div>
-				</div>
-				<!-- 테이블 끝 -->
+			
+			<div class="bestcontainer">
+			  <c:forEach var="bs" items="${blist}" varStatus="status">
+			    <c:if test="${status.index < 6}">
+			      <div class="item" style ="font-size : 18px;">
+			        <span class="number" style="font-weight : bolder;">${status.index + 1}</span>&nbsp;&nbsp;
+			        <span class="title">${bs.boardTitle}  <span class= "bno" hidden>${bs.boardNo}</span> </span>
+			        <td colspan="3"><span id="rcount">(${bs.replyCount})</span></td>
+			      </div>
+			    </c:if>
+			  </c:forEach>
+			</div>
+		
 											
-          <br><br><br><br><br><br>
+          <br><br>
          
 
         
@@ -141,6 +137,7 @@
 				        <td>${b.boardDate}</td>
 				        <td>
 				            ${b.boardTitle}
+				            <span id="rcount">(${b.replyCount})</span>
 				            <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
 							<c:if test="${not empty b.boardDate and b.boardDate == today}">
 							    <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
@@ -157,37 +154,39 @@
 				</c:forEach>
 				        </tbody>
         </table>
-        <br>
+       
 
-		<div class="layout-pagination">
-			  <div class="pagediv">
-			    <a href="#main" class="layout-pagination-button layout-pagination-first-page">맨 처음 페이지로 가기</a>
-			    <a href="#main" class="layout-pagination-button layout-pagination-prev-page">이전 페이지로 가기</a>
-			
-			    <c:forEach begin="${pageInfo.startPage}" end="${pageInfo.endPage}" var="pageNumber">
-			      <c:choose>
-			        <c:when test="${pageNumber == pageInfo.currentPage}">
-			          <span>
-			            <strong class="layout-pagination-button layout-pagination-number __active">${pageNumber}</strong>
-			          </span>
-			        </c:when>
-			        <c:otherwise>
-			          <span>
-			            <strong class="layout-pagination-button layout-pagination-number">${pageNumber}</strong>
-			          </span>
-			        </c:otherwise>
-			      </c:choose>
-			    </c:forEach>
-			
-			    <a href="#main" class="layout-pagination-button layout-pagination-next-page">다음 페이지로 가기</a>
-			    <a href="#main" class="layout-pagination-button layout-pagination-last-page">맨 끝 페이지로 가기</a>
-			  </div>
-			</div>
+		<div id="pagingArea"  style = "margin-top : 22px;">
+                <ul class="pagination" >
+                	
+                	<c:choose>
+                		<c:when test="${ pi.currentPage eq 1 }">
+                    		<li class="page-item disabled" ><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);"><</a></li>
+                		</c:when>
+                		<c:otherwise>
+		                    <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }"><</a></li>
+                		</c:otherwise>
+                	</c:choose>
+                    
+                    
+                    <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
+                    	<li class="page-item"><a class="page-link" href="list.bo?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
+                    </c:forEach>
+                    
+                    <c:choose>
+                    	<c:when test="${ pi.currentPage eq pi.maxPage }">
+                    		<li class="page-item disabled"><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);">></a></li>
+                    	</c:when>
+                    	<c:otherwise>
+                    		<li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
+                    	</c:otherwise>
+                    </c:choose>
+                </ul>
+            </div>
 
     </div>
     
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <script>
         // 버튼 요소를 선택합니다.
         const button = document.querySelector('.btn-secondary');
@@ -212,11 +211,11 @@
         });
          
          $(function() {
-          	$("#bestboard>tbody>tr").click(function() {
-          		let bno = $(this).children(".bno").text();
-          		location.href = "detail.bo?bno=" + bno; //
-          	});
-          }); 
+        	  $(".bestcontainer .item").click(function() {
+        	    let bno = $(this).find(".bno").text();
+        	    location.href = "detail.bo?bno=" + bno;
+        	  });
+        	});
           
          
          

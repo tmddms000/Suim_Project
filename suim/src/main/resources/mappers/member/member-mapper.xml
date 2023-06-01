@@ -2,23 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
-	<!-- private String memberId;
-	private String memberPwd;
-	private String memberName;
-	private String nickName;
-	private String phone;
-	private String email;
-	private String gender;
-	private String area;
-	private String birth;
-	private Date enrollDate;
-	private Date modifyDate;
-	private Date loginDate;
-	private String changeName;
-	private String status; -->
-
-  
-  <!-- MEMBER 테이블로부터 조회된 ResultSet 에 들은 데이터를 Member VO 로 가공해주는 용도 -->
+	<!-- MEMBER 테이블로부터 조회된 ResultSet 에 들은 데이터를 Member VO 로 가공해주는 용도 -->
 	<resultMap id="memberResultSet" type="member">
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="MEMBER_PWD" property="memberPwd" />
@@ -33,93 +17,139 @@
 		<result column="MODIFY_DATE" property="modifyDate" />
 		<result column="LOGIN_DATE" property="loginDate" />
 		<result column="STATUS" property="status" />
+		<result column="MEMBER_COMMENT" property="memberComment" />
 	</resultMap>
 
 	<!-- 로그인용 쿼리문 -->
-	<select id="loginMember" parameterType="member" resultMap="memberResultSet">
+	<select id="loginMember" parameterType="member"
+		resultMap="memberResultSet">
 
-	 	SELECT *
-	 	  FROM MEMBER
-	 	 WHERE MEMBER_ID = #{memberId}
+		SELECT * FROM MEMBER
+		LEFT JOIN MEMBER_INFO USING(MEMBER_ID)
+		WHERE MEMBER_ID = #{memberId}
 	</select>
 
-	<!-- 회원가입용 쿼리문 -->
-	<insert id="insertMember" parameterType="com.suim.member.model.vo.SignUp">
+	<!-- 일반 회원가입용 쿼리문 -->
+	<insert id="insertMember"
+		parameterType="com.suim.member.model.vo.SignUp">
 		INSERT INTO MEMBER(MEMBER_ID
-						 , MEMBER_PWD
-						 , MEMBER_NAME
-						 , NICKNAME
-						 , PHONE
-						 , EMAIL
-						 , GENDER
-						 , AREA
-						 , BIRTH)
-					VALUES(#{memberId}
-						 , #{memberPwd}
-						 , #{memberName}
-						 , #{nickName}
-						 , #{phone}
-						 , #{email}
-						 , #{gender}
-						 , #{area}
-						 , #{birth})
+		, MEMBER_PWD
+		, MEMBER_NAME
+		, NICKNAME
+		, PHONE
+		, EMAIL
+		, GENDER
+		, AREA
+		, BIRTH)
+		VALUES(#{memberId}
+		, #{memberPwd}
+		, #{memberName}
+		, #{nickName}
+		, #{phone}
+		, #{email}
+		, #{gender}
+		, #{area}
+		, #{birth})
 	</insert>
-
-<!-- 로그인용 쿼리문 -->
+	
+	
+	<!-- 소셜로그인용 회원가입 -->
+	<insert id="insertApiMember" parameterType="member">
+		INSERT INTO MEMBER(MEMBER_ID
+		, MEMBER_PWD
+		, MEMBER_NAME
+		, NICKNAME
+		, PHONE
+		, EMAIL
+		, GENDER
+		, AREA
+		, BIRTH)
+		VALUES(#{memberId}
+		, #{memberPwd}
+		, #{memberName}
+		, #{nickName}
+		, #{phone}
+		, #{email}
+		, #{gender}
+		, #{area}
+		, #{birth})
+		</insert>
+	
+	<!-- 로그인용 쿼리문 -->
 	<select id="nickCheck" parameterType="string" resultType="_int">
-	 	SELECT COUNT(*)
-	 	  FROM MEMBER
-	 	 WHERE NICKNAME = #{nickName}
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE NICKNAME = #{nickName}
 	</select>
 
 	<!-- 아이디 중복체크용 쿼리문 -->
 	<select id="idCheck" parameterType="string" resultType="_int">
-		SELECT COUNT(*)
-		  FROM MEMBER
-		 WHERE MEMBER_ID = #{checkId}
+		SELECT
+		COUNT(*)
+		FROM MEMBER
+		WHERE MEMBER_ID = #{checkId}
 	</select>
 	
+	<!-- 이메일 중복 체크 -->
 	<select id="emailCheck" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
-		  FROM MEMBER
-		 WHERE EMAIL = #{email}
+		FROM MEMBER
+		WHERE EMAIL = #{email}
 	</select>
-	
 
+	<!-- 휴대폰 중복 체크 -->
 	<select id="phoneCheck" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
-		  FROM MEMBER
-		 WHERE PHONE = #{phone}
+		FROM MEMBER
+		WHERE PHONE = #{phone}
 	</select>
 
+	<!-- 네이버 로그인이 연동되어 있는지 체크 -->
+	<select id="naverConnectionCheck" parameterType="string" resultType="map">
+		SELECT EMAIL, NAVERLOGIN
+		FROM MEMBER
+		WHERE EMAIL = #{email}
+	</select>
 
-
-
-
-
+	<!-- 이메일이 일치한 회원 네이버 로그인 연동 시키기 -->
+	<select id="setNaverConnection" parameterType="map">
+		UPDATE MEMBER 
+		SET NAVERLOGIN = #{id}
+		WHERE EMAIL = #{email}
+	</select>
 	
+	
+	<!-- 네이버 로그인 연동이 되어있는 회원 찾기 -->
+	<select id="userNaverLoginPro" parameterType="member"
+		resultMap="memberResultSet">
+	SELECT *
+	FROM MEMBER
+	LEFT JOIN MEMBER_INFO USING (MEMBER_ID) 
+	WHERE EMAIL = #{email} AND NAVERLOGIN = #{id}
+	</select>
+
 	<!-- 회원 정보 수정용 쿼리문 -->
 	<update id="updateMember" parameterType="member">
 		UPDATE MEMBER
-		   SET USER_NAME = #{userName}
-		     , EMAIL = #{email}
-		     , AGE = #{age}
-		     , PHONE = #{phone}
-		     , ADDRESS = #{address}
-		     , GENDER = #{gender}
-		     , MODIFY_DATE = SYSDATE
-		 WHERE USER_ID = #{userId}
+		SET USER_NAME = #{userName}
+		, EMAIL = #{email}
+		, AGE = #{age}
+		, PHONE = #{phone}
+		, ADDRESS = #{address}
+		, GENDER = #{gender}
+		, MODIFY_DATE = SYSDATE
+		WHERE USER_ID = #{userId}
 	</update>
-	
+
 	<!-- 회원 탈퇴용 쿼리문 -->
 	<update id="deleteMember" parameterType="string">
 		UPDATE MEMBER
-		   SET STATUS = 'N'
-		     , MODIFY_DATE = SYSDATE
-		 WHERE USER_ID = #{userId}
+		SET STATUS = 'N'
+		, MODIFY_DATE = SYSDATE
+		WHERE USER_ID = #{userId}
 	</update>
 
-	
+
 	<!-- 회원 전체 조회용 쿼리문 -->
 	<select id="selectMemberList" resultMap="memberResultSet">
 		SELECT *

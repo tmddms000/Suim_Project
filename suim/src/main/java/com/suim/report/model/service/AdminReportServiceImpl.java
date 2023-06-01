@@ -24,9 +24,16 @@ public class AdminReportServiceImpl implements AdminReportService {
 		return adminReportDao.selectListCount(sqlSession);
 	}
 
+	// 전체 조회용
 	@Override
 	public ArrayList<Report> selectList(PageInfo pi) {
 		return adminReportDao.selectList(sqlSession, pi);
+	}
+	
+	// 카테고리용 전체 조회
+	@Override
+	public ArrayList<Report> selectList(PageInfo pi, String category) {
+		return adminReportDao.selectList(sqlSession, pi, category);
 	}
 
 	@Override

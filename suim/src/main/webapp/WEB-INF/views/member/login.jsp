@@ -21,7 +21,7 @@
                 <br>
                 <div class="text-center mb-4"><span style="font-size : 40px; font-weight : bold;">로그인</span></div>
 
-                <form action="./login" method="post" onsubmit="return validateForm()">
+                <form action="./doLogin" method="post" onsubmit="return validateForm()">
            
                     <div class="form-group row justify-content-center">
                         <div class="form-floating col-sm-4">
@@ -76,13 +76,8 @@
                     </div>
                     <div class="row justify-content-center mt-2">
                         <div class="col-sm-4">
-                            <div class="text-center mt-2">
-                              <button class="image-button" onclick="location.href='${urlNaver}'">
-                            
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/KakaoTalk_logo.svg/240px-KakaoTalk_logo.svg.png" alt="Button Image">
-                                &nbsp;&nbsp;&nbsp;네이버계정으로 로그인
-                            </button>
-                            </div>
+                            <div id="naver_id_login" style="text-align:center"><a href="${url}">
+						<img width="300px" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/></a></div>
                         </div>
                     </div>
                     <br>

@@ -76,6 +76,7 @@
 			 , AREA
 			 , BIRTH
 			 , ENROLL_DATE
+			 , MODIFY_DATE
 			 , LOGIN_DATE
 			 , CHANGE_NAME
 			 , STATUS
@@ -83,20 +84,26 @@
 		 WHERE MEMBER_ID = #{memberId}
 	</select>
 
-	<!-- 게시글 삭제용 쿼리문 -->
-	<update id="deleteMember" parameterType="_int">
+	<!-- 회원 삭제용 쿼리문 -->
+	<update id="deleteMember" parameterType="string">
 		UPDATE MEMBER
-		   SET STATUS = 'N'
+		   SET STATUS = '탈퇴'
 		 WHERE MEMBER_ID = #{memberId}
 	</update>
 	
-	<!-- 게시글 수정용 쿼리문 -->
+	<!-- 회원 수정용 쿼리문 -->
 	<update id="updateMember" parameterType="member">
 		UPDATE MEMBER
-		   SET MEMBER_TITLE = #{boardTitle}
-		     , MEMBER_CONTENT = #{boardContent}
-		     , ORIGIN_NAME = #{originName}
+		   SET MEMBER_NAME = #{memberName}
+		     , NICKNAME = #{nickName}
+		     , PHONE = #{phone}
+		     , EMAIL = #{email}
+		     , GENDER = #{gender}
+		     , AREA = #{area}
+		     , BIRTH = #{birth}
+		     , MODIFY_DATE = SYSDATE
 		     , CHANGE_NAME = #{changeName}
+		     , STATUS = #{status}
 		 WHERE MEMBER_ID = #{memberId}
 	</update>
 	
