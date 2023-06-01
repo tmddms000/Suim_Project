@@ -1,6 +1,7 @@
 package com.suim.member.model.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -57,6 +58,14 @@ public class MemberDao {
 	public int phoneCheck(SqlSessionTemplate sqlSession, String phone) {
 		
 		return sqlSession.selectOne("memberMapper.phoneCheck", phone);
+	}
+
+	public Map<String, Object> naverConnectionCheck(SqlSessionTemplate sqlSession, String email) {
+		return (Map) sqlSession.selectOne("memberMapper.naverConnectionCheck", email);
+	}
+
+	public int setNaverConnection(SqlSessionTemplate sqlSession, Map<String, Object> apiJson) {
+		return sqlSession.update("memberMapper.setNaverConnection", apiJson);
 	}
 
 }
