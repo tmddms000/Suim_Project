@@ -16,6 +16,9 @@ public interface AdminReportService {
 	// 신고 리스트 조회
 	ArrayList<Report> selectList(PageInfo pi);
 	
+	// 카테고리용 전체 조회
+	ArrayList<Report> selectList(PageInfo pi, String category);
+	
 	// 신고 작성하기 서비스
 	int insertReport(Report r);
 	

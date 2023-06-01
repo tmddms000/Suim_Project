@@ -1,6 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<style>
+	.reportTableLeft{
+		display: inline-block;
+		float: left;
+	}
+	.reportTableRight{
+		display: inline-block;
+		float: rigth;	
+	}
+</style>
 
 	<%@ include file="../common/include.jsp" %>
 
@@ -23,7 +34,12 @@
 			<%@ include file="../common/navbar.jsp" %>
             <!-- Navbar End -->
 
-            
+            	<!-- Table Start -->
+	            <br><br>
+	            <div class="innerOuter">
+                <h2>회원 정보 보기</h2>
+                <br>
+                
 				<!-- 테이블 시작 -->
 				<div class="container-fluid pt-4 px-4">
 	                <div class="row g-4">
@@ -66,7 +82,7 @@
 		                                </table>
 		                        	</div>
 	                            	<!-- 오른쪽 테이블 -->
-		                			<div class="col-sm-12 col-xl-6 memberTableRight">
+		                			<div class="col-sm-12 col-xl-6 reportTableRight">
 		                                <table class="table">
 		                                    <tr>
 	                                            <th scope="row">신고 관련해서 뭐넣지..?</th>
@@ -90,10 +106,10 @@
 				<!-- 테이블 끝 -->
             
             
-            <a class="btn btn-secondary" style="float:right;" href="list.me">목록으로</a>
+            <a class="btn btn-secondary" style="float:right;" href="list.re">목록으로</a>
             <br>
     
-                <c:if test="${ (not empty loginUser) and (loginUser.userId eq b.boardWriter) }">
+                <!-- <c:if test="${ (not empty loginUser) and (loginUser.userId eq b.boardWriter) }"> -->
                     <div align="center">
                         <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
                             <a class="btn btn-primary" onclick="postFormSubmit(1);" href="member_update.html">수정하기</a>
@@ -115,13 +131,13 @@
                             
                             // 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
                             if(num == 1) { // 수정하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "updateForm.me").submit();
+                                $("#postForm").attr("action", "updateForm.re").submit();
                             } else { // 삭제하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "delete.me").submit();
+                                $("#postForm").attr("action", "delete.re").submit();
                             }
                         }
                     </script>
-                </c:if>
+                <!-- </c:if> -->
 
             </div>
             <br><br>    
