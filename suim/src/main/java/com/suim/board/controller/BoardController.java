@@ -1,5 +1,257 @@
 package com.suim.board.controller;
 
-public class BoardController {
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.suim.board.model.service.BoardService;
+import com.suim.board.model.vo.Battachment;
+import com.suim.board.model.vo.Board;
+import com.suim.board.model.vo.Reply;
+import com.suim.common.model.vo.PageInfo;
+import com.suim.common.template.Pagination;
+
+
+
+
+@Controller
+public class BoardController {
+	
+	@Autowired
+	private BoardService boardService;
+	
+	@RequestMapping("list.bo")
+	public ModelAndView selectList(
+			@RequestParam(value="cPage", defaultValue="1") int currentPage,
+			ModelAndView mv) {
+		
+
+		int listCount = boardService.selectListCount();
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		ArrayList<Board> list = boardService.selectList(pi);
+		ArrayList<Board> blist = boardService.selectbList();
+
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .addObject("blist", blist)
+		  .setViewName("board/free-board");
+		
+		return mv;
+	}
+	
+	@RequestMapping("enrollForm.bo")
+	public String enrollForm() {
+		
+		return "board/free-boardEnrollForm";
+	}
+
+		@RequestMapping("detail.bo")
+		public ModelAndView selectBoard(ModelAndView mv,
+										int bno) {
+
+			int result = boardService.increaseCount(bno);
+			
+
+
+			if(result > 0) { // 성공
+
+				Board b = boardService.selectBoard(bno);
+				
+				mv.addObject("b", b).setViewName("board/free-boardDetail");
+				
+			} else { // 실패
+
+				mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
+			}
+			
+			return mv;
+		}
+		
+		@RequestMapping("delete.bo")
+		public String deleteBoard(int bno,
+								  Model model,
+								  String filePath,
+								  HttpSession session) {
+			
+			
+			int result = boardService.deleteBoard(bno);
+			
+			if(result > 0) { // 삭제 처리 성공
+				
+				// delete.bo 요청 시 첨부파일이 있었을 경우
+				// 서버에 보관중인 첨부 파일 실물 (수정파일명) 을 삭제 처리까지 같이 하고 싶음!!
+				if(!filePath.equals("")) {
+					// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
+					String realPath = session.getServletContext().getRealPath(filePath);
+					new File(realPath).delete();
+				}
+				
+
+				session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
+				
+				return "redirect:/list.bo";
+				
+			} else { // 삭제 처리 실패 => 에러페이지 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 삭제 실패");
+				
+				return "common/errorPage";
+			}
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rlist.bo", produces = "application/json; charset=UTF-8")
+		public String ajaxSelectReplyList(int bno) {
+			
+			ArrayList<Reply> list = boardService.selectReplyList(bno);
+			
+			return new Gson().toJson(list);
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rinsert.bo", produces = "text/html; charset=UTF-8")
+		public String ajaxInsertReply(Reply r) {
+			
+
+			
+			int result = boardService.insertReply(r);
+			
+			return (result > 0) ? "success" : "fail";
+		}
+		
+		@RequestMapping(value="/uploadSummernoteImageFile", produces = "application/json; charset=utf8")
+		@ResponseBody
+		public String uploadSummernoteImageFile(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
+		    JsonObject jsonObject = new JsonObject();
+
+		    // 내부경로로 저장
+		    String contextRoot = new HttpServletRequestWrapper(request).getRealPath("/");
+		    String fileRoot = contextRoot + "resources/fileupload/";
+
+		    String originalFileName = multipartFile.getOriginalFilename();    // 오리지날 파일명
+		    String extension = originalFileName.substring(originalFileName.lastIndexOf("."));    // 파일 확장자
+		    String savedFileName = UUID.randomUUID() + extension;    // 저장될 파일 명
+		    
+		    File targetFile = new File(fileRoot + savedFileName);
+		    try {
+		        InputStream fileStream = multipartFile.getInputStream();
+		        FileUtils.copyInputStreamToFile(fileStream, targetFile);    // 파일 저장
+		        jsonObject.addProperty("url", "/resources/fileupload/" + savedFileName); // contextroot + resources + 저장할 내부 폴더명
+		        jsonObject.addProperty("responseCode", "success");
+		        
+		    } catch (IOException e) {
+		        FileUtils.deleteQuietly(targetFile);    // 저장된 파일 삭제
+		        jsonObject.addProperty("responseCode", "error");
+		        e.printStackTrace();
+		    }
+		    String a = jsonObject.toString();
+		    return a;
+		}
+		
+		@RequestMapping("insert.bo")
+		public String insertBoard(Board b,
+								 Battachment ba,
+								MultipartFile upfile,
+								HttpSession session,
+								Model model) {
+			
+			if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+				
+				String changeName = saveFile(upfile, session);
+				
+				
+				ba.setOriginName(upfile.getOriginalFilename());
+				ba.setChangeName("resources/uploadFiles/" + changeName);
+			}
+			
+			// 이 시점 기준으로
+			// 넘어온 첨부파일이 있다면
+			// boardTitle, boardWriter, boardContent, originName, changeName
+			// 필드에 값들이 담겨 있음
+			// 넘어온 첨부파일이 없다면
+			// boardTitle, boardWriter, boardContent
+			// 필드에 값들이 담겨 있음
+			int result = boardService.insertBoard(b,ba);
+			
+
+			if(result > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+				
+				session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
+				
+				return "redirect:/list.bo"; // 내부적으로 1번 페이지로 향함
+				
+			} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 등록 실패");
+				
+				return "common/errorPage";
+			}
+		}
+		public String saveFile(MultipartFile upfile, HttpSession session) {
+			
+			// 파일명 수정 작업 후 서버에 업로드 시키기
+			// => 왠만해선 파일명이 겹치지 않게끔 !!
+			
+			// MyFileRenamePolicy 에서 지정했던 로직 그대로 재현
+			// 예) "bono.jpg" => "20230511104425xxxxx.jpg"
+			// 1. 원본파일명 뽑기
+			String originName = upfile.getOriginalFilename(); // "bono.jpg"
+			
+			// 2. 현재 시간 형식을 문자열로 뽑아내기
+			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss")
+									 .format(new Date(0)); // "20230511104920"
+			
+			// 3. 뒤에 붙을 5자리 랜덤값 뽑기 (10000 ~ 99999 범위)
+			int ranNum = (int)(Math.random() * 90000 + 10000); // 13152
+			
+			// 4. 원본파일명으로부터 확장자명 뽑기
+			String ext = originName.substring(originName.lastIndexOf(".")); // ".jpg"
+			
+			// 5. 2, 3, 4 단계에서 구한 값을 모두 이어 붙이기
+			String changeName = currentTime + ranNum + ext;
+			
+			// 6. 업로드 하고자 하는 서버의 물리적인 경로 알아내기
+			String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+			
+			// 7. 경로와 수정파일명을 합체 후 파일을 업로드 해주기
+			// MultipartFile 객체에서 제공하는 transferTo 메소드
+			// [ 표현법 ]
+			// upfile.transferTo(업로드하고자하는파일객체);
+			try {
+				upfile.transferTo(new File(savePath + changeName));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return changeName;
+		}
+
+	
+	
+		   
 }

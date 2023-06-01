@@ -21,7 +21,7 @@ public class House {
     private int roomPeople; // 인실
     private String incFurniture; // 시설정보
     private String houseContent; // 하우스 소개
-    private char resGender; // 성별
+    private String resGender; // 성별
     private String resType; // 주거유형
     private String floor; // 층수
     private char houseStatus; // 삭제 유무

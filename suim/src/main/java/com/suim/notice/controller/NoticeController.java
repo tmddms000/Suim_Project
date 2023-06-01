@@ -80,7 +80,8 @@ public class NoticeController {
 		System.out.println("mv 는" + mv);
 		return mv;
 	}
- 
+	
+	
 }
 
 
