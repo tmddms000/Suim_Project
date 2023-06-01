@@ -5,39 +5,42 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-     <!-- 부트스트랩 -->
-     <link href="/resources/css/common/styles.css" rel="stylesheet" />
-     <!-- 폰트어썸 icon -->
-     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-     <!-- Core theme CSS (includes Bootstrap)-->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-     <link href="css/styles.css" rel="stylesheet" />
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-     <!-- TypeIt CDN -->
-     <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-     <!-- jQuery CDN -->
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-     <!-- 1:1문의 js -->
-     <script src="js/chatbot.js"></script>
-     <!-- 공지사항 css -->
-     <link href="/resources/css/notice/noticeDetailCopy.css" rel="stylesheet" />
+<link href="img/favicon.ico" rel="icon">
+
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Icon Font Stylesheet -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Libraries Stylesheet -->
+<link href="/resources/js/admin/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="/resources/js/admin/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+<!-- Customized Bootstrap Stylesheet -->
+<!-- <link href="/resources/css/admin/bootstrap.min.css" rel="stylesheet"> -->
+<link href="/resources/css/admin/bootstrap.min.css" rel="stylesheet">
+
+<!-- Template Stylesheet -->
+<link href="/resources/css/admin/style.css" rel="stylesheet">
 </head>
 <body>
+
+    <jsp:include page="./admin/common/header.jsp" />
 	<div class="content">
         <br><br>
         <div class="innerOuter">
-            <h2>게시글 작성하기</h2>
+            <h2>공지사항 작성하기</h2>
             <br>
 
-            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
+            <form id="enrollForm" method="post" action="enrollForm.no" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
                         <td><input type="text" id="title" class="form-control" name="boardTitle" required></td>
-                    </tr>
-                    <tr>
-                        <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ loginUser.userId }" name="boardWriter" readonly></td>
                     </tr>
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
