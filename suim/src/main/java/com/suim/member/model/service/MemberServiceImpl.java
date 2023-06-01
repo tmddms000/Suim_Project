@@ -1,6 +1,7 @@
 package com.suim.member.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -68,4 +69,23 @@ public class MemberServiceImpl implements MemberService {
 	public int phoneCheck(String phone) {
 		return memberDao.phoneCheck(sqlSession, phone);
 	}
+
+	@Override
+	public Map<String, Object> naverConnectionCheck(String email) {
+		return memberDao.naverConnectionCheck(sqlSession, email);
+	}
+
+	@Override
+	public int setNaverConnection(Map<String, Object> apiJson) {
+		return memberDao.setNaverConnection(sqlSession, apiJson);
+		
+	}
+
+	@Override
+	public Map<String, Object> userNaverLoginPro(Map<String, Object> apiJson) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }
