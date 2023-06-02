@@ -151,7 +151,7 @@ public class BoardController {
 
 		    // 내부경로로 저장
 		    String contextRoot = new HttpServletRequestWrapper(request).getRealPath("/");
-		    String fileRoot = contextRoot + "resources/fileupload/";
+		    String fileRoot = contextRoot + "resources/img/board/fileupload/";
 
 		    String originalFileName = multipartFile.getOriginalFilename();    // 오리지날 파일명
 		    String extension = originalFileName.substring(originalFileName.lastIndexOf("."));    // 파일 확장자
@@ -161,7 +161,7 @@ public class BoardController {
 		    try {
 		        InputStream fileStream = multipartFile.getInputStream();
 		        FileUtils.copyInputStreamToFile(fileStream, targetFile);    // 파일 저장
-		        jsonObject.addProperty("url", "/resources/fileupload/" + savedFileName); // contextroot + resources + 저장할 내부 폴더명
+		        jsonObject.addProperty("url", "resources/img/board/fileupload/" + savedFileName); // contextroot + resources + 저장할 내부 폴더명
 		        jsonObject.addProperty("responseCode", "success");
 		        
 		    } catch (IOException e) {
@@ -186,20 +186,15 @@ public class BoardController {
 				
 				
 				ba.setOriginName(upfile.getOriginalFilename());
-				ba.setChangeName("resources/uploadFiles/" + changeName);
+				ba.setChangeName("resources/img/board/fileupload/" + changeName);
 			}
 			
-			// 이 시점 기준으로
-			// 넘어온 첨부파일이 있다면
-			// boardTitle, boardWriter, boardContent, originName, changeName
-			// 필드에 값들이 담겨 있음
-			// 넘어온 첨부파일이 없다면
-			// boardTitle, boardWriter, boardContent
-			// 필드에 값들이 담겨 있음
-			int result = boardService.insertBoard(b,ba);
-			
 
-			if(result > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+			int result = boardService.insertBoard(b);
+			int result2 = boardService.insertBattachment(ba);
+			
+			
+			if(result > 0 || result2 > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
 				
 				session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
 				
@@ -236,7 +231,7 @@ public class BoardController {
 			String changeName = currentTime + ranNum + ext;
 			
 			// 6. 업로드 하고자 하는 서버의 물리적인 경로 알아내기
-			String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
+			String savePath = session.getServletContext().getRealPath("resources/img/board/fileupload/");
 			
 			// 7. 경로와 수정파일명을 합체 후 파일을 업로드 해주기
 			// MultipartFile 객체에서 제공하는 transferTo 메소드
@@ -250,7 +245,28 @@ public class BoardController {
 			
 			return changeName;
 		}
+		
+		@RequestMapping("flist.bo")
+		public ModelAndView selectfList(
+				@RequestParam(value="cPage", defaultValue="1") int currentPage,
+				ModelAndView mv) {
+			
 
+			int listCount = boardService.selectfListCount();
+			
+			int pageLimit = 10;
+			int boardLimit = 10;
+			
+			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			
+			ArrayList<Board> list = boardService.selectfList(pi);
+
+			mv.addObject("pi", pi)
+			  .addObject("list", list)
+			  .setViewName("board/find-board");
+			
+			return mv;
+		}
 	
 	
 		   

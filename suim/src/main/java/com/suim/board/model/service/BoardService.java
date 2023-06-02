@@ -9,6 +9,10 @@ import com.suim.common.model.vo.PageInfo;
 
 public interface BoardService {
 	
+	
+	
+	//------------------자유게시판-----------------------
+	
 	// 게시판 리스트 조회 서비스 (+ 페이징처리)
 	// 게시글의 총 갯수 조회
 	int selectListCount();
@@ -20,7 +24,7 @@ public interface BoardService {
 	ArrayList<Board> selectbList();
 	
 	// 게시글 등록
-	int insertBoard(Board b, Battachment ba);
+	int insertBoard(Board b);
 	
 	// 게시글 등록
 	int insertBattachment(Battachment ba);
@@ -43,7 +47,16 @@ public interface BoardService {
 	// 댓글 수량 
 	int ReplyCount(int boardNo);
 	
-
+	//------------------------------------------------
+	
+	//------------------사람구해요-----------------------
+	
+	// 게시판 리스트 조회 서비스 (+ 페이징처리)
+		// 게시글의 총 갯수 조회
+		int selectfListCount();
+		
+		// 게시글 리스트 조회
+		ArrayList<Board> selectfList(PageInfo pi);
 	
 
 }
