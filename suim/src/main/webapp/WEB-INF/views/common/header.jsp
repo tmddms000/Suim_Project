@@ -1,17 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> d024053125a2e4b4a5ab47d28aabd212feb7424d
 	<c:if test="${ not empty alertMsg }">
 		<script>
 			alert("${ alertMsg }");
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+<<<<<<< HEAD
 	
 	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
 
 
+=======
+	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
+>>>>>>> d024053125a2e4b4a5ab47d28aabd212feb7424d
 	<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
 	  <script>
 	    window.addEventListener('DOMContentLoaded', function() {
@@ -28,7 +35,7 @@
 	                
 	                <ul class="nav nav-pills navi">
 	                    
-	                        <li class="nav-item"><a href="#" class="nav-link nav-text">방 찾기</a></li>
+	                        <li class="nav-item"><a href="chat.ch" class="nav-link nav-text">방 찾기</a></li>
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">쉼</a>
 	                            <ul>
@@ -133,7 +140,7 @@
 	                                </c:if>
 	                                
 	                                <li class="nav-item offcanvas-text m-4">
-	                                    <a class="side-black" aria-current="page" href="#">방 찾기</a>
+	                                    <a class="side-black" aria-current="page" href="">방 찾기</a>
 	                                </li>
 	                                
 	                                

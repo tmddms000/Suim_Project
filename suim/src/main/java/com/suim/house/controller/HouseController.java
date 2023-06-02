@@ -26,22 +26,23 @@ public class HouseController {
 	@RequestMapping("detail.ho")
 	public ModelAndView selectList(ModelAndView mv, int hno, HttpSession session) {
 	    House h = houseService.selectHouse(hno);
-	    System.out.println("아");
-	    System.out.println(hno);
 	    
 	    ArrayList<Wish> list = houseService.checkHeart(h.getHouseNo());
 	    
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    
 	    int lo = 0;
+	    String Id = "";
 	    
 	    if (loginUser != null) {
+	    	Id = loginUser.getMemberId();
 	    	for(Wish w : list) {
 	    		if(loginUser.getMemberId().equals(w.getId())){
 	    			lo = w.getHno();
 	    		}
 	    	}
 	    }
+	    mv.addObject("Id", Id);
 	    mv.addObject("lo", lo);
 	    mv.addObject("h", h).setViewName("house/houseView");
 

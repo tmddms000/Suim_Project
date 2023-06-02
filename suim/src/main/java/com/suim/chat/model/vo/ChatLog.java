@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatList {
+public class ChatLog {
+    private String sendUser;
+    private String receiveUser;
+    private String content;
+    private Timestamp sendDate;
     private int chatNo;
-    private String cuser;
-    private String muser;
-    private Timestamp cDate;
-    private char sCuser;
-    private char sMuser;
+    private char status;
 }

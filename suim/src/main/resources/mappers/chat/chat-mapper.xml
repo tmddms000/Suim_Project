@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="chatMapper">
+
+	<resultMap id="chatListResultMap" type="chatList">
+		<id column="CHAT_NO" property="chatNo" />
+		<result column="CUSER" property="cuser" />
+		<result column="MUSER" property="muser" />
+		<result column="C_DATE" property="cDate" />
+		<result column="S_CUSER" property="sCuser" />
+		<result column="S_MUSER" property="sMuser" />
+	</resultMap>
+
+	<resultMap id="chatLogResultMap" type="chatlog">
+		<id column="CHAT_NO" property="chatNo" />
+		<result column="SEND_USER" property="sendUser" />
+		<result column="RECEIVE_USER" property="receiveUser" />
+		<result column="CONTENT" property="content" />
+		<result column="SEND_DATE" property="sendDate" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+
+
+	<insert id="insertChat" parameterType="java.util.Map">
+		INSERT INTO CHAT_LIST
+		(CHAT_NO, CUSER, MUSER, C_DATE, S_CUSER, S_MUSER)
+		VALUES
+		(SEQ_CNO.NEXTVAL, #{cuser}, #{muser}, SYSDATE, 'Y', 'Y')
+	</insert>
+
+	<select id="selectIchat" parameterType="java.util.Map"
+		resultMap="chatListResultMap">
+		SELECT *
+		FROM CHAT_LIST
+		WHERE CHAT_NO = (SELECT MAX(CHAT_NO)
+		FROM CHAT_LIST WHERE CUSER = #{cuser}
+		AND MUSER = #{muser})
+	</select>
+
+	<select id="selectChat" parameterType="java.lang.String"
+		resultMap="chatListResultMap">
+		SELECT *
+		FROM CHAT_LIST
+		WHERE CUSER = #{cuser}
+	</select>
+
+	<select id="selectList" resultMap="chatListResultMap">
+		SELECT *
+		FROM CHAT_LIST
+	</select>
+
+	<select id="selectOne" parameterType="java.lang.String"
+		resultMap="chatListResultMap">
+		SELECT *
+		FROM (
+		SELECT *
+		FROM CHAT_LIST
+		WHERE MUSER = #{muser}
+		OR CUSER = #{muser}
+		ORDER BY CHAT_NO DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
+
+	<insert id="saveChatLog" parameterType="chatlog">
+		INSERT INTO CHAT_LOG
+		(SEND_USER, RECEIVE_USER, CONTENT, SEND_DATE, CHAT_NO,
+		STATUS)
+		VALUES
+		(#{sendUser}, #{receiveUser}, #{content}, DEFAULT, #{chatNo},
+		'Y')
+	</insert>
+
+	<select id="selectChatLog" parameterType="_int"
+		resultMap="chatLogResultMap">
+		SELECT SEND_USER,
+		CONTENT
+		FROM CHAT_LOG
+		WHERE CHAT_NO = #{rno}
+	</select>
+
+
+
+</mapper>

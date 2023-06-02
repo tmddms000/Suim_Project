@@ -25,6 +25,21 @@
 		<result column="BRE_ID" property="breId" />
 	</resultMap>
 	
+		<!-- FIND 테이블로부터 조회된 ResultSet 을 Find 객체로 가공해주는 resultMap -->
+	<resultMap id="findResultSet" type="find">
+		<result column="FIND_NO" property="findNo" />
+		<result column="FIND_TITLE" property="findTitle" />
+		<result column="FIND_CATEGORY" property="findCategory" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="FIND_VIEW" property="findView" />
+		<result column="FIND_DATE" property="findDate" />
+		<result column="ORIGIN_NAME" property="originName" />
+		
+		<result column="FIND_COTENT" property="findContent" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="FIND_REPLY_COUNT" property="replyCount" />
+	</resultMap>
+	
 		<!-- 게시글 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -197,6 +212,41 @@
 			 WHERE STATUS = 'Y'
 	         AND BOARD_NO = #{boardNo}
 	</select>
+	
+		<!-- 게시글 리스트를 구해주는 쿼리문 -->
+		<select id="selectfList" resultMap="findResultSet">
+
+			SELECT
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_COTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME,
+			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT
+			FROM FIND F
+			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
+			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+			WHERE B.STATUS = 'Y'
+			GROUP BY
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_COTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME
+			ORDER BY F.FIND_NO DESC
+
+		</select>
 	
 
 	
