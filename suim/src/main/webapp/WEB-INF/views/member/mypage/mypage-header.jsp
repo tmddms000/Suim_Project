@@ -52,7 +52,7 @@
 						</div>
 						<c:set var="currentUrl" value="${pageContext.request.requestURI}" />
 						<c:set var="suffix"
-							value="${fn:substringAfter(currentUrl, 'mypage-')}" />
+							value="${fn:substringAfter(currentUrl, '/mypage/')}" />
 						<c:set var="pageUrl" value="${fn:substringBefore(suffix, '.jsp')}" />
 						<!-- END profile-header-content -->
 						<!-- BEGIN profile-header-tab -->
@@ -179,7 +179,7 @@
 									required="required">
 							</div>
 
-							<c:set var="birthYear" value="${loginUser.birth.substring(0, 4)}" />
+							<%-- <c:set var="birthYear" value="${loginUser.birth.substring(0, 4)}" />
 							<c:set var="birthMonth"
 								value="${loginUser.birth.substring(4, 6)}" />
 							<c:set var="birthDay" value="${loginUser.birth.substring(6, 8)}" />
@@ -205,7 +205,7 @@
 
 									<input type="hidden" name="birth" id="birth-date-input" />
 								</div>
-							</div>
+							</div> --%>
 
 							<div class="input_block form-group">
 								<label class="mini-tit" for="area">희망지역</label>
@@ -247,17 +247,5 @@
 
 
 <script>
-	$(document).ready(function() {
-		$(".editModalBtn").on("click", function() {
-			$.ajax({
-				url : "/mypage/updateProfile",
-				method : "post",
-				success : function(data) {
-					console.log(data);
-				},
-				error : function() {
-				}
-			});
-		});
-	});
+	
 </script>

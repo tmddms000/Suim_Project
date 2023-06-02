@@ -814,7 +814,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .form-group {
-margin-bottom : 25px;
+margin-bottom : 20px;
 }
 
 .input_block label.mini-tit {
