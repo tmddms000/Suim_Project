@@ -1,12 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%@ include file="/WEB-INF/views/common/header.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<%@ include file="/WEB-INF/views/common/include.jsp"%>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
 <html>
 <head>
-    <title>에어비앤비 채팅창 예시</title>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+<!-- STOMP -->
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+    <title>채팅방</title>
     <!-- 부트스트랩 -->
-    <link href="/resources/css/common/styles.css" rel="stylesheet" />
         <style>
+     .my-chat {
+        background-color: #01D1FE;
+        color: white;
+        text-align: right;
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .other-chat {
+        background-color: #ECECEC;
+        color: black;
+        text-align: left;
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+        
+        
+        
+        
         body {
             margin: 0;
             padding: 0;
@@ -102,19 +132,33 @@
     <div class="container_chat">
         <div class="chat-list">
             <!-- 채팅목록 -->
-            <h2>대화목록</h2>
-            <ul>
-                <li>사진 조민수</li>
-                <li>사진 유홍재</li>
-                <li>사진 이승은</li>
-                <li>사진 이태화</li>
-            </ul>
+			<h2>대화목록</h2>
+			<ul>
+			  <c:forEach var="u" items="${list}">
+			    <c:if test="${u.muser eq Id}">
+			      <li data-cno="${u.chatNo}">${u.cuser}</li>
+			    </c:if>
+			    <c:if test="${u.cuser eq Id}">
+			      <li data-cno="${u.chatNo}">${u.muser}</li>
+			    </c:if>
+			  </c:forEach>
+			</ul>
         </div>
         <div class="chat-window">
             <!-- 채팅창 -->
-            <h2>조민수</h2>
+             <c:if test="${c.muser eq Id}">
+			 	<h2>${c.cuser}</h2>
+			 </c:if>
+			 <c:if test="${c.cuser eq Id}">
+			    <h2>${c.muser}</h2>
+			</c:if>
             <div class="messages">
-                <p>조민수님과 대화를 시작하셨습니다.</p>
+            <c:if test="${c.muser eq Id}">
+				<p data-cno="${c.chatNo}">${c.cuser}님과 대화를 시작하셨습니다.</p>
+			</c:if>
+			<c:if test="${c.cuser eq Id}">
+				<p data-cno="${c.chatNo}">${c.muser}님과 대화를 시작하셨습니다.</p>
+			</c:if>
                 <p>안전한 결제를 위해 웹사이트를 통해 대화를 나누고 결제하세요.</p>
                 <hr>
             </div>
@@ -124,45 +168,148 @@
             </div>
         </div>
     </div>
-    
-<script>
-//메시지 입력란 키 이벤트 처리
-document.getElementById("messageInput").addEventListener("keydown", function(event) {
-  if (event.key === "Enter") {
-    if (!event.shiftKey) {
-      event.preventDefault(); // 기본 엔터 동작 방지
-      sendMessage();
-    }
-  }
-});
 
-// 전송 버튼 클릭 이벤트 처리
-document.getElementById("sendMessageButton").addEventListener("click", function() {
-  sendMessage();
-});
+<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
-// 메시지 전송 함수
-function sendMessage() {
-  var messageInput = document.getElementById("messageInput");
-  var message = messageInput.value;
-  if (message !== "") {
-    appendMessage(message);
-    messageInput.value = "";
-  }
-}
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    const socket = new SockJS('/websocket');
+    const stomp = Stomp.over(socket);
+    stomp.debug = null; // stomp 콘솔 출력 X
 
-// 메시지 추가 함수
-function appendMessage(message) {
-  var messagesContainer = document.querySelector(".chat-window .messages");
-  var messageElement = document.createElement("p");
-  messageElement.innerHTML = message.replace(/\n/g, "<br>"); // 줄바꿈 문자를 <br> 태그로 대체
-  messagesContainer.appendChild(messageElement);
+    let rno = ''; // rno 전역 변수 선언
+    let subscription; // 구독 객체 전역 변수 선언
+    let Iuser = '';
 
-  // 스크롤 자동 아래로 이동
-  messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
+    $(document).ready(function() {
+    	Iuser = $(".chat-list li").last().text(); // 초기 아이디 값을 저장할 변수
+        // 초기 rno 값을 설정합니다.
+        rno = $(".chat-list li:last-child").attr('data-cno');
+
+        // 대화목록의 각 아이디를 클릭했을 때 이벤트 처리
+        $('.chat-list li').click(function() {
+            var user = $(this).text(); // 클릭한 아이디 값을 가져옴
+            var cno = $(this).attr('data-cno'); // 클릭한 아이디의 cno 값을 가져옴
+            rno = cno;
+            Iuser = user; // 아이디값 변경
+            updateChatWindow(Iuser); // 대화창 업데이트 함수 호출
+
+            // 이전 구독을 해지합니다.
+            if (subscription) {
+                subscription.unsubscribe();
+            }
+
+         // 채팅 내역을 요청하고 받아옵니다.
+            $.ajax({
+                url: '/loadChat', // 채팅 내역을 조회하는 API 엔드포인트 URL
+                type: 'GET',
+                data: { chatNo: rno }, // 채팅방 번호를 서버에 전달
+                success: function(response) {
+                    var chatHistory = response; // 서버에서 받아온 채팅 내역
+
+                    // 채팅 내역을 대화창에 표시
+                    for (var i = 0; i < chatHistory.length; i++) {
+                        appendMessage(chatHistory[i]);
+                    }
+
+                    // STOMP 구독 설정
+                    subscription = stomp.subscribe('/topic/' + rno, function(message) {
+                        var receivedMessage = JSON.parse(message.body);
+                        appendMessage(receivedMessage); // 메시지 수신 처리
+                    });
+                }
+            });
+        });
+        
+        
+        $('.chat-list li').last().click();
+
+        // 대화창 업데이트 함수
+        function updateChatWindow(user) {
+            var chatTitle = document.querySelector(".chat-window h2");
+            chatTitle.textContent = user;
+
+            var messagesContainer = document.querySelector(".chat-window .messages");
+            messagesContainer.innerHTML = "";
+
+            var message1 = document.createElement("p");
+            message1.textContent = user + "님과 대화를 시작하셨습니다.";
+            messagesContainer.appendChild(message1);
+
+            var message2 = document.createElement("p");
+            message2.textContent = "안전한 결제를 위해 웹사이트를 통해 대화를 나누고 결제하세요.";
+            messagesContainer.appendChild(message2);
+
+            var hr = document.createElement("hr");
+            messagesContainer.appendChild(hr);
+
+            // 스크롤 자동 아래로 이동
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    });
+
+    stomp.connect({}, function() {
+        // STOMP 구독 설정
+        if (subscription) {
+            subscription.unsubscribe();
+        }
+        subscription = stomp.subscribe('/topic/' + rno, function(message) {
+            var receivedMessage = JSON.parse(message.body);
+            appendMessage(receivedMessage); // 메시지 수신 처리
+        });
+    });
+
+    // 메시지 입력란 키 이벤트 처리
+    document.getElementById("messageInput").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            if (!event.shiftKey) {
+                event.preventDefault(); // 기본 엔터 동작 방지
+                sendMessage();
+            }
+        }
+    });
+
+    // 전송 버튼 클릭 이벤트 처리
+    document.getElementById("sendMessageButton").addEventListener("click", function() {
+        sendMessage();
+    });
+
+    // 메시지 전송 함수
+	function sendMessage() {
+	    var messageInput = document.getElementById("messageInput");
+	    var messageContent = messageInput.value.trim();
+	
+	    if (messageContent !== "") {
+	        var message = {
+	            content: messageContent,
+	            sendUser: "${Id}", // 보내는 사람 아이디를 지정해야 합니다.
+	           	receiveUser: Iuser,
+	            chatNo : rno
+	        };
+	        stomp.send("/chat/" + rno, {}, JSON.stringify(message));
+	        messageInput.value = ""; // 메시지 입력란 초기화
+	    }
+	}
+
+	// 메시지 출력 함수
+	function appendMessage(message) {
+	    var messagesContainer = document.querySelector(".chat-window .messages");
+	    var messageElement = document.createElement("p");
+
+	    messageElement.textContent = message.sendUser + " : " + message.content;
+
+	    if (message.sendUser === "${Id}") {
+	         messageElement.classList.add("my-chat");
+	     } else {
+	         messageElement.classList.add("other-chat");
+	     }
+
+	    messagesContainer.appendChild(messageElement);
+
+	    // 스크롤 자동 아래로 이동
+	    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+	}
+	});
 </script>
-
-<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 </body>
 </html>

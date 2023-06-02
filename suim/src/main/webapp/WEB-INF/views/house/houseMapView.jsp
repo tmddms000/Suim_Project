@@ -18,7 +18,8 @@
         <!-- 부트스트랩 자바스크립트 -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- 타입잇 자바스크립트 -->
-        <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+        <script src="https://unp
+        kg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <!-- 1:1문의 채팅 -->
@@ -262,7 +263,7 @@
 		                    cardDiv.id = '${m.houseNo}';
 		                    
 		                    var cardLink = document.createElement('a');
-		                    var hno = ${m.houseNo};
+		                    var hno = "${m.houseNo}";
 		                    cardLink.href = 'detail.ho?hno=' + hno;
 		                    cardLink.className = '';
 		                    
@@ -428,7 +429,8 @@
 		                    cardDiv.id = '${m.houseNo}';
 		                    
 		                    var cardLink = document.createElement('a');
-		                    cardLink.href = '';
+		                    var hno = "${m.houseNo}";
+		                    cardLink.href = 'detail.ho?hno=' + hno;
 		                    cardLink.className = '';
 		                    
 		                    var card = document.createElement('div');

@@ -8,7 +8,6 @@
 <html>
 <head>
 <title>상세페이지</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
 <link href="/resources/css/house/house.css" rel="stylesheet" />
 <!-- Example assets -->
 <link rel="stylesheet" type="text/css"
@@ -225,7 +224,7 @@
 					    </button>
 						</li>
 						<li class="actionButton">
-							<button class="q_btn white" id="shareBtn">소통하기</button>
+							<button class="q_btn white" id="chatBtn">소통하기</button>
 						</li>
 					</ul>
 				</div>
@@ -273,6 +272,22 @@
 					          }
 					        });
 					      }
+					
+					
+					$(document).ready(function() {
+					    $("#chatBtn").click(function() {
+					        var muser = "${h.memberId}"; // JSP 표현식으로부터 값을 가져옴
+					        var isLoggedIn = "${Id}"; // JSP 표현식에서 중괄호({})를 제거하여 JavaScript 변수에 할당
+
+					        if (isLoggedIn) {
+					            // 로그인 상태인 경우 채팅 페이지로 이동
+					            window.location.href = "house.ch?muser=" + muser;
+					        } else {
+					            // 로그인이 필요한 기능이므로 로그인되지 않은 경우 알림창을 표시
+					            alert("로그인 후 이용해주세요.");
+					        }
+					    });
+					});
 					      </script>
 			</article>
 		</section>

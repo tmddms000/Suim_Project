@@ -20,6 +20,8 @@
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
 		
 
+	<typeAlias type="com.suim.chat.model.vo.ChatList" alias="chatList" />
+	<typeAlias type="com.suim.chat.model.vo.ChatLog" alias="chatlog" />
 	</typeAliases>
 	    
 	    
@@ -31,6 +33,7 @@
 	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
 	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/notice/notice-mapper.xml" />
+	    	<mapper resource="/mappers/chat/chat-mapper.xml" />
 	    </mappers>
 	    
 </configuration>
