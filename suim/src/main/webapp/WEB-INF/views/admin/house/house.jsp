@@ -34,7 +34,7 @@
                             <div class="d-flex">
                                 <div class="me-2 " style="width:150px">
                                     <select class="form-select" onchange="changeDropdown(this)">
-                                        <option id="title" value="title">글 제목</option>
+                                        <option id="title" value="title">공실 여부</option>
                                         <option id="content" value="content">글 내용</option>
                                         <option id="writer" value="username">작성자</option>
                                     </select>

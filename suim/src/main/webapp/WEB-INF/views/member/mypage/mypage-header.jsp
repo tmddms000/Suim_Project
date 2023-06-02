@@ -6,6 +6,13 @@
 .actives {
 	color: black !important;
 }
+
+.profile {
+    margin: 0 auto;
+    width : 100%;
+    height : 100%;
+    border-radius: 50%;
+}
 </style>
 
 <div class="container" style="margin-top: 75px;">
@@ -16,17 +23,22 @@
 				<!-- begin profile -->
 				<div class="profile">
 					<div class="profile-header">
-						<!-- BEGIN profile-header-cover -->
-						<div class="profile-header-cover"></div>
-						<!-- END profile-header-cover -->
-						<!-- BEGIN profile-header-content -->
+						<div class="profile-header-cover">
+						</div>
 						<div class="profile-header-content">
-							<!-- BEGIN profile-header-img -->
 							<div class="profile-header-img">
-								<img src="/resources/img/common/default_profile.png" alt="">
+							
+							
+							<c:choose>
+						    <c:when test="${empty loginUser.changeName}">
+						        <img src="/resources/img/common/default_profile.png" alt="어라" style="width : 100%; height : 100%">
+						    </c:when>
+						    <c:otherwise>
+						        <img src="${ loginUser.changeName }" alt="어라" style="width : 100%; height : 100%">
+						    </c:otherwise>
+						</c:choose>
+								
 							</div>
-							<!-- END profile-header-img -->
-							<!-- BEGIN profile-header-info -->
 							<div class="profile-header-info">
 								<c:choose>
 									<c:when test="${not empty loginUser }">
@@ -52,7 +64,7 @@
 						</div>
 						<c:set var="currentUrl" value="${pageContext.request.requestURI}" />
 						<c:set var="suffix"
-							value="${fn:substringAfter(currentUrl, 'mypage-')}" />
+							value="${fn:substringAfter(currentUrl, '/mypage/')}" />
 						<c:set var="pageUrl" value="${fn:substringBefore(suffix, '.jsp')}" />
 						<!-- END profile-header-content -->
 						<!-- BEGIN profile-header-tab -->
@@ -94,13 +106,20 @@
 					aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="text-align: left">
-				<form id="updateForm" method="post" action="./updateProfile">
+				<form id="updateForm" method="post" action="./updateProfile" enctype="multipart/form-data">
 					<div id="fileupload_profile_img2" class="fileupload_profile_img">
-						<div id="profile_img2" class="profile"></div>
+						<c:choose>
+						    <c:when test="${empty loginUser.changeName}">
+						        <div id="profile_img2" class="profile" style="background: url(/resources/img/common/default_profile.png) 50% 50% / cover no-repeat;"></div>
+						    </c:when>
+						    <c:otherwise>
+						        <div id="profile_img2" class="profile" style="background: url(${loginUser.changeName}) 50% 50% / cover no-repeat;"></div>
+						    </c:otherwise>
+						</c:choose>
 						<span class="over"><i class="fa-solid fa-camera"
 							style="color: #f2f2f2; margin-top: 7px;"></i></span>
 						<div id="drop_profile_img2" class="drop_profile_img">
-							<input title="프로필 업로드" type="file" name="changeName"
+							<input title="프로필 업로드" type="file" name="file"
 								style="width: 100%; height: 100%; cursor: pointer;"
 								accept="image/jpeg, image/jpg, image/png, image/gif, image/svg+xml">
 						</div>
@@ -179,7 +198,7 @@
 									required="required">
 							</div>
 
-							<c:set var="birthYear" value="${loginUser.birth.substring(0, 4)}" />
+							<%-- <c:set var="birthYear" value="${loginUser.birth.substring(0, 4)}" />
 							<c:set var="birthMonth"
 								value="${loginUser.birth.substring(4, 6)}" />
 							<c:set var="birthDay" value="${loginUser.birth.substring(6, 8)}" />
@@ -205,7 +224,7 @@
 
 									<input type="hidden" name="birth" id="birth-date-input" />
 								</div>
-							</div>
+							</div> --%>
 
 							<div class="input_block form-group">
 								<label class="mini-tit" for="area">희망지역</label>
@@ -247,17 +266,23 @@
 
 
 <script>
-	$(document).ready(function() {
-		$(".editModalBtn").on("click", function() {
-			$.ajax({
-				url : "/mypage/updateProfile",
-				method : "post",
-				success : function(data) {
-					console.log(data);
-				},
-				error : function() {
-				}
-			});
-		});
-	});
+var profileImg = document.getElementById("profile_img2");
+
+//Add event listener for file input change
+document.getElementById("drop_profile_img2").addEventListener("change", function(event) {
+// Get the selected file
+var file = event.target.files[0];
+
+// Create a FileReader object to read the file
+var reader = new FileReader();
+
+// Set up the onload event handler
+reader.onload = function(e) {
+ // Set the image source to the loaded data URL
+ profileImg.style.backgroundImage = "url(" + e.target.result + ")";
+};
+
+// Read the file as a data URL
+reader.readAsDataURL(file);
+});
 </script>

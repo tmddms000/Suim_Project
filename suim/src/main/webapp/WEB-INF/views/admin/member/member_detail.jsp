@@ -57,19 +57,20 @@
 	                                        data-bs-target="#nav-profile" type="button" role="tab"
 	                                        aria-controls="nav-profile" aria-selected="false">가맹 신청 내역</button>
 	                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-profile" type="button" role="tab"
-	                                        aria-controls="nav-profile" aria-selected="false">예치금 내역</button>
+	                                        data-bs-target="#nav-contact1" type="button" role="tab"
+	                                        aria-controls="nav-profile" aria-selected="false" onclick="payment();">예치금 내역</button>
 	                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-profile" type="button" role="tab"
+	                                        data-bs-target="#nav-contact2" type="button" role="tab"
 	                                        aria-controls="nav-profile" aria-selected="false">게시글 내역</button>
 	                                </div>
                             	</nav>
 	                            <div class="tab-content pt-3" id="nav-tabContent">
 	                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+										<br>
 										<div class="table-responsive">
 			                                <table class="table">
 		                                        <tr>
-		                                            <th scope="col">이름</th>
+		                                            <th scope="col" width="200">이름</th>
 		                                            <td>${ m.memberName }</td>
 		                                        </tr>
 		                                        <tr>
@@ -115,12 +116,61 @@
 			                                </table>
 			                        	</div>
 			                        </div>
+	                                <div class="tab-pane fade" id="nav-contact1" role="tabpanel" aria-labelledby="nav-contact-tab">
+	                                    <table id="contentArea" algin="center" class="table">
+							                <tr>
+							                	<th>주문번호</th>
+							                	<th>주문자</th>
+							                	<th>가격</th>
+							                	<th>결제일</th>
+							                	<th>상태</th>
+							                </tr>
+							                <tr>
+							                    <td>${ p.paymentNo }</td>
+							                    <td>${ p.memberId }</td>
+							                    <td>${ p.price }</td>
+							                    <td>${ p.paymentDate }</td>
+							                    <td>${ p.paymentStatus }</td>
+							                </tr>
+							            </table>
+	                                </div>
 	                            </div>
 	                        </div>
 	                    </div>
                 	</div>
 				</div>
 				<!-- 테이블 끝 -->
+				
+				<script>
+					function payment(){
+						$.ajax({
+							url: "admin/detail.me",
+							type: "get",
+							data: { id: ${ m.memberId } },
+							success: function(result){
+								
+								console.log(result);
+								
+								var resultStr = "";
+								
+								for(var i = 0; i < result.length; i++) {
+									
+									resultStr += "<tr>"
+											   + 	"<td>" + result[i].userId + "</td>"
+											   + 	"<td>" + result[i].userName + "</td>"
+											   + 	"<td>" + result[i].age + "</td>"
+											   + 	"<td>" + result[i].phone + "</td>"
+											   + "</tr>";
+								}
+								
+								$("#contentArea").html(result);
+							},
+							error : function() {
+								console.log("ajax 통신 실패!");
+							}
+						});
+					}
+				</script>
 
                 <a class="btn btn-secondary" style="float:right;" href="admin/list.me">목록으로</a>
                 <br>

@@ -1,6 +1,7 @@
 package com.suim.house.model.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,23 @@ public class ListHouseServiceImpl implements ListHouseService{
 	private SqlSessionTemplate sqlSession;
 	
 	@Override
-	public ArrayList<House> selectList() {
-		return listHouseDao.selectList(sqlSession);
+	public ArrayList<House> selectList(String minValue, String maxValue, String[] genderDivisions,
+										String[] houseType, String[] maxResident,  String[] floor, Date openDate) {
+		return listHouseDao.selectList(sqlSession, minValue,maxValue,genderDivisions,houseType,maxResident,floor,openDate);
 	}
 
 	@Override
 	public ArrayList<Region> regionSelectList(String searchKeyword) {
 		return listHouseDao.regionSelectList(sqlSession, searchKeyword);
 	}
+
+
+
+	
+
+	
+
+
 	
 	
 

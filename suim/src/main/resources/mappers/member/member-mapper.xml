@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
 
+
 	<!-- MEMBER 테이블로부터 조회된 ResultSet 에 들은 데이터를 Member VO 로 가공해주는 용도 -->
 	<resultMap id="memberResultSet" type="member">
 		<result column="MEMBER_ID" property="memberId" />
@@ -24,9 +25,7 @@
 	<!-- 로그인용 쿼리문 -->
 	<select id="loginMember" parameterType="member"
 		resultMap="memberResultSet">
-
 		SELECT * FROM MEMBER
-		LEFT JOIN MEMBER_INFO USING(MEMBER_ID)
 		WHERE MEMBER_ID = #{memberId}
 	</select>
 
@@ -125,21 +124,24 @@
 		resultMap="memberResultSet">
 	SELECT *
 	FROM MEMBER
-	LEFT JOIN MEMBER_INFO USING (MEMBER_ID) 
 	WHERE EMAIL = #{email} AND NAVERLOGIN = #{id}
 	</select>
 
 	<!-- 회원 정보 수정용 쿼리문 -->
 	<update id="updateMember" parameterType="member">
 		UPDATE MEMBER
-		SET USER_NAME = #{userName}
-		, EMAIL = #{email}
-		, AGE = #{age}
-		, PHONE = #{phone}
-		, ADDRESS = #{address}
-		, GENDER = #{gender}
-		, MODIFY_DATE = SYSDATE
-		WHERE USER_ID = #{userId}
+		SET
+		<if test="memberPwd !=null">MEMBER_PWD = #{memberPwd},</if>
+		MEMBER_NAME= #{memberName},
+		NICKNAME = #{nickName},
+		PHONE = #{phone},
+		GENDER = #{gender},
+		<if test="area !=null">AREA = #{area},</if>
+		
+		<if test="changeName !=null">CHANGE_NAME = #{changeName},</if>
+		MODIFY_DATE = SYSDATE,
+		MEMBER_COMMENT = #{memberComment}
+		WHERE MEMBER_ID = #{memberId}
 	</update>
 
 	<!-- 회원 탈퇴용 쿼리문 -->

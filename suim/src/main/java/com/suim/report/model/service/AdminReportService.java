@@ -35,4 +35,6 @@ public interface AdminReportService {
 	// 신고 수정 서비스
 	int updateReport(Report r);
 
+	// 승인/반려 처리용
+	int updateReportStatus(Report r);
 }

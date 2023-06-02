@@ -14,11 +14,14 @@
 		<typeAlias type="com.suim.board.model.vo.Board" alias="board" />
 		<typeAlias type="com.suim.board.model.vo.Battachment" alias="battachment" />
 		<typeAlias type="com.suim.board.model.vo.Reply" alias="reply" />
+		<typeAlias type="com.suim.board.model.vo.Find" alias="find" />
     <typeAlias type="com.suim.house.model.vo.House" alias="house" />
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
-		<typeAlias type="com.suim.notice.model.vo.Nattachment" alias="nAttachment" />
+		
 
+	<typeAlias type="com.suim.chat.model.vo.ChatList" alias="chatList" />
+	<typeAlias type="com.suim.chat.model.vo.ChatLog" alias="chatlog" />
 	</typeAliases>
 	    
 	    
@@ -30,7 +33,7 @@
 	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
 	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/notice/notice-mapper.xml" />
-	    	<mapper resource="/mappers/notice/admin-notice-mapper.xml" />
+	    	<mapper resource="/mappers/chat/chat-mapper.xml" />
 	    </mappers>
 	    
 </configuration>

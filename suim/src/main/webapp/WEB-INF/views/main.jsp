@@ -1,10 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="UTF-8">
 <title>쉐어하우스 쉼</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 </head>
+
+<c:set var="currentPath" value="${pageContext.request.servletPath}" />
+
+<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var navbarCollapsible = document.querySelector('#mainNav');
+      navbarCollapsible.style.backgroundColor = 'white';
+    });
+  </script>
+</c:if>
 
 <body>    
  	<jsp:include page="/WEB-INF/views/common/header.jsp"/>

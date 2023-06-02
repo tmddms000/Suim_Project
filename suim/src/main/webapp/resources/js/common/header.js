@@ -2,13 +2,6 @@
 
 window.addEventListener('DOMContentLoaded', event => {
 
-    if (window.location.pathname !== '/webapp/WEB-INF/views/index.html') {
-        const navbarCollapsible = document.querySelector('#mainNav');
-        
-        // Set the background-color of #mainNav to white
-        navbarCollapsible.style.backgroundColor = 'white';
-      };
-
 
     // Navbar shrink function
     var navbarShrink = function () {

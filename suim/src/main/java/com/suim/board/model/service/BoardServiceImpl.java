@@ -21,7 +21,8 @@ public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
-
+	//------------------자유게시판-----------------------
+	
 	@Override
 	public int selectListCount() {
 		return boardDao.selectListCount(sqlSession);
@@ -33,29 +34,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int insertBoard(Board b, Battachment ba) {
-	    int result = 0;
-	    SqlSessionTemplate sqlSession = null;
-
-	    try {
-	        sqlSession = getSqlSession();  // 메소드를 통해 SqlSessionTemplate을 가져옵니다.
-	        sqlSession.getConnection().setAutoCommit(false);  // 트랜잭션 시작
-
-	        result = sqlSession.insert("boardMapper.insertBoard", b);  // 첫 번째 쿼리 실행
-	        result += sqlSession.insert("boardMapper.battachment", ba);  // 두 번째 쿼리 실행
-
-	        sqlSession.getConnection().commit();  // 트랜잭션 커밋
-	    } catch (Exception e) {
-	        sqlSession.getConnection().rollback();  // 에러 발생 시 롤백
-	        e.printStackTrace();
-	    } finally {
-	        if (sqlSession != null) {
-	            sqlSession.getConnection().setAutoCommit(true);  // 자동 커밋 설정 복원
-	            sqlSession.close();  // SqlSessionTemplate 종료
-	        }
-	    }
-
-	    return result;
+	public int insertBoard(Board b) {
+		return boardDao.insertBoard(sqlSession, b);
 	}
 	@Override
 	public int insertBattachment(Battachment ba) {
@@ -95,6 +75,20 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int ReplyCount(int boardNo) {
 		return boardDao.ReplyCount(sqlSession, boardNo);
+	}
+	
+	//------------------------------------------------
+	
+	//------------------사람구해요-----------------------
+
+	@Override
+	public int selectfListCount() {
+		return boardDao.selectfListCount(sqlSession);
+	}
+
+	@Override
+	public ArrayList<Board> selectfList(PageInfo pi) {
+		return boardDao.selectfList(sqlSession, pi);
 	}
 	
 	

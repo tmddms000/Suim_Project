@@ -56,6 +56,11 @@ public class AdminReportDao {
 		return sqlSession.update("adminReportMapper.updateReport", r);
 	}
 	
+	// 승인/반려 처리용
+	public int updateReportStatus(SqlSessionTemplate sqlSession, Report r) {
+		return sqlSession.update("adminReportMapper.updateReportStatus", r);
+	}
+	
 	public ArrayList<Member> selectTopMemberList(SqlSessionTemplate sqlSession) {
 		return (ArrayList)sqlSession.selectList("adminReportMapper.selectTopMemberList");
 	}

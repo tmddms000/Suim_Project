@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
  
 <head>
 <meta charset="UTF-8">
@@ -52,15 +53,17 @@
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="" required></td>
+                        <td><input type="text" id="title" class="form-control" name="boardTitle" value="" required></td>
                     </tr>
+                    
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="user01" name="" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${loginUser.memberId}" name="memberId" readonly></td>
                     </tr>
+
                     <tr>
                         <th><label for="content">내용</label></th>
-                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="" required></textarea></td>
+                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="boardContent" required></textarea></td>
                     </tr>
                 </table>
                 <br>
@@ -138,7 +141,7 @@
 	    				$.ajax({
 	    					data : data,
 	    					type : "POST",
-	    					url : "uploadSummernoteImageFile",
+	    					url : "/uploadSummernoteImageFile",
 	    					contentType : false,
 	    					enctype : 'multipart/form-data',
 	    					processData : false,
