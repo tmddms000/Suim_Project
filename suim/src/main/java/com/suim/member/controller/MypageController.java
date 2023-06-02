@@ -1,13 +1,20 @@
 package com.suim.member.controller;
 
+import java.io.File;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.vo.Member;
@@ -29,7 +36,7 @@ public class MypageController {
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	// 처음 페이지(알림 페이지)로 이동합니다.
-	@RequestMapping({ "timeline", "" })
+	@RequestMapping("timeline")
 	public String mypageAlert(HttpServletRequest request) {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/timeline";
@@ -73,14 +80,53 @@ public class MypageController {
 	
 	// 사용자 정보 수정 메소드
 	@PostMapping("updateProfile")
-	public String updateProfile(Member m, String changePwd1, String changePwd2, HttpServletRequest request) {
+	public String updateProfile(@RequestParam("file") MultipartFile file, Member m, String changePwd1, String changePwd2, 
+			HttpServletRequest request, Model model) {
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
 		
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd()) || m.getMemberPwd().equals(loginUser.getMemberPwd())) {
 			log.info("패스워드가 일치함");
+			
+			// 비밀번호가 일치하고, 파일이 비어있지 않음
+			if (!file.isEmpty()) {
+				
+				try {
+					
+					String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
+	                String fileName = new Date().getTime() + "-" + originalFilename;
 
+	                // 파일 용량 체크 (5MB 제한)
+	                if (file.getSize() > 5 * 1024 * 1024) {
+	                    // 용량 초과 처리
+	                	model.addAttribute("errorMsg", "회원가입 실패");
+	    				return "common/errorPage";
+	                }
+
+	                // 파일 저장 경로
+	                String uploadDir = session.getServletContext().getRealPath("/resources/uploadFiles/");
+
+	                // 디렉토리 생성
+	                File uploadDirFile = new File(uploadDir);
+	                if (!uploadDirFile.exists()) {
+	                    uploadDirFile.mkdirs();
+	                }
+
+	                // 파일 저장
+	                String filePath = uploadDir + fileName;
+	                File dest = new File(filePath);
+	                file.transferTo(dest);
+	                
+	                
+	                log.info(filePath);
+	                m.setChangeName(filePath);
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}
 			
 			// 비밀번호 변경을 할수도 있고 안할수도 있기 때문에 조건 걸어준다
 			// 비밀번호가 null이 아니고, 비밀번호가 
