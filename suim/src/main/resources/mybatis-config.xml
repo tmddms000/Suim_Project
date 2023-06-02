@@ -14,9 +14,11 @@
 		<typeAlias type="com.suim.board.model.vo.Board" alias="board" />
 		<typeAlias type="com.suim.board.model.vo.Battachment" alias="battachment" />
 		<typeAlias type="com.suim.board.model.vo.Reply" alias="reply" />
+		<typeAlias type="com.suim.board.model.vo.Find" alias="find" />
     <typeAlias type="com.suim.house.model.vo.House" alias="house" />
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
+		
 
 	</typeAliases>
 	    

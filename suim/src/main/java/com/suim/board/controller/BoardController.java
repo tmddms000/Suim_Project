@@ -55,7 +55,7 @@ public class BoardController {
 		
 		ArrayList<Board> list = boardService.selectList(pi);
 		ArrayList<Board> blist = boardService.selectbList();
-
+		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("blist", blist)
@@ -191,10 +191,11 @@ public class BoardController {
 			
 
 			int result = boardService.insertBoard(b);
-			int result2 = boardService.insertBattachment(ba);
 			
+      //int result2 = boardService.insertBattachment(ba);
 			
-			if(result > 0 || result2 > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+			if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+
 				
 				session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
 				
@@ -251,7 +252,6 @@ public class BoardController {
 				@RequestParam(value="cPage", defaultValue="1") int currentPage,
 				ModelAndView mv) {
 			
-
 			int listCount = boardService.selectfListCount();
 			
 			int pageLimit = 10;
