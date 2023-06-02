@@ -136,7 +136,9 @@
 		NICKNAME = #{nickName},
 		PHONE = #{phone},
 		GENDER = #{gender},
-		<if test="area !=null">area = #{area},</if>
+		<if test="area !=null">AREA = #{area},</if>
+		
+		<if test="changeName !=null">CHANGE_NAME = #{changeName},</if>
 		MODIFY_DATE = SYSDATE,
 		MEMBER_COMMENT = #{memberComment}
 		WHERE MEMBER_ID = #{memberId}
