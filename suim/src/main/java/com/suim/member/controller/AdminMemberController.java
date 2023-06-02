@@ -68,7 +68,7 @@ public class AdminMemberController {
 	}
 	
 	@RequestMapping("delete.me")
-	public String deleteMember(String memberId,
+	public String deleteMember(@RequestParam("id") String memberId,
 							  Model model,
 //							  String filePath,
 							  HttpSession session) {
@@ -96,7 +96,7 @@ public class AdminMemberController {
 	}
 	
 	@RequestMapping("updateForm.me")
-	public String updateForm(String memberId,
+	public String updateForm(@RequestParam("id") String memberId,
 						   Model model) {
 		
 		Member m = adminMemberService.selectMember(memberId);
@@ -149,5 +149,20 @@ public class AdminMemberController {
 			return "common/errorPage";
 		}
 	}
+	
+	
+	// 회원 상세보기 - 가맹 신청 조회용
+
+	// 회원 상세보기 - 예치금 조회용
+	@RequestMapping("payment.me")
+	public ModelAndView selectMemberPayment(ModelAndView mv,
+					@RequestParam("id") String memberId) {
+		Member m = adminMemberService.selectMember(memberId);
+		
+		mv.addObject("m", m).setViewName("admin/member/member_detail");
+		
+		return mv;
+	}
+	
 	
 }

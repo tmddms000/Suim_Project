@@ -52,8 +52,8 @@ public class AdminReportController {
 	
 	@ResponseBody
 	// 카테고리용 전체 조회용
-	@RequestMapping(value = "list.re", produces = "application/json; charset=UTF-8")
-	public HashMap<String, Object> selectList(
+	@RequestMapping(value = "category.re", produces = "application/json; charset=UTF-8")
+	public ArrayList<Report> selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
 			ModelAndView mv,
 			String category) {
@@ -68,17 +68,13 @@ public class AdminReportController {
 		
 		ArrayList<Report> list = new ArrayList<>();
 		
-		if(category == null || category.equals("전체")) {
+		if(category == null || category.equals("A")) {
 			list = adminReportService.selectList(pi);
 		} else {
 			list = adminReportService.selectList(pi, category);
 		}
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("pi", pi);
-		map.put("list", list);
 		
-		return map;
+		return list;
 	}
 
 	
@@ -94,7 +90,7 @@ public class AdminReportController {
 	}
 	
 	@RequestMapping("delete.re")
-	public String deleteReport(int reportNo,
+	public String deleteReport(@RequestParam("rno") int reportNo,
 							  Model model,
 							  String filePath,
 							  HttpSession session) {
@@ -115,7 +111,7 @@ public class AdminReportController {
 			// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
 			session.setAttribute("alertMsg", "성공적으로 OO가 삭제되었습니다.");
 			
-			return "redirect:/list.re";
+			return "redirect:/admin/list.re";
 			
 		} else { // 삭제 처리 실패 => 에러페이지 포워딩
 			
@@ -126,7 +122,7 @@ public class AdminReportController {
 	}
 	
 	@RequestMapping("updateForm.re")
-	public String updateForm(int reportNo,
+	public String updateForm(@RequestParam("rno") int reportNo,
 						   Model model) {
 		
 		// 게시글 상세보기용 selectMember 요청 재활용
@@ -135,5 +131,29 @@ public class AdminReportController {
 		model.addAttribute("r", r);
 		
 		return "admin/report/report_update";
+	}
+	
+	// 승인/반려 처리용
+	@RequestMapping("updateStatus.re")
+	public String updateReportStatus(Report r,
+							HttpSession session,
+							Model model) {
+		
+		int result = adminReportService.updateReportStatus(r);
+		
+		if(result > 0) { // 성공
+			
+			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
+			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
+			
+			return "redirect:/detail.re?rno=" + r.getReportNo();
+			
+		} else { // 실패
+			
+			// 에러문구 담아서 에러페이지로 포워딩
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			
+			return "common/errorPage";
+		}
 	}
 }
