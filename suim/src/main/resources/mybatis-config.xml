@@ -17,6 +17,7 @@
     <typeAlias type="com.suim.house.model.vo.House" alias="house" />
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
+		<typeAlias type="com.suim.notice.model.vo.Nattachment" alias="nAttachment" />
 
 	</typeAliases>
 	    
@@ -29,6 +30,7 @@
 	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
 	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/notice/notice-mapper.xml" />
+	    	<mapper resource="/mappers/notice/admin-notice-mapper.xml" />
 	    </mappers>
 	    
 </configuration>

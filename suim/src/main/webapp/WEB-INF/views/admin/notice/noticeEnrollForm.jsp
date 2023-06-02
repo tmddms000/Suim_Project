@@ -1,3 +1,7 @@
+<!-- 2023.06.01 작업 내용 이지환 -->
+<!-- form 태그 action="" 수정
+	 (action="enrollForm.no" -> action="insert.no" -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,21 +30,55 @@
 
 <!-- Template Stylesheet -->
 <link href="/resources/css/admin/style.css" rel="stylesheet">
+
+<style>
+
+		 body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .main {
+                flex: 1;
+                margin-top : 90px;
+            }
+            footer {
+                margin-top: auto;
+            }
+		
+
+    </style>
 </head>
 <body>
+<%@ include file="../common/include.jsp" %>
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+		
+        <!-- Spinner End -->
 
-    <jsp:include page="./admin/common/header.jsp" />
-	<div class="content">
+
+        <!-- Sidebar Start -->
+		<%@ include file="../common/sidebar.jsp" %>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+
+            <!-- Navbar Start -->
+			<%@ include file="../common/navbar.jsp" %>
+            <!-- Navbar End -->
         <br><br>
         <div class="innerOuter">
             <h2>공지사항 작성하기</h2>
             <br>
-
-            <form id="enrollForm" method="post" action="enrollForm.no" enctype="multipart/form-data">
+			
+			<!-- action="" 을 통해 AdminNoticeController 로 이동 -->
+            <form id="enrollForm" method="post" action="insert.no" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="boardTitle" required></td>
+                        <td><input type="text" id="title" class="form-control" name="noticeTitle" required></td>
                     </tr>
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
@@ -48,7 +86,7 @@
                     </tr>
                     <tr>
                         <th><label for="content">내용</label></th>
-                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="boardContent" required></textarea></td>
+                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="noticeContent" required></textarea></td>
                     </tr>
                 </table>
                 <br>
@@ -62,5 +100,18 @@
         <br><br>
 
     </div>
+    </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

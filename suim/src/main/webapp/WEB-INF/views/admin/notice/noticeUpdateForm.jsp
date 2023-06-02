@@ -36,7 +36,7 @@
     <div class="content">
         <br><br>
         <div class="innerOuter">
-            <h2>공지사항 수정하기</h2>
+            <h2>공지사항 수정하</h2>
             <br>
 
             <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
