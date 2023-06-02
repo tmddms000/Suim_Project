@@ -3,23 +3,25 @@
 <mapper namespace="listHouseMapper">
   	
   	<resultMap id="houseResultMap" type="house">
-		<result column="HOUSE_NO" property="houseNo"/>
-		<result column="HOUSE_NAME" property="houseName"/>
-		<result column="HOUSE_ADDRESS" property="houseAddress"/>
-		<result column="DEPOSIT" property="deposit"/>
-		<result column="RENT" property="rent"/>
-		<result column="ENTER_DATE" property="enterDate"/>
-		<result column="MIN_STAY" property="minStay"/>
-		<result column="MAX_STAY" property="maxStay"/>
-		<result column="ROOM_PEOPLE" property="roomPeople"/>
-		<result column="INC_FURNITURE" property="incFurniture"/>
-		<result column="HOUSE_CONTENT" property="houseContent"/>
-		<result column="RES_GENDER" property="resGender"/>
-		<result column="RES_TYPE" property="resType"/>
-		<result column="FLOOR" property="floor"/>
-		<result column="HOUSE_STATUS" property="houseStatus"/>
-		<result column="HOUSE_DATE" property="houseDate"/>
-		<result column="MEMBER_ID" property="memberId"/>
+	    <result column="HOUSE_NO" property="houseNo"/>
+	    <result column="HOUSE_NAME" property="houseName"/>
+	    <result column="HOUSE_ADDRESS" property="houseAddress"/>
+	    <result column="DEPOSIT" property="deposit"/>
+	    <result column="RENT" property="rent"/>
+	    <result column="ENTER_DATE" property="enterDate"/>
+	    <result column="MAX_ENTER_DATE"  property="maxEnterDate"/>
+	    <result column="MIN_STAY" property="minStay"/>
+	    <result column="MAX_STAY" property="maxStay"/>
+	    <result column="ROOM_PEOPLE" property="roomPeople"/>
+	    <result column="INC_FURNITURE" property="incFurniture"/>
+	    <result column="HOUSE_CONTENT" property="houseContent"/>
+	    <result column="RES_GENDER" property="resGender"/>
+	    <result column="RES_TYPE" property="resType"/>
+	    <result column="FLOOR" property="floor"/>
+	    <result column="HOUSE_STATUS" property="houseStatus"/>
+	    <result column="HOUSE_DATE" property="houseDate"/>
+	    <result column="MEMBER_ID" property="memberId"/>
+	   	<result column="CHANGE_NAME" property="changeName"/>
 	</resultMap>
 	
 	<resultMap id="regionResultMap" type="com.suim.house.model.vo.Region">
@@ -29,17 +31,52 @@
 	
 	
 	<select id="selectList" resultMap="houseResultMap">
-		SELECT *
-		 FROM HOUSE
-		 ORDER BY HOUSE_NO DESC
+	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
+	    FROM HOUSE h
+	    JOIN PHOTO p ON h.HOUSE_NO = p.HOUSE_NO
+	    <where>
+	    	<if test="minValue != null">
+	    		AND RENT BETWEEN #{minValue} AND #{maxValue}
+	    	</if>
+	        <if test="genderDivisions != null">
+	            AND RES_GENDER IN
+	            <foreach item="gender" collection="genderDivisions" open="(" separator="," close=")">
+	                #{gender}
+	            </foreach>
+	        </if>
+	        <if test="houseType != null">
+	            AND RES_TYPE IN
+	            <foreach item="type" collection="houseType" open="(" separator="," close=")">
+	                #{type}
+	            </foreach>
+	        </if>
+	        <if test="maxResident != null">
+	        	AND ROOM_PEOPLE IN
+	        	<foreach item="roompeople" collection="maxResident" open="(" separator="," close=")">
+	                #{roompeople}
+	            </foreach>
+		    </if>
+	        <if test="floor != null">
+	            AND FLOOR IN
+	            <foreach item="flo" collection="floor" open="(" separator="," close=")">
+	                #{flo}
+	            </foreach>
+	        </if>
+	        <if test="openDate != null">
+				AND #{openDate} BETWEEN ENTER_DATE AND MAX_ENTER_DATE
+	   	 	</if>
+	   	 	AND p.FILE_LEVEL = 'Y'
+	    </where>
+	    ORDER BY HOUSE_NO DESC
 	</select>
-	
+		
 	<select id="regionSelectList" resultMap="regionResultMap">
 		SELECT LATITUDE,
 				LONGITUDE
 		FROM REGION
 		WHERE REGION_NAME LIKE '%' || #{searchKeyword} || '%' AND ROWNUM = 1
-
-		
 	</select>
+	
+	
+	
 </mapper>

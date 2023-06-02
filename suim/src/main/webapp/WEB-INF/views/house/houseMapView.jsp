@@ -18,8 +18,7 @@
         <!-- 부트스트랩 자바스크립트 -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- 타입잇 자바스크립트 -->
-        <script src="https://unp
-        kg.com/typeit@8.7.1/dist/index.umd.js"></script>
+        <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <!-- 1:1문의 채팅 -->
@@ -56,13 +55,20 @@
             align-items: center;
             justify-content: center;
             }
-        .search-box>form {
+        .search-box {
             margin-bottom: 20px;
+        }
+        #keyword-detail-search{
+            width : 275px;
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 10px 20px;
         }
         #search-detail {
             height: 50px;
             width: 50px;
-            margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -140,12 +146,10 @@
         a {
         text-decoration: none;
         }
-      </style>
-        
-        
-        
-        
-        
+        .filterTitle{
+        	margin-bottom : 5px;
+        }
+      </style>     
 </head>
 
 
@@ -189,7 +193,7 @@
 	        });
 	    }
 			
-	
+		
 	
 		// 주소-좌표 변환 객체 생성합니다
 		var geocoder = new kakao.maps.services.Geocoder();
@@ -246,12 +250,12 @@
 			    		
 						        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 						        
-						        // 결과값으로 받은 위치를 마커로 표시합니다
+								// 결과값으로 받은 위치를 마커로 표시합니다
 						        var marker = new kakao.maps.Marker({
 						            map: map,	
 						            position: coords,
 						        });
-						        
+
 							// 마커가 지도 위에 표시되도록 설정합니다
 							marker.setMap(map);	
 							// 마커를 markers 배열에 추가
@@ -263,7 +267,7 @@
 		                    cardDiv.id = '${m.houseNo}';
 		                    
 		                    var cardLink = document.createElement('a');
-		                    var hno = "${m.houseNo}";
+		                    var hno = '${m.houseNo}';
 		                    cardLink.href = 'detail.ho?hno=' + hno;
 		                    cardLink.className = '';
 		                    
@@ -271,7 +275,7 @@
 		                    card.className = 'card';
 		                    
 		                    var cardImage = document.createElement('img');
-		                    cardImage.src = '...';
+		                    cardImage.src = '${m.changeName}';
 		                    cardImage.className = 'card-img-top';
 		                    cardImage.alt = '...';
 		                    card.appendChild(cardImage);
@@ -398,15 +402,12 @@
 	    
 	    // 영역의 북동쪽 위도 좌표를 얻어옵니다 
 	    var neLng = bounds.getNorthEast().getLng(); 
-	    
-	    
-	    
+	    	    
 	    var markers = [];
 	      
 	    <c:forEach var="m" items="${ list }">
 		  // 경계 좌표를 기반으로 DB에서 마커 데이터 가져오기 & 가져온 데이터를 기반으로 새로운 마커 생성 및 표시
 		  geocoder.addressSearch('${ m.houseAddress }', function(result, status) {
-				
 			    // 정상적으로 검색이 완료됐으면 
 			     if (status === kakao.maps.services.Status.OK) {
 			    	 
@@ -416,10 +417,9 @@
 						        var marker = new kakao.maps.Marker({
 						            position: new kakao.maps.LatLng(result[0].y, result[0].x)
 						        });
-
 						    // 클러스터에 마커 추가
 							clusterer.addMarker(marker);
-
+						    
 							// 마커를 markers 배열에 추가
 							markers.push(marker);
 						
@@ -429,7 +429,7 @@
 		                    cardDiv.id = '${m.houseNo}';
 		                    
 		                    var cardLink = document.createElement('a');
-		                    var hno = "${m.houseNo}";
+		                    var hno = '${m.houseNo}';
 		                    cardLink.href = 'detail.ho?hno=' + hno;
 		                    cardLink.className = '';
 		                    
@@ -437,7 +437,7 @@
 		                    card.className = 'card';
 		                    
 		                    var cardImage = document.createElement('img');
-		                    cardImage.src = '...';
+		                    cardImage.src = '${m.changeName}';
 		                    cardImage.className = 'card-img-top';
 		                    cardImage.alt = '...';
 		                    card.appendChild(cardImage);
@@ -487,7 +487,8 @@
 		}
 	</script>
             <div class="col-md-5">
-                <div class="scrollable-div">
+                <form method="get" action="list.ho">
+                    <div class="scrollable-div">
                     <div class="row">
                         <div class="search-box">
                             <!-- HTML 코드 -->
@@ -498,86 +499,93 @@
                                     </svg>
                                     <div id="search-detail-text">조건검색</div>
                                 </span>
-                            <form method="get" action="list.ho">
+                                <div id="keyword-detail-search">
                                 <input type="text" name="searchKeyword" placeholder="지역명, 주변명 입력">
                                 <button type="submit">
                                     <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
                                 </button>
-                            </form>
+                                </div>
                         </div>
                         <div id="content-view" class="row">
                             <div  id="content" class="row box" style="height: 100%; padding: 0; opacity: 1;"></div>
                             <div id="content-clicked" class="col-md-12 box" style="opacity: 0; pointer-events: none;">
-                                <form>
-                                    <div class="h-filter-detailFix" id="filter-detail" style="display: block; top: 170.297px; left: 22.5625px; width: 100%; height: 798.703px;">
+                                   <div class="h-filter-detailFix" id="filter-detail" style="display: block; top: 170.297px; left: 22.5625px; width: 100%; height: 798.703px;">
                                         <fieldset>
                                             <div id="select-container">
                                                 <!--월세조정-->
-                                                <h6 class="filterTitle"><strong>월세 범위</strong>&nbsp;&nbsp;(0만원~300만원)</h6>
+                                                <h6 class="filterTitle"><strong>월세 범위</strong>&nbsp;&nbsp;(현재 검색 범위 : <span id="minValueSpan">${minValueResult}</span>만원 - <span id="maxValueSpan">${maxValueResult}</span>만원)</h6>
                                                 <div id="slider"></div>
                                                 <div class="slider-values">
-                                                <span id="minValue">20</span>만원 - <span id="maxValue">150</span>만원
+                                                <span name="minValueText" id="minValueText"></span>만원 - <span name="maxValueText" id="maxValueText"></span>만원
                                                 </div>
+                                                <input type="hidden" id="minValue" name="minValue">
+												<input type="hidden" id="maxValue" name="maxValue">
                                                 <script>
-                                                    var slider = document.getElementById('slider');
-                                                    var minValue = document.getElementById('minValue');
-                                                    var maxValue = document.getElementById('maxValue');
+                                                var slider = document.getElementById('slider');
+                                                var minValueText = document.getElementById('minValueText');
+                                                var maxValueText = document.getElementById('maxValueText');
+                                                var minValue = document.getElementById('minValue');
+                                                var maxValue = document.getElementById('maxValue');
+                                               	var initialValues = [0,300];
+                                              
+                                                noUiSlider.create(slider, {
+                                                  start: initialValues,
+                                                  connect: true,
+                                                  range: {
+                                                    'min': 0,
+                                                    'max': 300
+                                                  },
+                                                  step: 1,
+                                                  format: {
+                                                    to: function(value) {
+                                                      return Math.round(value);
+                                                    },
+                                                    from: function(value) {
+                                                      return value;
+                                                    }
+                                                  }
+                                                });
 
-                                                    noUiSlider.create(slider, {
-                                                        start: [20, 150],
-                                                        connect: true,
-                                                        range: {
-                                                        'min': 0,
-                                                        'max': 300
-                                                        },
-                                                        step: 1,
-                                                        format: {
-                                                        to: function(value) {
-                                                            return Math.round(value);
-                                                        },
-                                                        from: function(value) {
-                                                            return value;
-                                                        }
-                                                        }
-                                                    });
-                                                
-                                                    slider.noUiSlider.on('update', function(values) {
-                                                        minValue.textContent = values[0];
-                                                        maxValue.textContent = values[1];
-                                                    }); 
-                                                </script>
+                                                slider.noUiSlider.on('update', function(values) {
+                                                  minValueText.textContent = values[0];
+                                                  maxValueText.textContent = values[1];
+
+                                                  minValue.value = values[0];
+                                                  maxValue.value = values[1];
+
+                                                });
+                                              	</script>
                                                 <!--월세조정 끝-->
-                                                <br>
                                                 <!-- 성별 타입 -->
+                                                <br>
                                                 <div class="genderFilter">
                                                     <p class="filterTitle"><strong>성별 타입</strong>
                                                     <div class="filter_cont">
-                                                            <input type="radio" id="house-filter_gender_division_f" name="gender_division" value="f"><label for="house-filter_gender_division_f"><span class="select_icon02">&nbsp;</span>여성전용</label>&nbsp;
-                                                            <input type="radio" id="house-filter_gender_division_m" name="gender_division" value="m"><label for="house-filter_gender_division_m"><span class="select_icon04">&nbsp;</span>남성전용</label>&nbsp;
-                                                            <input type="radio" id="house-filter_gender_division_mf" name="gender_division" value="u"><label for="house-filter_gender_division_mf"><span class="select_icon03">&nbsp;</span>남녀공용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_division_f" name="genderDivisions" value="여성"><label for="house-filter_gender_division_f">&nbsp;여성전용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_division_m" name="genderDivisions" value="남성"><label for="house-filter_gender_division_m">&nbsp;남성전용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_division_mf" name="genderDivisions" value="남녀공용"><label for="house-filter_gender_division_mf">&nbsp;남녀공용</label>&nbsp;
                                                     </div>
                                                 </div>
-                                                <!-- 성별 타입 -->
+                                                <!-- 성별 타입 끝-->
                                                 <br>
                                                 <!-- 주거 형태 -->
                                                 <div class="houseTypeWrap">
                                                     <p class="filterTitle"><strong>주거 유형</strong>
                                                     <div class="filter_cont">
-                                                            <input type="radio" id="house-filter_house_type_0" name="house_type" value="0"><label for="house-filter_house_type_0"><span class="select_icon02">&nbsp;</span>아파트</label>&nbsp;
-                                                            <input type="radio" id="house-filter_house_type_1" name="house_type" value="1"><label for="house-filter_house_type_1"><span class="select_icon04">&nbsp;</span>단독주택</label>&nbsp;
-                                                            <input type="radio" id="house-filter_house_type_2" name="house_type" value="2"><label for="house-filter_house_type_2"><span class="select_icon03">&nbsp;</span>빌라</label>&nbsp;
-                                                            <input type="radio" id="house-filter_house_type_3" name="house_type" value="3"><label for="house-filter_house_type_3"><span class="select_icon03">&nbsp;</span>기타</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_house_type_0" name="houseType" value="아파트"><label for="house-filter_house_type_0">&nbsp;아파트</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_house_type_1" name="houseType" value="오피스텔"><label for="house-filter_house_type_1">&nbsp;오피스텔</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_house_type_2" name="houseType" value="원룸"><label for="house-filter_house_type_2">&nbsp;원룸</label>&nbsp;
                                                     </div>
                                                 </div>
                                                 <!-- 주거형태 끝 -->
-                                                <!-- 룸 형태 -->
+                                             	<!-- 룸 형태 -->
                                                 <br>
                                                 <div class="houseTypeWrap">
                                                     <p class="filterTitle"><strong>룸 형태</strong>
                                                     <div class="filter_cont">
-                                                            <input type="radio" id="house-filter_max_resident_1" name="max_resident" value="1"><label for="house-filter_max_resident_1"><span class="select_icon02">&nbsp;</span>1인실</label>&nbsp;
-                                                            <input type="radio" id="house-filter_max_resident_2" name="max_resident" value="2"><label for="house-filter_max_resident_2"><span class="select_icon04">&nbsp;</span>2인실</label>&nbsp;
-                                                            <input type="radio" id="house-filter_max_resident_3" name="max_resident" value="3"><label for="house-filter_max_resident_3"><span class="select_icon03">&nbsp;</span>3인실</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_max_resident_1" name="maxResident" value=1><label for="house-filter_max_resident_1">&nbsp;1인실</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_max_resident_2" name="maxResident" value=2><label for="house-filter_max_resident_2">&nbsp;2인실</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_max_resident_3" name="maxResident" value=3><label for="house-filter_max_resident_3">&nbsp;3인실</label>&nbsp;
                                                     </div>
                                                 </div>
                                                 <!-- 룸 형태 끝 -->
@@ -585,18 +593,16 @@
                                                 <div class="houseTypeWrap">
                                                     <p class="filterTitle"><strong>층수</strong>
                                                     <div class="filter_cont">
-                                                        <select>
-                                                            <option value="semi-basement">반지하</option>
-                                                            <option value="rooftop">옥탑</option>
-                                                            <option value="first-floor">지상</option>
-                                                        </select>
+                                                            <input type="checkbox" id="house-filter_floor_type_0" name="floor" value="반지하"><label for="house-filter_floor_type_0">&nbsp;반지하</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_floor_type_1" name="floor" value="옥탑"><label for="house-filter_floor_type_1">&nbsp;옥탑</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_floor_type_2" name="floor" value="지상"><label for="house-filter_floor_type_2">&nbsp;지상</label>&nbsp;
                                                     </div>
                                                 </div>
                                                 <br>
                                                 <!--입주일 선택-->
-                                                <div class="dateWrap">
+                                               	<div class="dateWrap">
                                                   <h5 class="filterTitle"><strong>입주예정일</strong></h5>
-                                                   <input type="date" class="text-input" name="open_date" max="2099-12-31" placeholder="ex)2017-08-14">
+                                                   <input type="date" class="text-input" name="openDate" max="2099-12-31" placeholder="ex)2023-06-01">
                                                 </div>
                                                 <!--입주일 선택 끝-->
                                             </div>
@@ -604,19 +610,64 @@
                                         <hr>
                                         <div class="applyWrap">
                                             <input type="reset" id="reset" value="초기화">       
-                                            <input type="button" id="detail-search-click" value="검색" onclick="">    
-                                            <input type="button" id="close" value="닫기" onClick="">                               
+                                            <input type="submit" id="detail-search-click" value="검색">    
+                                            <input type="button" id="close" value="닫기" onClick="toggleContent()">                               
                                         </div>
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
     <!-- JavaScript 코드 -->
+  	<!-- checkbox 유지 -->
+  	<script>
+	  // 페이지 로드 시 inputtag 상태 복원
+	  window.addEventListener('DOMContentLoaded', function () {
+	    // checkbox의 체크 상태를 localStorage에서 가져옴
+	    var checkedValues = localStorage.getItem('checkedValues');
+	    if (checkedValues) {
+	      checkedValues = JSON.parse(checkedValues);
+	      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	      checkboxes.forEach(function (checkbox) {
+	        if (checkedValues.includes(checkbox.value)) {
+	          checkbox.checked = true;
+	        }
+	      });
+	    }
+	    const inputElement = document.querySelector('input[name="openDate"]');
+	    const savedValue = localStorage.getItem('openDate');
+	    if (savedValue) {
+	      inputElement.value = savedValue;
+	    }
+	  });
+	
+	  // 폼 제출 이벤트 리스너 추가
+	  document.getElementById('detail-search-click').addEventListener('click', function () {
+	    // checkbox의 체크 상태 저장
+	    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	    var checkedValues = [];
+	    checkboxes.forEach(function (checkbox) {
+	      if (checkbox.checked) {
+	        checkedValues.push(checkbox.value);
+	      }
+	    });
+	
+	    // checkbox의 체크 상태를 localStorage에 저장
+	    localStorage.setItem('checkedValues', JSON.stringify(checkedValues));
+	    
+	    const inputElement = document.querySelector('input[name="openDate"]');
+	    const value = inputElement.value;
+	    localStorage.setItem('openDate', value); // 입력 값을 로컬 스토리지에 저장합니다.
+	  });
+	</script>
+	
+	
+  	
+    <!-- 토글 효과 -->
     <script>
         function toggleContent() {
             var contentView = document.getElementById('content');
