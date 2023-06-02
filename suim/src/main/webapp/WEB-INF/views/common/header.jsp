@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 	
@@ -11,6 +9,20 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+	
+	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
+
+
+	<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
+	  <script>
+	    window.addEventListener('DOMContentLoaded', function() {
+	      var navbarCollapsible = document.querySelector('#mainNav');
+	      navbarCollapsible.style.backgroundColor = 'white';
+	    });
+	  </script>
+	</c:if>
+		
+	
 	
 	
 	<header>
