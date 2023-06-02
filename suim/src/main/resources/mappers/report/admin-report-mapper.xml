@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="adminReportMapper">
 
-	<!-- MEMBER 테이블로부터 조회된 ResultSet 에 들은 데이터를 Member VO 로 가공해주는 용도 -->
+	<!-- REPORT 테이블로부터 조회된 ResultSet 에 들은 데이터를 REPORT VO 로 가공해주는 용도 -->
 	<resultMap id="adminReportResultSet" type="report">
 		<result column="REPORT_NO" property="reportNo" />
 		<result column="REPORT_TITLE" property="reportTitle" />
@@ -71,7 +71,7 @@
 				   		, #{reportId})
 	</insert>
 	
-	<!-- 회원 상세 조회용 쿼리문 -->
+	<!-- 신고 상세 조회용 쿼리문 -->
 	<select id="selectReport" parameterType="_int" resultMap="adminReportResultSet">
 		SELECT REPORT_NO
 			 , REPORT_TITLE
@@ -84,14 +84,14 @@
 		 WHERE REPORT_NO = #{reportNo}
 	</select>
 
-	<!-- 게시글 삭제용 쿼리문 -->
+	<!-- 신고 삭제용 쿼리문 -->
 	<update id="deleteReport" parameterType="_int">
 		UPDATE REPORT
-		   SET STATUS = 'N'
+		   SET REPORT_STATUS = 'N'
 		 WHERE REPORT_NO = #{reportNo}
 	</update>
 	
-	<!-- 게시글 수정용 쿼리문 -->
+	<!-- 신고 수정용 쿼리문 -->
 	<update id="updateReport" parameterType="report">
 		UPDATE REPORT
 		   SET REPORT_TITLE = #{reportTitle}
@@ -101,5 +101,10 @@
 		 WHERE REPORT_NO = #{reportNo}
 	</update>
 
-
+	<!-- 승인/반려용 쿼리문 -->
+	<update id="updateReportStatus" parameterType="report">
+		UPDATE REPORT
+		   SET REPORT_STATUS = #{reportStatus}
+		 WHERE REPORT_NO = #{reportNo}
+	</update>
 </mapper>

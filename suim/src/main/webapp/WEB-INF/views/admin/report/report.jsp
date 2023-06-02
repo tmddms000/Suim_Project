@@ -41,16 +41,15 @@
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                        aria-selected="true">전체</button>
+                                        aria-selected="true" value="A">전체</button>
                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false">미처리</button>
+                                        aria-controls="nav-profile" aria-selected="false" value="N">미처리</button>
                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false">처리 완료</button>
+                                        aria-controls="nav-profile" aria-selected="false" value="Y">처리 완료</button>
                                     <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false">반려</button>
+                                        type="button" role="tab" aria-selected="false" value="C">반려</button>
                                 </div>
                             </nav>
                             <div class="tab-content pt-3" id="nav-tabContent">
@@ -59,7 +58,7 @@
 		                                <table class="table" id="reportList">
 		                                    <thead>
 		                                        <tr>
-		                                            <th scope="col"><input class="form-check-input" type="checkbox" value=""></th>
+		                                            <th scope="col"><input class="form-check-input" type="checkbox" id="selectAll_A"></th>
 		                                            <th scope="col">번호</th>
 		                                            <th scope="col">제목</th>
 		                                            <th scope="col">내용</th>
@@ -72,114 +71,7 @@
 		                                    <tbody>
 		                                    	<c:forEach var="r" items="${ list }">
 		                    						<tr>
-			                                            <td scope="row"><input class="form-check-input" type="checkbox" value=""></td>
-			                                            
-			                                            <td class="rno">${ r.reportNo }</td>
-			                                            <td>${ r.reportTitle }</td>
-			                                            <td>${ r.reportContent }</td>
-			                                            <td>${ r.reportType }</td>
-			                                            <td>${ r.reportId }</td>
-			                                            <td>${ r.reportDate }</td>
-			                                            <td>${ r.reportStatus }</td>
-			                                        </tr>
-			                                	</c:forEach>
-		                                    </tbody>
-		                                </table>
-		                            </div>
-                                </div>
-                                
-                                <script>
-                                $(function(){
-                                	 $("nav>div>button").on("click", function() {
-                                		 var selectedCategory = $(this).text();
-                                		 
-										                                		 
-										 $.ajax({
-											url : "list.re",
-											type : "get",
-											data: { category: selectedCategory },
-											success : function(result) {
-												
-												console.log(result);
-												
-												var resultStr = "";
-												
-												for(var i = 0; i < result.length; i++) {
-													
-													resultStr += "<tr>"
-															   + 	"<td>" + result[i].reportNo + "</td>"
-															   + 	"<td>" + result[i].reportTitle + "</td>"
-															   + 	"<td>" + result[i].reportContent + "</td>"
-															   + 	"<td>" + result[i].reportType + "</td>"
-															   + 	"<td>" + result[i].reportId + "</td>"
-															   + 	"<td>" + result[i].reportDate + "</td>"
-															   + 	"<td>" + result[i].reportStatus + "</td>"
-															   + "</tr>";
-												}
-												
-												$("#result3>tbody").html(resultStr);
-											},
-											error : function() {
-												console.log("ajax 통신 실패!");
-											}
-										});
-									});
-                                });
-							</script>
-                                
-                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-									<div class="table-responsive">
-		                                <table class="table" id="reportList">
-		                                    <thead>
-		                                        <tr>
-		                                            <th scope="col"><input class="form-check-input" type="checkbox" value=""></th>
-		                                            <th scope="col">번호</th>
-		                                            <th scope="col">제목</th>
-		                                            <th scope="col">내용</th>
-		                                            <th scope="col">유형</th>
-		                                            <th scope="col">신고자</th>
-		                                            <th scope="col">신고일</th>
-		                                            <th scope="col">상태</th>
-		                                        </tr>
-		                                    </thead>
-		                                    <tbody>
-		                                    	<c:forEach var="r" items="${ list }">
-		                    						<tr>
-			                                            <td scope="row"><input class="form-check-input" type="checkbox" value=""></td>
-			                                            
-			                                            <td class="rno">${ r.reportNo }</td>
-			                                            <td>${ r.reportTitle }</td>
-			                                            <td>${ r.reportContent }</td>
-			                                            <td>${ r.reportType }</td>
-			                                            <td>${ r.reportId }</td>
-			                                            <td>${ r.reportDate }</td>
-			                                            <td>${ r.reportStatus }</td>
-			                                        </tr>
-			                                	</c:forEach>
-		                                    </tbody>
-		                                </table>
-		                            </div>
-                                </div>
-                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-									<div class="table-responsive">
-		                                <table class="table" id="reportList">
-		                                    <thead>
-		                                        <tr>
-		                                            <th scope="col"><input class="form-check-input" type="checkbox" value=""></th>
-		                                            <th scope="col">번호</th>
-		                                            <th scope="col">제목</th>
-		                                            <th scope="col">내용</th>
-		                                            <th scope="col">유형</th>
-		                                            <th scope="col">신고자</th>
-		                                            <th scope="col">신고일</th>
-		                                            <th scope="col">상태</th>
-		                                        </tr>
-		                                    </thead>
-		                                    <tbody>
-		                                    	<c:forEach var="r" items="${ list }">
-		                    						<tr>
-			                                            <td scope="row"><input class="form-check-input" type="checkbox" value=""></td>
-			                                            
+			                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
 			                                            <td class="rno">${ r.reportNo }</td>
 			                                            <td>${ r.reportTitle }</td>
 			                                            <td>${ r.reportContent }</td>
@@ -194,7 +86,6 @@
 		                            </div>
                                 </div>
                             </div>
-
                             
                         </div>
                     </div>
@@ -203,24 +94,77 @@
             <!-- Table End -->
 
             <script>
-                $(document).ready(function(){
-                    $("#check_all").click(function(){
-                        if($("#check_all").prop("checked")){
-                            $("input[type=checkbox]").prop("checked",true);
-                        }else{
-                            $("input[type=checkbox]").prop("checked",false);
-                        }
-                    });
-                });
+            $(function() {
+            	  $("nav>div>button").on("click", function() {
+            	    var selectedCategory = $(this).val();
+            	    var tabId = "#nav-profile-" + selectedCategory;
+            	    var selectAllId = "#selectAll_" + selectedCategory;
+            	    var checkboxName = "checkboxName_" + selectedCategory;
+					console.log(checkboxName);
+					
+            	    $.ajax({
+            	      url: "category.re",
+            	      type: "get",
+            	      data: { category: selectedCategory },
+            	      success: function(result) {
+            	        var resultStr = "";
 
+            	        for (var i = 0; i < result.length; i++) {
+            	          resultStr += "<tr>" +
+				            	            "<td><input class='form-check-input' type='checkbox' name='" + checkboxName + "'></td>" +
+				            	            "<td class='rno'>" + result[i].reportNo + "</td>" +
+				            	            "<td>" + result[i].reportTitle + "</td>" +
+				            	            "<td>" + result[i].reportContent + "</td>" +
+				            	            "<td>" + result[i].reportType + "</td>" +
+				            	            "<td>" + result[i].reportId + "</td>" +
+				            	            "<td>" + result[i].reportDate + "</td>" +
+				            	            "<td>" + result[i].reportStatus + "</td>" +
+			            	            "</tr>";
+            	        }
+            	        
+            	        $("#reportList>tbody").html(resultStr);
+
+            	        $(tabId + " table tbody").html(resultStr);
+            	        
+            	        $("#reportList>tbody>tr").click(function(event) {
+    				        if (!$(event.target).is('input[type="checkbox"]')) {
+    				            let rno = $(this).children(".rno").text();
+    				            location.href = "detail.re?rno=" + rno;
+    				        }
+    				    });
+            	        
+            	        // 전체 선택 체크박스 클릭 이벤트 핸들러
+            	        $(selectAllId).on("change", function() {
+            	          var isChecked = $(this).prop("checked");
+            	          $(tabId + " input[name='" + checkboxName + "']").prop("checked", isChecked);
+            	        });
+            	      },
+						error : function() {
+							console.log("ajax 통신 실패!");
+						}
+					});
+				});
+	          });
+	            	
+
+                // 디테일로 넘겨주는 함수
                 $(function() {
-            		$("#reportList>tbody>tr").click(function() {
-            			let rno = $(this).children(".rno").text();
-            			location.href = "detail.re?rno=" + rno;
-            		});
-            	});
+				    $("#reportList>tbody>tr").click(function(event) {
+				        if (!$(event.target).is('input[type="checkbox"]')) {
+				            let rno = $(this).children(".rno").text();
+				            location.href = "detail.re?rno=" + rno;
+				        }
+				    });
+
+        	        // 전체 선택 체크박스 클릭 이벤트 핸들러
+        	        $(selectAllId).on("change", function() {
+        	          var isChecked = $(this).prop("checked");
+        	          $(tabId + " input[name='" + checkboxName + "']").prop("checked", isChecked);
+        	        });
+				});
             </script>
 
+			<br>
             <div id="pagingArea">
                 <ul class="pagination">
                     

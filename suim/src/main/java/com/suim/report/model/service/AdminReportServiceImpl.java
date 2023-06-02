@@ -55,5 +55,11 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public int updateReport(Report r) {
 		return adminReportDao.updateReport(sqlSession, r);
 	}
+	
+	// 승인/반려 처리용
+	@Override
+	public int updateReportStatus(Report r) {
+		return adminReportDao.updateReportStatus(sqlSession, r);
+	}
 
 }

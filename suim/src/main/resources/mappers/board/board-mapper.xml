@@ -105,18 +105,19 @@
 	<insert id="insertBoard" parameterType="board">
 		INSERT INTO BOARD (BOARD_NO, 
 		                   BOARD_TITLE, 
-		                   BOARD_COTENT, 
-		                   BOARD_VIEW, 
-		                   BOARD_DATE, 
-		                   STATUS,
-		                   MEMBER_ID)
+		                   BOARD_COTENT,
+                           BOARD_VIEW,
+                           BOARD_DATE,
+                           STATUS,
+                           MEMBER_ID)
 				   VALUES(SEQ_BNO.NEXTVAL
 				   		, #{boardTitle}
-				   		, #{boardContent})
-				   		, #{boardView}
-				   		, DEFAULT
-				   		, DEFAULT
-				   		, #{memberId}
+				   		, #{boardContent}
+                        ,DEFAULT
+                        ,DEFAULT
+                        ,DEFAULT
+                        ,#{memberId})
+		
 	</insert>
 	
 		<!-- 게시글 파일첨부 쿼리문 -->

@@ -15,6 +15,8 @@ import com.suim.common.model.vo.PageInfo;
 @Repository
 public class BoardDao {
 	
+	//-----------------------------자유게시판----------------------------------
+	
 	public int selectListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("boardMapper.selectListCount");
 	}
@@ -59,4 +61,23 @@ public class BoardDao {
 	public int ReplyCount(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.selectOne("boardMapper.ReplyCount", boardNo);
 	}
+	
+	//------------------------------------------------------------------------------
+	
+	//---------------------------사람구해요---------------------------------------------
+	
+	public int selectfListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("boardMapper.selectListCount");
+	}
+	
+	public ArrayList<Board> selectfList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
+	}
+	
 }

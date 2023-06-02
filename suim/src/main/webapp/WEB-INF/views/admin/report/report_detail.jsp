@@ -1,7 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <style>
 	.reportTableLeft{
 		display: inline-block;
@@ -12,8 +16,9 @@
 		float: rigth;	
 	}
 </style>
-
 	<%@ include file="../common/include.jsp" %>
+</head>
+<body>  
 
 	<div class="container-xxl position-relative bg-white d-flex p-0">
 	
@@ -37,7 +42,7 @@
             	<!-- Table Start -->
 	            <br><br>
 	            <div class="innerOuter">
-                <h2>회원 정보 보기</h2>
+                <h2>신고 내역 보기</h2>
                 <br>
                 
 				<!-- 테이블 시작 -->
@@ -52,7 +57,7 @@
 		                			<div class="col-sm-12 col-xl-6 reportTableLeft">
 		                                <table class="table">
 	                                        <tr>
-	                                            <th scope="col">번호</th>
+	                                            <th scope="col" width="100">번호</th>
 	                                            <td class="rno">${ r.reportNo }</td>
 	                                        </tr>
 	                                        <tr>
@@ -85,7 +90,7 @@
 		                			<div class="col-sm-12 col-xl-6 reportTableRight">
 		                                <table class="table">
 		                                    <tr>
-	                                            <th scope="row">신고 관련해서 뭐넣지..?</th>
+	                                            <th scope="row">첨부파일</th>
 	                                            <c:choose>
 													<c:when test="${empty changeName}">
 														<img src="../../../resources/img/admin/user.jpg"/>
@@ -108,36 +113,32 @@
             
             <a class="btn btn-secondary" style="float:right;" href="list.re">목록으로</a>
             <br>
-    
-                <!-- <c:if test="${ (not empty loginUser) and (loginUser.userId eq b.boardWriter) }"> -->
-                    <div align="center">
-                        <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-                            <a class="btn btn-primary" onclick="postFormSubmit(1);" href="member_update.html">수정하기</a>
-                            <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
-                    </div>
-                    <br><br>
-                    
-                    <!--
-                        	수정, 삭제 시 게시글 번호를 get 방식으로 넘기기에는 위험이 크므로
-                        	post 방식으로 요청 보내보기 => form 태그 필요
-                    -->
-                    <form id="postForm" action="" method="post">
-                        <input type="hidden" name="memberId" value="${ m.memberId }">
-                        <input type="hidden" name="filePath" value="${ m.changeName }">
-                    </form>
-                    <script>
-                        // 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
-                        function postFormSubmit(num) {
-                            
-                            // 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-                            if(num == 1) { // 수정하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "updateForm.re").submit();
-                            } else { // 삭제하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "delete.re").submit();
-                            }
-                        }
-                    </script>
-                <!-- </c:if> -->
+
+            <div align="center">
+			    <a class="btn btn-primary" onclick="postFormSubmit(1);">승인</a>
+			    <a class="btn btn-danger" onclick="postFormSubmit(2);">반려</a>
+			</div>
+			<br><br>
+			
+			<form id="postForm" action="" method="post">
+			    <input type="hidden" name="rno" value="${r.reportNo}">
+			</form>
+			
+			<script>
+			    function postFormSubmit(num) {
+			        var form = document.getElementById("postForm");
+			        
+			        if (num == 1) {
+			            form.action = "updateStatus.re";
+			        } else {
+			            form.action = "delete.re";
+			        }
+			        
+			        form.submit();
+			    }
+			</script>
+
+
 
             </div>
             <br><br>    
@@ -152,4 +153,6 @@
         <!-- Content End -->
 
 	</div>
-          
+
+</body>
+</html>

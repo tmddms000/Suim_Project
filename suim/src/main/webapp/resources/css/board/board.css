@@ -187,12 +187,10 @@ body{
 }
 
 .search-find {
-  position: fixed;
-  top: 240px;
-  left: 0;
   width: 270px;
   background-color: #fff;
-  margin-left: 295px;
+  position: relative;
+  top: -100px; /* 원하는 위치로 조정해주세요 */
 }
 
 .search-find form {
@@ -218,5 +216,9 @@ body{
   font-size: 20px;
   color: #777;
 }
+
+    .search-filter {
+        font-size: 17px; /* 원하는 크기로 설정하세요 */
+    }
 
 
