@@ -1,6 +1,8 @@
 package com.suim.member.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +30,10 @@ public class MypageController {
 
 	@Autowired
 	private MemberService memberService;
-	
+
 	@Autowired
-    private HttpSession session;
-	
+	private HttpSession session;
+
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 
@@ -76,84 +78,85 @@ public class MypageController {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/profile";
 	}
-	
-	
+
 	// 사용자 정보 수정 메소드
 	@PostMapping("updateProfile")
-	public String updateProfile(@RequestParam("file") MultipartFile file, Member m, String changePwd1, String changePwd2, 
-			HttpServletRequest request, Model model) {
-		
+	public String updateProfile(@RequestParam("file") MultipartFile file, Member m, String changePwd1,
+			String changePwd2, HttpServletRequest request, Model model) {
+
 		Member loginUser = (Member) session.getAttribute("loginUser");
-		
-		
-		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd()) || m.getMemberPwd().equals(loginUser.getMemberPwd())) {
+
+		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())
+				|| m.getMemberPwd().equals(loginUser.getMemberPwd())) {
 			log.info("패스워드가 일치함");
-			
+
 			// 비밀번호가 일치하고, 파일이 비어있지 않음
-			if (!file.isEmpty()) {
-				
-				try {
-					
-					String originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
-	                String fileName = new Date().getTime() + "-" + originalFilename;
-
-	                // 파일 용량 체크 (5MB 제한)
-	                if (file.getSize() > 5 * 1024 * 1024) {
-	                    // 용량 초과 처리
-	                	model.addAttribute("errorMsg", "회원가입 실패");
-	    				return "common/errorPage";
-	                }
-
-	                // 파일 저장 경로
-	                String uploadDir = session.getServletContext().getRealPath("/resources/uploadFiles/");
-
-	                // 디렉토리 생성
-	                File uploadDirFile = new File(uploadDir);
-	                if (!uploadDirFile.exists()) {
-	                    uploadDirFile.mkdirs();
-	                }
-
-	                // 파일 저장
-	                String filePath = uploadDir + fileName;
-	                File dest = new File(filePath);
-	                file.transferTo(dest);
-	                
-	                
-	                log.info(filePath);
-	                m.setChangeName(filePath);
-					
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}	
+			if (!file.getOriginalFilename().equals("")) {
+				String changeName = saveFile(file, session);
+				m.setChangeName(changeName);
 			}
-			
+
 			// 비밀번호 변경을 할수도 있고 안할수도 있기 때문에 조건 걸어준다
-			// 비밀번호가 null이 아니고, 비밀번호가 
-			if (changePwd1 != null && !changePwd1.trim().isEmpty() && changePwd2 != null && !changePwd2.trim().isEmpty()) {
-			   
+			// 비밀번호가 null이 아니고, 비밀번호가
+			if (changePwd1 != null && !changePwd1.trim().isEmpty() && changePwd2 != null
+					&& !changePwd2.trim().isEmpty()) {
+
 				// 만약 변경비밀번호1과 변경비밀번호2가 같다면? => 일치하므로 changePwd1을 암호화하여 updte 해준다
-				if(changePwd1.equals(changePwd2)) {
+				if (changePwd1.equals(changePwd2)) {
 					log.info("비밀번호 변경 로직 시작");
 					m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
 				}
 			}
 			int result = memberService.updateMember(m);
-			
+
 			session.setAttribute("loginUser", m);
-			
-			if(result > 0) {
+
+			if (result > 0) {
 				log.info("정보 변경 성공");
 			} else {
 				log.info("정보 변경 실패");
 			}
 		}
-		
+
 		log.info("넘어옴");
-		
+
 		return "redirect:" + (String) session.getAttribute("originalUrl");
 	}
-	
 
+	public String saveFile(MultipartFile file, HttpSession session) {
+
+		// 파일명 수정 작업 후 서버에 업로드 시키기
+		// => 왠만해선 파일명이 겹치지 않게끔 !!
+
+		// MyFileRenamePolicy 에서 지정했던 로직 그대로 재현
+		// 예) "bono.jpg" => "20230511104425xxxxx.jpg"
+		// 1. 원본파일명 뽑기
+		String originName = file.getOriginalFilename(); // "bono.jpg"
+
+		// 2. 현재 시간 형식을 문자열로 뽑아내기
+		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // "20230511104920"
+
+		// 3. 뒤에 붙을 5자리 랜덤값 뽑기 (10000 ~ 99999 범위)
+		int ranNum = (int) (Math.random() * 90000 + 10000); // 13152
+
+		// 4. 원본파일명으로부터 확장자명 뽑기
+		String ext = originName.substring(originName.lastIndexOf(".")); // ".jpg"
+
+		// 5. 2, 3, 4 단계에서 구한 값을 모두 이어 붙이기
+		String changeName = currentTime + ranNum + ext;
+
+		String savePath = session.getServletContext().getRealPath("/resources/img/member/uploadFiles/");
+
+		// 7. 경로와 수정파일명을 합체 후 파일을 업로드 해주기
+		try {
+			String filePath = savePath + changeName;
+			File dest = new File(filePath);
+			file.transferTo(dest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return "/resources/img/member/uploadFiles/" + changeName;
+	}
 
 }

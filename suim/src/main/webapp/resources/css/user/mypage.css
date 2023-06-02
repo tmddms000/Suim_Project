@@ -83,13 +83,7 @@ body {
     background-color :rgb(243,243,243);
 }
 
-.profile {
-    margin: 0 auto;
-    background : url(/resources/img/common/default_profile.png) 50% 50% / cover no-repeat;
-    width : 100%;
-    height : 100%;
-    border-radius: 50%;
-}
+
 
 .fileupload_profile_img {
     width: 80px;

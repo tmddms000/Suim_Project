@@ -6,6 +6,13 @@
 .actives {
 	color: black !important;
 }
+
+.profile {
+    margin: 0 auto;
+    width : 100%;
+    height : 100%;
+    border-radius: 50%;
+}
 </style>
 
 <div class="container" style="margin-top: 75px;">
@@ -16,18 +23,22 @@
 				<!-- begin profile -->
 				<div class="profile">
 					<div class="profile-header">
-						<!-- BEGIN profile-header-cover -->
-						<div class="profile-header-cover"></div>
-						<!-- END profile-header-cover -->
-						<!-- BEGIN profile-header-content -->
+						<div class="profile-header-cover">
+						</div>
 						<div class="profile-header-content">
-							<!-- BEGIN profile-header-img -->
 							<div class="profile-header-img">
-								<!--<img src="/resources/img/common/default_profile.png" alt=""> -->
-								<img src="${ loginUser.changeName }" alt="">
+							
+							
+							<c:choose>
+						    <c:when test="${empty loginUser.changeName}">
+						        <img src="/resources/img/common/default_profile.png" alt="어라" style="width : 100%; height : 100%">
+						    </c:when>
+						    <c:otherwise>
+						        <img src="${ loginUser.changeName }" alt="어라" style="width : 100%; height : 100%">
+						    </c:otherwise>
+						</c:choose>
+								
 							</div>
-							<!-- END profile-header-img -->
-							<!-- BEGIN profile-header-info -->
 							<div class="profile-header-info">
 								<c:choose>
 									<c:when test="${not empty loginUser }">
@@ -97,7 +108,14 @@
 			<div class="modal-body" style="text-align: left">
 				<form id="updateForm" method="post" action="./updateProfile" enctype="multipart/form-data">
 					<div id="fileupload_profile_img2" class="fileupload_profile_img">
-						<div id="profile_img2" class="profile"></div>
+						<c:choose>
+						    <c:when test="${empty loginUser.changeName}">
+						        <div id="profile_img2" class="profile" style="background: url(/resources/img/common/default_profile.png) 50% 50% / cover no-repeat;"></div>
+						    </c:when>
+						    <c:otherwise>
+						        <div id="profile_img2" class="profile" style="background: url(${loginUser.changeName}) 50% 50% / cover no-repeat;"></div>
+						    </c:otherwise>
+						</c:choose>
 						<span class="over"><i class="fa-solid fa-camera"
 							style="color: #f2f2f2; margin-top: 7px;"></i></span>
 						<div id="drop_profile_img2" class="drop_profile_img">

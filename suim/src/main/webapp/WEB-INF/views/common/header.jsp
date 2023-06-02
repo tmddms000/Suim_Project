@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-	
 
 	<c:if test="${ not empty alertMsg }">
 		<script>
@@ -21,9 +20,6 @@
 	    });
 	  </script>
 	</c:if>
-		
-	
-	
 	
 	<header>
 	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
