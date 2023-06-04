@@ -3,6 +3,7 @@ package com.suim.report.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -155,5 +156,36 @@ public class AdminReportController {
 			
 			return "common/errorPage";
 		}
+	}
+	
+	// 검색용
+	@RequestMapping("search.re")
+	public ModelAndView selectSearch(String condition, String keyword, 
+						@RequestParam(value="currentPage", defaultValue="1") int currentPage,
+						ModelAndView mv) {
+		
+		// 페이징처리를 위한 PageInfo 객체 얻어내기
+		int listCount = adminReportService.selectListCount();
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		HashMap<String, String> map = new HashMap<>();
+		
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		
+		ArrayList<Report> list = adminReportService.selectSearchList(map, pi);
+		
+		System.out.println(list);
+
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .setViewName("admin/report/report");
+		
+		return mv;
 	}
 }
