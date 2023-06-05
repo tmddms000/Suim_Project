@@ -1,13 +1,13 @@
 package com.suim.report.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.suim.common.model.vo.PageInfo;
-import com.suim.member.model.vo.Member;
 import com.suim.report.model.vo.Report;
 
 @Repository
@@ -61,7 +61,21 @@ public class AdminReportDao {
 		return sqlSession.update("adminReportMapper.updateReportStatus", r);
 	}
 	
-	public ArrayList<Member> selectTopMemberList(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminReportMapper.selectTopMemberList");
+	// 검색용
+	public int selectSearchCount(SqlSessionTemplate sqlSession, HashMap<String, String> map) {
+		
+		return sqlSession.selectOne("adminReportMapper.selectSearchCount", map);
+	}
+	
+	public ArrayList<Report> selectSearchList(SqlSessionTemplate sqlSession, HashMap<String, String> map, PageInfo pi){
+	
+		// 페이징 처리에 필요한 마이바티스용 객체: RowBounds
+		// => 객체 생성 시 필요한 변수: offset(건너 뛸 숫자), limit(조회할 개수)
+		int limit = pi.getBoardLimit();
+		int offset = (pi.getCurrentPage() - 1) * limit;
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("adminReportMapper.selectSearchList", map, rowBounds);
 	}
 }
