@@ -119,13 +119,9 @@
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 	   <property name="host" value="smtp.gmail.com" />
 	   <property name="port" value="25" />
-<<<<<<< HEAD
 	   <property name="username" value="suimm012@gmail.com" />
 	   <property name="password" value="wrclnfcdosefvdrn" />
-=======
-	   <property name="username" value="dunghasd@gmail.com" />
-	   <property name="password" value="yetjsncqnvaxatqc" />
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 	 
 	   <!-- email 전송 시 필요한 SMTP 지정 -->
 	   <property name="javaMailProperties">

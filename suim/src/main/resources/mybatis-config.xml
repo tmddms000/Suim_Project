@@ -9,26 +9,34 @@
 	<typeAliases>
 		<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
 		<typeAlias type="com.suim.member.model.vo.Email" alias="email" />
-		<typeAlias type="com.suim.house.model.vo.House" alias="house" />
+
 		<typeAlias type="com.suim.house.model.vo.Wish" alias="wish" />
+		<typeAlias type="com.suim.house.model.vo.House" alias="house" />
+
+		
 		<typeAlias type="com.suim.board.model.vo.Board" alias="board" />
 		<typeAlias type="com.suim.board.model.vo.Battachment" alias="battachment" />
 		<typeAlias type="com.suim.board.model.vo.Reply" alias="reply" />
+		
+
+
 		<typeAlias type="com.suim.board.model.vo.Find" alias="find" />
 		<typeAlias type="com.suim.board.model.vo.findReply" alias="findreply" />
+		
+		
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.notice.model.vo.Nattachment" alias="nAttachment"/>
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
-
 		<typeAlias type="com.suim.chat.model.vo.ChatList" alias="chatList" />
 		<typeAlias type="com.suim.chat.model.vo.ChatLog" alias="chatlog" />
+
 	</typeAliases>
 	    
 	    
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
 	    	<mapper resource="/mappers/member/email-mapper.xml"/>
-	    	<mapper resource="/mappers/member/mypage-mapper.xml"/>
+
 	    	<mapper resource="/mappers/board/board-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
 	    	<mapper resource="/mappers/house/list-house-mapper.xml" />
@@ -38,5 +46,6 @@
 	    	<mapper resource="/mappers/chat/chat-mapper.xml" />
 	    	<mapper resource="/mappers/notice/admin-notice-mapper.xml" />
 	    </mappers>
+	    
 	    
 </configuration>

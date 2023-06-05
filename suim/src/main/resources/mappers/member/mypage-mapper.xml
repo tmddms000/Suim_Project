@@ -9,11 +9,9 @@
 		<result column="BOARD_VIEW" property="boardView" />
 		<result column="BOARD_DATE" property="boardDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-<<<<<<< HEAD
+
 		<result column="BOARD_CONTENT" property="boardContent" />
-=======
-		<result column="BOARD_COTENT" property="boardContent" />
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="BOARD_REPLY_COUNT" property="replyCount" />
 	</resultMap>
@@ -26,59 +24,12 @@
 		<result column="FIND_VIEW" property="findView" />
 		<result column="FIND_DATE" property="findDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-<<<<<<< HEAD
-		<result column="FIND_CONTENT" property="findContent" />
-		<result column="CHANGE_NAME" property="changeName" />
-		<result column="FIND_REPLY_COUNT" property="replyCount" />
-	</resultMap>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
 		<result column="FIND_COTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="FIND_REPLY_COUNT" property="replyCount" />
 	</resultMap>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
-
-
 
 	<!-- 자유게시판 게시글 갯수 -->
 	<select id="selectBoardListCount" resultType="_int">
@@ -94,11 +45,9 @@
 		SELECT
 		B.BOARD_NO,
 		B.BOARD_TITLE,
-<<<<<<< HEAD
+
 		B.BOARD_CONTENT,
-=======
-		B.BOARD_COTENT,
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		B.BOARD_VIEW,
 		B.BOARD_DATE,
 		B.STATUS,
@@ -107,7 +56,7 @@
 		BA.CHANGE_NAME,
 		COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
 		FROM BOARD B
-<<<<<<< HEAD
+
 		JOIN
 		MEMBER M ON
 		(M.MEMBER_ID = B.MEMBER_ID)
@@ -116,45 +65,30 @@
 		B.BOARD_NO)
 		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO =
 		B.BOARD_NO)
-=======
-		JOIN MEMBER M ON
-		(M.MEMBER_ID = B.MEMBER_ID)
-		LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO =
-		B.BOARD_NO)
-		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		WHERE B.STATUS = 'Y'
 		AND M.MEMBER_ID = #{memberId}
 		GROUP BY
 		B.BOARD_NO,
 		B.BOARD_TITLE,
-<<<<<<< HEAD
+
 		B.BOARD_CONTENT,
-=======
-		B.BOARD_COTENT,
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		B.BOARD_VIEW,
 		B.BOARD_DATE,
 		B.STATUS,
 		B.MEMBER_ID,
 		BA.ORIGIN_NAME,
 		BA.CHANGE_NAME
-<<<<<<< HEAD
+
 		ORDER BY B.BOARD_NO
 		DESC
-=======
-		ORDER BY B.BOARD_NO DESC
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 	</select>
 
 	<select id="selectFindListCount" resultType="_int">
 		SELECT COUNT(*)
-<<<<<<< HEAD
-		FROM
-		FIND
-=======
 		FROM FIND
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
 		WHERE STATUS = 'Y'
 		AND MEMBER_ID = #{memberId}
 	</select>
@@ -166,11 +100,9 @@
 		SELECT
 		F.FIND_NO,
 		F.FIND_TITLE,
-<<<<<<< HEAD
+
 		F.FIND_CONTENT,
-=======
-		F.FIND_COTENT,
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		F.FIND_CATEGORY,
 		F.FIND_VIEW,
 		F.FIND_DATE,
@@ -178,7 +110,7 @@
 		F.MEMBER_ID,
 		FA.ORIGIN_NAME,
 		FA.CHANGE_NAME,
-<<<<<<< HEAD
+
 		COUNT(FR.FRE_NO) AS
 		FIND_REPLY_COUNT
 		FROM FIND F
@@ -194,19 +126,7 @@
 		F.FIND_NO,
 		F.FIND_TITLE,
 		F.FIND_CONTENT,
-=======
-		COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT
-		FROM FIND F
-		JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
-		LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
-		LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-		WHERE B.STATUS = 'Y'
-		AND M.MEMBER_ID = #{memberId}
-		GROUP BY
-		F.FIND_NO,
-		F.FIND_TITLE,
-		F.FIND_COTENT,
->>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
+
 		F.FIND_CATEGORY,
 		F.FIND_VIEW,
 		F.FIND_DATE,
