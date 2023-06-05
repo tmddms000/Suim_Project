@@ -51,6 +51,11 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
 	}
 
+	@Override
+	public int updateBoard(Notice n) {
+		return adminNoticeDao.updateNoticeBoard(sqlSession, n);
+	}
+
 	
 	
 

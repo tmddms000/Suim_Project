@@ -59,6 +59,14 @@
 		 WHERE NOTICE_NO = #{noticeNo}
 	</select>
 	
+	<update id="updateNoticeBoard" parameterType="notice">
+		UPDATE NOTICE
+		   SET NOTICE_TITLE = {n.noticeTitle}
+		   	 , NOTICE_CONTENT = {n.noticeContent}
+		 WHERE NOTICE_NO = #{notice_no}
+		   
+	</update>
+	
 	
 	
 

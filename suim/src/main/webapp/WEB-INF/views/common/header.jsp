@@ -174,7 +174,7 @@
 	                                </li>
 	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>
 	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown3">
-	                                        <li><a class="dropdown-item" href="#">공지사항</a></li>
+	                                        <li><a class="dropdown-item" href="notice.no">공지사항</a></li>
 	                                        <li><a class="dropdown-item" href="#">자주 묻는 질문</a></li>                        
 	                                    </ul>
 	                                </li>

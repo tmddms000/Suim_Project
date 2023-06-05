@@ -1,3 +1,5 @@
+<%@page import="com.suim.notice.model.vo.Nattachment"%>
+<%@page import="com.suim.notice.model.vo.Notice" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -24,6 +26,21 @@
      <script src="js/chatbot.js"></script>
      <!-- 공지사항 css -->
      <link href="/resources/css/notice/noticeDetailCopy.css" rel="stylesheet" />
+     
+      <style>
+       body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .main {
+                flex: 1;
+                margin-top : 90px;
+            }
+            footer {
+                margin-top: auto;
+            }
+    </style>
 </head>
 <body>
 
@@ -33,25 +50,22 @@
     <jsp:include page="/WEB-INF/views/admin/common/spinner.jsp" />
     <jsp:include page="/WEB-INF/views/admin/common/include.jsp" />
 
-    <div class="content">
+    <div class="container main">
         <br><br>
         <div class="innerOuter">
             <h2>공지사항 수정하</h2>
             <br>
 
-            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
+            <form id="updateForm" method="post" action="insert.bo" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="boardTitle" required></td>
+                        <td><input type="text" id="title" class="form-control" name="boardTitle" placeholder="${ n.noticeTitle }"></td>
                     </tr>
-                    <tr>
-                        <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ loginUser.userId }" name="boardWriter" readonly></td>
-                    </tr>
+                    
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
-                        <td><input type="file" id="upfile" class="form-control-file border" name="upfile"></td>
+                        <td><input type="file" id="upfile" class="form-control-file border" name="upfile" placeholder="${n.changeName }"></td>
                     </tr>
                     <tr>
                         <th><label for="content">내용</label></th>

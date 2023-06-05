@@ -56,6 +56,8 @@
     
     
             <div class="table-wrapper">
+            
+            <div style="display:inline-block", "max-witdh=100%;">
                 <div id="noticeBold" class="table-title">
                     우주 공지사항
                 </div>
@@ -68,6 +70,7 @@
                         </button>
                     </form>
                 </div>
+            </div>
                 
                 <table id="noticeDetailTable" class="table">
                     <thead>
@@ -84,6 +87,36 @@
                                 <div>조회수</div>
                                 <div>${ n.noticeView }</div>
                             </td>
+                            <td>
+                            	
+                            </td>
+                            
+                            <c:forEach items="${nAttach}" var="nAttach">
+                            	<div align="center" style="display: inline-block;" align="right">
+						                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
+						                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+						                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+						        </div>
+                            	
+                            	
+			                	<form id="postForm" action="" method="post">
+					            	<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
+					            	<input type="hidden" name="nno" value="${ nAttach.noticeNo }">
+					            	<input type="hidden" name="filePath" value="${ nAttach.changeName }">
+				            	</form>
+				            </c:forEach>
+				            <script>
+				            	// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
+				            	function postFormSubmit(num) {
+				            		
+				            		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
+				            		if(num==1) { // 수정하기 버튼을 클릭했을 경우
+				            			$("#postForm").attr("action", "updateForm.no").submit();
+				            		} else { // 삭제하기 버튼을 클릭했을 경우
+				            			$("#postForm").attr("action", "delete.bo").submit();
+				            		}	
+				            	}
+				            </script>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,7 +141,7 @@
                 
                
                 
-                <button class="btn btn-primary btn-block submit-btn" onclick="/faqList.no">
+                <button class="btn btn-primary btn-block submit-btn" onclick="faqList.no">
                     <a href="./faqList.no" id="faqLink">목록가기</a>
                 </button>
                

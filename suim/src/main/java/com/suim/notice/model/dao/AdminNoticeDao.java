@@ -36,4 +36,8 @@ public class AdminNoticeDao {
 		return sqlSession.selectOne("noticeMapper.selectBoard", noticeNo);
 	}
 
+	public int updateNoticeBoard(SqlSessionTemplate sqlSession, Notice n) {
+		return sqlSession.update("adminNoticeMapper.updateNoticeBoard", n);
+	}
+
 }

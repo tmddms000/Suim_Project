@@ -14,6 +14,8 @@ public interface AdminNoticeService {
 
 	int insertNoticeFile(Nattachment nAttach);
 
+	int updateBoard(Notice n);
+
 	
 
 	
