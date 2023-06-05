@@ -26,7 +26,7 @@ public class Find {
 	private int findNo;
 	private String findTitle;
 	private String findContent;
-	private String findCategory;
+	private String category;
 	private int findView;
 	private Date findDate;
 	private String status;
