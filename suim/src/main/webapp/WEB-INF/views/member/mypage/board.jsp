@@ -83,6 +83,7 @@ td {
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
 
 	<div class="table-container" style="margin-top: 5px;">
+<<<<<<< HEAD
 
 		<ul class="nav nav-tabs">
 			<li class="nav-item"><a class="nav-link active" id="free-board"
@@ -94,17 +95,38 @@ td {
 		</ul>
 
 
+=======
+	
+	<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#free-board">자유게시판 (52)</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#review-board">입주후기 (33)</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#job-board">사람구해요 (12)</a>
+    </li>
+  </ul>
+	
+	
+>>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
 		<table class="table">
 			<thead>
 				<tr>
 					<th scope="col" class="select-cell"></th>
 					<th scope="col" class="boardno-cell"></th>
+<<<<<<< HEAD
 					<th scope="col" class="title-th title-cell text-center">제목</th>
+=======
+					<th scope="col" class="title-th text-center">제목</th>
+>>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
 					<th scope="col" class="date-cell">작성일</th>
 					<th scope="col" class="views-th">조회</th>
 				</tr>
 			</thead>
 			<tbody>
+<<<<<<< HEAD
 				<c:if test="${not empty loginUser }">
 
 					<c:choose>
@@ -128,6 +150,17 @@ td {
 
 					</c:choose>
 				</c:if>
+=======
+				<c:forEach var="b" items="${list}">
+			      <tr>
+			        <td class="select-cell"><input type="checkbox"></td>
+			        <td class="boardno-cell">${b.boardNo}</td>
+			        <td class="title-cell">${b.boardTitle} <a href="">[1]</a></td>
+			        <td class="date-cell">${b.boardDate}</td>
+			        <td class="views-cell">${b.boardView}</td>
+			      </tr>
+    			</c:forEach>
+>>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
 			</tbody>
 
 			<tfoot>
@@ -175,6 +208,7 @@ td {
 	
 	<script>
 	$(document).ready(function() {
+<<<<<<< HEAD
 	    $('.nav-link').click(function(e) {
 	        e.preventDefault();
 
@@ -256,6 +290,29 @@ td {
 	});
 
 	</script>
+=======
+		  $('.nav-link').click(function(e) {
+		    // Remove the "active" class from all tabs and content
+		    $('.nav-link').removeClass('active');
+		    $('.tab-pane').removeClass('show active');
+
+		    // Add the "active" class to the clicked tab
+		    $(this).addClass('active');
+
+		    // Get the target tab's ID from the data attribute
+		    var targetTab = $(this).data('tab');
+
+		    // Show the corresponding tab content
+		    $('#' + targetTab).addClass('show active');
+
+		    // Prevent default behavior if the clicked link has a "data-toggle" attribute
+		    if ($(this).data('toggle')) {
+		      e.preventDefault();
+		    }
+		  });
+		});
+  </script>
+>>>>>>> b3a77092a936f35203c2c15cd573cb1c42c95718
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>

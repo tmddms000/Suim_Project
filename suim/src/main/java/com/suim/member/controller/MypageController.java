@@ -204,15 +204,15 @@ public class MypageController {
 			System.out.println("free");
 
 		} 
-//		else if (type.equals("inreview")) {
-//
-//			listCount = mypageService.selectBoardListCount(memberId);
-//
-//			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
-//			list = mypageService.selectBoardList(pi, memberId);
-//			System.out.println("inreview");
-//
-//		} 
+		else if (type.equals("inreview")) {
+
+			listCount = mypageService.selectBoardListCount(memberId);
+
+			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+			list = mypageService.selectBoardList(pi, memberId);
+			System.out.println("inreview");
+
+		} 
 		else if (type.equals("find")) {
 
 			listCount = mypageService.selectFindListCount(memberId);

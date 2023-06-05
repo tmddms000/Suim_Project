@@ -15,6 +15,15 @@
 		<result column="NOTICE_STATUS" property="noticeStatus" />
 	</resultMap>
 	
+	<resultMap id="adminNoticeResultSet" type="nAttachment">
+		<result column="NAT_NO" property="natNo" />
+		<result column="ORGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="FILE_STATUS" property="fileStatus" />
+		<result column="NOTICE_NO" property="noticeNo" />
+	</resultMap>
+	
 	
 
 	<!-- 게시글 총 갯수 구하는 쿼리문 -->
@@ -59,6 +68,17 @@
 		 WHERE NOTICE_NO = #{noticeNo}
 		   AND NOTICE_STATUS = 'Y'
 	</update>
+	
+	<select id="selectNoticeFile" parameterType="_int" resultMap="adminNoticeResultSet">
+		SELECT NAT_NO
+			 , ORIGIN_NAME
+			 , CHANGE_NAME
+			 , CREATE_DATE
+			 , FILE_STATUS
+			 , NOTICE_NO
+		  FROM NATTACHMENT
+		 WHERE NOTICE_NO = #{noticeNo}
+	</select>
 	
 	
 	

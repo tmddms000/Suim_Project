@@ -38,7 +38,7 @@ public class ListHouseController {
 		    ArrayList<House> list = listHouseService.selectList(minValue,maxValue,genderDivisions,houseType,maxResident,floor,openDate);
 
 		    mv.addObject("list", list);
-		    
+		     
 		    if (region.isEmpty()) {
 		        mv.addObject("regionEmpty", true);
 		    } else {

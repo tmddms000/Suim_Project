@@ -48,6 +48,7 @@
    
     <!-- 자주 묻는 질문 리스트 (Content) 영역 -->
     <div id="faq" class="container main">
+    <form action="faqList.no">
         <div class="col-lg-12">
     
     
@@ -153,6 +154,7 @@
 
             </div>
         </div>
+    </form>
     </div>
 <!-- 본문 영역 종료-->
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

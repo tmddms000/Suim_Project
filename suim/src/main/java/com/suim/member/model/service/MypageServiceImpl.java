@@ -23,8 +23,10 @@ public class MypageServiceImpl implements MypageService{
 	}
 	
 	@Override
+
 	public int selectBoardListCount(String memberId) {
 		return mypageDao.selectBoardListCount(sqlSession, memberId);
+
 	}
 	
 	@Override
@@ -33,8 +35,10 @@ public class MypageServiceImpl implements MypageService{
 	}
 
 	@Override
+
 	public int selectFindListCount(String memberId) {
 		return mypageDao.selectFindListCount(sqlSession, memberId);
+
 	}
 
 	@Override
