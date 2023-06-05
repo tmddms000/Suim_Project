@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,9 @@ import com.google.gson.JsonObject;
 import com.suim.board.model.service.BoardService;
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
+import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.Reply;
+import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 
@@ -45,6 +49,7 @@ public class BoardController {
 			@RequestParam(value="cPage", defaultValue="1") int currentPage,
 			ModelAndView mv) {
 		
+		
 
 		int listCount = boardService.selectListCount();
 		
@@ -56,6 +61,9 @@ public class BoardController {
 		ArrayList<Board> list = boardService.selectList(pi);
 		ArrayList<Board> blist = boardService.selectbList();
 		
+	
+		
+
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("blist", blist)
@@ -180,14 +188,15 @@ public class BoardController {
 								HttpSession session,
 								Model model) {
 			
-			if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
-				
-				String changeName = saveFile(upfile, session);
-				
-				
-				ba.setOriginName(upfile.getOriginalFilename());
-				ba.setChangeName("resources/img/board/fileupload/" + changeName);
-			}
+			/*
+			 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+			 * 
+			 * String changeName = saveFile(upfile, session);
+			 * 
+			 * 
+			 * ba.setOriginName(upfile.getOriginalFilename());
+			 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
+			 */
 			
 
 			int result = boardService.insertBoard(b);
@@ -247,26 +256,156 @@ public class BoardController {
 			return changeName;
 		}
 		
-		@RequestMapping("flist.bo")
-		public ModelAndView selectfList(
-				@RequestParam(value="cPage", defaultValue="1") int currentPage,
-				ModelAndView mv) {
+		@RequestMapping("updateForm.bo")
+		public ModelAndView updateBoard(int bno,
+									ModelAndView mv) {
 			
-			int listCount = boardService.selectfListCount();
-			
-			int pageLimit = 10;
-			int boardLimit = 10;
-			
-			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-			
-			ArrayList<Board> list = boardService.selectfList(pi);
 
-			mv.addObject("pi", pi)
-			  .addObject("list", list)
-			  .setViewName("board/find-board");
+			Board b = boardService.updateBoardList(bno);
+
+			
+			System.out.println(b);
+			mv.addObject("b", b)
+			  .setViewName("board/free-boardUpdate");
 			
 			return mv;
 		}
+
+		@RequestMapping("update.bo")
+		public String updateBoard(Board b,
+						HttpSession session,
+						Model model) {
+	
+		int result = boardService.updateBoard(b);
+		
+		System.out.println(b);
+		
+		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+		
+		
+		session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+		
+		return "redirect:/list.bo"; // 내부적으로 1번 페이지로 향함
+		
+		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+		
+		model.addAttribute("errorMsg", "게시글 등록 실패");
+		
+		return "common/errorPage";
+		}
+		
+		}
+		
+		
+
+		//---------------------------사람구해요--------------------------------
+		
+				@RequestMapping("list.fi")
+				public ModelAndView selectfList(
+						@RequestParam(value="cPage", defaultValue="1") int currentPage,
+						ModelAndView mv) {
+					
+					int listCount = boardService.selectfListCount();
+					
+					int pageLimit = 10;
+					int boardLimit = 10;
+					
+					PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+					
+					ArrayList<Find> flist = boardService.selectfList(pi);
+
+					mv.addObject("pi", pi)
+					  .addObject("flist", flist)
+					  .setViewName("board/find-board");
+					
+					return mv;    // 첨부파일 필드
+
+				}
+				
+				@RequestMapping("enrollForm.fi")
+				public String enrollFormFind() {
+					
+					return "board/find-boardEnrollForm";
+				}
+
+					@RequestMapping("detail.fi")
+					public ModelAndView selectFind(ModelAndView mv,
+													int fno) {
+
+						int result = boardService.increasefCount(fno);
+						
+					
+
+						if(result > 0) { // 성공
+
+							Find fb = boardService.selectFind(fno);
+							
+							mv.addObject("fb", fb).setViewName("board/find-boardDetail");
+							
+						} else { // 실패
+
+							mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
+						}
+						
+						return mv;
+					}
+					
+				@RequestMapping("delete.fi")
+				public String deleteFind(int fno,
+										  Model model,
+										  String filePath,
+										  HttpSession session) {
+					
+					
+					int result = boardService.deleteFind(fno);
+					
+					
+					
+					if(result > 0) { // 삭제 처리 성공
+						
+						// delete.bo 요청 시 첨부파일이 있었을 경우
+						// 서버에 보관중인 첨부 파일 실물 (수정파일명) 을 삭제 처리까지 같이 하고 싶음!!
+						if(!filePath.equals("")) {
+							// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
+							String realPath = session.getServletContext().getRealPath(filePath);
+							new File(realPath).delete();
+						}
+						
+
+						session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
+						
+						return "redirect:/list.fi";
+						
+					} else { // 삭제 처리 실패 => 에러페이지 포워딩
+						
+						model.addAttribute("errorMsg", "게시글 삭제 실패");
+						
+						return "common/errorPage";
+					}
+				}
+				
+				@ResponseBody
+				@RequestMapping(value = "rlist.fi", produces = "application/json; charset=UTF-8")
+				public String ajaxSelectfReplyList(int fno) {
+					
+					ArrayList<findReply> filist = boardService.selectfReplyList(fno);
+					
+		
+					
+					return new Gson().toJson(filist);
+				}
+				
+				@ResponseBody
+				@RequestMapping(value = "rinsert.fi", produces = "text/html; charset=UTF-8")
+				public String ajaxInsertfReply(findReply fr) {
+					
+
+					
+					int result = boardService.insertfReply(fr);
+					
+					return (result > 0) ? "success" : "fail";
+				}
+
 	
 	
 		   

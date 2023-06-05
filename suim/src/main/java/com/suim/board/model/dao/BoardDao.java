@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
+import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.Reply;
+import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
 
 
@@ -67,17 +69,42 @@ public class BoardDao {
 	//---------------------------사람구해요---------------------------------------------
 	
 	public int selectfListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("boardMapper.selectListCount");
+		return sqlSession.selectOne("boardMapper.selectfListCount");
 	}
 	
-	public ArrayList<Board> selectfList(SqlSessionTemplate sqlSession, PageInfo pi) {
+	public ArrayList<Find> selectfList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, rowBounds);
+		return (ArrayList)sqlSession.selectList("boardMapper.selectfList", null, rowBounds);
+	}
+	public int increasefCount(SqlSessionTemplate sqlSession, int findNo) {
+		return sqlSession.update("boardMapper.increasefCount", findNo);
 	}
 	
+	public Find selectFind(SqlSessionTemplate sqlSession, int findNo) {
+		return sqlSession.selectOne("boardMapper.selectFind", findNo);
+	}
+	public int deleteFind(SqlSessionTemplate sqlSession, int findNo) {
+		return sqlSession.update("boardMapper.deleteFind", findNo);
+	}
+	public ArrayList<findReply> selectfReplyList(SqlSessionTemplate sqlSession, int findNo) {
+		return (ArrayList)sqlSession.selectList("boardMapper.selectfReplyList", findNo);
+	}
+	
+	public int insertfReply(SqlSessionTemplate sqlSession, findReply fr) {
+		return sqlSession.insert("boardMapper.insertfReply", fr);
+	
+	}
+	
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.update("boardMapper.updateBoard", b);
+	}
+	
+	public Board updateBoardList(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+	}
 }

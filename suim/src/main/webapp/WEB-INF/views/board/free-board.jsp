@@ -143,12 +143,12 @@
 							    <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
 							</c:if>
 							
-				            <c:if test="${not empty b.originName}">
+				            <c:if test="${not empty b.thumbnail}">
 				                <span><img height="15" width="15" alt="이미지 첨부유무" src="/resources/img/board/ico_img.gif"></span>
 				            </c:if>
 				            
 				        </td>
-				        <td>${b.memberId}</td>
+				        <td>${b.nickName}</td>
 				        <td>${b.boardView}</td>
 				    </tr>
 				</c:forEach>

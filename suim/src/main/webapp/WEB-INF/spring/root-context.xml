@@ -41,7 +41,7 @@
 														destroy-method="close">
 		<!-- 어느 DB 에 접속할건지 지정 -->
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="url" value="jdbc:oracle:thin:@khds-d1.iptime.org:15211:xe" />
 		<property name="username" value="SUIM" />
 		<property name="password" value="SUIM" />
 	</bean>
