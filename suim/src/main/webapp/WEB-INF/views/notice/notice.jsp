@@ -69,7 +69,15 @@
                         </button>
                     </form>
                 </div>
+                		
+				
+                <!-- 공지사항은 관리자만 작성 가능하므로 관리자로 로그인했을 경우에만 버튼이 보이게끔 -->
+                <!-- 클릭 시 insert.no 로 넘어감 -->
                 
+                <button id="insertNoticeButton" class="btn btn-secondary" type="button" onclick="location.href='enrollForm.no';">글작성</button>
+            	
+				
+		
                 <table id="notice-table" class="table">
                     <thead>
                         <tr class="table-header">

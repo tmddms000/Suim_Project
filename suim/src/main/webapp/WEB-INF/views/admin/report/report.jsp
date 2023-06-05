@@ -6,6 +6,9 @@
 	#reportList {text-align:center;}
 	#reportList>tbody>tr:hover {cursor:pointer;}
 	#pagingArea {width:fit-content; margin:auto;}
+	form input {width:150px!important;}
+	form button {border:none!important;}
+	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
 </style>
 
 	<%@ include file="../common/include.jsp" %>
@@ -37,6 +40,23 @@
                         <div class="bg-light rounded h-100 p-4" width="">
                             <h6 class="mb-4">신고 관리</h6>
 
+							<div align="right" class="searchForm">
+							<form class="d-md-flex ms-4" action="search.re">
+								<div class="select">
+				                    <select class="custom-select" name="condition">
+				                        <option value="REPORT_TITLE">제목</option>
+				                        <option value="REPORT_CONTENT">내용</option>
+				                        <option value="REPORT_TYPE">유형</option>
+				                        <option value="REPORT_ID">신고자</option>
+				                    </select>
+				                </div>
+								<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
+                       		 	<button type="submit">
+                                    <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
+                                </button>
+                    		</form>
+							</div>
+							
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"

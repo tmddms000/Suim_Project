@@ -1,6 +1,7 @@
 package com.suim.report.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,4 +63,15 @@ public class AdminReportServiceImpl implements AdminReportService {
 		return adminReportDao.updateReportStatus(sqlSession, r);
 	}
 
+	// 검색용
+	@Override
+	public int selectSearchCount(HashMap<String, String> map) {
+		return adminReportDao.selectSearchCount(sqlSession, map);
+	}
+	@Override
+	public ArrayList<Report> selectSearchList(HashMap<String, String> map, PageInfo pi) {
+		return adminReportDao.selectSearchList(sqlSession, map, pi);
+	}
+	
+	
 }

@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-     <!-- 부트스트랩 -->
-     <link href="/resources/css/common/styles.css" rel="stylesheet" />
+ <!-- 부트스트랩 -->
+     
+     <link href="/resources/css/admin/style.css" rel="stylesheet" />
      <!-- 폰트어썸 icon -->
      <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
      <!-- Core theme CSS (includes Bootstrap)-->
@@ -23,10 +26,17 @@
      <link href="/resources/css/notice/noticeDetailCopy.css" rel="stylesheet" />
 </head>
 <body>
-	<div class="content">
+
+	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+    <jsp:include page="/WEB-INF/views/admin/common/navbar.jsp" />
+    <jsp:include page="/WEB-INF/views/admin/common/sidebar.jsp" />
+    <jsp:include page="/WEB-INF/views/admin/common/spinner.jsp" />
+    <jsp:include page="/WEB-INF/views/admin/common/include.jsp" />
+
+    <div class="content">
         <br><br>
         <div class="innerOuter">
-            <h2>게시글 작성하기</h2>
+            <h2>공지사항 수정하</h2>
             <br>
 
             <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
@@ -59,5 +69,10 @@
         <br><br>
 
     </div>
+    
+    <jsp:include page="/WEB-INF/views/admin/common/footer.jsp" />
+    
+</body>
+</html>
 </body>
 </html>
