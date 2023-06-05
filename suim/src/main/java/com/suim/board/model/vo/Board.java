@@ -30,11 +30,13 @@ public class Board {
     private Date boardDate;
     private String status;
     private String memberId;
+    private String nickName;
     private int replyCount;
     
     // 첨부파일 필드
 	private String originName;
 	private String changeName;
+	private String thumbnail;
 	
 
 }

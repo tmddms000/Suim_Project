@@ -132,7 +132,7 @@
 
 
 
-        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="/board/freeinsert.html">
+        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="/board/free-insert.html">
             글작성
         </a>
         
@@ -147,20 +147,29 @@
             </tr>
         </thead>
 
-            <tbody>
-            <tr>
-                <td>1</td>
-                <td>2023-05-22</td>
-                <td>
-                    쉐어하우스 어떤가요?
-                    <span><img height="15" width="15" alt="이미지 첨부" src="/resources/img/board/ico_new.gif"></span>
-                    <span><img height="15" width="15" alt="이미지 첨부" src="/resources/img/board/ico_img.gif"></span>
-                </td>
-                <td>dldllxoghk</td>
-                <td>511</td>
-            </tr>
-        
-        </tbody>
+        <tbody>
+				<c:forEach var="fb" items="${flist}">
+				    <tr>
+				        <td class="fno">${fb.findNo}</td>
+				        <td>${fb.findDate}</td>
+				        <td>
+				            ${fb.findTitle}
+				            <span id="rcount">(${fb.freplyCount})</span>
+				            <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
+							<c:if test="${not empty fb.findDate and fb.findDate == today}">
+							    <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
+							</c:if>
+							
+				            <c:if test="${not empty fb.thumbnail}">
+				                <span><img height="15" width="15" alt="이미지 첨부유무" src="/resources/img/board/ico_img.gif"></span>
+				            </c:if>
+				            
+				        </td>
+				        <td>${fb.memberId}</td>
+				        <td>${fb.findView}</td>
+				    </tr>
+				</c:forEach>
+				        </tbody>
         </table>
 	
 	
@@ -215,15 +224,15 @@
         
          $(function() {
         	$("#freeboard>tbody>tr").click(function() {
-        		let bno = $(this).children(".bno").text();
-        		location.href = "detail.bo?bno=" + bno; //
+        		let fno = $(this).children(".fno").text();
+        		location.href = "detail.fi?fno=" + fno; //
         	});
         });
          
          $(function() {
         	  $(".bestcontainer .item").click(function() {
-        	    let bno = $(this).find(".bno").text();
-        	    location.href = "detail.bo?bno=" + bno;
+        	    let fno = $(this).find(".fno").text();
+        	    location.href = "detail.fi?fno=" + fno;
         	  });
         	});
           

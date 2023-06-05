@@ -61,33 +61,31 @@
         <br><br>
         <div class="innerOuter">
             <br><br>
-            <h2>게시판 상세보기</h2>
+            <h2>사람구해요 상세보기</h2>
             <br>
 
-            <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);" href="list.bo">목록으로</a>
+            <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);" href="list.fi">목록으로</a>
             <br><br>
 
             <table id="contentArea" algin="center" class="table">
                 <tr>
                     <th width="100">제목</th>
-                    <td colspan="3">${ b.boardTitle }</td>
+                    <td colspan="3">${ fb.findTitle }</td>
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${ b.memberId }</td>
+                    <td>${ fb.memberId }</td>
                     <th>작성일</th>
-                    <td>${ b.boardDate }</td>
+                    <td>${ fb.findDate }</td>
                 </tr>
                 <tr>
-      
-                 
+                    <th>첨부파일</th>
+                    <td>
+                        <a href="" download="">파일명.jpg</a>
+                    </td>
                     <th>조회수</th>
                     <td>
-                        ${ b.boardView }
-                    </td>
-                     <th></th>
-                    <td>
-                      
+                        ${ fb.findView }
                     </td>
                 </tr>
                 <tr>
@@ -95,11 +93,11 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><p style="height:150px;">${ b.boardContent }</p></td>
+                    <td colspan="4"><p style="height:150px;">${ fb.findContent }</p></td>
                 </tr>
             </table>
             <br>
-			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq b.memberId) }">
+			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq fb.memberId) }">
             <div align="center">
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 		                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
@@ -108,8 +106,8 @@
             <br><br>
             
          		<form id="postForm" action="" method="post">
-	            	<input type="hidden" name="bno" value="${ b.boardNo }">
-	            	<input type="hidden" name="filePath" value="${ b.changeName }">
+	            	<input type="hidden" name="fno" value="${ fb.findNo }">
+	            	<input type="hidden" name="filePath" value="${ fb.changeName }">
 	            </form>
 	            <script>
 	            	// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
@@ -175,10 +173,10 @@
 			// 즉, 유효한 내용이 한자라도 있을 경우
 			
 			$.ajax({
-				url : "rinsert.bo",
+				url : "rinsert.fi",
 				data : {
-					boardNo : ${ b.boardNo },
-					breContent : $("#content").val(),
+					findNo : ${ fb.findNo },
+					freContent : $("#content").val(),
 					memberId : "${ loginUser.memberId }"
 				},
 				type : "post", 
@@ -202,8 +200,8 @@
 	function selectReplyList() { // 해당 게시글에 딸린 댓글리스트 조회용 ajax
 		
 		$.ajax({
-			url : "rlist.bo",
-			data : {bno : ${ b.boardNo }},
+			url : "rlist.fi",
+			data : {fno : ${ fb.findNo }},
 			type : "get",
 			success : function(result) {
 				
@@ -213,9 +211,9 @@
 				
 				for(let i = 0; i < result.length; i++) {
 					resultStr += "<tr>"
-							   + 	"<td>" + result[i].breId + "</td>"
-							   + 	"<td>" + result[i].breContent + "</td>"
-							   + 	"<td>" + result[i].breDate + "</td>"
+							   + 	"<td>" + result[i].loginUser.nickName + "</td>"
+							   + 	"<td>" + result[i].freContent + "</td>"
+							   + 	"<td>" + result[i].freDate + "</td>"
 							   + "</tr>";
 				}
 				

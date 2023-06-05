@@ -7,26 +7,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @NoArgsConstructor
 @Setter
 @Getter
 @ToString
-public class Reply {
-	
-//	BRE_NO	NUMBER
-//	BRE_COTENT	VARCHAR2(300 BYTE)
-//	BRE_DATE	DATE
+public class findReply {
+
+//	fre_NO	NUMBER
+//	fre_COTENT	VARCHAR2(300 BYTE)
+//	fre_DATE	DATE
 //	STATUS	CHAR(1 BYTE)
 //	BOARD_NO	NUMBER
 	
-	private int breNo;
-    private String breContent;
-    private Date breDate;
+	private int freNo;
+    private String freContent;
+    private Date freDate;
     private String status;
-    private int boardNo;
-    private String breId;
+    private int findNo;
+    private String freId;
     private String memberId;
     private String nickName;
 
 }
+	
+
+
