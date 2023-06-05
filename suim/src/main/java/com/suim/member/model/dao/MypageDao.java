@@ -12,8 +12,10 @@ import com.suim.common.model.vo.PageInfo;
 @Repository
 public class MypageDao {
 
-	public int selectBoardListCount(SqlSessionTemplate sqlSession) {
-		return sqlSession.selectOne("mypageMapper.selectBoardListCount");
+
+	public int selectBoardListCount(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.selectOne("mypageMapper.selectBoardListCount", memberId);
+
 	}
 
 	public ArrayList<Board> selectBoardList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
@@ -26,9 +28,10 @@ public class MypageDao {
 		return (ArrayList) sqlSession.selectList("mypageMapper.selectBoardList", memberId, rowBounds);
 	}
 
-	public int selectFindListCount(SqlSessionTemplate sqlSession) {
+	public int selectFindListCount(SqlSessionTemplate sqlSession, String memberId) {
 
-		return sqlSession.selectOne("mypageMapper.selectFindListCount");
+		return sqlSession.selectOne("mypageMapper.selectFindListCount", memberId);
+
 	}
 
 	public ArrayList<Board> selectFindList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {

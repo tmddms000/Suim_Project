@@ -66,6 +66,7 @@
 				AND #{openDate} BETWEEN ENTER_DATE AND MAX_ENTER_DATE
 	   	 	</if>
 	   	 	AND p.FILE_LEVEL = 'Y'
+	   	 	AND h.HOUSE_STATUS = 'Y'
 	    </where>
 	    ORDER BY HOUSE_NO DESC
 	</select>

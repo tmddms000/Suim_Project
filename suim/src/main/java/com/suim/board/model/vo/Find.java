@@ -30,6 +30,15 @@ public class Find {
 	private int findView;
 	private Date findDate;
 	private String status;
+	private String replyCount;
 	private String memberId;
+  
+	private String nickName;
+	private int freplyCount;
+	
+    // 첨부파일 필드
+	private String originName;
+	private String changeName;
+
 
 }

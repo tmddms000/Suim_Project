@@ -16,7 +16,7 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
-	
+
 	<c:if test="${ not empty toastError }">
 		<script>
 		toastr.error("${ toastError }");
@@ -30,8 +30,7 @@
 		</script>
 		<c:remove var="toastSuccess" scope="session" />
 	</c:if>
-	
-	
+
 	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
 	<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
 	  <script>
@@ -77,6 +76,7 @@
 	                            		<a href="#" class="nav-link nav-text">${ loginUser.memberName }님</a>
 		                            	<ul>
 			                                <li><a href="/mypage/timeline">마이페이지</a></li>
+
 			                                <li><a href="/chat.ch">채팅방</a>
 			                                
 			                                <li>
@@ -140,7 +140,7 @@
 									    </c:choose>
 									  </c:when>
 									</c:choose>
-								
+
 	                                <c:if test="${not empty loginUser }">
 	                                
 	                                <li class="nav-item dropdown m-4">
@@ -157,7 +157,6 @@
 	                                <li class="nav-item offcanvas-text m-4">
 	                                    <a class="side-black" aria-current="page" href="">방 찾기</a>
 	                                </li>
-	                                
 	                                
 	                                <li class="nav-item dropdown m-4">
 	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">셰어하우스 쉼</a>
