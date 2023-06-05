@@ -32,7 +32,7 @@
                     
                     <div class="form-group form-floating row justify-content-center mt-2">
                         <div class="form-floating col-sm-4">
-                            <input type="password" autocomplete="new-password" class="form-control" id="floatingInput" name="memberPwd" placeholder="비밀번호">
+                            <input type="password" autocomplete="off" class="form-control" id="floatingInput" name="memberPwd" placeholder="비밀번호">
                         	<label for="floatingInput">비밀번호</label>
                         </div>
                     </div>
@@ -58,7 +58,8 @@
                         <div class="col-sm-12 mt-3">
                             <div class="text-center">
                                 <a style="color : black; text-decoration: none;" href="./join" class="">회원가입</a>
-                                <a style="color : black; text-decoration: none;" href=".find" class="ml-4">아이디찾기 비밀번호 찾기</a>
+                                <a style="color : black; text-decoration: none;" href="./find" class="ml-4">아이디찾기</a>
+                                <a style="color : black; text-decoration: none;" href="./find" class="ml-4">비밀번호찾기</a>
                             </div>
                         </div>
                     </div>
@@ -102,6 +103,18 @@
         }
 
         return true;
+    }
+    
+    
+    function login() {
+        $.ajax({
+            url: '/member/doLogin',
+            method: 'POST',
+            success: function(response) {
+            	alert('로그아웃 되었습니다.');
+                location.reload(true);
+            }
+        });
     }
 	</script>
 	

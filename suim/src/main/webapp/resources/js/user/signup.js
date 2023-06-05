@@ -71,18 +71,6 @@
     	            return false;
     	        }
 
-    	    //희망지역(주소) 유효성 검사
-
-    	    const areaInputEl = document.querySelector('#area');
-    	    
-    	    //만약 address가 비어있다면
-    	    if(areaInputEl.value == "") {
-    	        // alert("희망지역을 다시 확인해주세요");
-    	        toastr.error("희망지역을 다시 확인해주세요");
-    	        areaInputEl.focus();
-
-    	        return false;
-    	    }
     	  
     	    //생년월일 유효성 검사
     	    const formattedDate = birthArr.join('');
@@ -162,7 +150,7 @@
 		    });
 
     	    
-    	    // 주소 유효성 검사
+    	    // 생년월일 유효성검사
     	    const birthYearEl = document.querySelector('#birth-year');
     	    const birthMonthEl = document.querySelector('#birth-month');
     	    const birthDayEl = document.querySelector('#birth-day');
@@ -230,15 +218,15 @@
     	        birthYearEl.addEventListener('focus', function () {
     	        // Year options creation (on first click)
     	        if (!isOptionExisted.year) {
-    	            isOptionExisted.year = true;
-    	            for (let i = 1940; i <= 2023; i++) {
-    	            const yearOption = document.createElement('option');
-    	            yearOption.setAttribute('value', i);
-    	            yearOption.innerText = i;
-    	            birthYearEl.appendChild(yearOption);
-    	            }
-    	        }
-    	        });
+				        isOptionExisted.year = true;
+				        for (let i = 2023; i >= 1970; i--) {
+				            const yearOption = document.createElement('option');
+				            yearOption.setAttribute('value', i);
+				            yearOption.innerText = i;
+				            birthYearEl.appendChild(yearOption);
+				        }
+				    }
+				});
 
     	        birthMonthEl.addEventListener('focus', function () {
     	        // Month options creation (on first click)
@@ -288,9 +276,6 @@
     	        const formattedDate = birthArr.join('');
     	        birthDateInput.value = formattedDate;
     	        }
-
-
-
 
     	        function searchAddr() {
     		    var themeObj = {
@@ -357,51 +342,3 @@
     	            top: (window.screen.height / 2) - (height / 2)
     	        });
     	    };
-
-
-
-
-//    	     let isDuplicateChecked = false; // Variable to track if duplicate check has been performed
-
-//    	     function idCheck() {
-    	//   let $memberId = $("#submit_check_id");
-    	//   let regExp = /^[a-z][a-z\d]{6,12}$/;
-
-    	//   if (!regExp.test($memberId.val())) {
-//    	     alert("Please enter the correct ID.");
-//    	     return false;
-    	//   }
-
-    	//   if (!isDuplicateChecked) {
-//    	     $.ajax({
-//    	       url: "idCheck.me",
-//    	       type: "get",
-//    	       data: { memberId: $memberId.val() },
-//    	       success: function (result) {
-//    	         if (result === "NN") {
-//    	           alert("This is the ID of an already existing or canceled member.");
-//    	           $memberId.focus(); // Induce input again
-//    	           isDuplicateChecked = false; // Reset duplicate check status
-//    	           $("#formSubmit button[type=submit]").prop("disabled", true); // Disable the submit button
-//    	         } else {
-//    	           let answer = confirm("This ID is available. Do you want to use it?");
-
-//    	           if (answer) {
-//    	             isDuplicateChecked = true; // Set duplicate check status to true
-//    	             $("#formSubmit button[type=submit]").prop("disabled", false); // Enable the submit button
-//    	           } else {
-//    	             $memberId.focus(); // Induce input again
-//    	             isDuplicateChecked = false; // Reset duplicate check status
-//    	             $("#formSubmit button[type=submit]").prop("disabled", true); // Disable the submit button
-//    	           }
-//    	         }
-//    	       },
-//    	       error: function () {
-//    	         console.log("Ajax communication failed to check duplicate ID!!");
-//    	       }
-//    	     });
-    	//   } else {
-//    	     // Duplicate check has already been performed
-//    	     $("#formSubmit button[type=submit]").prop("disabled", false); // Enable the submit button
-    	//   }
-    	// }
