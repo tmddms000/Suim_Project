@@ -26,10 +26,11 @@ public class Find {
 	private int findNo;
 	private String findTitle;
 	private String findContent;
-	private String category;
+	private String findCategory;
 	private int findView;
 	private Date findDate;
 	private String status;
+	private String replyCount;
 	private String memberId;
 
 }

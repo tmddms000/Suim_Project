@@ -9,7 +9,7 @@
 		<result column="BOARD_VIEW" property="boardView" />
 		<result column="BOARD_DATE" property="boardDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-		<result column="BOARD_COTENT" property="boardContent" />
+		<result column="BOARD_CONTENT" property="boardContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="BOARD_REPLY_COUNT" property="replyCount" />
 	</resultMap>
@@ -22,30 +22,30 @@
 		<result column="FIND_VIEW" property="findView" />
 		<result column="FIND_DATE" property="findDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-		<result column="FIND_COTENT" property="findContent" />
+		<result column="FIND_CONTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="FIND_REPLY_COUNT" property="replyCount" />
 	</resultMap>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -63,7 +63,7 @@
 		SELECT
 		B.BOARD_NO,
 		B.BOARD_TITLE,
-		B.BOARD_COTENT,
+		B.BOARD_CONTENT,
 		B.BOARD_VIEW,
 		B.BOARD_DATE,
 		B.STATUS,
@@ -72,29 +72,34 @@
 		BA.CHANGE_NAME,
 		COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
 		FROM BOARD B
-		JOIN MEMBER M ON
+		JOIN
+		MEMBER M ON
 		(M.MEMBER_ID = B.MEMBER_ID)
-		LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO =
+		LEFT JOIN BATTACHMENT BA ON
+		(BA.BOARD_NO =
 		B.BOARD_NO)
-		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
+		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO =
+		B.BOARD_NO)
 		WHERE B.STATUS = 'Y'
 		AND M.MEMBER_ID = #{memberId}
 		GROUP BY
 		B.BOARD_NO,
 		B.BOARD_TITLE,
-		B.BOARD_COTENT,
+		B.BOARD_CONTENT,
 		B.BOARD_VIEW,
 		B.BOARD_DATE,
 		B.STATUS,
 		B.MEMBER_ID,
 		BA.ORIGIN_NAME,
 		BA.CHANGE_NAME
-		ORDER BY B.BOARD_NO DESC
+		ORDER BY B.BOARD_NO
+		DESC
 	</select>
 
 	<select id="selectFindListCount" resultType="_int">
 		SELECT COUNT(*)
-		FROM FIND
+		FROM
+		FIND
 		WHERE STATUS = 'Y'
 		AND MEMBER_ID = #{memberId}
 	</select>
@@ -106,7 +111,7 @@
 		SELECT
 		F.FIND_NO,
 		F.FIND_TITLE,
-		F.FIND_COTENT,
+		F.FIND_CONTENT,
 		F.FIND_CATEGORY,
 		F.FIND_VIEW,
 		F.FIND_DATE,
@@ -114,17 +119,21 @@
 		F.MEMBER_ID,
 		FA.ORIGIN_NAME,
 		FA.CHANGE_NAME,
-		COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT
+		COUNT(FR.FRE_NO) AS
+		FIND_REPLY_COUNT
 		FROM FIND F
-		JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+		JOIN MEMBER M ON (M.MEMBER_ID =
+		F.MEMBER_ID)
 		LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
-		LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-		WHERE B.STATUS = 'Y'
-		AND M.MEMBER_ID = #{memberId}
+		LEFT
+		JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+		WHERE F.STATUS = 'Y'
+		AND
+		M.MEMBER_ID = #{memberId}
 		GROUP BY
 		F.FIND_NO,
 		F.FIND_TITLE,
-		F.FIND_COTENT,
+		F.FIND_CONTENT,
 		F.FIND_CATEGORY,
 		F.FIND_VIEW,
 		F.FIND_DATE,
