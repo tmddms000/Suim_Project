@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.suim.common.model.vo.PageInfo;
+import com.suim.notice.model.vo.Nattachment;
 import com.suim.notice.model.vo.Notice;
 
 @Repository
@@ -40,9 +41,15 @@ public class NoticeDao {
 	}
 
 	/* 공지사항 게시글 상세조회 시 해당 공지사항 게시글 증가 */
-	public int increseCount(SqlSessionTemplate sqlSession, int noticeNo) {
-		return sqlSession.update("noticeMapper.increaseCount", noticeNo);
+	public int increseCount(SqlSessionTemplate sqlSession, int nno) {
+		return sqlSession.update("noticeMapper.increaseCount", nno);
 	}
+
+	
+	public ArrayList<Nattachment> selectNoticeFile(SqlSessionTemplate sqlSession, int nno) {
+		return (ArrayList)sqlSession.selectList("noticeMapper.selectNoticeFile", nno);
+	}
+	
 	
 	
 	

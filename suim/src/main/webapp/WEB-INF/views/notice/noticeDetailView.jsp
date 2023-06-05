@@ -1,7 +1,10 @@
+<%@page import="com.suim.notice.model.vo.Nattachment"%>
+<%@page import="com.suim.notice.model.vo.Notice" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -88,8 +91,13 @@
                         <tr style="width: 100%;" rowspan="3">
                             
                             <td class="noticeContent" style="height: 100px;">
-                               ${ n.noticeContent }
+                               <c:forEach items="${nAttach}" var="nAttach">
+		                          <img src="${nAttach.changeName }">
+		                           ${ n.noticeContent }
+		                       </c:forEach>
                             </td>
+                            
+                            
                             
                         </tr>
                     
@@ -100,10 +108,10 @@
                 
                
                 
-                <button class="btn btn-primary btn-block submit-btn">
-                    <a href="./notice.html">목록가기</a>
+                <button class="btn btn-primary btn-block submit-btn" onclick="/faqList.no">
+                    <a href="./faqList.no" id="faqLink">목록가기</a>
                 </button>
-
+               
             </div>
         </div>
     </div>
