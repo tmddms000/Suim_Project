@@ -7,9 +7,13 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.suim.board.model.vo.Board;
+import com.suim.common.model.vo.PageInfo;
+import com.suim.member.model.vo.Email;
 import com.suim.member.model.vo.Member;
 
 import com.suim.member.model.vo.SignUp;
@@ -75,5 +79,35 @@ public class MemberDao {
 	public int insertApiMember(SqlSessionTemplate sqlSession, Member member) {
 		return sqlSession.insert("memberMapper.insertApiMember", member);
 	}
+	
+
+	public int insertEmail(SqlSessionTemplate sqlSession, Email email) {
+		return sqlSession.insert("emailMapper.insertEmail", email);
+	}
+
+	public int setEmailCode(SqlSessionTemplate sqlSession, Email email) {
+		return sqlSession.update("emailMapper.setEmailCode", email);
+	}
+
+	public int updateEmail(SqlSessionTemplate sqlSession, Email email) {
+		return sqlSession.update("emailMapper.updateEmail", email);
+	}
+
+	public int emailAuthCheck(SqlSessionTemplate sqlSession, Email email) {
+		return sqlSession.selectOne("emailMapper.emailAuthCheck", email);
+	}
+
+	public int checkEmailLogin(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("emailMapper.checkEmailLogin", email);
+	}
+
+	public int selectBoardListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("emailMapper.selectBoardListCount");
+	}
+
+
+
+
+
 
 }

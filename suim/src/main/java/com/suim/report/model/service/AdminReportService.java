@@ -1,6 +1,7 @@
 package com.suim.report.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
@@ -37,4 +38,9 @@ public interface AdminReportService {
 
 	// 승인/반려 처리용
 	int updateReportStatus(Report r);
+
+	// 검색용
+	int selectSearchCount(HashMap<String, String> map);
+	
+	ArrayList<Report> selectSearchList(HashMap<String, String> map, PageInfo pi);
 }

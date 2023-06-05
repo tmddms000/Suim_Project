@@ -107,4 +107,26 @@
 		   SET REPORT_STATUS = #{reportStatus}
 		 WHERE REPORT_NO = #{reportNo}
 	</update>
+	
+	<!-- 검색용 count 쿼리문 -->
+	<select id="selectSearchCount" parameterType="hashmap" resultType="_int">
+		SELECT COUNT(*)
+		  FROM REPORT R
+		  JOIN MEMBER USING (MEMBER_ID)
+		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
+	</select>
+	<!-- 검색용 쿼리문 -->
+	<select id="selectSearchList" parameterType="hashmap" resultMap="adminReportResultSet">
+		SELECT REPORT_NO
+			 , REPORT_TITLE
+			 , REPORT_CONTENT
+			 , REPORT_TYPE
+			 , REPORT_ID
+			 , REPORT_DATE
+			 , REPORT_STATUS
+		  FROM REPORT
+		  JOIN MEMBER USING (MEMBER_ID)
+		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
+		 ORDER BY REPORT_NO DESC
+	</select>
 </mapper>

@@ -2,15 +2,11 @@ package com.suim.report.model.vo;
 
 import java.sql.Date;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+@Data
 @NoArgsConstructor
-@Setter
-@Getter
-@ToString
 public class Report {
 
 	private int reportNo;
