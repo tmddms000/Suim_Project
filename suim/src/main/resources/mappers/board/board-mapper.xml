@@ -216,19 +216,23 @@
 		
 
  	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
-		         SELECT 
-			         BR.BRE_NO,
-			         BR.BRE_CONTENT,
-			         BR.BRE_DATE,
-			         BR.STATUS,
-			         BR.BOARD_NO,
-			         BR.BRE_ID,
-			         M.NICKNAME
-		         FROM BOARD_REPLY BR
-		         WHERE STATUS = 'Y'
-		         JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
-		         AND BOARD_NO = #{boardNo}
-		         ORDER BY BRE_NO DESC
+			SELECT 
+			    BR.BRE_NO,
+			    BR.BRE_CONTENT,
+			    BR.BRE_DATE,
+			    BR.STATUS,
+			    BR.BOARD_NO,
+			    BR.BRE_ID,
+			    M.NICKNAME
+			FROM 
+			    BOARD_REPLY BR
+			JOIN 
+			    MEMBER M ON (M.MEMBER_ID = BR.BRE_ID)
+			WHERE 
+			    BR.STATUS = 'Y'
+			    AND BR.BOARD_NO = #{boardNo}
+			ORDER BY 
+			    BR.BRE_NO DESC
 	</select>
 
 

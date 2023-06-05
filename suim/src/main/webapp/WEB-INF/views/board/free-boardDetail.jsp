@@ -213,7 +213,7 @@
 				
 				for(let i = 0; i < result.length; i++) {
 					resultStr += "<tr>"
-							   + 	"<td>" + result[i].breId + "</td>"
+							   + 	"<td>" + result[i].nickName + "</td>"
 							   + 	"<td>" + result[i].breContent + "</td>"
 							   + 	"<td>" + result[i].breDate + "</td>"
 							   + "</tr>";
