@@ -1,51 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="houseMapper">
-  
-<resultMap id="houseResultMap" type="house">
-	<result column="HOUSE_NO" property="houseNo"/>
-	<result column="HOUSE_NAME" property="houseName"/>
-	<result column="HOUSE_ADDRESS" property="houseAddress"/>
-	<result column="DEPOSIT" property="deposit"/>
-	<result column="RENT" property="rent"/>
-	<result column="ENTER_DATE" property="enterDate"/>
-	<result column="MIN_STAY" property="minStay"/>
-	<result column="MAX_STAY" property="maxStay"/>
-	<result column="ROOM_PEOPLE" property="roomPeople"/>
-	<result column="INC_FURNITURE" property="incFurniture"/>
-	<result column="HOUSE_CONTENT" property="houseContent"/>
-	<result column="RES_GENDER" property="resGender"/>
-	<result column="RES_TYPE" property="resType"/>
-	<result column="FLOOR" property="floor"/>
-	<result column="HOUSE_STATUS" property="houseStatus"/>
-	<result column="HOUSE_DATE" property="houseDate"/>
-	<result column="MEMBER_ID" property="memberId"/>
-</resultMap>
 
-<resultMap id="wishResultMap" type="wish">
-	<result column="MEMBER_ID" property="Id"/>
-	<result column="HOUSE_NO" property="hno"/>
-</resultMap>
+	<resultMap id="houseResultMap" type="house">
+		<result column="HOUSE_NO" property="houseNo" />
+		<result column="HOUSE_NAME" property="houseName" />
+		<result column="HOUSE_ADDRESS" property="houseAddress" />
+		<result column="DEPOSIT" property="deposit" />
+		<result column="RENT" property="rent" />
+		<result column="ENTER_DATE" property="enterDate" />
+		<result column="MAX_ENTER_DATE" property="maxEnterDate" />
+		<result column="MIN_STAY" property="minStay" />
+		<result column="MAX_STAY" property="maxStay" />
+		<result column="ROOM_PEOPLE" property="roomPeople" />
+		<result column="INC_FURNITURE" property="incFurniture" />
+		<result column="HOUSE_CONTENT" property="houseContent" />
+		<result column="RES_GENDER" property="resGender" />
+		<result column="RES_TYPE" property="resType" />
+		<result column="FLOOR" property="floor" />
+		<result column="HOUSE_STATUS" property="houseStatus" />
+		<result column="HOUSE_DATE" property="houseDate" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="CHANGE_NAME" property="changeName" />
+	</resultMap>
 
-<!-- 하우스 상세 조회용 쿼리문 -->
-<select id="selectHouse" parameterType="int" resultMap="houseResultMap">
-	SELECT * FROM HOUSE
-	WHERE HOUSE_NO = #{hno}
-</select>
+	<resultMap id="photoResultMap" type="photo">
+		<result column="PHOTO_NO" property="photoNo" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="FILE_LEVEL" property="fileLevel" />
+		<result column="FILE_STATUS" property="fileStatus" />
+	</resultMap>
 
-<select id="checkHeart" parameterType="_int" resultMap="wishResultMap">
-	SELECT * FROM WISH
-	WHERE HOUSE_NO = #{hno}
-</select>
+	<resultMap id="wishResultMap" type="wish">
+		<result column="MEMBER_ID" property="Id" />
+		<result column="HOUSE_NO" property="hno" />
+	</resultMap>
 
-<insert id="addHeart">
-        INSERT INTO WISH (MEMBER_ID, HOUSE_NO)
-        VALUES (#{id}, #{hno})
-    </insert>
-    
-    <delete id="removeHeart">
-        DELETE FROM WISH
-        WHERE MEMBER_ID = #{id} AND HOUSE_NO = #{hno}
-    </delete>
-  
+	<!-- 하우스 상세 조회용 쿼리문 -->
+	<select id="selectHouse" parameterType="int"
+		resultMap="houseResultMap">
+		SELECT H.*, M.CHANGE_NAME
+		FROM HOUSE H
+		INNER JOIN MEMBER M ON
+		H.MEMBER_ID = M.MEMBER_ID
+		WHERE H.HOUSE_NO = #{hno}
+	</select>
+
+	<select id="checkHeart" parameterType="_int"
+		resultMap="wishResultMap">
+		SELECT * FROM WISH
+		WHERE HOUSE_NO = #{hno}
+	</select>
+
+	<insert id="addHeart">
+		INSERT INTO WISH (MEMBER_ID, HOUSE_NO)
+		VALUES (#{id},
+		#{hno})
+	</insert>
+
+	<delete id="removeHeart">
+		DELETE FROM WISH
+		WHERE MEMBER_ID = #{id} AND HOUSE_NO
+		= #{hno}
+	</delete>
+
+	<select id="selectPhoto" parameterType="_int"
+		resultMap="photoResultMap">
+		SELECT * FROM PHOTO
+		WHERE HOUSE_NO = #{hno}
+		ORDER BY PHOTO_NO
+	</select>
+
+	<insert id="enrollPhoto" parameterType="photo">
+
+		INSERT INTO PHOTO
+		(PHOTO_NO, ORIGIN_NAME, CHANGE_NAME, CREATE_DATE,
+		FILE_LEVEL,
+		FILE_STATUS, HOUSE_NO)
+		VALUES (
+		SEQ_PHOTO_NO.NEXTVAL, #{originName},
+		#{changeName}, SYSDATE, #{fileLevel}, 'Y', #{houseNo}
+		)
+	</insert>
+
+	<insert id="enrollHouse" parameterType="house">
+		INSERT INTO house (
+		HOUSE_NO, HOUSE_NAME, HOUSE_ADDRESS, DEPOSIT, RENT, ENTER_DATE,
+		MAX_ENTER_DATE,
+		MIN_STAY, MAX_STAY, ROOM_PEOPLE, INC_FURNITURE,
+		HOUSE_CONTENT,
+		RES_GENDER,
+		RES_TYPE, FLOOR, HOUSE_STATUS, HOUSE_DATE,
+		MEMBER_ID
+		)
+		VALUES (
+		SEQ_HOUSE_NO.NEXTVAL, #{houseName}, #{houseAddress},
+		#{deposit}, #{rent}, #{enterDate},
+		#{maxEnterDate},
+		#{minStay},
+		#{maxStay}, #{roomPeople}, #{incFurniture}, #{houseContent},
+		#{resGender},
+		#{resType}, #{floor}, 'Y', SYSDATE, #{memberId}
+		)
+	</insert>
+
+	<select id="selectHno" parameterType="String" resultType="int">
+		SELECT
+		HOUSE_NO
+		FROM (
+		SELECT HOUSE_NO
+		FROM HOUSE
+		WHERE MEMBER_ID = #{Id}
+		ORDER BY
+		HOUSE_NO DESC
+		)
+		WHERE ROWNUM = 1
+	</select>
+
+	<update id="updateHouse" parameterType="house">
+		UPDATE HOUSE
+		SET
+		HOUSE_NAME = #{houseName},
+		HOUSE_ADDRESS = #{houseAddress},
+		DEPOSIT =
+		#{deposit},
+		RENT = #{rent},
+		ENTER_DATE = #{enterDate},
+		MAX_ENTER_DATE =
+		#{maxEnterDate},
+		MIN_STAY = #{minStay},
+		MAX_STAY = #{maxStay},
+		ROOM_PEOPLE = #{roomPeople},
+		INC_FURNITURE = #{incFurniture},
+		HOUSE_CONTENT = #{houseContent},
+		RES_GENDER = #{resGender},
+		RES_TYPE =
+		#{resType},
+		FLOOR = #{floor},
+		HOUSE_STATUS = 'Y',
+		HOUSE_DATE = SYSDATE,
+		MEMBER_ID = #{memberId}
+		WHERE HOUSE_NO = #{houseNo}
+	</update>
+
+	<update id="updatePhoto" parameterType="photo">
+		UPDATE PHOTO
+		SET ORIGIN_NAME = #{originName},
+		CHANGE_NAME = #{changeName},
+		CREATE_DATE = SYSDATE,
+		FILE_LEVEL = #{fileLevel},
+		FILE_STATUS = 'Y'
+		WHERE HOUSE_NO = #{houseNo} AND PHOTO_NO =#{photoNo}
+	</update>
+
 </mapper>

@@ -1,6 +1,6 @@
 package com.suim.chat.model.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class ChatLog {
     private String sendUser;
     private String receiveUser;
     private String content;
-    private Timestamp sendDate;
+    private Date sendDate;
     private int chatNo;
     private char status;
 }
