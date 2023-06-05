@@ -1,5 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<style>
+.offcanvas-profile {
+	width: 200px;
+ 	height: 200px; 
+ 	margin-left: 25px;
+}
+
+</style>
+
 
 	<c:if test="${ not empty alertMsg }">
 		<script>
@@ -7,6 +16,22 @@
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
+	
+	<c:if test="${ not empty toastError }">
+		<script>
+		toastr.error("${ toastError }");
+		</script>
+		<c:remove var="toastError" scope="session" />
+	</c:if>
+	
+	<c:if test="${ not empty toastSuccess }">
+		<script>
+		toastr.success("${ toastSuccess }");
+		</script>
+		<c:remove var="toastSuccess" scope="session" />
+	</c:if>
+	
+	
 	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
 	<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
 	  <script>
@@ -34,9 +59,9 @@
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">커뮤니티</a>
 	                            <ul>
-	                                <li><a href="list.bo">자유게시판</a></li>
+	                                <li><a href="/list.bo">자유게시판</a></li>
 	                                <li><a href="">입주후기</a></li>
-	                                <li><a href="flist.bo">사람구해요</a></li>
+	                                <li><a href="/flist.bo">사람구해요</a></li>
 	                            </ul>
 	                        </li>
 	                        
@@ -52,11 +77,11 @@
 	                            		<a href="#" class="nav-link nav-text">${ loginUser.memberName }님</a>
 		                            	<ul>
 			                                <li><a href="/mypage/timeline">마이페이지</a></li>
-			                                
+			                                <li><a href="/chat.ch">채팅방</a>
 			                                
 			                                <li>
-			                                <form id="logout-form" action="/member/logout" method="post">
-			                                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">로그아웃</a>
+			                                <form id="logout-form1" action="/member/logout" method="post">
+			                                <a href="#" onclick="event.preventDefault(); logout();">로그아웃</a>
 			                                </form>
 			                                </li>
 			                                
@@ -69,7 +94,7 @@
 	                            <a href="#" class="nav-link nav-text">고객센터</a>
 	                            <ul>
 	                                <li><a href="/notice.no">공지사항</a></li>
-	                                <li><a href="faqList">자주 묻는 질문</a></li>
+	                                <li><a href="/faqList">자주 묻는 질문</a></li>
 	                            </ul>
 	                        </li>
 	                </ul>
@@ -107,22 +132,23 @@
 									  <c:when test="${not empty loginUser}">
 									    <c:choose>
 									      <c:when test="${empty loginUser.changeName}">
-									        <img src="/resources/img/common/default_profile.png" style="width: 200px; height: 200px; margin-left: 25px;">
+									        <img src="/resources/img/common/default_profile.png" class="offcanvas-profile">
 									      </c:when>
 									      <c:otherwise>
-									        <img src="${loginUser.changeName}"/>
+									        <img src="${loginUser.changeName}" class="offcanvas-profile"/>
 									      </c:otherwise>
 									    </c:choose>
 									  </c:when>
 									</c:choose>
 								
-	                                
 	                                <c:if test="${not empty loginUser }">
 	                                
 	                                <li class="nav-item dropdown m-4">
-	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">마이페이지</a>
+	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">${ loginUser.nickName }님</a>
 	                                        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown1">
-	                                           <li><a class="dropdown-item" href="#">쉼 소개</a></li>
+	                                           <li><a class="dropdown-item" href="mypage">마이페이지</a></li>
+	                                           <li><a class="dropdown-item" href="chat.ch">채팅방</a></li>
+	                                           <li><form id="logout-form2" action="/member/logout" method="post"><a class="dropdown-item" href="#" onclick="event.preventDefault(); logout();">로그아웃</a></form></li>
 	                                        </ul> 
 	                                </li>
 	                                
@@ -158,3 +184,17 @@
 	            </div>
 	        </nav>
 	    </header>
+	    
+	    
+	    <script>
+    function logout() {
+        $.ajax({
+            url: '/member/logout',
+            method: 'POST',
+            success: function(response) {
+            	alert('로그아웃 되었습니다.');
+                location.reload(true);
+            }
+        });
+    }
+	</script>

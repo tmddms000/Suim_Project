@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-
+import com.suim.board.model.vo.Board;
+import com.suim.common.model.vo.PageInfo;
+import com.suim.member.model.vo.Email;
 import com.suim.member.model.vo.Member;
 import com.suim.member.model.vo.SignUp;
 
@@ -50,6 +52,21 @@ public interface MemberService {
 
 	// 회원 네이버 연동 서비스
 	Member userNaverLoginPro(Map<String, Object> apiJson);
+
+	
+	// 회원가입 시 memberAuth를 insert(외래키로 연결)
+	int insertEmail(Email email);
+	// 회원가입이 완료되거나 재발급 받을때 인증코드를 보낼때 사용
+	int setEmailCode(Email email);
+	// 이메일 업데이트
+	int updateEmail(Email email);
+	// 이메일권한체크
+	int emailAuthCheck(Email email);
+	// 로그인할때 이메일 체크
+	int checkEmailLogin(String email);
+
+
+
 
 	
 }

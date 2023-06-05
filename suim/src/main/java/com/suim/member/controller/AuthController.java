@@ -5,31 +5,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.suim.common.api.NaverLoginBO;
+import com.suim.common.mail.MailHandler;
+import com.suim.common.mail.TempKey;
 import com.suim.member.model.service.MemberService;
+import com.suim.member.model.vo.Email;
 import com.suim.member.model.vo.Member;
 import com.suim.member.model.vo.SignUp;
 
@@ -40,227 +46,246 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthController {
 
+	private final MemberService memberService;
+	private final BCryptPasswordEncoder bcryptPasswordEncoder;
+	private final JavaMailSender mailSender;
+	private final NaverLoginBO naverLoginBO;
+	private final HttpSession session;
+
 	@Autowired
-	private MemberService memberService;
-	@Autowired
-	private NaverLoginBO naverLoginBO;
-	@Autowired
-	private BCryptPasswordEncoder bcryptPasswordEncoder;
+	public AuthController(MemberService memberService, BCryptPasswordEncoder bcryptPasswordEncoder,
+			JavaMailSender mailSender, NaverLoginBO naverLoginBO, HttpSession session) {
+		this.memberService = memberService;
+		this.bcryptPasswordEncoder = bcryptPasswordEncoder;
+		this.mailSender = mailSender;
+		this.naverLoginBO = naverLoginBO;
+		this.session = session;
+	}
 
 	// 회원가입 페이지 이동
 	@RequestMapping("join")
 	public String signUp(Model theModel) {
 
 		theModel.addAttribute("member", new SignUp());
-		return ("member/signup");
+		return "member/signup";
 	}
 
-	// 회원가입 아이디 체크
 	@ResponseBody
 	@RequestMapping(value = "idCheck", produces = "text/html; charset=UTF-8")
 	public String idCheck(@RequestParam("id") String checkId) {
-
-		int count = memberService.idCheck(checkId);
-
-		return (count > 0) ? "Duplicate" : "Available";
-
+		return checkDuplicate("id", checkId);
 	}
 
-	// 회원가입 이메일 체크
 	@ResponseBody
 	@RequestMapping(value = "emailCheck", produces = "text/html; charset=UTF-8")
 	public String emailCheck(String email) {
-
-		int count = memberService.emailCheck(email);
-
-		return (count > 0) ? "Duplicate" : "Available";
-
+		return checkDuplicate("email", email);
 	}
 
-	// 회원가입 핸드폰 체크
 	@ResponseBody
 	@RequestMapping(value = "phoneCheck", produces = "text/html; charset=UTF-8")
 	public String phoneCheck(String phone) {
-
-		int count = memberService.phoneCheck(phone);
-
-		return (count > 0) ? "Duplicate" : "Available";
-
+		return checkDuplicate("phone", phone);
 	}
 
 	// 회원가입 성공
 	@RequestMapping("joinSuccess")
-	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult theBindingResult,
-			Model model, HttpSession session) throws IOException {
+	public String insertMember(@Valid @ModelAttribute("member") SignUp member, BindingResult bindingResult, Model model)
+			throws Exception {
 
-		if (theBindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			return "member/signup";
+		}
+
+		if (checkDuplicate("id", member.getMemberId()).equals("Duplicate")) {
+			session.setAttribute("alertMsg", "중복된 아이디가 존재합니다.");
+			return "member/signup";
+		}
+
+		if (checkDuplicate("email", member.getEmail()).equals("Duplicate")) {
+			session.setAttribute("alertMsg", "중복된 이메일이 존재합니다.");
+			return "member/signup";
+		}
+
+		if (checkDuplicate("phone", member.getPhone()).equals("Duplicate")) {
+			session.setAttribute("alertMsg", "중복된 번호가 존재합니다.");
+			return "member/signup";
+		}
+
+		String nickName = generateUniqueNickname();
+		String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
+
+		member.setNickName(nickName);
+		member.setMemberPwd(encPwd);
+
+		int result = memberService.insertMember(member);
+		if (result > 0) {
+
+			String mailKey = new TempKey().getKey(30, false);
+			Email email = new Email(mailKey, member.getEmail());
+			int result2 = memberService.insertEmail(email);
+			int result3 = memberService.setEmailCode(email);
+
+			CompletableFuture.runAsync(() -> {
+				try {
+					mailSendAsync(mailKey, member.getEmail());
+				} catch (Exception e) {
+					log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+				}
+			});
+
+			session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
+			return "member/sign-success";
 		} else {
-
-			// id, email, phone 중복 체크
-			int id = memberService.idCheck(member.getMemberId());
-			int email = memberService.emailCheck(member.getEmail());
-			int phone = memberService.phoneCheck(member.getPhone());
-
-			if (id > 0) {
-				session.setAttribute("alertMsg", "중복된 아이디가 존재합니다.");
-				return "member/signup";
-			} else if (email > 0) {
-				session.setAttribute("alertMsg", "중복된 이메일이 존재합니다.");
-				return "member/signup";
-			} else if (phone > 0) {
-				session.setAttribute("alertMsg", "중복된  번호가 존재합니다.");
-				return "member/signup";
-			}
-
-			String nickName = generateUniqueNickname();
-			String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
-			member.setNickName(nickName);
-			member.setMemberPwd(encPwd);
-
-			int result = memberService.insertMember(member);
-
-			if (result > 0) {
-
-				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
-
-				// 이메일 인증 받아야함
-				return "member/sign-success";
-
-			} else {
-
-				model.addAttribute("errorMsg", "회원가입 실패");
-				return "common/errorPage";
-
-			}
+			session.setAttribute("alertMsg", "오류가 발생했습니다. 다시 시도해주세요.");
+			return "member/signup";
 		}
 	}
 
 	// 로그인 페이징
 	@RequestMapping(value = "login", method = { RequestMethod.GET, RequestMethod.POST })
 	public String login(Model model, HttpSession session) {
-
 		/* 네이버아이디로 인증 URL을 생성하기 위하여 naverLoginBO클래스의 getAuthorizationUrl메소드 호출 */
 		String naverAuthUrl = naverLoginBO.getAuthorizationUrl(session);
-
-		// https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sE***************&
-		// redirect_uri=http%3A%2F%2F211.63.89.90%3A8090%2Flogin_project%2Fcallback&state=e68c269c-5ba9-4c31-85da-54c16c658125
-
 		// 네이버
 		model.addAttribute("url", naverAuthUrl);
-
-		return "/member/login";
+		return "member/login";
 	}
 
 	// 일반 로그인
 	@PostMapping("doLogin")
-	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv, HttpServletResponse response) {
-
+	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response) {
 		Member loginUser = memberService.loginMember(m);
 
-		if (loginUser != null && bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "아이디를 확인해주세요");
+			return "member/login";
 
-			session.setAttribute("loginUser", loginUser);
-			session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+		} else {
 
-			mv.setViewName("redirect:/");
+			if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+				int result = memberService.checkEmailLogin(loginUser.getEmail());
 
-		} else { // 로그인 실패 처리
+				if (result > 0) {
 
-			mv.addObject("errorMsg", "로그인 실패");
+					session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+					session.setAttribute("loginUser", loginUser);
 
-			mv.setViewName("common/errorPage");
+					return "redirect:/";
+
+				} else {
+					session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+
+					String mailKey = new TempKey().getKey(30, false);
+					Email email = new Email(mailKey, loginUser.getEmail());
+
+					int result3 = memberService.setEmailCode(email);
+					CompletableFuture<Void> emailTask = mailSendAsync(mailKey, loginUser.getEmail());
+
+					return "redirect:/member/verifyPage";
+				}
+			} else {
+				session.setAttribute("alertMsg", "비밀번호를 확인해주세요.");
+				return "member/login";
+
+			}
 		}
+	}
 
-		return mv;
+	// 메일 전송됐다고 알려지는 창
+	@RequestMapping("verifyPage")
+	public String verifyPage() {
+		return "member/sign-success";
+	}
+
+	@RequestMapping("verifySuccess")
+	public String verifySuccess() {
+		session.setAttribute("alertMsg", "이메일 인증이 완료됐습니다.");
+		return "/member/verifySuccess";
+	}
+
+	// 이메일 링크
+	@GetMapping("verifyEmail")
+	public String verifyEmail(String email, String mailKey) {
+
+		int result = memberService.updateEmail(new Email(mailKey, email));
+
+		return "redirect:/member/verifySuccess";
 	}
 
 	// 네이버 로그인
 	@RequestMapping(value = "loginNaver", method = { RequestMethod.GET, RequestMethod.POST })
 	public String userNaverLoginPro(Model model, @RequestParam Map<String, Object> paramMap, @RequestParam String code,
-			@RequestParam String state, HttpSession session) throws SQLException, Exception {
+			@RequestParam String state, HttpSession session) throws Exception {
 
-		OAuth2AccessToken oauthToken;
-		oauthToken = naverLoginBO.getAccessToken(session, code, state);
-
+		OAuth2AccessToken oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		String apiResult = naverLoginBO.getUserProfile(oauthToken);
 
 		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Object> apiJson = objectMapper.readValue(apiResult, new TypeReference<Map<String, Object>>() {
+		});
+		Map<String, Object> response = (Map<String, Object>) apiJson.get("response");
 
-		Map<String, Object> apiJson = (Map<String, Object>) objectMapper.readValue(apiResult, Map.class)
-				.get("response");
-
-		String email = (String) apiJson.get("email");
+		String email = (String) response.get("email");
 
 		Map<String, Object> naverConnectionCheck = memberService.naverConnectionCheck(email);
+		String mailKey = new TempKey().getKey(30, false);
+		Email sendEmail = new Email(mailKey, email);
 
-		if (naverConnectionCheck == null) { // 일치하는 이메일 없으면 가입
-
-			Member m = new Member();
-
-			Random random = new Random();
-			int randomNumber = random.nextInt(100000); // 0부터 99999까지의 랜덤 숫자 생성
-
-			String naverID = "naver" + String.format("%05d", randomNumber); // 5자리 숫자로 포맷팅
-			
-			System.out.println(apiJson);
-			
-			m.setMemberId(naverID);
-			m.setEmail((String) apiJson.get("email"));
-			m.setMemberPwd(bcryptPasswordEncoder.encode((String) apiJson.get("email")));
-			m.setMemberName((String) apiJson.get("name"));
-			m.setPhone((String) apiJson.get("mobile"));
-			String birthday = (String) apiJson.get("birthyear") + ((String) apiJson.get("birthday")).replace("-", "");
-			m.setBirth(birthday);
-			m.setGender((String) apiJson.get("gender"));
-			m.setNickName(generateUniqueNickname());
-			
-			
-
+		// 네이버 계정이 없다 => 회원가입
+		if (naverConnectionCheck == null) {
+			Member m = createNewMemberFromNaverAPI(response);
 			int result = memberService.insertApiMember(m);
 			if (result > 0) {
-				session.setAttribute("alertMsg", "회원가입에 성공했습니다.");
-				return "redirect:/";
+				int result2 = memberService.insertEmail(sendEmail);
+				int result3 = memberService.setEmailCode(sendEmail);
+
+				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);
+
+				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
+				return "redirect:/member/verifyPage";
 			} else {
-				session.setAttribute("alertMsg", "오류가 발생했습니다. 잠시 후 시도해주세요.");
-				return "redirect:/";
+				session.setAttribute("alertMsg", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+				return "member/login";
 			}
-
-		} else if (naverConnectionCheck.get("NAVERLOGIN") == null && naverConnectionCheck.get("EMAIL") != null) {
-
-			memberService.setNaverConnection(apiJson);
-			
-			System.out.println(apiJson);
-
-			Member loginUser = memberService.userNaverLoginPro(apiJson);
-			session.setAttribute("loginUser", loginUser);
-			session.setAttribute("alertMsg", "로그인에 성공했습니다.");
 		} else {
-			Member loginUser = memberService.userNaverLoginPro(apiJson);
+			memberService.setNaverConnection(response);
+			Member loginUser = memberService.userNaverLoginPro(response);
 			session.setAttribute("loginUser", loginUser);
-			session.setAttribute("alertMsg", "로그인에 성공했습니다.");
-		}
 
-		return "redirect:/";
+			int result = memberService.checkEmailLogin(loginUser.getEmail());
+
+			if (result > 0) {
+
+				session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+				session.setAttribute("loginUser", loginUser);
+
+				return "redirect:/";
+
+			} else {
+				session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+
+				int result3 = memberService.setEmailCode(sendEmail);
+				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);
+
+				return "redirect:/member/verifyPage";
+			}
+		}
 	}
 
-	// 로그아웃
 	@PostMapping("logout")
 	public String logoutMember(HttpSession session) {
-
-		session.setAttribute("alertMsg", "로그아웃 되었습니다.");
 		session.removeAttribute("loginUser");
 		return "redirect:/";
-
 	}
 
-	// 닉네임 존재하면 반복하여 닉 생성
-	public String generateUniqueNickname() throws IOException {
+	// Auth 관련 메소드들
+
+	private String generateUniqueNickname() throws IOException {
 		String nickname = randomNickName();
 		int nicknameCount = memberService.nickCheck(nickname);
 
 		if (nicknameCount > 1) {
-			System.out.println("닉네임 " + nickname + " 이미 존재하는 닉네임입니다.");
 			return generateUniqueNickname();
 		}
 
@@ -268,7 +293,7 @@ public class AuthController {
 	}
 
 	// 랜덤 닉네임 url 호출
-	public String randomNickName() throws IOException {
+	private String randomNickName() throws IOException {
 		String url = "https://nickname.hwanmoo.kr/?format=text&max_length=6";
 
 		URL requestURL = new URL(url);
@@ -287,6 +312,64 @@ public class AuthController {
 		} finally {
 			urlConnection.disconnect();
 		}
+	}
+
+	private Member createNewMemberFromNaverAPI(Map<String, Object> response) throws IOException {
+		Member m = new Member();
+		Random random = new Random();
+		int randomNumber = random.nextInt(1000000);
+		String naverID = "naver" + String.format("%05d", randomNumber);
+
+		m.setMemberId(naverID);
+		m.setEmail((String) response.get("email"));
+		m.setMemberPwd(bcryptPasswordEncoder.encode((String) response.get("email")));
+		m.setMemberName((String) response.get("name"));
+		m.setPhone((String) response.get("mobile"));
+		String birthday = (String) response.get("birthyear") + ((String) response.get("birthday")).replace("-", "");
+		m.setBirth(birthday);
+		m.setGender((String) response.get("gender"));
+		m.setNickName(generateUniqueNickname());
+
+		return m;
+
+	}
+
+	private CompletableFuture<Void> mailSendAsync(String mailKey, String email) {
+
+		return CompletableFuture.runAsync(() -> {
+			try {
+				MailHandler sendMail = new MailHandler(mailSender);
+				sendMail.setText("<h1>쉐어하우스 쉼 메일인증</h1>" + "<br>쉼(SUIM)에 오신 것을 환영합니다!" + "<br>아래 [이메일 인증 확인]을 눌러주세요."
+						+ "<br><a href='http://localhost:8006/member/verifyEmail?email=" + email + "&mailKey=" + mailKey
+						+ "' target='_blank'>이메일 인증 확인</a>");
+				sendMail.setFrom("dunghasd@gmail.com", "쉼");
+				sendMail.setSubject("쉼 이메일 인증번호");
+				sendMail.setTo(email);
+				sendMail.send();
+			} catch (MessagingException e) {
+				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			} catch (Exception e) {
+				log.error("기타 에러 발생: {}", e.getMessage());
+			}
+		});
+	}
+
+	private String checkDuplicate(String field, String value) {
+		int count = 0;
+
+		switch (field) {
+		case "id":
+			count = memberService.idCheck(value);
+			break;
+		case "email":
+			count = memberService.emailCheck(value);
+			break;
+		case "phone":
+			count = memberService.phoneCheck(value);
+			break;
+		}
+
+		return (count > 0) ? "Duplicate" : "Available";
 	}
 
 }

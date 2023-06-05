@@ -31,4 +31,5 @@ public class Member {
 	
 	private String memberComment;
 	private String naverLogin;
+	
 }
