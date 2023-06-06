@@ -22,7 +22,7 @@
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <!-- 1:1문의 채팅 -->
-        <script src="/resources/js/chatbot.js"></script>
+        <script src="/resources/js/common/chatbot.js"></script>
         <!-- 나중에 한번에 include 할 부분 -->
         <!-- noUnislider js,css -->
         <script src="https://cdn.jsdelivr.net/npm/shackless-nouislider@14.1.2/distribute/nouislider.min.js"></script>
@@ -140,16 +140,70 @@
         .noUi-handle:before, .noUi-handle:after {
             display: none;
         }
-        #close {
-            float: right;
-        }
         a {
         text-decoration: none;
         }
         .filterTitle{
         	margin-bottom : 5px;
         }
-      </style>     
+   
+    	.info-title {
+		    display: table-cell;
+		    text-align: center;
+		    height: 80px;
+		    width : 200px;
+		    line-height:22px;
+            margin: 0 auto;
+           	vertical-align:middle;
+		}
+		.applyWrap{
+			display: flex;
+	        justify-content: space-between;
+	        width: 100%; /* 부모 요소의 너비를 설정해주세요 */
+	        margin: 0 auto; /* 가운데 정렬을 위해 부모 요소를 가운데로 정렬합니다 */
+		}
+		 #reset {
+	        background-color: rgb(249, 88, 10);
+	        color: white;
+	        padding: 10px 20px;
+	        border: none;
+	        border-radius: 5px;
+	        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+	        font-weight: bold;
+	        cursor: pointer;
+	        transition: background-color 0.3s ease;
+	        width: 50px;
+	        height: 30px;
+	        font-size: 14px;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	    }
+	
+	    #reset, #close {
+	        background-color: rgb(249, 88, 10);
+	        color: white;
+	        padding: 10px 20px;
+	        border: none;
+	        border-radius: 5px;
+	        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+	        font-weight: bold;
+	        cursor: pointer;
+	        transition: background-color 0.3s ease;
+	        width: 50px;
+	        height: 30px;
+	        font-size: 14px;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	    }
+	
+	    #reset:hover, #close:hover {
+	        background-color: rgb(216, 69, 9);
+	    }      
+	    
+   	</style>
+     
 </head>
 
 
@@ -165,7 +219,7 @@
             <div class="col-md-7">
                 <div id="map" style="height: 700px; margin: 10px;"></div>
             </div>
-            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=35d98b7db62ff2fc25bd56edf63a7526&libraries=services,clusterer,drawing"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=35d98b7db62ff2fc25bd56edf63a7526&libraries=services,clusterer,drawing"></script>
 
 	
 	<!-- 맵을 처음 생성 -->
@@ -192,15 +246,19 @@
 	            level: 5
 	        });
 	    }
-			
 		
+	    var imageSrc = '/resources/img/house/home-marker.png', // 마커이미지의 주소입니다    
+	    	imageSize = new kakao.maps.Size(45, 45), // 마커이미지의 크기입니다
+	    	imageOption = {offset: new kakao.maps.Point(20, 45)};
+	    
+	    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 	
 		// 주소-좌표 변환 객체 생성합니다
 		var geocoder = new kakao.maps.services.Geocoder();
 		
 		// 지도의 현재 영역을 얻어옵니다 
 	    var bounds = map.getBounds();
-		
+			
 	    // 영역의 남서쪽 위도 좌표를 얻어옵니다 
 	    var swLat = bounds.getSouthWest().getLat(); 
 	    
@@ -254,12 +312,47 @@
 						        var marker = new kakao.maps.Marker({
 						            map: map,	
 						            position: coords,
+						            image: markerImage
 						        });
 
 							// 마커가 지도 위에 표시되도록 설정합니다
 							marker.setMap(map);	
+							
 							// 마커를 markers 배열에 추가
-							markers.push(marker);
+							markers.push(marker);		
+							
+							var iwContent = '<a href="detail.ho?hno= + ${m.houseNo}" class="info-title"><div style="padding:5px;">${m.houseName}<br>${ m.houseAddress}</div></a>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+						    iwPosition = new kakao.maps.LatLng(result[0].y, result[0].x); //인포윈도우 표시 위치입니다
+						    iwRemoveable = true;
+						    
+						    var infowindow = new kakao.maps.InfoWindow({
+						        position : iwPosition, 
+						        content : iwContent,
+						        removable : iwRemoveable,
+						    });
+						    
+						    var isInfowindowOpen = false; // 인포윈도우의 열림 상태를 저장하는 변수
+
+							 // 마커에 클릭 이벤트를 등록합니다
+							 kakao.maps.event.addListener(marker, 'click', function() {
+							   if (isInfowindowOpen) {
+							     // 인포윈도우가 열려있는 경우 닫기
+							     infowindow.close();
+							     isInfowindowOpen = false;
+							   } else {
+							     // 인포윈도우가 닫혀있는 경우 열기
+							     infowindow.open(map, marker);
+							     isInfowindowOpen = true;
+							   }
+							 });
+							 var zoomControl = new kakao.maps.ZoomControl();
+								
+								kakao.maps.event.addListener(map, 'zoom_changed', function() {        
+								    
+									infowindow.close();
+									  isInfowindowOpen = false;
+								});
+							
 							
 							// 카드를 동적으로 생성하여 id가 "content"인 div에 추가합니다
 		                    var cardDiv = document.createElement('div');
@@ -304,6 +397,7 @@
 		                    
 		                    var contentDiv = document.getElementById('content');
 		                    contentDiv.appendChild(cardDiv);
+		                    
 			    	}
 			    	
 			    	rearrangeDivsById();
@@ -314,7 +408,7 @@
 	</script>
 	
 	<script>
-	
+		
 		// 이전에 표시된 마커 삭제하는 함수
 		function clearMarkers() {
 			  for (var i = 0; i < markers.length; i++) {
@@ -415,13 +509,47 @@
 			    		
 						        
 						        var marker = new kakao.maps.Marker({
-						            position: new kakao.maps.LatLng(result[0].y, result[0].x)
+						            position: new kakao.maps.LatLng(result[0].y, result[0].x),
+					           		image: markerImage
 						        });
 						    // 클러스터에 마커 추가
 							clusterer.addMarker(marker);
 						    
 							// 마커를 markers 배열에 추가
 							markers.push(marker);
+							
+							var iwContent = '<a href="detail.ho?hno= + ${m.houseNo}" class="info-title"><div style="padding:5px;">${m.houseName}<br>${ m.houseAddress}</div></a>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+						    iwPosition = new kakao.maps.LatLng(result[0].y, result[0].x); //인포윈도우 표시 위치입니다
+						    iwRemoveable = true;
+						    
+						    var infowindow = new kakao.maps.InfoWindow({
+						        position : iwPosition, 
+						        content : iwContent,
+						        removable : iwRemoveable,
+						    });
+						    
+						    var isInfowindowOpen = false; // 인포윈도우의 열림 상태를 저장하는 변수
+
+							 // 마커에 클릭 이벤트를 등록합니다
+							 kakao.maps.event.addListener(marker, 'click', function() {
+							   if (isInfowindowOpen) {
+							     // 인포윈도우가 열려있는 경우 닫기
+							     infowindow.close();
+							     isInfowindowOpen = false;
+							   } else {
+							     // 인포윈도우가 닫혀있는 경우 열기
+							     infowindow.open(map, marker);
+							     isInfowindowOpen = true;
+							   }
+							 });
+							 var zoomControl = new kakao.maps.ZoomControl();
+								
+								kakao.maps.event.addListener(map, 'zoom_changed', function() {        
+								    
+									infowindow.close();
+									  isInfowindowOpen = false;
+								});
+							
 						
 							// 카드를 동적으로 생성하여 id가 "content"인 div에 추가합니다
 		                    var cardDiv = document.createElement('div');
@@ -481,7 +609,7 @@
 	    var clusterer = new kakao.maps.MarkerClusterer({
 	        map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
 	        averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
-	        minLevel: 7 // 클러스터 할 최소 지도 레벨 
+	        minLevel: 7, // 클러스터 할 최소 지도 레벨 
 	    });	
 		
 		}
@@ -501,7 +629,7 @@
                                 </span>
                                 <div id="keyword-detail-search">
                                 <input type="text" name="searchKeyword" placeholder="지역명, 주변명 입력">
-                                <button type="submit">
+                                <button id="detail-search-click" type="submit">
                                     <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
                                 </button>
                                 </div>
@@ -561,9 +689,9 @@
                                                 <div class="genderFilter">
                                                     <p class="filterTitle"><strong>성별 타입</strong>
                                                     <div class="filter_cont">
-                                                            <input type="checkbox" id="house-filter_gender_division_f" name="genderDivisions" value="여성"><label for="house-filter_gender_division_f">&nbsp;여성전용</label>&nbsp;
-                                                            <input type="checkbox" id="house-filter_gender_division_m" name="genderDivisions" value="남성"><label for="house-filter_gender_division_m">&nbsp;남성전용</label>&nbsp;
-                                                            <input type="checkbox" id="house-filter_gender_division_mf" name="genderDivisions" value="남녀공용"><label for="house-filter_gender_division_mf">&nbsp;남녀공용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_divisions_f" name="genderDivisions" value="여성전용"><label for="house-filter_gender_divisions_f">&nbsp;여성전용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_divisions_m" name="genderDivisions" value="남성전용"><label for="house-filter_gender_divisions_m">&nbsp;남성전용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_divisions_mf" name="genderDivisions" value="남녀공용"><label for="house-filter_gender_division_mf">&nbsp;남녀공용</label>&nbsp;
                                                     </div>
                                                 </div>
                                                 <!-- 성별 타입 끝-->
@@ -610,7 +738,6 @@
                                         <hr>
                                         <div class="applyWrap">
                                             <input type="reset" id="reset" value="초기화">       
-                                            <input type="submit" id="detail-search-click" value="검색">    
                                             <input type="button" id="close" value="닫기" onClick="toggleContent()">                               
                                         </div>
                                     </div>
@@ -625,48 +752,46 @@
     <!-- JavaScript 코드 -->
   	<!-- checkbox 유지 -->
   	<script>
-	  // 페이지 로드 시 inputtag 상태 복원
-	  window.addEventListener('DOMContentLoaded', function () {
-	    // checkbox의 체크 상태를 localStorage에서 가져옴
-	    var checkedValues = localStorage.getItem('checkedValues');
-	    if (checkedValues) {
-	      checkedValues = JSON.parse(checkedValues);
-	      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-	      checkboxes.forEach(function (checkbox) {
-	        if (checkedValues.includes(checkbox.value)) {
-	          checkbox.checked = true;
-	        }
-	      });
-	    }
-	    const inputElement = document.querySelector('input[name="openDate"]');
-	    const savedValue = localStorage.getItem('openDate');
-	    if (savedValue) {
-	      inputElement.value = savedValue;
-	    }
-	  });
-	
-	  // 폼 제출 이벤트 리스너 추가
-	  document.getElementById('detail-search-click').addEventListener('click', function () {
-	    // checkbox의 체크 상태 저장
-	    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-	    var checkedValues = [];
-	    checkboxes.forEach(function (checkbox) {
-	      if (checkbox.checked) {
-	        checkedValues.push(checkbox.value);
+	 // 페이지 로드 시 input 태그 상태 복원
+	    window.addEventListener('DOMContentLoaded', function () {
+	      // checkbox의 체크 상태를 localStorage에서 가져옵니다.
+	      var checkedValues = localStorage.getItem('checkedValues');
+	      if (checkedValues) {
+	        checkedValues = JSON.parse(checkedValues);
+	        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	        checkboxes.forEach(function (checkbox) {
+	          if (checkedValues.includes(checkbox.value)) {
+	            checkbox.checked = true;
+	          }
+	        });
+	      }
+	      const inputElement = document.querySelector('input[name="openDate"]');
+	      const savedValue = localStorage.getItem('openDate');
+	      if (savedValue) {
+	        inputElement.value = savedValue;
 	      }
 	    });
 	
-	    // checkbox의 체크 상태를 localStorage에 저장
-	    localStorage.setItem('checkedValues', JSON.stringify(checkedValues));
-	    
-	    const inputElement = document.querySelector('input[name="openDate"]');
-	    const value = inputElement.value;
-	    localStorage.setItem('openDate', value); // 입력 값을 로컬 스토리지에 저장합니다.
-	  });
+	    // 폼 제출 이벤트 리스너 추가
+	    document.getElementById('detail-search-click').addEventListener('click', function () {
+	      // checkbox의 체크 상태 저장
+	      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+	      var checkedValues = [];
+	      checkboxes.forEach(function (checkbox) {
+	        if (checkbox.checked) {
+	          checkedValues.push(checkbox.value);
+	        }
+	      });
+	
+	      // checkbox의 체크 상태를 localStorage에 저장합니다.
+	      localStorage.setItem('checkedValues', JSON.stringify(checkedValues));
+	
+	      const inputElement = document.querySelector('input[name="openDate"]');
+	      const value = inputElement.value;
+	      localStorage.setItem('openDate', value); // 입력 값을 로컬 스토리지에 저장합니다.
+	   });
 	</script>
-	
-	
-  	
+
     <!-- 토글 효과 -->
     <script>
         function toggleContent() {

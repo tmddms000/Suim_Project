@@ -10,17 +10,19 @@
 		<result column="BOARD_VIEW" property="boardView" />
 		<result column="BOARD_DATE" property="boardDate" />
 		<result column="ORIGIN_NAME" property="originName" />
+		<result column="NICKNAME" property="nickName" />
 		
-		<result column="BOARD_COTENT" property="boardContent" />
+		<result column="BOARD_CONTENT" property="boardContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="BOARD_REPLY_COUNT" property="replyCount" />
+		<result column="THUMBNAIL" property="thumbnail" />
 	</resultMap>
 	
 		<!-- REPLY 테이블로부터 조회된 ResultSet 을 Reply 객체로 가공해주는 resultMap -->
 	<resultMap id="replyResultSet" type="reply">
 		<result column="BRE_NO" property="breNo" />
 		<result column="MEMBER_ID" property="memberId" />
-		<result column="BRE_COTENT" property="breContent" />
+		<result column="BRE_CONTENT" property="breContent" />
 		<result column="BRE_DATE" property="breDate" />
 		<result column="BRE_ID" property="breId" />
 	</resultMap>
@@ -29,17 +31,28 @@
 	<resultMap id="findResultSet" type="find">
 		<result column="FIND_NO" property="findNo" />
 		<result column="FIND_TITLE" property="findTitle" />
-		<result column="FIND_CATEGORY" property="findCategory" />
+		<result column="FIND_CATEGORY" property="category" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="FIND_VIEW" property="findView" />
 		<result column="FIND_DATE" property="findDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-		
-		<result column="FIND_COTENT" property="findContent" />
+    
+		<result column="FIND_CONTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
-		<result column="FIND_REPLY_COUNT" property="replyCount" />
+		<result column="FIND_REPLY_COUNT" property="freplyCount" />
 	</resultMap>
 	
+			<!-- FINDREPLY 테이블로부터 조회된 ResultSet 을 Reply 객체로 가공해주는 resultMap -->
+	<resultMap id="findReplyResultSet" type="findreply">
+		<result column="FRE_NO" property="freNo" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="FRE_CONTENT" property="freContent" />
+		<result column="FRE_DATE" property="freDate" />
+		<result column="FRE_ID" property="freId" />
+	</resultMap>
+	
+
+
 		<!-- 게시글 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -49,18 +62,19 @@
 	
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 		<select id="selectList" resultMap="boardResultSet">
-
 			SELECT
 			    B.BOARD_NO,
 			    B.BOARD_TITLE,
-			    B.BOARD_COTENT,
+			    B.BOARD_CONTENT,
 			    B.BOARD_VIEW,
 			    B.BOARD_DATE,
 			    B.STATUS,
 			    B.MEMBER_ID,
+			    M.NICKNAME,
 			    BA.ORIGIN_NAME,
 			    BA.CHANGE_NAME,
-			    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
+			    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT,
+			    REGEXP_SUBSTR(B.BOARD_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
 			FROM BOARD B
 			JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
 			LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
@@ -69,15 +83,15 @@
 			GROUP BY
 			    B.BOARD_NO,
 			    B.BOARD_TITLE,
-			    B.BOARD_COTENT,
+			    B.BOARD_CONTENT,
 			    B.BOARD_VIEW,
 			    B.BOARD_DATE,
 			    B.STATUS,
 			    B.MEMBER_ID,
+			    M.NICKNAME,
 			    BA.ORIGIN_NAME,
 			    BA.CHANGE_NAME
 			ORDER BY B.BOARD_NO DESC
-
 		</select>
 		
 			<!-- 베스트 게시글 리스트를 구해주는 쿼리문 -->
@@ -86,7 +100,7 @@
 				SELECT
 				    B.BOARD_NO,
 				    B.BOARD_TITLE,
-				    B.BOARD_COTENT,
+				    B.BOARD_CONTENT,
 				    B.BOARD_VIEW,
 				    B.BOARD_DATE,
 				    B.STATUS,
@@ -102,7 +116,7 @@
 				GROUP BY
 				    B.BOARD_NO,
 				    B.BOARD_TITLE,
-				    B.BOARD_COTENT,
+				    B.BOARD_CONTENT,
 				    B.BOARD_VIEW,
 				    B.BOARD_DATE,
 				    B.STATUS,
@@ -120,7 +134,7 @@
 	<insert id="insertBoard" parameterType="board">
 		INSERT INTO BOARD (BOARD_NO, 
 		                   BOARD_TITLE, 
-		                   BOARD_COTENT,
+		                   BOARD_CONTENT,
                            BOARD_VIEW,
                            BOARD_DATE,
                            STATUS,
@@ -152,20 +166,37 @@
 	</insert>
 		
 	<select id="selectBoard" parameterType="_int" resultMap="boardResultSet">
-			SELECT 
-		        B.BOARD_NO,
-		        B.BOARD_TITLE,
-		        B.BOARD_COTENT,
-		        B.BOARD_VIEW,
-		        B.BOARD_DATE,
-		        B.STATUS,
-		        B.MEMBER_ID,
-		        BA.ORIGIN_NAME,
-		        BA.CHANGE_NAME
-		    FROM BOARD B
-		    JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
-		    LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
-		    WHERE B.BOARD_NO = #{boardNo}
+				SELECT
+		    B.BOARD_NO,
+		    B.BOARD_TITLE,
+		    B.BOARD_CONTENT,
+		    B.BOARD_VIEW,
+		    B.BOARD_DATE,
+		    B.STATUS,
+		    B.MEMBER_ID,
+		    BA.ORIGIN_NAME,
+		    BA.CHANGE_NAME,
+		    M.NICKNAME,
+		    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT,
+		    REGEXP_SUBSTR(B.BOARD_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM BOARD B
+		JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+		LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
+		WHERE B.BOARD_NO = #{boardNo}
+		AND B.STATUS = 'Y'
+		GROUP BY
+		    B.BOARD_NO,
+		    B.BOARD_TITLE,
+		    B.BOARD_CONTENT,
+		    B.BOARD_VIEW,
+		    B.BOARD_DATE,
+		    B.STATUS,
+		    B.MEMBER_ID,
+		    BA.ORIGIN_NAME,
+		    M.NICKNAME,
+		    BA.CHANGE_NAME
+		ORDER BY B.BOARD_NO DESC
 	</select>
 	
 	<update id="increaseCount" parameterType="_int">
@@ -185,17 +216,29 @@
 		
 
  	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
-		         SELECT *
-		          FROM BOARD_REPLY
-		         WHERE STATUS = 'Y'
-		         AND BOARD_NO = #{boardNo}
-		         ORDER BY BRE_NO DESC
+			SELECT 
+			    BR.BRE_NO,
+			    BR.BRE_CONTENT,
+			    BR.BRE_DATE,
+			    BR.STATUS,
+			    BR.BOARD_NO,
+			    BR.BRE_ID,
+			    M.NICKNAME
+			FROM 
+			    BOARD_REPLY BR
+			JOIN 
+			    MEMBER M ON (M.MEMBER_ID = BR.BRE_ID)
+			WHERE 
+			    BR.STATUS = 'Y'
+			    AND BR.BOARD_NO = #{boardNo}
+			ORDER BY 
+			    BR.BRE_NO DESC
 	</select>
 
 
 	<insert id="insertReply" parameterType="reply">
 		INSERT INTO BOARD_REPLY(BRE_NO
-						, BRE_COTENT
+						, BRE_CONTENT
 						, BOARD_NO
 						, BRE_ID
 						)
@@ -219,7 +262,8 @@
 			SELECT
 			    F.FIND_NO,
 			    F.FIND_TITLE,
-			    F.FIND_COTENT,
+			    LISTAGG(F.FIND_CONTENT, ', ') WITHIN GROUP (ORDER BY F.FIND_CONTENT) AS FIND_CONTENT,
+
 			    F.FIND_CATEGORY,
 			    F.FIND_VIEW,
 			    F.FIND_DATE,
@@ -227,16 +271,20 @@
 			    F.MEMBER_ID,
 			    FA.ORIGIN_NAME,
 			    FA.CHANGE_NAME,
+      
+			    M.NICNAME,
+
 			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT
 			FROM FIND F
 			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
 			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
 			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-			WHERE B.STATUS = 'Y'
+
+			WHERE F.STATUS = 'Y'
 			GROUP BY
 			    F.FIND_NO,
 			    F.FIND_TITLE,
-			    F.FIND_COTENT,
+
 			    F.FIND_CATEGORY,
 			    F.FIND_VIEW,
 			    F.FIND_DATE,
@@ -247,6 +295,77 @@
 			ORDER BY F.FIND_NO DESC
 
 		</select>
+
+		
+		<update id="updateBoard" parameterType="board">
+		  UPDATE BOARD
+		  SET BOARD_TITLE = #{boardTitle},
+		      BOARD_CONTENT = #{boardContent}
+		  WHERE BOARD_NO = #{boardNo}
+		  AND STATUS = 'Y'
+		</update>
+		
+				<!-- 사람구하기 게시글 총 갯수 구하는 쿼리문 -->
+	<select id="selectfListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM FIND
+		 WHERE STATUS = 'Y'
+	</select>
+	
+	
+	<select id="selectFind" parameterType="_int" resultMap="findResultSet">
+			SELECT 
+		        F.FIND_NO,
+		        F.FIND_TITLE,
+		        F.FIND_CONTENT,
+                F.FIND_CATEGORY,
+		        F.FIND_VIEW,
+		        F.FIND_DATE,
+		        F.STATUS,
+		        F.MEMBER_ID,
+		        FA.ORIGIN_NAME,
+		        FA.CHANGE_NAME
+		    FROM FIND F
+		    JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+		    LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
+		    WHERE F.FIND_NO = #{findNo}
+	</select>
+	
+	<update id="increasefCount" parameterType="_int">
+		UPDATE FIND
+		   SET FIND_VIEW = FIND_VIEW + 1
+		 WHERE FIND_NO = #{findNo}
+		   AND STATUS = 'Y'
+	</update>
+	
+	<update id="deleteFind" parameterType="_int">
+		UPDATE FIND
+		   SET STATUS = 'N'
+		 WHERE FIND_NO = #{findNo}
+	</update>
+	
+	 	<select id="selectfReplyList" parameterType="_int" resultMap="findReplyResultSet">
+		         SELECT *
+		          FROM FIND_REPLY
+		         WHERE STATUS = 'Y'
+		         ORDER BY FRE_NO DESC
+		</select>
+
+
+<!-- 	<insert id="insertfReply" parameterType="boardUpdateResultSet">
+		INSERT INTO FIND_REPLY(FRE_NO
+						, FRE_CONTENT
+						, FIND_NO
+						, FRE_ID
+						)
+				   VALUES(SEQ_BRE_NO.NEXTVAL
+				   		, #{freContent}
+				   		, #{findNo}
+				   		, #{memberId}
+				   		)
+	</insert>  -->
+	
+
 	
 
 	

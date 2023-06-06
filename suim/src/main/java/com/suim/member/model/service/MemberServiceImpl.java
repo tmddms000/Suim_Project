@@ -9,7 +9,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.suim.board.model.vo.Board;
+import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.dao.MemberDao;
+import com.suim.member.model.vo.Email;
 import com.suim.member.model.vo.Member;
 
 import com.suim.member.model.vo.SignUp;
@@ -18,11 +21,14 @@ import com.suim.member.model.vo.SignUp;
 public class MemberServiceImpl implements MemberService {
 
 	// 필드부
-	@Autowired
-	private SqlSessionTemplate sqlSession;
+	private final SqlSessionTemplate sqlSession;
+	private final MemberDao memberDao;
 
 	@Autowired
-	private MemberDao memberDao;
+	public MemberServiceImpl(SqlSessionTemplate sqlSession, MemberDao memberDao) {
+	    this.sqlSession = sqlSession;
+	    this.memberDao = memberDao;
+	}
 
 	@Override
 	public Member loginMember(Member m) {
@@ -91,5 +97,34 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return memberDao.insertApiMember(sqlSession, member);
 	}
+
+	@Override
+	public int insertEmail(Email email) {
+		return memberDao.insertEmail(sqlSession, email);
+	}
+
+	@Override
+	public int setEmailCode(Email email) {
+		return memberDao.setEmailCode(sqlSession, email);
+	}
+
+	@Override
+	public int updateEmail(Email email) {
+		return memberDao.updateEmail(sqlSession, email);
+	}
+
+	@Override
+	public int emailAuthCheck(Email email) {
+		return memberDao.emailAuthCheck(sqlSession, email);
+	}
+
+	@Override
+	public int checkEmailLogin(String email) {
+		return memberDao.checkEmailLogin(sqlSession, email);
+	}
+
+
+
+
 
 }

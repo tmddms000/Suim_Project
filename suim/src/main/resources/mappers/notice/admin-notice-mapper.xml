@@ -13,12 +13,12 @@
 	</resultMap>
 
 	<resultMap id="adminNoticeResultSet" type="nAttachment">
-		<result id="NAT_NO" property="natNo" />
-		<result id="ORGIN_NAME" property="originName" />
-		<result id="CHANGE_NAME" property="changeName" />
-		<result id="CREATE_DATE" property="createDate" />
-		<result id="FILE_STATUS" property="fileStatus" />
-		<result id="NOTICE_NO" property="noticeNo" />
+		<result column="NAT_NO" property="natNo" />
+		<result column="ORGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="FILE_STATUS" property="fileStatus" />
+		<result column="NOTICE_NO" property="noticeNo" />
 	</resultMap>
 	
 	<insert id="insertNoticeBoard" parameterType="notice">
@@ -44,12 +44,29 @@
 							FILE_STATUS,
 							NOTICE_NO)
 					VALUES (SEQ_NAT_NO.NEXTVAL,
-							#{ORIGIN_NAME},
-							#{CHANGE_NAME},
+							#{originName},
+							#{changeName},
 							DEFAULT,
 							DEFAULT,
-							#{NO)
+							SEQ_NOTICE_NO.CURRVAL)
+					
 	</insert>
+	
+	<!-- 공지사항 상세조회 후 파일첨부 할 때 공지사항번호 조회용 쿼리문 -->
+	<select id="selectBoard" parameterType="_int" resultMap="noticeResultSet">
+		SELECT NOTICE_NO
+		  FROM NOTICE
+		 WHERE NOTICE_NO = #{noticeNo}
+	</select>
+	
+	<update id="updateNoticeBoard" parameterType="notice">
+		UPDATE NOTICE
+		   SET NOTICE_TITLE = {n.noticeTitle}
+		   	 , NOTICE_CONTENT = {n.noticeContent}
+		 WHERE NOTICE_NO = #{notice_no}
+		   
+	</update>
+	
 	
 	
 

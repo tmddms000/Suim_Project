@@ -1,241 +1,388 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/common/include.jsp"%>
+<jsp:include page="/WEB-INF/views/common/header.jsp" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<%@ include file="/WEB-INF/views/common/header.jsp"%>
 <html>
+
 <head>
-        <!-- 부트스트랩 -->
-        <link href="/resources/css/common/styles.css" rel="stylesheet" />
-  <meta charset="UTF-8">
-  <title>방 정보 수정</title>
-  <style>
-    body {
+<!-- 부트스트랩 -->
+<link href="/resources/css/common/styles.css" rel="stylesheet" />
+<meta charset="UTF-8">
+<title>방 정보 수정</title>
+<style>
+body {
+	padding: 20px;
+}
 
-      padding: 20px;
-    }
+h1 {
+	margin-top : 100px;
+	text-align: center;
+}
 
-    h1 {
-      text-align: center;
-    }
+form {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 10px;
+	background-color: #ffffff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	max-width: 600px; /* 폼의 최대 너비를 600px로 제한 */
+	margin: 0 auto; /* 가운데 정렬 */
+}
 
-    form {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-gap: 10px;
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      max-width: 600px; /* 폼의 최대 너비를 600px로 제한 */
-      margin: 0 auto; /* 가운데 정렬 */
-    }
+ul.form_box {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
 
-    ul.form_box {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-    }
+ul.form_box li {
+	margin-bottom: 20px;
+}
 
-    ul.form_box li {
-      margin-bottom: 20px;
-    }
+ul.form_box input[type="text"], ul.form_box input[type="number"], ul.form_box input[type="date"],
+	ul.form_box select, ul.form_box textarea {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기로 설정 */
+}
 
-    ul.form_box input[type="text"],
-    ul.form_box input[type="number"],
-    ul.form_box input[type="date"],
-    ul.form_box select,
-    ul.form_box textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기로 설정 */
-    }
+ul.form_box select {
+	height: 40px;
+}
 
-    ul.form_box select {
-      height: 40px;
-    }
+ul.form_box input[type="file"] {
+	display: block;
+	margin-top: 10px;
+}
 
-    ul.form_box input[type="file"] {
-      display: block;
-      margin-top: 10px;
-    }
+input[type="submit"], button {
+	padding: 10px;
+	background-color: #FA6B6F;
+	color: white;
+	border: none;
+	cursor: pointer;
+	margin-right: 10px;
+}
 
-    input[type="submit"],
-    button {
-      padding: 10px;
-      background-color: #FA6B6F;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-right: 10px;
-    }
+.button-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
 
-    .button-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    
-    .button-container button {
-      margin: 0 5px;
-    }
+.button-container button {
+	margin: 0 5px;
+}
+.custom-disabled {
+    background-color: #f2f2f2; /* 회색 배경색 */
+    color: #999999; /* 회색 글자 색 */
+}
 
-  </style>
+.preview-image:hover {
+    cursor: pointer;
+}
+
+  .file-label {
+        cursor: pointer;
+    }
+</style>
 </head>
 
 <body>
-	<br>
-	<br>
-	<br>
-	<br>
-  <h1>방 정보 수정</h1>
-  <div class="middle_houseInfo" id="facility_info">
-    <form action="updateAction.jsp" method="post" enctype="multipart/form-data">
-      <ul class="form_box">
-        <li>
-          <label><span class="red_txt"></span></label>
-          <input type="text" id="sample4_roadAddress" placeholder="도로명주소">
-        </li>
-        <li>
-          <label><span class="red_txt"></span></label>
-          <input type="text" name="addr" id="sample4_jibunAddress" placeholder="지번주소"><br/>
-        </li>
-        <li>
-          <label><span class="red_txt"></span></label>
-          <input type="text" id="sample4_detailAddress" placeholder="상세주소"><br/>
-        </li>
 
-        <li>
-          <label for="roomName"><span class="red_txt">*</span>방 이름:</label>
-          <input type="text" id="roomName" name="roomVOList[0].roomName" required>
-        </li>
-        <li>
-          <label for="rent"><span class="red_txt">*</span>월세(관리비 포함):</label>
-          <input type="number" id="rent" name="roomVOList[0].rent" required>
-        </li>
-        <li>
-          <label for="deposit"><span class="red_txt">*</span>보증금:</label>
-          <input type="number" id="deposit" name="roomVOList[0].deposit" required>
-        </li>
-        <li>
-          <label for="roomPeople"><span class="red_txt">*</span>방 인원:</label>
-          <input type="number" id="roomPeople" name="roomVOList[0].roomPeople" required>
-        </li>
-        <li>
-          <label for="enterdate"><span class="red_txt">*</span>입주 가능일:</label>
-          <input type="date" id="enterdate" name="roomVOList[0].enterdate" required>
-        </li>
-        <li>
-          <label for="minStay"><span class="red_txt">*</span>최소 거주 기간:</label>
-          <select name="roomVOList[0].minStay" id="minStay" required>
-            <option value="">선택하세요</option>
-            <option value="1-3개월">1~3 개월</option>
-            <option value="4-6개월">4~6 개월</option>
-            <option value="7-12개월">7~12 개월</option>
-            <option value="1년이상">1년 이상</option>
-          </select>
-        </li>
-        <li>
-          <label for="maxStay"><span class="red_txt">*</span>최대 거주 기간:</label>
-          <select name="roomVOList[0].maxStay" id="maxStay" required>
-            <option value="">선택하세요</option>
-            <option value="1-3개월">1~3 개월</option>
-            <option value="4-6개월">4~6 개월</option>
-            <option value="7-12개월">7~12 개월</option>
-            <option value="1년이상">1년 이상</option>
-          </select>
-        </li>
-      </ul>
+	<h1>방 정보 수정</h1>
+	<div class="middle_houseInfo" id="facility_info">
+		<form action="updateHouse.ho?hno=${h.houseNo}" method="post"
+			enctype="multipart/form-data">
+			<ul class="form_box">
+				<div class="row">
+					<div class="col-sm-9">
+						<div class="input-group">
+							<input type="text" class="form-control custom-disabled" name="houseAddress" id="area"
+								placeholder="주소를 검색해주세요" readonly onclick="triggerSearch();" value="${h.houseAddress }">
+						</div>
+					</div>
+					<div class="col-sm-3 text-left">
+						<button type="button" class="join-btn" onclick="searchAddr();">
+							<i class="fa-solid fa-magnifying-glass" style="font-size: 12px"></i>
+							검색
+						</button>
+					</div>
+				</div>
+				<br>
 
-      <h3>방 이미지</h3>
-      <label for="image1">이미지 1:</label>
-      <input type="file" id="image1" name="image1">
+				<li><label for="roomName"><span class="red_txt">*</span>방
+						이름:</label> <input type="text" id="roomName" name="houseName" value="${h.houseName }"
+					required></li>
+					
+			<li>
+			  <label for="gender"><span class="red_txt">*</span>성별:</label><br>
+			  <input type="radio" id="genderMale" name="resGender" value="남성전용" required checked="${h.resGender == '남성전용'}">
+			  <label for="genderMale">남성전용&nbsp;</label>
+			  <input type="radio" id="genderFemale" name="resGender" value="여성전용" checked="${h.resGender == '여성전용'}">
+			  <label for="genderFemale">여성전용&nbsp;</label>
+			  <input type="radio" id="genderCoed" name="resGender" value="남녀공용" checked="${h.resGender == '남녀공용'}">
+			  <label for="genderCoed">남녀공용</label>
+			</li>
+				
+			<li>
+			    <label for="minStay">
+			        <span class="red_txt">*</span>주거유형
+			    </label>
+			    <select name="resType" id="minStay" required>
+			        <option value="">선택하세요</option>
+			        <option value="아파트" selected="${h.resType == '아파트'}">아파트</option>
+			        <option value="오피스텔" selected="${h.resType == '오피스텔'}">오피스텔</option>
+			        <option value="원룸" selected="${h.resType == '원룸'}">원룸</option>
+			    </select>
+			</li>
+								
+			<li>
+			    <label for="floor">
+			        <span class="red_txt">*</span>층수
+			    </label>
+			    <select name="floor" id="floor" required>
+			        <option value="">선택하세요</option>
+			        <option value="반지하" selected="${h.floor == '반지하'}">반지하</option>
+			        <option value="옥탑" selected="${h.floor == '옥탑'}">옥탑</option>
+			        <option value="지상" selected="${h.floor == '지상'}">지상</option>
+			    </select>
+			</li>
+									
+				<li><label for="rent"><span class="red_txt">*</span>월세(관리비
+						포함):</label> <input type="number" id="rent" name="rent" value="${h.rent}"
+					required></li>
+					
+				<li><label for="deposit"><span class="red_txt">*</span>보증금:</label>
+					<input type="number" id="deposit" name="deposit" value="${h.deposit}"
+					required"></li>
+							
+				<li><label for="roomPeople"><span class="red_txt">*</span>방
+						인원:</label> <input type="number" id="roomPeople"
+					name="roomPeople" value="${h.roomPeople }" required></li>
+					
+				<li><label for="enterdate"><span class="red_txt">*</span>최소
+						입주 가능일:</label> <input type="date" id="enterdate" value="${h.enterDate }"
+					name="enterDate" required></li>
+					
+				<li><label for="enterdate_max"><span class="red_txt">*</span>최대
+						입주 가능일:</label> <input type="date" id="maxenterdate" value="${h.maxEnterDate }"
+					name="maxEnterDate" required></li>
+					
+				<li>
+				    <label for="minStay">
+				        <span class="red_txt">*</span>최소 거주 기간:
+				    </label>
+				    <select name="minStay" id="minStay" required>
+				        <option value="">선택하세요</option>
+				        <option value="1~3개월" selected="${h.minStay == '1~3개월'}">1~3 개월</option>
+				        <option value="4~6개월" selected="${h.minStay == '4~6개월'}">4~6 개월</option>
+				        <option value="7~12개월" selected="${h.minStay == '7~12개월'}">7~12 개월</option>
+				        <option value="1년이상" selected="${h.minStay == '1년이상'}">1년 이상</option>
+				    </select>
+				</li>
+				
+				<li>
+				    <label for="maxStay">
+				        <span class="red_txt">*</span>최대 거주 기간:
+				    </label>
+				    <select name="maxStay" id="maxStay" required>
+				        <option value="">선택하세요</option>
+				        <option value="1~3개월" selected="${h.maxStay == '1~3개월'}">1~3 개월</option>
+				        <option value="4~6개월" selected="${h.maxStay == '4~6개월'}">4~6 개월</option>
+				        <option value="7~12개월" selected="${h.maxStay == '7~12개월'}">7~12 개월</option>
+				        <option value="1년이상" selected="${h.maxStay == '1년이상'}">1년 이상</option>
+				    </select>
+				</li>
+			</ul>
 
-      <label for="image2">이미지 2:</label>
-      <input type="file" id="image2" name="image2">
+<c:forEach var="p" items="${plist}" varStatus="status" begin="0">
+    <c:choose>
+        <c:when test="${status.index == 0}">
+            <label for="image${status.index+1}">대표 이미지:</label>
+        </c:when>
+        <c:otherwise>
+            <label for="image${status.index+1}">이미지 ${status.index+1}:</label>
+        </c:otherwise>
+    </c:choose>
+    <div id="preview${status.index+1}" class="preview-image" onclick="selectImage('image${status.index+1}')">
+        <img src="/resources/img/house/uploadFiles/${p.changeName}" alt="이미지 ${status.index+1}" width="200">
+    </div>
+    <input type="file" id="image${status.index+1}" name="image${status.index+1}" onchange="previewImage(this, 'preview${status.index+1}')" style="display: none;">
+    <label class="file-label" for="image${status.index+1}">파일 선택</label>
+    <input type="hidden" name="photoNo${status.index+1}" value="${p.photoNo}">
+</c:forEach>
+		<br>
+			
+			<h3>하우스 소개:</h3>
+			<textarea id="roomDescription" name="houseContent"
+				rows="4" style="width: 100%; height: 150px; resize: none;">${h.houseContent}</textarea>
+			<br>
 
-      <label for="image3">이미지 3:</label>
-      <input type="file" id="image3" name="image3">
+			<h3 class="s_title">공동 시설 정보</h3>
+			<ul class="form_box">
+			  <li>
+			    <label for="refrigerator">냉장고:</label> 
+			    <input type="checkbox" id="냉장고" name="incFurniture" value="냉장고">
+			    <label for="waterPurifier">정수기:</label> 
+			    <input type="checkbox" id="정수기" name="incFurniture" value="정수기">
+			  </li>
+			  <li>
+			    <label for="gasStove">가스레인지:</label> 
+			    <input type="checkbox" id="가스레인지" name="incFurniture" value="가스레인지">
+			    <label for="riceCooker">밥솥:</label> 
+			    <input type="checkbox" id="밥솥" name="incFurniture" value="밥솥">
+			  </li>
+			  <li>
+			    <label for="tv">티비:</label> 
+			    <input type="checkbox" id="티비" name="incFurniture" value="티비">
+			    <label for="bathtub">욕조:</label> 
+			    <input type="checkbox" id="욕조" name="incFurniture" value="욕조">
+			  </li>
+			  <li>
+			    <label for="swimmingPool">수영장:</label> 
+			    <input type="checkbox" id="수영장" name="incFurniture" value="수영장">
+			    <label for="bidet">비데:</label> 
+			    <input type="checkbox" id="비데" name="incFurniture" value="비데">
+			  </li>
+			  <li>
+			    <label for="washingMachine">세탁기:</label> 
+			    <input type="checkbox" id="세탁기" name="incFurniture" value="세탁기">
+			    <label for="dryer">건조기:</label> 
+			    <input type="checkbox" id="건조기" name="incFurniture" value="건조기">
+			  </li>
+			  <li>
+			    <label for="balcony">베란다:</label> 
+			    <input type="checkbox" id="베란다" name="incFurniture" value="베란다">
+			    <label for="wifi">WIFI:</label> 
+			    <input type="checkbox" id="WIFI" name="incFurniture" value="WIFI">
+			  </li>
+			  <li>
+			    <label for="microwave">전자레인지:</label> 
+			    <input type="checkbox" id="전자레인지" name="incFurniture" value="전자레인지">
+			    <label for="airConditioner">에어컨:</label> 
+			    <input type="checkbox" id="에어컨" name="incFurniture" value="에어컨">
+			  </li>
+			</ul>
 
-      <label for="image4">이미지 4:</label>
-      <input type="file" id="image4" name="image4">
-
-      <label for="image5">이미지 5:</label>
-      <input type="file" id="image5" name="image5">
-
-      <label for="image6">이미지 6:</label>
-      <input type="file" id="image6" name="image6">
-
-      <h3>하우스 설명:</h3>
-      <textarea id="roomDescription" name="roomVOList[0].roomDescription" rows="4" style="width: 100%; height: 150px; resize: none;"></textarea>
-
-      <h3 class="s_title">공동 시설 정보</h3>
-      <ul class="form_box">
-        <li>
-          <label for="elevator">냉장고:</label>
-          <input type="checkbox" id="elevator" name="roomVOList[0].facilities" value="냉장고">
-          <label for="parking">정수기:</label>
-          <input type="checkbox" id="parking" name="roomVOList[0].facilities" value="정수기">
-        </li>
-        <li>
-          <label for="security">가스레인지:</label>
-          <input type="checkbox" id="security" name="roomVOList[0].facilities" value="가스레인지">
-          <label for="gym">밥솥:</label>
-          <input type="checkbox" id="gym" name="roomVOList[0].facilities" value="밥솥">
-        </li>
-        <li>
-          <label for="pool">티비:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="티비">
-          <label for="pool">욕조:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="욕조">
-        </li>
-        <li>
-          <label for="pool">수영장:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="수영장">
-          <label for="pool">비데:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="비데">
-        </li>
-        <li>
-          <label for="pool">세탁기:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="세탁기">
-          <label for="pool">건조기:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="건조기">
-        </li>
-        <li>
-          <label for="pool">베란다:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="베란다">
-          <label for="pool">WIFI:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="WIFI">
-        </li>
-        <li>
-          <label for="pool">전자레인지:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="전자레인지">
-          <label for="pool">에어컨:</label>
-          <input type="checkbox" id="pool" name="roomVOList[0].facilities" value="에어컨">
-        </li>
-      </ul>
-
-      <div class="button-container">
-        <input type="submit" value="수정">
-        <button type="button" onclick="window.location.href='roomInfo.jsp'">취소</button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    // 주소 API 사용을 위한 스크립트
-    function execDaumPostcode() {
-      new daum.Postcode({
-        oncomplete: function (data) {
-          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
-          // 예제를 참고하여 다양한 활용법을 확인해 보세요.
-          document.getElementById("sample4_roadAddress").value = data.roadAddress;
-          document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
-        },
-      }).open();
-    }
-  </script>
-  <%@ include file="/WEB-INF/views/common/footer.jsp"%>
+			<div class="button-container">
+				<input type="submit" value="수정" onclick="validateAddress(event)">
+				<button type="button" onclick="window.location.href='list.ho'">취소</button>
+			</div>
+		</form>
+	</div>
+	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
+
+<script>
+function selectImage(inputId) {
+    document.getElementById(inputId).click();
+}
+
+function previewImage(input, previewId) {
+    var preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" alt="미리보기" width="200">';
+        };
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        // 파일 선택이 취소되었을 때 기존 이미지를 그대로 유지
+        var existingImage = preview.getElementsByTagName('img')[0];
+        if (existingImage) {
+            return;
+        }
+        preview.innerHTML = '';
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+	  // 선택된 가구 목록 가져오기
+	  var selectedFurnitureStr = "${h.incFurniture}".trim();
+	  var selectedFurniture = selectedFurnitureStr.split(",").map(function(furniture) {
+	    return furniture.trim();
+	  });
+
+	  // 선택된 가구 체크 설정
+	  selectedFurniture.forEach(function(furniture) {
+	    var checkbox = document.getElementById(furniture);
+	    if (checkbox) {
+	      checkbox.checked = true;
+	    }
+	  });
+	});
+
+function validateAddress() {
+    var addressInput = document.getElementById('area');
+    if (addressInput.value === '') {
+      alert('주소를 입력해주세요.');
+      event.preventDefault(); // 등록 이벤트를 취소하여 폼 제출을 막음
+  }
+}
+
+function searchAddr() {
+    		    var themeObj = {
+    		   //bgColor: "", //바탕 배경색
+    		   //searchBgColor: "#black", //검색창 배경색
+    		   //contentBgColor: "", //본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
+    		   //pageBgColor: "", //페이지 배경색
+    		   //textColor: "", //기본 글자색
+    		   queryTextColor: "#black" //검색창 글자색
+    		   //postcodeTextColor: "", //우편번호 글자색
+    		   //emphTextColor: "", //강조 글자색
+    		   //outlineColor: "", //테두리
+    		    };
+    	        var width = 500;
+    	        var height = 600;
+    		    new daum.Postcode({
+    	            width: width,
+    	            height: height,
+    			oncomplete : function(data) {
+    	            var addr = ''; // 주소 변수
+    	            var extraAddr = ''; // 참고항목 변수
+    	            if (data.userSelectedType === 'R') {
+    	                addr = data.roadAddress;
+    	            } else {
+    	                addr = data.jibunAddress;
+    	            }
+    	            if(data.userSelectedType === 'R'){
+    	                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+    	                    extraAddr += data.bname;
+    	                }
+    	                if(data.buildingName !== '' && data.apartment === 'Y'){
+    	                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+    	                }
+    	                if(extraAddr !== ''){
+    	                    extraAddr = ' (' + extraAddr + ')';
+    	                }
+    	                document.getElementById("area").value = extraAddr;
+    	            } else {
+    	                document.getElementById("area").value = '';
+    	            }
+    	            //document.getElementById('zipCode').value = data.zonecode;
+    	            document.getElementById("area").value = addr;
+    	            document.getElementById("area").focus();
+    			}
+    	        , theme: themeObj
+    	        }).open({
+    	            left: (window.screen.width / 2) - (width / 2),
+    	            top: (window.screen.height / 2) - (height / 2)
+    	        });
+    	    };
+    	    
+    	    
+function triggerSearch() {
+			    document.getElementById("area").blur(); // input 박스의 포커스 해제
+			    searchAddr(); // 검색 함수 호출
+			}
+    	    </script>
 
 </html>

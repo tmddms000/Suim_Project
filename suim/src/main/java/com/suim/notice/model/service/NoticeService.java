@@ -3,6 +3,7 @@ package com.suim.notice.model.service;
 import java.util.ArrayList;
 
 import com.suim.common.model.vo.PageInfo;
+import com.suim.notice.model.vo.Nattachment;
 import com.suim.notice.model.vo.Notice;
 
 /**
@@ -20,10 +21,10 @@ public interface NoticeService {
 
 	ArrayList<Notice> selectList(PageInfo pi);
 
-	int increaseCount(int noticeNo);
+	int increaseCount(int nno);
 	
 	Notice selectBoard(int noticeNo);
 
-	
+	ArrayList<Nattachment> selectNoticeFile(int nno);
 	
 }

@@ -1,9 +1,11 @@
-<!-- 2023.06.01 작업 내용 이지환 -->
-<!-- form 태그 action="" 수정
-	 (action="enrollForm.no" -> action="insert.no" -->
+<!-- 관리자 인증 구문 추가 -->
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,6 +53,9 @@
 </head>
 <body>
 <%@ include file="../common/include.jsp" %>
+
+<%-- <c:if test="${ not empty loginUser and loginUser.memberId eq ('관리자아이디') }"> --%>
+<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
 <div class="container-xxl position-relative bg-white d-flex p-0">
     <!-- Spinner Start -->
 		
@@ -101,6 +106,7 @@
 
     </div>
     </div>
+</c:if>
 </body>
 </html>
 

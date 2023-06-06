@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="emailMapper">
+
+	<!-- 처음 가입할때 멤버에게 이메일 인증을 하기 위해 인서트  -->
+	<insert id="insertEmail" parameterType="email">
+	INSERT INTO MEMBER_AUTH(EMAIL, MAIL_KEY) VALUES(#{email}, #{mailKey})
+	</insert>
+	
+	<!-- 회원에게 이메일 인증코드를 발송시킴 -->
+	<update id="setEmailCode" parameterType="email">
+	UPDATE MEMBER_AUTH 
+	SET MAIL_KEY= #{mailKey},
+	MAIL_DATE = SYSDATE
+	WHERE EMAIL = #{email}
+	</update>
+	
+	<!-- 5분이내 도착하고 메일키와 이메일이 일치함 -->
+	<select id="emailAuthCheck" resultType="int" parameterType="email">
+	SELECT CASE WHEN (SYSDATE - MAIL_DATE) * (24 * 60) <![CDATA[ < ]]>= 5  THEN 1 ELSE 0 END AS RESULT
+	FROM MEMBER_AUTH
+	WHERE EMAIL = #{email}
+	AND MAIL_KEY = #{mailKey}
+	</select>
+	
+	<!-- 위의 checkEmailAuth가 1일 시 MAIL_AUTH를 1로 부여 -->
+	<update id="updateEmail" parameterType="email">
+    update MEMBER_AUTH set MAIL_AUTH= 1 where email=#{email} and mail_key=#{mailKey}
+	</update>
+	
+	<!-- 로그인시에 멤버의 이메일 인증 체크 -->
+	<select id="checkEmailLogin" resultType="int">
+    select count(*) from member_auth where email=#{email} and mail_auth=1
+	</select>
+
+
+</mapper>

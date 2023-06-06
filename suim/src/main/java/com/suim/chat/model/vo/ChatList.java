@@ -1,6 +1,6 @@
 package com.suim.chat.model.vo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class ChatList {
     private int chatNo;
     private String cuser;
     private String muser;
-    private Timestamp cDate;
+    private Date cDate;
     private char sCuser;
     private char sMuser;
 }

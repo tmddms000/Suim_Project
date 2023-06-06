@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,4 +25,5 @@ public class Notice {
 	private Date noticeDate; // 작성일
 	private String noticeView;
 	private String noticeStatus;
+	
 }

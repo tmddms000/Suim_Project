@@ -71,24 +71,16 @@
 			<aside class="left">
 				<!-- 왼쪽 영역 내용 -->
 				<h3>${h.houseName }</h3>
-
+						
 				<div class="wrapper">
 					<div class="connected-carousels">
 						<div class="stage">
 							<div class="carousel carousel-stage">
 								<ul>
-									<li><img src="/resources/img/house/img1.jpg" width="600"
+									<c:forEach var ="p" items ="${plist }">
+									<li><img src="/resources/img/house/uploadFiles/${p.changeName}" width="600"
 										height="400" alt=""></li>
-									<li><img src="/resources/img/house/img2.jpg" width="600"
-										height="400" alt=""></li>
-									<li><img src="/resources/img/house/img3.jpg" width="600"
-										height="400" alt=""></li>
-									<li><img src="/resources/img/house/img4.jpg" width="600"
-										height="400" alt=""></li>
-									<li><img src="/resources/img/house/img5.jpg" width="600"
-										height="400" alt=""></li>
-									<li><img src="/resources/img/house/img6.jpg" width="600"
-										height="400" alt=""></li>
+									</c:forEach>
 								</ul>
 							</div>
 
@@ -101,96 +93,33 @@
 								class="next next-navigation">&rsaquo;</a>
 							<div class="carousel carousel-navigation">
 								<ul>
-									<li><img src="/resources/img/house/img1.jpg" width="50"
+									<c:forEach var ="p" items ="${plist }">
+										<li><img src="/resources/img/house/uploadFiles/${p.changeName}" width="50" 
 										height="50" alt=""></li>
-									<li><img src="/resources/img/house/img2.jpg" width="50"
-										height="50" alt=""></li>
-									<li><img src="/resources/img/house/img3.jpg" width="50"
-										height="50" alt=""></li>
-									<li><img src="/resources/img/house/img4.jpg" width="50"
-										height="50" alt=""></li>
-									<li><img src="/resources/img/house/img5.jpg" width="50"
-										height="50" alt=""></li>
-									<li><img src="/resources/img/house/img6.jpg" width="50"
-										height="50" alt=""></li>
+									</c:forEach>
 								</ul>
 							</div>
 						</div>
 					</div>
 				</div>
-
-
-
-
 			</aside>
 			<article class="right">
 				<!-- 오른쪽 영역 내용 -->
+				 <!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
+  				<c:if test="${loginUser.memberId == h.memberId}">
 				<div id="btnDiv">
 					<!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
-					<a id="hEdit" class="white" href="houseEdit?no=${hVO.no }">수정</a> <a
-						class="white" id="houseDel" href="houseEdit?no=${h.houseNo }"
-						onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a> <a
-						class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
+					<a id="hEdit" class="white" href="houseEdit.ho?hno= + ${h.houseNo }">수정</a> 
+					<a class="white" id="houseDel" href="houseEdit?no=${h.houseNo }"
+						onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a> 
+					<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
 						src="/resources/img/house/ico_report.png">
 					</a>
 				</div>
+				</c:if>
 
-				<!--  신고하기 팝업창///////////////////////////////////////////// -->
-				<!-- 
-  <div class="pup_wrap reportpopup">
-	<div class="pup_form">
-		<form id="reportForm" method="post">
-			<div class="pup_head">신고 정보</div>
-			<div class="pup_body">
-				<div class="pup_list">
-					<ul>
-						<li><div>신고 ID</div><input class="userid" type="text" name="userid" readonly></li>
-						<li><div>신고자 ID</div> <input type="text" name="reportid" value="${logId}" readonly> </li>
-						<li>
-							<div>분류</div> <input class="reportCategory" type="text" name="category" value="하우스" readonly>
-							<input type="hidden" class="reportNum" name="no">
-						</li>
-						<li><div>신고 사유</div>
-							<select id="reportcategory" name="reportcategory">
-								<option disabled selected hidden>신고사유를 선택하세요</option>
-								<option>홍보,광고</option>
-								<option>음란</option>
-								<option>욕설</option>
-								<option>기타</option>
-							</select>
-						</li>
-						<li><div>상세내용</div> <textarea rows="5" id="reportcontent" name="reportcontent"></textarea></li>
-					</ul>
 				
-				</div>
-			</div>
-			<div class="pup_bottom">
-				<a class="btn_cancel popupClose">닫기</a>
-				<a href="javascript:$('#reportForm').submit()" id="reportSubmit" class="btn_save">접수</a>
-			</div>
-		</form>
-	</div>
-</div> 
--->
-
 				<script>
-				<!--
-					$(document).ready(function() {
-						// 팝업창 숨기기
-						$('.reportpopup').hide();
-
-						// 신고 버튼 클릭 시 팝업창 열기
-						$('#reportBtn').click(function() {
-							$('.reportpopup').show();
-						});
-
-						// 닫기 버튼 클릭 시 팝업창 닫기
-						$('.popupClose').click(function() {
-							$('.reportpopup').hide();
-						});
-					});
-					-->
-
 					$(document).ready(
 							function() {
 								// 신고 버튼 클릭 시 새로운 팝업창 열기
@@ -209,10 +138,9 @@
 
 				<div id="peopleExplain">
 					<ul class="peopleList">
-						<li class="profileImage"><img
-							src="/resources/img/house/ad.jpg/${memProfilePic}"
-							id="profilepic"
-							onerror="this.src='<%=request.getContextPath()%>/img/comm/no_mate_pic.png'" />
+						<li class="profileImage">
+    						<img src="${h.changeName}" id="profilepic" 
+    						onerror="this.src='/resources/img/common/default_profile.png'" />
 						</li>
 						<li class="userId">${h.memberId }</li>
 						<li class="actionButton">
@@ -243,7 +171,7 @@
 					    var heartIcon = $(".fa-heart");
 					    var isLiked = heartIcon.hasClass("fa-solid");
 					    var type = isLiked ? "unlike" : "like"; // 하트가 칠해져 있다면 "unlike", 칠해져 있지 않다면 "like" 지정
-
+						console.log("${h}");
 					    $.ajax({
 					        url: "heart.ho", // 서블릿으로 전송
 					        type: "get",
@@ -328,7 +256,7 @@
 							<!-- A타입 / 16인실, B타입 / 12인, C타입 / 3인실, D타입 / 1인실 등 -->
 							<td>${h.deposit }</td>
 							<td>${h.rent }</td>
-							<td>${h.enterDate }</td>
+							<td>${h.enterDate } ~ ${h.maxEnterDate}</td>
 							<td>${h.minStay }</td>
 							<td>${h.maxStay }</td>
 							<td>${h.floor }</td>

@@ -60,8 +60,57 @@ public class AdminNoticeController {
 	public String enrollForm() {
 		
 		// /WEB-INF/views/admin/notice/noticeEnrollForm.jsp
+	
 		return "admin/notice/noticeEnrollForm";
 	}
+		
+	
+	
+////////////////
+////////////////
+				// 공지사항 작성용 테스트 
+////////////////
+////////////////
+
+	
+/*	
+	public ModelAndView selectNoticeBoard(ModelAndView mv, int noticeNo) {
+*/
+	
+	// pathContext 방식
+	/*
+	@RequestMapping("detail.bo/{nno}")
+	public ModelAndView selctBoard(@PathVariable int nno,
+								   ModelAndView mv) {
+	*/							   
+
+		// nno 에는 상세조회하고자하는 해당 게시글의 번호가 담겨있음
+		// System.out.println(nno);
+
+	/*
+		// 1. 해당 게시글 조회수 증가용 서비스 호출 및 결과 받기 (update 하고 옴)
+		int result = adminNoticeService.increaseCount(noticeNo);
+		
+		// 2. 만약 게시글 조회수가 성공적으로 증가되었다면 그제서야 select 요청
+		if(result> 0) { // 성공
+			System.out.println(result + "값");
+			// NoticeDetailView.jsp 에서 필요로 하는 응답데이터를 조회
+			Notice n= adminNoticeService.selectBoard(noticeNo);
+			
+			// 조회된 데이터를 mv 에 담아서 포워딩 페이지 경로를 잡아주기
+			mv.addObject("n", n).setViewName("notice/noticeDetailView");
+			System.out.println(mv);
+		} else { // 실패
+			// 에러문구를 담아서 에러페이지로 포워딩 경로 잡아주기
+			mv.addObject("errorMsg", "게시글 상세조회 실패")
+			   .setViewName("common/errorPage");
+			
+		}
+		mv.setViewName("notice/noticeDetailView");
+		System.out.println("mv 는" + mv);
+		return mv;
+	}
+	*/
 	
 	/*
 	 * * 단일 파일 업로드 (한번에 첨부파일 하나만 넘어오는 구조)
@@ -75,12 +124,19 @@ public class AdminNoticeController {
 	 *    Controller 단에서 MultipartFile[] upfile 로 얻어낼 수 있다.
 	 *    			    또는 ArrayList<MultipartFile> upfile 로 얻어낼 수 있다.
 	 */
+	
+	@GetMapping
 	@RequestMapping("/insert.no")
 	public String insertNoticeBoard(Notice n,
 							Nattachment nAttach,
+							// Date noticeFileuploadDate,
 							MultipartFile upfile,
 							HttpSession session,
 							Model model) {
+							
+	
+	
+	
 		
 		// 분명히 제대로 전달값을 넘겨받고자 구문을 작성했음에도 불구하고
 		// null 이 뜨는 것을 볼 수 있다.
@@ -146,7 +202,11 @@ public class AdminNoticeController {
 			
 			// 8. 원본파일명, 서버에 업로드된경로 + 수정파일명을 NoticeAttachment n 에 담기
 			nAttach.setOriginName(upfile.getOriginalFilename());
-			nAttach.setChangeName("resources/uploadFiles/" + changeName);
+			nAttach.setChangeName("resources/img/notice/" + changeName);
+
+			System.out.println("upfile 에 해한 정보는 " + upfile + " 입니다");
+			
+			System.out.println("nAttach 는 " + nAttach + "입니다.");
 		}
 		
 		
@@ -158,10 +218,20 @@ public class AdminNoticeController {
 		// 넘어온 첨부파일이 없다면
 		// boardTitle, boardWriter, boardContent
 		// 필드에 값들이 담겨 있음
-		int result = adminNoticeService.insertNoticeBoard(n);
-		int result1 = adminNoticeService.insertNoticeFile(nAttach);
-		if(result > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+		// 파일 넘기려면 어떻게 해야 되나 테스트 하기 위해 주석 처리 : int result = adminNoticeService.insertNoticeBoard(n, nAttach);
+		int result = adminNoticeService.insertNoticeBoard(n, nAttach);
+		
+		if(result  > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+			// nAttach.setNoticeNo((n.getNoticeNo()));
+			System.out.println("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + nAttach);
 			
+			nAttach.setCreateDate(n.getNoticeDate());
+			nAttach.setFileStatus("y");
+			nAttach.setNoticeNo(n.getNoticeNo());
+			System.out.println(n.getNoticeNo() + "이게 result 가 성공했을 때의 n 에 담겨있는 값이다.");
+			
+			
+			int fileResult = adminNoticeService.insertNoticeFile(nAttach);
 			session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
 			
 			return "redirect:/notice.no"; // 내부적으로 1번 페이지로 향함
@@ -185,7 +255,7 @@ public class AdminNoticeController {
 			String originName = upfile.getOriginalFilename(); // "bono.jpg"
 			
 			// 2. 현재 시간 형식을 문자열로 뽑아내기
-			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss")
+			String currentTime = new SimpleDateFormat("yyyyMMddHHss")
 									 .format(new Date()); // "20230511104920"
 			
 			// 3. 뒤에 붙을 5자리 랜덤값 뽑기 (10000 ~ 99999 범위)
@@ -209,9 +279,82 @@ public class AdminNoticeController {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			System.out.println("changeName 은 " + changeName);
+			return   changeName;
 			
-			return changeName;
+			
 		}
+	
+	// 공지사항 업데이트폼으로 이동
+	@RequestMapping("/updateForm.no")
+	public String updateForm(int nno
+						 , Model model) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
+		
+		System.out.println("nno : " + nno);
+		
+		// 게시글 상세보기용 selectBoard 요청 재활용
+		Notice n = noticeService.selectBoard(nno);
+		
+		model.addAttribute("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
+		System.out.println(model + "입니다.");
+		return "admin/notice/noticeUpdateForm";
+	}
+	
+
+	@RequestMapping("update.no")
+	public String update(Notice n,
+			           Nattachment nAttach,	
+					   MultipartFile reupfile,
+					   HttpSession session,
+					   Model model) {
+		
+		// System.out.println(b);
+		// System.out.println(reupfile);
+		
+		// 새로 넘어온 첨부파일이 있을 경우
+		if(!reupfile.getOriginalFilename().equals("")) {
+			// 즉, filename 필드값 (원본파일명) 이 있을 경우
+			
+			// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 삭제
+			if(nAttach.getOriginName() != null) {
+				
+				// session 객체가 필요하므로 매개변수에 HttpSession session 추가하고 작성
+				String realPath = session.getServletContext().getRealPath(nAttach.getChangeName());
+				new File(realPath).delete();
+			}
+			
+			// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
+			String changeName = saveFile(reupfile, session);
+			
+			// 3. 커맨드 객체 방식으로 넘겨받은 b 라는 객체에
+			//	   새로 넘어온 첨부파일에 대한 원본명, 수정파일명을 덮어씌우기 (필드값 셋팅)
+			nAttach.setOriginName(reupfile.getOriginalFilename());
+			
+			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
+			//		       경로를 지정하여 정확하게 뽑아야 함
+			nAttach.setChangeName("resources/img/notice/" + changeName);
+		}
+		
+		int result = adminNoticeService.updateBoard(n);
+				
+		if(result > 0) { // 성공
+			
+			// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
+			session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
+			
+			return "redirect:/notice.no?nno=" + n.getNoticeNo();
+			
+		} else { // 실패
+			
+			// 에러문구 담아서 에러페이지로 포워딩
+			model.addAttribute("errorMsg", "업데이트 실패");
+			
+			return "common/errorPage";
+			
+			
+		}
+	}
+		
 	
 	
 	

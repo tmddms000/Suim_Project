@@ -58,7 +58,7 @@
                     
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${loginUser.memberId}" name="memberId" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${loginUser.nickName}" name="memberId" readonly></td>
                     </tr>
 
                     <tr>

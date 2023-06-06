@@ -13,10 +13,10 @@ import com.suim.member.model.vo.Member;
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService {
-	
+
 	@Autowired
 	private AdminMemberDao adminMemberDao;
-	
+
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
@@ -34,7 +34,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	public int insertMember(Member m) {
 		return adminMemberDao.insertMember(sqlSession, m);
 	}
-
 
 	@Override
 	public Member selectMember(String memberId) {

@@ -79,13 +79,15 @@
                     <td>${ b.boardDate }</td>
                 </tr>
                 <tr>
-                    <th>첨부파일</th>
-                    <td>
-                        <a href="" download="">파일명.jpg</a>
-                    </td>
+      
+                 
                     <th>조회수</th>
                     <td>
                         ${ b.boardView }
+                    </td>
+                     <th></th>
+                    <td>
+                      
                     </td>
                 </tr>
                 <tr>
@@ -211,7 +213,7 @@
 				
 				for(let i = 0; i < result.length; i++) {
 					resultStr += "<tr>"
-							   + 	"<td>" + result[i].breId + "</td>"
+							   + 	"<td>" + result[i].nickName + "</td>"
 							   + 	"<td>" + result[i].breContent + "</td>"
 							   + 	"<td>" + result[i].breDate + "</td>"
 							   + "</tr>";

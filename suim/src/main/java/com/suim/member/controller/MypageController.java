@@ -3,7 +3,10 @@ package com.suim.member.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,13 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.suim.board.model.vo.Board;
+import com.suim.common.model.vo.PageInfo;
+import com.suim.common.template.Pagination;
 import com.suim.member.model.service.MemberService;
+import com.suim.member.model.service.MypageService;
 import com.suim.member.model.vo.Member;
 
 import lombok.extern.slf4j.Slf4j;
@@ -28,55 +35,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MypageController {
 
-	@Autowired
-	private MemberService memberService;
+	private final MemberService memberService;
+	private final MypageService mypageService;
+	private final HttpSession session;
+	private final BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	@Autowired
-	private HttpSession session;
-
-	@Autowired
-	private BCryptPasswordEncoder bcryptPasswordEncoder;
-
-	// 처음 페이지(알림 페이지)로 이동합니다.
-	@RequestMapping("timeline")
-	public String mypageAlert(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/timeline";
-	}
-
-	// 마이페이지의 내 게시글 조회로 이동합니다.
-	@RequestMapping("post")
-	public String mypageBoard(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/post";
-	}
-
-	// 마이페이지의 내 찜목록 조회로 이동합니다.
-	@RequestMapping("wish")
-	public String mypageWish(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/wish";
-	}
-
-	// 마이페이지의 내 셰어하우스 조회로 이동합니다.
-	@RequestMapping("house")
-	public String mypageHouse(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/house";
-	}
-
-	// 마이페이지의 내 예약내역 조회로 이동합니다.
-	@RequestMapping("reservation")
-	public String mypageReservation(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/reservation";
-	}
-
-	// 마이페이지의 내 정보 조회로 이동합니다.
-	@RequestMapping("profile")
-	public String mypageProfile(HttpServletRequest request) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/profile";
+	public MypageController(MemberService memberService, MypageService mypageService, HttpSession session,
+			BCryptPasswordEncoder bcryptPasswordEncoder) {
+		this.memberService = memberService;
+		this.mypageService = mypageService;
+		this.session = session;
+		this.bcryptPasswordEncoder = bcryptPasswordEncoder;
 	}
 
 	// 사용자 정보 수정 메소드
@@ -86,14 +56,21 @@ public class MypageController {
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
 
-		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())
-				|| m.getMemberPwd().equals(loginUser.getMemberPwd())) {
+		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			log.info("패스워드가 일치함");
 
+			m.setMemberPwd(bcryptPasswordEncoder.encode(m.getMemberPwd()));
+
 			// 비밀번호가 일치하고, 파일이 비어있지 않음
-			if (!file.getOriginalFilename().equals("")) {
+			if (!file.getOriginalFilename().equals("") && !file.isEmpty()) {
+
 				String changeName = saveFile(file, session);
+
+				log.info(changeName);
 				m.setChangeName(changeName);
+
+			} else {
+				m.setChangeName(loginUser.getChangeName());
 			}
 
 			// 비밀번호 변경을 할수도 있고 안할수도 있기 때문에 조건 걸어준다
@@ -105,20 +82,25 @@ public class MypageController {
 				if (changePwd1.equals(changePwd2)) {
 					log.info("비밀번호 변경 로직 시작");
 					m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
+				} else {
+					session.setAttribute("toastError", "확인 비밀번호가 일치하지 않습니다.");
 				}
 			}
+
 			int result = memberService.updateMember(m);
 
 			session.setAttribute("loginUser", m);
 
 			if (result > 0) {
 				log.info("정보 변경 성공");
+				session.setAttribute("toastSuccess", "프로필 변경 완료");
 			} else {
 				log.info("정보 변경 실패");
+				session.setAttribute("toastError", "프로필 변경 실패");
 			}
+		} else {
+			session.setAttribute("toastError", "비밀번호가 일치하지 않습니다.");
 		}
-
-		log.info("넘어옴");
 
 		return "redirect:" + (String) session.getAttribute("originalUrl");
 	}
@@ -157,6 +139,123 @@ public class MypageController {
 		}
 
 		return "/resources/img/member/uploadFiles/" + changeName;
+	}
+
+	// 처음 페이지(알림 페이지)로 이동합니다.
+	@RequestMapping({ "timeline", "" })
+	public String mypageAlert(HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/timeline";
+	}
+
+	// 마이페이지의 BoardList를 조회합니다.
+	@RequestMapping("board")
+	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page, HttpServletRequest request,
+			Model model) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+
+		int pageLimit = 10;
+		int boardLimit = 10;
+
+		Member m = (Member) session.getAttribute("loginUser");
+
+		if (m == null) {
+			return "redirect:/";
+		}
+
+		String memberId = m.getMemberId();
+
+		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
+
+		int listCount = mypageService.selectBoardListCount(memberId);
+		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+		ArrayList<Board> list = mypageService.selectBoardList(pi, memberId);
+
+		model.addAttribute("pi", pi).addAttribute("list", list);
+
+		return "member/mypage/board";
+	}
+
+	// 마이페이지의 BoardList를 조회합니다.
+	@RequestMapping("boardType")
+	@ResponseBody
+	public Map<String, Object> boardList(@RequestParam(value = "page", defaultValue = "1") int page,
+			HttpServletRequest request, @RequestParam(value= "type") String type) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		System.out.println(type);
+		int pageLimit = 10;
+		int boardLimit = 10;
+
+		Member m = (Member) session.getAttribute("loginUser");
+
+		ArrayList<Board> list = new ArrayList<Board>();
+
+		String memberId = m.getMemberId();
+
+		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
+		int listCount = 0;
+		PageInfo pi = null;
+
+		if (type == null || type.equals("board")) {
+
+			listCount = mypageService.selectBoardListCount(memberId);
+			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+			list = mypageService.selectBoardList(pi, memberId);
+			System.out.println("free");
+
+		} 
+		else if (type.equals("inreview")) {
+
+			listCount = mypageService.selectBoardListCount(memberId);
+
+			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+			list = mypageService.selectBoardList(pi, memberId);
+			System.out.println("inreview");
+
+		} 
+		else if (type.equals("find")) {
+
+			listCount = mypageService.selectFindListCount(memberId);
+			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+			list = mypageService.selectFindList(pi, memberId);
+			System.out.println("find");
+			
+
+		}
+
+		Map<String, Object> response = new HashMap<>();
+		response.put("pi", pi);
+		response.put("list", list);
+
+		return response;
+	}
+
+	// 마이페이지의 내 찜목록 조회로 이동합니다.
+	@RequestMapping("wish")
+	public String mypageWish(HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/wish";
+	}
+
+	// 마이페이지의 내 정보 조회로 이동합니다.
+	@RequestMapping("profile")
+	public String mypageProfile(HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/profile";
+	}
+
+	// 마이페이지의 내 셰어하우스 조회로 이동합니다.
+	@RequestMapping("house")
+	public String mypageHouse(HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/house";
+	}
+
+	// 마이페이지의 내 예약내역 조회로 이동합니다.
+	@RequestMapping("reservation")
+	public String mypageReservation(HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/reservation";
 	}
 
 }
