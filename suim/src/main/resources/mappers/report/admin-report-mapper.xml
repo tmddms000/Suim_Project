@@ -20,6 +20,13 @@
 		  FROM REPORT
 	</select>
 	
+	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
+	<select id="selectCategoryListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM REPORT
+		 WHERE REPORT_STATUS = #{category}
+	</select>
+	
 	<!-- 리스트를 구해주는 쿼리문 -->
 	<select id="selectList" resultMap="adminReportResultSet">
 		SELECT REPORT_NO

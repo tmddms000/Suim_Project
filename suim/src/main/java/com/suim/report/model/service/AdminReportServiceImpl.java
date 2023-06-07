@@ -20,11 +20,18 @@ public class AdminReportServiceImpl implements AdminReportService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
+	// 신고 총 갯수 조회
 	@Override
 	public int selectListCount() {
 		return adminReportDao.selectListCount(sqlSession);
 	}
 
+	// 카테고리용 총 갯수 조회
+	@Override
+	public int selectListCount(String category) {
+		return adminReportDao.selectListCount(sqlSession, category);
+	}
+	
 	// 전체 조회용
 	@Override
 	public ArrayList<Report> selectList(PageInfo pi) {

@@ -43,7 +43,7 @@
 							<div align="right" class="searchForm">
 							<form class="d-md-flex ms-4" action="search.re">
 								<div class="select">
-				                    <select class="custom-select" name="condition">
+				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;">
 				                        <option value="REPORT_TITLE">제목</option>
 				                        <option value="REPORT_CONTENT">내용</option>
 				                        <option value="REPORT_TYPE">유형</option>
@@ -57,21 +57,21 @@
                     		</form>
 							</div>
 							
-                            <nav>
-                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                        aria-selected="true" value="A">전체</button>
-                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false" value="N">미처리</button>
-                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false" value="Y">처리 완료</button>
-                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                        type="button" role="tab" aria-selected="false" value="C">반려</button>
-                                </div>
-                            </nav>
+							<ul class="nav nav-tabs">
+								<li class="nav-item">
+									<button class="nav-link active" id="A">전체</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="N">대기</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="Y">승인</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="C">반려</button>
+								</li>
+							</ul>
+							
                             <div class="tab-content pt-3" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 									<div class="table-responsive">
@@ -80,10 +80,10 @@
 		                                        <tr>
 		                                            <th scope="col"><input class="form-check-input" type="checkbox" id="selectAll_A"></th>
 		                                            <th scope="col">번호</th>
-		                                            <th scope="col">제목</th>
-		                                            <th scope="col">내용</th>
 		                                            <th scope="col">유형</th>
-		                                            <th scope="col">신고자</th>
+		                                            <th scope="col">제목</th>
+		                                            <th scope="col">신고당한사람</th>
+		                                            <th scope="col">내용</th>
 		                                            <th scope="col">신고일</th>
 		                                            <th scope="col">상태</th>
 		                                        </tr>
@@ -93,10 +93,10 @@
 		                    						<tr>
 			                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
 			                                            <td class="rno">${ r.reportNo }</td>
-			                                            <td>${ r.reportTitle }</td>
-			                                            <td>${ r.reportContent }</td>
 			                                            <td>${ r.reportType }</td>
+			                                            <td>${ r.reportTitle }</td>
 			                                            <td>${ r.reportId }</td>
+			                                            <td>${ r.reportContent }</td>
 			                                            <td>${ r.reportDate }</td>
 			                                            <td>${ r.reportStatus }</td>
 			                                        </tr>
@@ -114,74 +114,147 @@
             <!-- Table End -->
 
             <script>
-            $(function() {
-            	  $("nav>div>button").on("click", function() {
-            	    var selectedCategory = $(this).val();
-            	    var tabId = "#nav-profile-" + selectedCategory;
-            	    var selectAllId = "#selectAll_" + selectedCategory;
-            	    var checkboxName = "checkboxName_" + selectedCategory;
-					console.log(checkboxName);
-					
-            	    $.ajax({
-            	      url: "category.re",
-            	      type: "get",
-            	      data: { category: selectedCategory },
-            	      success: function(result) {
-            	        var resultStr = "";
+            $(document).ready(function() {
+        	    // 전체선택 체크박스 클릭 이벤트
+        	    $(document).on('change', 'thead input[type="checkbox"]', function() {
+        	        var checkboxes = $('tbody input[type="checkbox"]');
+        	        checkboxes.prop('checked', this.checked);
+        	    });
 
-            	        for (var i = 0; i < result.length; i++) {
-            	          resultStr += "<tr>" +
-				            	            "<td><input class='form-check-input' type='checkbox' name='" + checkboxName + "'></td>" +
-				            	            "<td class='rno'>" + result[i].reportNo + "</td>" +
-				            	            "<td>" + result[i].reportTitle + "</td>" +
-				            	            "<td>" + result[i].reportContent + "</td>" +
-				            	            "<td>" + result[i].reportType + "</td>" +
-				            	            "<td>" + result[i].reportId + "</td>" +
-				            	            "<td>" + result[i].reportDate + "</td>" +
-				            	            "<td>" + result[i].reportStatus + "</td>" +
-			            	            "</tr>";
-            	        }
-            	        
-            	        $("#reportList>tbody").html(resultStr);
+        	    // 개별 체크박스 클릭 이벤트
+        	    $(document).on('change', 'tbody input[type="checkbox"]', function() {
+        	        var selectAllCheckbox = $('thead input[type="checkbox"]');
+        	        selectAllCheckbox.prop('checked', $('tbody input[type="checkbox"]:checked').length === $('tbody input[type="checkbox"]').length);
+        	    });
 
-            	        $(tabId + " table tbody").html(resultStr);
-            	        
-            	        $("#reportList>tbody>tr").click(function(event) {
-    				        if (!$(event.target).is('input[type="checkbox"]')) {
-    				            let rno = $(this).children(".rno").text();
-    				            location.href = "detail.re?rno=" + rno;
-    				        }
-    				    });
-            	        
-            	        // 전체 선택 체크박스 클릭 이벤트 핸들러
-            	        $(selectAllId).on("change", function() {
-            	          var isChecked = $(this).prop("checked");
-            	          $(tabId + " input[name='" + checkboxName + "']").prop("checked", isChecked);
-            	        });
-            	      },
-						error : function() {
-							console.log("ajax 통신 실패!");
-						}
-					});
-				});
-	          });
-	            	
+        	    $('.nav-link').click(function(e) {
+        	        if ($(this).data('toggle')) {
+        	            e.preventDefault();
+        	        }
 
-                // 디테일로 넘겨주는 함수
-                $(function() {
-				    $("#reportList>tbody>tr").click(function(event) {
-				        if (!$(event.target).is('input[type="checkbox"]')) {
-				            let rno = $(this).children(".rno").text();
-				            location.href = "detail.re?rno=" + rno;
-				        }
-				    });
+        	        $('.nav-link').removeClass('active');
+        	        $('.tab-pane').removeClass('show active');
 
-        	        // 전체 선택 체크박스 클릭 이벤트 핸들러
-        	        $(selectAllId).on("change", function() {
-        	          var isChecked = $(this).prop("checked");
-        	          $(tabId + " input[name='" + checkboxName + "']").prop("checked", isChecked);
+        	        $(this).addClass('active');
+
+        	        var targetTab = $(this).attr('id');
+        	        var type = "";
+
+        	        if (targetTab === "A") {
+        	            type = "미처리";
+        	        } else if (targetTab === "N") {
+        	            type = "untreated";
+        	        } else if (targetTab === "Y") {
+        	            type = "confirm";
+        	        } else if (targetTab === "C"){
+        	        	type = "companion";
+        	        }
+
+
+        	        $.ajax({
+        	            type: "GET",
+        	            url: "/admin/category.re",
+        	            data: {
+        	                type: type
+        	            },
+        	            success: function(response) {
+        	                console.log(response);
+
+        	                var tableBody = $('#reportList tbody');
+        	                tableBody.empty();
+
+        	                if (response && response.list && response.list.length > 0) {
+        	                    $.each(response.list, function(index, item) {
+        	                    	
+        	                    	console.log(response.list);
+        	                       
+
+        	                            var date = new Date(item.reportDate);
+        	                            var formattedDate = date.toISOString().split('T')[0];
+        	                            var row = "<tr data-id='" + item.reportNo + "'>" +
+        	                            "<td class='select-cell'><input type='checkbox' data-id='" + item.reportNo + "'></td>";
+        	                            row += "<td class='no-cell'>" + item.reportNo + "</td>";
+        	                            row += "<td class='type-cell'>" + item.reportType + "</td>";
+        	                            row += "<td class='title-cell'>" + item.reportTitle + "<a href=''>[1]</a></td>";
+        	                            row += "<td class='id-cell'>" + item.reportId + "</td>";
+        	                            row += "<td class='content-cell'>" + item.reportContent  + "</td>";
+        	                            row += "<td class='date-cell'>" + formattedDate + "</td>";
+        	                            row += "<td class='views-cell'>" + item.reportStatus + "</td>";
+        	                        
+
+        	                        row += "</tr>";
+
+        	                        tableBody.append(row);
+        	                    });
+        		                } else {
+        		                    var noDataHtml = "<tr><td colspan='5' class='text-center'>작성된 게시글이 없습니다.</td></tr>";
+        		                    tableBody.append(noDataHtml);
+        		                }
+        	                $('thead input[type="checkbox"]').prop('checked', false);
+        	            },
+        	            error: function(xhr, status, error) {
+        	                console.error(error);
+        	                
+        	                var tableBody = $('#reportList tbody');
+        	                tableBody.empty();
+
+        	                var noDataHtml = "<tr><td colspan='5' class='text-center'>작성된 게시글이 없습니다.</td></tr>";
+        	                tableBody.append(noDataHtml);
+
+        	                // Uncheck 전체선택 checkbox
+        	                $('tfoot input[type="checkbox"]').prop('checked', false);
+        	            }
         	        });
-				});
+        	    });
+
+        	    // 삭제 버튼 클릭 이벤트
+        	    $(document).on('click', 'button.delete-btn', function() {
+        	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
+        	        var deleteIds = [];
+
+        	        checkedCheckboxes.each(function() {
+        	            deleteIds.push($(this).data('id'));
+        	        });
+        	        
+        	        if (deleteIds.length === 0) {
+        	            alert("삭제할 게시글을 선택해주세요.");
+        	            return;
+        	        }
+        	        
+        	        var confirmation = confirm("게시글을 삭제하시겠습니까?");
+        	        if (!confirmation) {
+        	            return;
+        	        }
+
+        	        // 삭제 처리를 위한 Ajax 요청
+        	        $.ajax({
+        	            type: "POST",
+        	            url: "/admin/delete.re",
+        	            data: {
+        	                ids: deleteIds.join(",")
+        	            },
+        	            success: function(response) {
+        		            if(response === 'Y') {
+        		            	
+        		            	toastr.success("게시글이 삭제 되었습니다.");
+        		            	
+        		            	deleteIds.forEach(function(id) {
+                                    $("tr[data-id=" + id + "]").remove();
+                                });
+        		            	$('thead input[type="checkbox"]').prop('checked', false);
+        		            	
+        		            } else {
+        		            	toastr.error("게시글 삭제에 실패했습니다.");
+        		            }
+        	            },
+        	            error: function() {
+        	            	toastr.error("게시글 삭제에 실패했습니다.");
+        	            }
+        	            
+        	        });
+        	    });
+        	});
+        	
             </script>
 
 			<br>

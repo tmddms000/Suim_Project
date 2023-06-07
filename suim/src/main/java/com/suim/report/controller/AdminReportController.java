@@ -54,7 +54,7 @@ public class AdminReportController {
 	@ResponseBody
 	// 카테고리용 전체 조회용
 	@RequestMapping(value = "category.re", produces = "application/json; charset=UTF-8")
-	public ArrayList<Report> selectList(
+	public Map<String, Object> selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
 			ModelAndView mv,
 			String category) {
@@ -75,7 +75,10 @@ public class AdminReportController {
 			list = adminReportService.selectList(pi, category);
 		}
 		
-		return list;
+		Map<String, Object> response = new HashMap<>();
+		response.put("pi", pi);
+		response.put("list", list);
+		return response;
 	}
 
 	

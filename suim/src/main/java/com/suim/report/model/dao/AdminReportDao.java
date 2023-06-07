@@ -13,8 +13,14 @@ import com.suim.report.model.vo.Report;
 @Repository
 public class AdminReportDao {
 
+	// 신고 총 갯수 조회
 	public int selectListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("adminReportMapper.selectListCount");
+	}
+	
+	// 카테고리용 총 갯수 조회
+	public int selectListCount(SqlSessionTemplate sqlSession, String category) {
+		return sqlSession.selectOne("adminReportMapper.selectCategoryListCount", category);
 	}
 	
 	// 전체 조회용 selectList
