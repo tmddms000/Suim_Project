@@ -59,13 +59,28 @@
 		 WHERE NOTICE_NO = #{noticeNo}
 	</select>
 	
+	<!-- 공지사항 업데이트용 파일 -->
 	<update id="updateNoticeBoard" parameterType="notice">
 		UPDATE NOTICE
-		   SET NOTICE_TITLE = {n.noticeTitle}
-		   	 , NOTICE_CONTENT = {n.noticeContent}
-		 WHERE NOTICE_NO = #{notice_no}
+		   SET NOTICE_TITLE = #{noticeTitle}
+		   	 , NOTICE_CONTENT = #{noticeContent}
+		 WHERE NOTICE_NO = #{noticeNo}
 		   
 	</update>
+	
+	<select id="selectNoticeFile" parameterType="nAttachment" resultMap="adminNoticeResultSet">
+		SELECT NAT_NO
+			 , ORIGIN_NAME
+			 , CHANGE_NAME
+			 , CREATE_DATE
+			 , FILE_STATUS
+			 , NOTICE_NO
+		FROM NATTACHMENT
+	   WHERE NAT_NO = #{natNo}
+	
+	</select>
+	
+	
 	
 	
 	

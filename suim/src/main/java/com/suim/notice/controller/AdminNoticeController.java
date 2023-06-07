@@ -287,22 +287,92 @@ public class AdminNoticeController {
 	
 	// 공지사항 업데이트폼으로 이동
 	@RequestMapping("/updateForm.no")
-	public String updateForm(int nno
-						 , Model model) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
+	public ModelAndView updateForm(int nno /* , int nat */
+						 , ModelAndView mv, Notice n, Nattachment nAttach, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
 		
 		System.out.println("nno : " + nno);
 		
 		// 게시글 상세보기용 selectBoard 요청 재활용
-		Notice n = noticeService.selectBoard(nno);
+		n = noticeService.selectBoard(nno);
 		
-		model.addAttribute("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
-		System.out.println(model + "입니다.");
-		return "admin/notice/noticeUpdateForm";
+		System.out.println("--------");
+		System.out.println(n);
+		System.out.println("--------");
+		
+		// nAttach = noticeService.selectNoticeFile(nno);
+		System.out.println(nAttach);
+		//  System.out.println(mv);
+		mv.addObject("nAttach", nAttach);
+		mv.addObject("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
+		
+		// System.out.println(mv + "입니다.");
+		
+		mv.setViewName("admin/notice/noticeUpdateForm");
+		return mv;
 	}
 	
-
+	@RequestMapping("/update.no")
+	public String updateNotice(Model model,
+								 Notice n, 
+								MultipartFile reupfile,
+								HttpSession session/*,*/ /*
+								Nattachment nAttach */) {
+		/*
+		
+		if(!reupfile.getOriginalFilename().equals("")) {
+			
+			// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 FILE_STATUS 를 'N' 으로 바꿔야 함.
+			if(nAttach.getOriginName() != null) {
+				
+				// session 객체가 필요하므로 매개변수에 HttpSession session 추가하고 작성
+				String realPath = session.getServletContext().getRealPath(nAttach.getChangeName());
+				new File(realPath).delete();
+			}
+			// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
+			String changeName = saveFile(reupfile, session);
+			
+			
+			nAttach.setOriginName(reupfile.getOriginalFilename());
+			
+			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
+			//		       경로를 지정하여 정확하게 뽑아야 함
+			nAttach.setChangeName("resources/img/notice/" + changeName);
+			}
+			int result = adminNoticeService.updateNotice(nno);
+			*/
+			
+			
+			//n = noticeService.selectBoard(nno);
+		System.out.println("--------");
+			System.out.println("n 에 대한 것은 " + n + "입니다.");
+			System.out.println("--------");
+			int result = adminNoticeService.updateNotice(n);
+			
+			System.out.println();
+			System.out.println(result + "!1111444444444444");
+				
+			if(result > 0) { // 성공
+				
+				// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
+				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+			//	mv.setViewName(viewName);
+				return "redirect:/detail.no?nno=" + n.getNoticeNo();
+				
+			} else { // 실패
+				
+				// 에러문구 담아서 에러페이지로 포워딩
+				model.addAttribute("errorMsg", "업데이트 실패");
+				return "common/errorPage";
+				
+				
+			}
+		}
+	
+	
+	/* 업데이트 할 때 매개변수 뭘 해야 할 지 몰라 새로 작성하기 위해 주석 처리
+	 * 
 	@RequestMapping("update.no")
-	public String update(Notice n,
+	public String update(int nno, Notice n,
 			           Nattachment nAttach,	
 					   MultipartFile reupfile,
 					   HttpSession session,
@@ -354,6 +424,7 @@ public class AdminNoticeController {
 			
 		}
 	}
+	*/
 		
 	
 	

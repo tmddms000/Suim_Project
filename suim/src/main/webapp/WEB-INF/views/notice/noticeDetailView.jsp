@@ -57,7 +57,7 @@
     
             <div class="table-wrapper">
             
-            <div style="display:inline-block", "max-witdh=100%;">
+            <div style="display:inline-block">
                 <div id="noticeBold" class="table-title">
                     우주 공지사항
                 </div>
@@ -75,66 +75,68 @@
                 <table id="noticeDetailTable" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td id="noticeNo" class="nListNo contentHeader" hidden colspan="2">No</td>
-                            <td class="title contentHeader" colspan="2">
+                            <td id="noticeNo" class="nListNo contentHeader" hidden>No</td>
+                            <td class="title contentHeader">
                                 <div style = "padding-left : 10% ">${n.noticeTitle}</div>
                             </td>              
-                            <td class="createDate contentHeader">
+                            <td class="createDate contentHeader" style="width:15%;">
                                 <div class="text-center">작성일자</div>
                                 <div><fmt:formatDate pattern="yyyy-MM-dd" value="${n.noticeDate }" /></div>
                             </td>
-                            <td class="page_views" colspan="2">
+                            <td class="page_views">
                                 <div>조회수</div>
                                 <div>${ n.noticeView }</div>
                             </td>
-                            <td>
-                            	
-                            </td>
+                           
                             
-                            <c:forEach items="${nAttach}" var="nAttach">
-                            	<div align="center" style="display: inline-block;" align="right">
-						                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-						                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
-						                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
-						        </div>
-                            	
-                            	
-			                	<form id="postForm" action="" method="post">
-					            	<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
-					            	<input type="hidden" name="nno" value="${ nAttach.noticeNo }">
-					            	<input type="hidden" name="filePath" value="${ nAttach.changeName }">
-				            	</form>
-				            </c:forEach>
-				            <script>
-				            	// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
-				            	function postFormSubmit(num) {
-				            		
-				            		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-				            		if(num==1) { // 수정하기 버튼을 클릭했을 경우
-				            			$("#postForm").attr("action", "updateForm.no").submit();
-				            		} else { // 삭제하기 버튼을 클릭했을 경우
-				            			$("#postForm").attr("action", "delete.bo").submit();
-				            		}	
-				            	}
-				            </script>
+                            
                         </tr>
                     </thead>
                     <tbody>
-                        
-                        <tr style="width: 100%;" rowspan="3">
-                            
-                            <td class="noticeContent" style="height: 100px;">
+                        <tr rowspan="3">
+                          
+                            <td class="noticeContent" colspan="4" id="noticeFileAndContent">
                                <c:forEach items="${nAttach}" var="nAttach">
-		                          <img src="${nAttach.changeName }">
+		                          <img src="${nAttach.changeName }" style= "width : 100%;" name="nat">
 		                           ${ n.noticeContent }
-		                       </c:forEach>
+		                       </c:forEach>		                	
                             </td>
                             
-                            
+                           
                             
                         </tr>
-                    
-                        
+                      	<c:forEach items="${nAttach}" var="nAttach">
+                         	<div align="center" style="display: inline-block;" align="right">
+				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
+				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+				                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+			        		</div>
+                         	
+                         	
+                			<form id="postForm" action="updateForm.no" method="post">
+			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
+			            		<input type="hidden" name="nno" value="${ n.noticeNo }">	
+			            		<input type="hidden" name="nat" value="${ nAttach.natNo }">	            		
+	            			</form>
+	            			
+				        </c:forEach>
+				        
+				        
+		               	<script>
+		               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
+		               		function postFormSubmit(num) {
+		               	
+		               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
+		               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
+		            				$("#postForm").attr("action", "updateForm.no").submit();
+		            			} else { // 삭제하기 버튼을 클릭했을 경우
+		            				$("#postForm").attr("action", "delete.bo").submit();
+		            			}	
+		            		}
+		               		
+		                
+		            </script>
+		            
 
                     </tbody>
                 </table>

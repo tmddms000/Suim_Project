@@ -52,8 +52,13 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	}
 
 	@Override
-	public int updateBoard(Notice n) {
+	public int updateNotice(Notice n) {
 		return adminNoticeDao.updateNoticeBoard(sqlSession, n);
+	}
+
+	@Override
+	public Nattachment selectForUpdateNoticeFile(Nattachment nAttach) {
+		return adminNoticeDao.selectForUpdateNoticeFile(sqlSession, nAttach);
 	}
 
 	

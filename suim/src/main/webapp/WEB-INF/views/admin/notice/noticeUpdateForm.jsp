@@ -47,7 +47,7 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
     <jsp:include page="/WEB-INF/views/admin/common/navbar.jsp" />
     <jsp:include page="/WEB-INF/views/admin/common/sidebar.jsp" />
-    <jsp:include page="/WEB-INF/views/admin/common/spinner.jsp" />
+  
     <jsp:include page="/WEB-INF/views/admin/common/include.jsp" />
 
     <div class="container main">
@@ -56,20 +56,40 @@
             <h2>공지사항 수정하</h2>
             <br>
 
-            <form id="updateForm" method="post" action="insert.bo" enctype="multipart/form-data">
-                <table algin="center">
+            <form id="updateForm" method="post" action="update.no" enctype="multipart/form-data">
+            
+            <script>
+            	console.log("${ n.noticeNo }    ${ n.noticeTitle }    ${ n.noticeContent }, ${ nAttach.changeName} ")
+            </script>
+            
+            	<input type="hidden" name="noticeNo" value="${n.noticeNo }">
+                <table>
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="boardTitle" placeholder="${ n.noticeTitle }"></td>
+                        <td><input type="text" id="title" class="form-control" name="noticeTitle" value="${ n.noticeTitle }"></td>
                     </tr>
                     
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
-                        <td><input type="file" id="upfile" class="form-control-file border" name="upfile" placeholder="${n.changeName }"></td>
+                        <td><input type="file" id="upfile" class="form-control-file border" name="changeName">
+                        
+                            <c:if test="${ not empty nAttach.changeName }">
+                            	현재 업로드된 파일 : 
+                            	<a href="${ nAttach.changeName }" download="${ nAttach.originName }">${ nAttach.changeName }</a>
+                            	
+                            	
+                            	<!-- 기존 첨부파일이 있을 경우 : 기존첨부파일의 원본명과 수정명을 같이 넘겨줄 것 -->
+                            	<input type="file" name="originName" value="${ nAttach.originName }">
+                            	<input type="hidden" name="changeName" value="${ nAttach.changeName }">
+                            </c:if>
+                         
+                         </td>
+                        
                     </tr>
                     <tr>
                         <th><label for="content">내용</label></th>
-                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="boardContent" required></textarea></td>
+                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="noticeContent">${n.noticeContent }</textarea></td>
+
                     </tr>
                 </table>
                 <br>
@@ -86,7 +106,5 @@
     
     <jsp:include page="/WEB-INF/views/admin/common/footer.jsp" />
     
-</body>
-</html>
 </body>
 </html>
