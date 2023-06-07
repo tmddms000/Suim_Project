@@ -36,19 +36,23 @@
 		<result column="FIND_VIEW" property="findView" />
 		<result column="FIND_DATE" property="findDate" />
 		<result column="ORIGIN_NAME" property="originName" />
+		<result column="NICKNAME" property="nickName" />
+		<result column="GENDER" property="gender" />
     
 		<result column="FIND_CONTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="FIND_REPLY_COUNT" property="freplyCount" />
+		<result column="THUMBNAIL" property="thumbnail" />
 	</resultMap>
 	
-			<!-- FINDREPLY 테이블로부터 조회된 ResultSet 을 Reply 객체로 가공해주는 resultMap -->
-	<resultMap id="findReplyResultSet" type="findreply">
+	  <!-- FINDREPLY 테이블로부터 조회된 ResultSet 을 Reply 객체로 가공해주는 resultMap -->
+	<resultMap id="findreplyResultSet" type="findreply">
 		<result column="FRE_NO" property="freNo" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="FRE_CONTENT" property="freContent" />
 		<result column="FRE_DATE" property="freDate" />
 		<result column="FRE_ID" property="freId" />
+		<result column="FIND_NO" property="findNo" />
 	</resultMap>
 	
 
@@ -132,20 +136,24 @@
 	
 		<!-- 게시글 작성용 쿼리문 -->
 	<insert id="insertBoard" parameterType="board">
-		INSERT INTO BOARD (BOARD_NO, 
-		                   BOARD_TITLE, 
-		                   BOARD_CONTENT,
-                           BOARD_VIEW,
-                           BOARD_DATE,
-                           STATUS,
-                           MEMBER_ID)
-				   VALUES(SEQ_BNO.NEXTVAL
-				   		, #{boardTitle}
-				   		, #{boardContent}
-                        ,DEFAULT
-                        ,DEFAULT
-                        ,DEFAULT
-                        ,#{memberId})
+		    INSERT INTO BOARD (
+			        BOARD_NO,
+			        BOARD_TITLE,
+			        BOARD_CONTENT,
+			        BOARD_VIEW,
+			        BOARD_DATE,
+			        STATUS,
+			        MEMBER_ID
+			    )
+			    VALUES (
+			        SEQ_BNO.NEXTVAL,
+			        #{boardTitle},
+			        #{boardContent},
+			        DEFAULT,
+			        DEFAULT,
+			        DEFAULT,
+			        #{memberId}
+			    )
 		
 	</insert>
 	
@@ -166,7 +174,7 @@
 	</insert>
 		
 	<select id="selectBoard" parameterType="_int" resultMap="boardResultSet">
-				SELECT
+		SELECT
 		    B.BOARD_NO,
 		    B.BOARD_TITLE,
 		    B.BOARD_CONTENT,
@@ -258,38 +266,37 @@
 	
 		<!-- 게시글 리스트를 구해주는 쿼리문 -->
 		<select id="selectfList" resultMap="findResultSet">
-
 			SELECT
 			    F.FIND_NO,
 			    F.FIND_TITLE,
-			    LISTAGG(F.FIND_CONTENT, ', ') WITHIN GROUP (ORDER BY F.FIND_CONTENT) AS FIND_CONTENT,
-
+			    F.FIND_CONTENT,
 			    F.FIND_CATEGORY,
 			    F.FIND_VIEW,
 			    F.FIND_DATE,
 			    F.STATUS,
 			    F.MEMBER_ID,
+			    M.NICKNAME,
+			    M.GENDER,
 			    FA.ORIGIN_NAME,
 			    FA.CHANGE_NAME,
-      
-			    M.NICNAME,
-
-			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT
+			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
+			    REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
 			FROM FIND F
 			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
 			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
 			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-
 			WHERE F.STATUS = 'Y'
 			GROUP BY
 			    F.FIND_NO,
 			    F.FIND_TITLE,
-
+			    F.FIND_CONTENT,
 			    F.FIND_CATEGORY,
 			    F.FIND_VIEW,
 			    F.FIND_DATE,
 			    F.STATUS,
 			    F.MEMBER_ID,
+			    M.NICKNAME,
+			    M.GENDER,
 			    FA.ORIGIN_NAME,
 			    FA.CHANGE_NAME
 			ORDER BY F.FIND_NO DESC
@@ -314,21 +321,39 @@
 	
 	
 	<select id="selectFind" parameterType="_int" resultMap="findResultSet">
-			SELECT 
-		        F.FIND_NO,
-		        F.FIND_TITLE,
-		        F.FIND_CONTENT,
-                F.FIND_CATEGORY,
-		        F.FIND_VIEW,
-		        F.FIND_DATE,
-		        F.STATUS,
-		        F.MEMBER_ID,
-		        FA.ORIGIN_NAME,
-		        FA.CHANGE_NAME
-		    FROM FIND F
-		    JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
-		    LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
-		    WHERE F.FIND_NO = #{findNo}
+			SELECT
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_CONTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    M.NICKNAME,
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME,
+			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
+			    REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM FIND F
+			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
+			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+			WHERE F.FIND_NO = #{findNo}
+			AND F.STATUS = 'Y'
+			GROUP BY
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_CONTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    M.NICKNAME,
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME
+			ORDER BY F.FIND_NO DESC
 	</select>
 	
 	<update id="increasefCount" parameterType="_int">
@@ -344,15 +369,28 @@
 		 WHERE FIND_NO = #{findNo}
 	</update>
 	
-	 	<select id="selectfReplyList" parameterType="_int" resultMap="findReplyResultSet">
-		         SELECT *
-		          FROM FIND_REPLY
-		         WHERE STATUS = 'Y'
-		         ORDER BY FRE_NO DESC
+	 	<select id="selectfReplyList" parameterType="_int" resultMap="findreplyResultSet">
+			SELECT 
+			    FR.FRE_NO,
+			    FR.FRE_CONTENT,
+			    FR.FRE_DATE,
+			    FR.STATUS,
+			    FR.FIND_NO,
+			    FR.FRE_ID,
+			    M.NICKNAME
+			FROM 
+			    FIND_REPLY FR
+			JOIN 
+			    MEMBER M ON (M.MEMBER_ID = FR.FRE_ID)
+			WHERE 
+			    FR.STATUS = 'Y'
+			    AND FR.FIND_NO = #{findNo}
+			ORDER BY 
+			    FR.FRE_NO DESC
 		</select>
 
 
-<!-- 	<insert id="insertfReply" parameterType="boardUpdateResultSet">
+	<insert id="insertfReply" parameterType="findreply">
 		INSERT INTO FIND_REPLY(FRE_NO
 						, FRE_CONTENT
 						, FIND_NO
@@ -363,7 +401,48 @@
 				   		, #{findNo}
 				   		, #{memberId}
 				   		)
-	</insert>  -->
+	</insert> 
+	
+	<select id="findReplyCount" resultType="_int">
+			  SELECT COUNT(*)
+			  FROM FIND_REPLY
+			 WHERE STATUS = 'Y'
+	         AND BOARD_NO = #{findNo}
+	</select>
+	
+			<!-- 게시글 작성용 쿼리문 -->
+	<insert id="insertFind" parameterType="find">
+		    INSERT INTO FIND (
+			        FIND_NO,
+			        FIND_TITLE,
+			        FIND_CONTENT,
+			        FIND_CATEGORY,
+			        FIND_VIEW,
+			        FIND_DATE,
+			        STATUS,
+			        MEMBER_ID
+			    )
+			    VALUES (
+			        SEQ_BNO.NEXTVAL,
+			        #{findTitle},
+			        #{findContent},
+			        #{category},
+			        DEFAULT,
+			        DEFAULT,
+			        DEFAULT,
+			        #{memberId}
+			    )
+		
+	</insert>
+	
+		<update id="updateFind" parameterType="find">
+		  UPDATE FIND
+		  SET FIND_TITLE = #{findTitle},
+		      FIND_CONTENT = #{findContent},
+		      FIND_CATEGORY = #{category}
+		  WHERE FIND_NO = #{findNo}
+		  AND STATUS = 'Y'
+		</update>
 	
 
 	

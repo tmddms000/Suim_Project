@@ -105,17 +105,17 @@
     <label for="gender">성별:</label>
     <select id="gender" style="border-radius: 8px;">
         <option value="">성별을 선택하세요</option>
-        <option value="남자">남자</option>
-        <option value="여자">여자</option>
+        <option value="M">남자</option>
+        <option value="F">여자</option>
     </select>
 
     &nbsp;&nbsp;
 
     <label for="condition">조건:</label>
     <select id="condition" style="border-radius: 8px;">
-        <option value="모두">조건을 선택하세요</option>
-        <option value="방구해요">방구해요</option>
-        <option value="세놓아요">세놓아요</option>
+        <option value="all">조건을 선택하세요</option>
+        <option value="buy">방구해요</option>
+        <option value="sell">세놓아요</option>
     </select>
     &nbsp;
 
@@ -132,7 +132,7 @@
 
 
 
-        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="/board/free-insert.html">
+        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.fi">
             글작성
         </a>
         
@@ -140,7 +140,9 @@
         <thead>
             <tr>
                 <th width="60px">번호</th>
-                <th width="150px">등록일</th>
+                <th width="120px">등록일</th>
+                <th width="100px">카테고리</th>
+                <th width="50px">성별</th>
                 <th width="500px">제목</th>
                 <th width="90px">작성자</th>
                 <th width="90px">조회수</th>
@@ -152,6 +154,20 @@
 				    <tr>
 				        <td class="fno">${fb.findNo}</td>
 				        <td>${fb.findDate}</td>
+				        <td>${fb.category}</td>
+				        <td>
+				        <c:choose>
+						  <c:when test="${fb.gender == 'M'}">
+						    남자
+						  </c:when>
+						  <c:when test="${fb.gender == 'F'}">
+						    여자
+						  </c:when>
+						  <c:otherwise>
+						    성별 정보 없음
+						  </c:otherwise>
+						</c:choose>
+						</td>
 				        <td>
 				            ${fb.findTitle}
 				            <span id="rcount">(${fb.freplyCount})</span>
@@ -183,13 +199,13 @@
                     		<li class="page-item disabled" ><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);"><</a></li>
                 		</c:when>
                 		<c:otherwise>
-		                    <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }"><</a></li>
+		                    <li class="page-item"><a class="page-link" href="list.fi?cPage=${ pi.currentPage - 1 }"><</a></li>
                 		</c:otherwise>
                 	</c:choose>
                     
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="list.bo?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
+                    	<li class="page-item"><a class="page-link" href="list.fi?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -197,7 +213,7 @@
                     		<li class="page-item disabled"><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);">></a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
+                    		<li class="page-item"><a class="page-link" href="list.fi?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
                     	</c:otherwise>
                     </c:choose>
                 </ul>

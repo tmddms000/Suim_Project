@@ -13,11 +13,7 @@ import lombok.ToString;
 @ToString
 public class findReply {
 
-//	fre_NO	NUMBER
-//	fre_COTENT	VARCHAR2(300 BYTE)
-//	fre_DATE	DATE
-//	STATUS	CHAR(1 BYTE)
-//	BOARD_NO	NUMBER
+
 	
 	private int freNo;
     private String freContent;

@@ -138,6 +138,8 @@ public class BoardController {
 			
 			ArrayList<Reply> list = boardService.selectReplyList(bno);
 			
+			
+			
 			return new Gson().toJson(list);
 		}
 		
@@ -264,7 +266,7 @@ public class BoardController {
 			Board b = boardService.updateBoardList(bno);
 
 			
-			System.out.println(b);
+	
 			mv.addObject("b", b)
 			  .setViewName("board/free-boardUpdate");
 			
@@ -278,7 +280,7 @@ public class BoardController {
 	
 		int result = boardService.updateBoard(b);
 		
-		System.out.println(b);
+		
 		
 		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
 		
@@ -311,9 +313,11 @@ public class BoardController {
 					int boardLimit = 10;
 					
 					PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-					
+						
 					ArrayList<Find> flist = boardService.selectfList(pi);
-
+					
+					System.out.println(flist);
+					
 					mv.addObject("pi", pi)
 					  .addObject("flist", flist)
 					  .setViewName("board/find-board");
@@ -322,11 +326,7 @@ public class BoardController {
 
 				}
 				
-				@RequestMapping("enrollForm.fi")
-				public String enrollFormFind() {
-					
-					return "board/find-boardEnrollForm";
-				}
+
 
 					@RequestMapping("detail.fi")
 					public ModelAndView selectFind(ModelAndView mv,
@@ -388,11 +388,12 @@ public class BoardController {
 				@RequestMapping(value = "rlist.fi", produces = "application/json; charset=UTF-8")
 				public String ajaxSelectfReplyList(int fno) {
 					
-					ArrayList<findReply> filist = boardService.selectfReplyList(fno);
 					
-		
+					ArrayList<findReply> flist = boardService.selectfReplyList(fno);
 					
-					return new Gson().toJson(filist);
+					
+					
+					return new Gson().toJson(flist);
 				}
 				
 				@ResponseBody
@@ -404,6 +405,95 @@ public class BoardController {
 					int result = boardService.insertfReply(fr);
 					
 					return (result > 0) ? "success" : "fail";
+				}
+				@RequestMapping("enrollForm.fi")
+				public String findEnrollForm() {
+					
+					return "board/find-boardEnrollForm";
+				}
+
+				@RequestMapping("insert.fi")
+				public String insertFind(Find f,
+										HttpSession session,
+										Model model) {
+					
+					/*
+					 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+					 * 
+					 * String changeName = saveFile(upfile, session);
+					 * 
+					 * 
+					 * ba.setOriginName(upfile.getOriginalFilename());
+					 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
+					 */
+					
+
+					int result = boardService.insertFind(f);
+					
+		      //int result2 = boardService.insertBattachment(ba);
+					
+					if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+
+						
+						session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
+						
+						return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
+						
+					} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+						
+						model.addAttribute("errorMsg", "게시글 등록 실패");
+						
+						return "common/errorPage";
+					}
+				}
+				
+				@RequestMapping("updateForm.fi")
+				public ModelAndView updateFind(int fno,
+											ModelAndView mv) {
+					
+
+					Find fb = boardService.updateFindList(fno);
+					
+
+
+					
+					
+					mv.addObject("fb", fb)
+					  .setViewName("board/find-boardUpdate");
+					
+					return mv;
+				}
+
+				@RequestMapping("update.fi")
+				public String updateBoard(Find fb,
+									String category,
+								HttpSession session,
+								Model model) {
+					
+					System.out.println("category" + " " + category);
+					fb.setCategory(category);
+				int result = boardService.updateFind(fb);
+				
+			
+				
+
+				
+				
+				
+				if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+				
+				
+				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+				
+				return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
+				
+				} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 등록 실패");
+				
+				return "common/errorPage";
+				}
+				
 				}
 
 	

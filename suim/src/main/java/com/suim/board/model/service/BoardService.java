@@ -49,6 +49,8 @@ public interface BoardService {
 	// 댓글 수량 
 	int ReplyCount(int boardNo);
 	
+	
+	
 	// 게시글 업데이트
 	int updateBoard(Board b);
 	
@@ -81,6 +83,15 @@ public interface BoardService {
 	
 	// 댓글 작성 서비스 (Ajax)
 	int insertfReply(findReply fr);
+	
+	// 게시글 등록
+	int insertFind(Find f);
+	
+	// 게시글 업데이트
+	int updateFind(Find f);
+	
+	// 상세페이지 조회
+	Find updateFindList(int findNo);
 	
 
 }

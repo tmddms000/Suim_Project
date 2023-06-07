@@ -92,6 +92,7 @@ public class BoardDao {
 		return sqlSession.update("boardMapper.deleteFind", findNo);
 	}
 	public ArrayList<findReply> selectfReplyList(SqlSessionTemplate sqlSession, int findNo) {
+		
 		return (ArrayList)sqlSession.selectList("boardMapper.selectfReplyList", findNo);
 	}
 	
@@ -106,5 +107,15 @@ public class BoardDao {
 	
 	public Board updateBoardList(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+	}
+	public int insertFind(SqlSessionTemplate sqlSession, Find f) {
+		return sqlSession.insert("boardMapper.insertFind", f);
+	}
+	public int updateFind(SqlSessionTemplate sqlSession, Find f) {
+		return sqlSession.update("boardMapper.updateFind", f);
+	}
+	
+	public Find updateFindList(SqlSessionTemplate sqlSession, int findNo) {
+		return sqlSession.selectOne("boardMapper.selectFind", findNo);
 	}
 }

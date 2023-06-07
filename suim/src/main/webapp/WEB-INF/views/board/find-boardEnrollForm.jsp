@@ -49,21 +49,30 @@
             <h2>자유게시판 작성하기</h2>
             <br><br>
 
-            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
+            <form id="enrollForm" method="post" action="insert.fi" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="boardTitle" value="" required></td>
+                        <td><input type="text" id="title" class="form-control" name="findTitle" value="" required></td>
                     </tr>
                     
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
                         <td><input type="text" id="writer" class="form-control" value="${loginUser.memberId}" name="memberId" readonly></td>
                     </tr>
+					<tr>
+					    <th style="width: 80px;"><label for="category">카테고리</label></th>
+					    <td>
+					        <input type="checkbox" id="personNeeded" name="category" value="방구해요" style="transform: scale(1.5);"  checked onclick="uncheckOtherCheckbox('personNeeded');">
+					        <label for="personNeeded" style="font-size: 20px;">방구해요</label>
+					        <input type="checkbox" id="roomAvailable" name="category" value="세놓아요" style="transform: scale(1.5);" onclick="uncheckOtherCheckbox('roomAvailable');">
+					        <label for="roomAvailable" style="font-size: 20px;">세놓아요</label>
+					    </td>
+					</tr>
 
                     <tr>
                         <th><label for="content">내용</label></th>
-                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="boardContent" required></textarea></td>
+                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="findContent" required></textarea></td>
                     </tr>
                 </table>
                 <br>
@@ -150,7 +159,13 @@
 	    					}
 	    				});
 	    			}
-	      
+	    	        function uncheckOtherCheckbox(checkboxId) {
+	    	            if (checkboxId === 'personNeeded') {
+	    	                document.getElementById('roomAvailable').checked = false;
+	    	            } else if (checkboxId === 'roomAvailable') {
+	    	                document.getElementById('personNeeded').checked = false;
+	    	            }
+	    	        }
 
 	          
 	         

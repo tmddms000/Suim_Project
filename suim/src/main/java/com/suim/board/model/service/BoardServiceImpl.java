@@ -76,6 +76,8 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int ReplyCount(int boardNo) {
+		
+		
 		return boardDao.ReplyCount(sqlSession, boardNo);
 	}
 	
@@ -121,12 +123,29 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public ArrayList<findReply> selectfReplyList(int findNo) {
+		
+		
 		return boardDao.selectfReplyList(sqlSession, findNo);
 	}
 
 	@Override
 	public int insertfReply(findReply fr) {
 		return boardDao.insertfReply(sqlSession, fr);
+	}
+
+	@Override
+	public int insertFind(Find f) {
+		return boardDao.insertFind(sqlSession, f);
+	}
+
+	@Override
+	public int updateFind(Find f) {
+		return boardDao.updateFind(sqlSession, f);
+	}
+
+	@Override
+	public Find updateFindList(int findNo) {
+		return boardDao.updateFindList(sqlSession, findNo);
 	}
 
 
