@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
-import com.suim.member.model.vo.Wish;
+import com.suim.member.model.vo.MyWish;
 
 public interface MypageService {
 
@@ -31,7 +31,7 @@ public interface MypageService {
 	int selectWishListCount(String memberId);
 	
 	//찜목록 리스트 조회
-	ArrayList<Wish> selectWishList(PageInfo pi, String memberId);
+	ArrayList<MyWish> selectWishList(PageInfo pi, String memberId);
 	
 	
 

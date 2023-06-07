@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.dao.MypageDao;
-import com.suim.member.model.vo.Wish;
+import com.suim.member.model.vo.MyWish;
 
 @Service
 public class MypageServiceImpl implements MypageService {
@@ -58,7 +58,7 @@ public class MypageServiceImpl implements MypageService {
 	}
 
 	@Override
-	public ArrayList<Wish> selectWishList(PageInfo pi, String memberId) {
+	public ArrayList<MyWish> selectWishList(PageInfo pi, String memberId) {
 		return mypageDao.selectWishList(sqlSession, pi, memberId);
 	}
 

@@ -9,11 +9,11 @@
 	<typeAliases>
 		<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
 		<typeAlias type="com.suim.member.model.vo.Email" alias="email" />
-		<typeAlias type="com.suim.member.model.vo.Wish" alias="wish" />
+		<typeAlias type="com.suim.member.model.vo.MyWish" alias="myWish" />
 
 		<typeAlias type="com.suim.house.model.vo.House" alias="house" />
 		<typeAlias type="com.suim.house.model.vo.Photo" alias="photo" />
-        		<typeAlias type="com.suim.house.model.vo.Wish" alias="wish" />
+        <typeAlias type="com.suim.house.model.vo.Wish" alias="wish" />
 
 		<typeAlias type="com.suim.board.model.vo.Board" alias="board" />
 		<typeAlias type="com.suim.board.model.vo.Battachment" alias="battachment" />
@@ -37,6 +37,8 @@
 	    <mappers>
 	    	<mapper resource="/mappers/member/member-mapper.xml"/>
 	    	<mapper resource="/mappers/member/email-mapper.xml"/>
+	    	<mapper resource="/mappers/member/mypage-mapper.xml"/>
+	    	
 	    	<mapper resource="/mappers/board/board-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
 	    	<mapper resource="/mappers/house/list-house-mapper.xml" />

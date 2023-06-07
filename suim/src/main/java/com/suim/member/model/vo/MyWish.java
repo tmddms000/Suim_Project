@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Wish {
+public class MyWish {
 
 	private int houseNo;
 	private String memberId;

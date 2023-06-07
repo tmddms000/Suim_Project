@@ -27,7 +27,7 @@
 		<result column="FIND_REPLY_COUNT" property="replyCount" />
 	</resultMap>
 	
-	<resultMap id="wishResultSet" type="wish">
+	<resultMap id="wishResultSet" type="myWish">
 		<result column="HOUSE_NO" property="houseNo" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="HOUSE_ADDRESS" property="houseAddress" />
@@ -35,7 +35,7 @@
 		<result column="RES_GENDER" property="resGender" />
 		<result column="DEPOSIT" property="deposit" />
 		<result column="RENT" property="rent" />
-
+	</resultMap>
 	
 
 	<!-- 자유게시판 게시글 갯수 -->

@@ -28,7 +28,7 @@ import com.suim.common.template.Pagination;
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.service.MypageService;
 import com.suim.member.model.vo.Member;
-import com.suim.member.model.vo.Wish;
+import com.suim.member.model.vo.MyWish;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -231,7 +231,7 @@ public class MypageController {
 		int listCount = mypageService.selectWishListCount(memberId);
 		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 		
-		ArrayList<Wish> list = mypageService.selectWishList(pi, memberId);
+		ArrayList<MyWish> list = mypageService.selectWishList(pi, memberId);
 
 		model.addAttribute("pi", pi).addAttribute("list", list);
 		

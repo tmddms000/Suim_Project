@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
-import com.suim.member.model.vo.Wish;
+import com.suim.member.model.vo.MyWish;
 
 @Repository
 public class MypageDao {
@@ -59,7 +59,7 @@ public class MypageDao {
 		return sqlSession.selectOne("mypageMapper.selectWishListCount", memberId);
 	}
 
-	public ArrayList<Wish> selectWishList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
+	public ArrayList<MyWish> selectWishList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
