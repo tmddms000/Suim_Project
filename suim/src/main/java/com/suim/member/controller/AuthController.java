@@ -98,17 +98,17 @@ public class AuthController {
 		}
 
 		if (checkDuplicate("id", member.getMemberId()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 아이디가 존재합니다.");
+			session.setAttribute("toastError", "중복된 아이디가 존재합니다.");
 			return "member/signup";
 		}
 
 		if (checkDuplicate("email", member.getEmail()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 이메일이 존재합니다.");
+			session.setAttribute("toastError", "중복된 이메일이 존재합니다.");
 			return "member/signup";
 		}
 
 		if (checkDuplicate("phone", member.getPhone()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 번호가 존재합니다.");
+			session.setAttribute("toastError", "중복된 번호가 존재합니다.");
 			return "member/signup";
 		}
 
@@ -119,27 +119,21 @@ public class AuthController {
 		member.setMemberPwd(encPwd);
 
 		int result = memberService.insertMember(member);
-		if (result > 0) {
+		String mailKey = new TempKey().getKey(30, false);
+		Email email = new Email(mailKey, member.getEmail());
+		int result2 = memberService.insertEmail(email);
+		int result3 = memberService.setEmailCode(email);
 
-			String mailKey = new TempKey().getKey(30, false);
-			Email email = new Email(mailKey, member.getEmail());
-			int result2 = memberService.insertEmail(email);
-			int result3 = memberService.setEmailCode(email);
+		CompletableFuture.runAsync(() -> {
+			try {
+				mailSendAsync(mailKey, member.getEmail());
+			} catch (Exception e) {
+				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			}
+		});
 
-			CompletableFuture.runAsync(() -> {
-				try {
-					mailSendAsync(mailKey, member.getEmail());
-				} catch (Exception e) {
-					log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-				}
-			});
-
-			session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
-			return "member/sign-success";
-		} else {
-			session.setAttribute("alertMsg", "오류가 발생했습니다. 다시 시도해주세요.");
-			return "member/signup";
-		}
+		session.setAttribute("toastSuccess", "성공적으로 회원가입이 되었습니다.");
+		return "member/sign-success";
 	}
 
 	// 로그인 페이징
@@ -158,7 +152,7 @@ public class AuthController {
 		Member loginUser = memberService.loginMember(m);
 
 		if (loginUser == null) {
-			session.setAttribute("alertMsg", "아이디를 확인해주세요");
+			session.setAttribute("toastError", "아이디를 확인해주세요");
 			return "member/login";
 
 		} else {
@@ -168,13 +162,13 @@ public class AuthController {
 
 				if (result > 0) {
 
-					session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+					session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
 					session.setAttribute("loginUser", loginUser);
 
 					return "redirect:/";
 
 				} else {
-					session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+					session.setAttribute("toastError", "아이디 인증이 되지 않았습니다");
 
 					String mailKey = new TempKey().getKey(30, false);
 					Email email = new Email(mailKey, loginUser.getEmail());
@@ -185,7 +179,7 @@ public class AuthController {
 					return "redirect:/member/verifyPage";
 				}
 			} else {
-				session.setAttribute("alertMsg", "비밀번호를 확인해주세요.");
+				session.setAttribute("toastError", "비밀번호를 확인해주세요.");
 				return "member/login";
 
 			}
@@ -200,7 +194,7 @@ public class AuthController {
 
 	@RequestMapping("verifySuccess")
 	public String verifySuccess() {
-		session.setAttribute("alertMsg", "이메일 인증이 완료됐습니다.");
+		session.setAttribute("toastSuccess", "이메일 인증이 완료됐습니다.");
 		return "/member/verifySuccess";
 	}
 
@@ -242,10 +236,10 @@ public class AuthController {
 
 				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);
 
-				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
+				session.setAttribute("toastSuccess", "성공적으로 회원가입이 되었습니다.");
 				return "redirect:/member/verifyPage";
 			} else {
-				session.setAttribute("alertMsg", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+				session.setAttribute("toastError", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 				return "member/login";
 			}
 		} else {
@@ -257,13 +251,13 @@ public class AuthController {
 
 			if (result > 0) {
 
-				session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+				session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
 				session.setAttribute("loginUser", loginUser);
 
 				return "redirect:/";
 
 			} else {
-				session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+				session.setAttribute("toastError", "아이디 인증이 되지 않았습니다");
 
 				int result3 = memberService.setEmailCode(sendEmail);
 				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);

@@ -13,6 +13,9 @@
 	height: 100%;
 	border-radius: 50%;
 }
+.container {
+	padding : 0px;
+}
 </style>
 
 <div class="container" style="margin-top: 75px;">

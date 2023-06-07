@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ import com.suim.common.template.Pagination;
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.service.MypageService;
 import com.suim.member.model.vo.Member;
+import com.suim.member.model.vo.Wish;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,7 +59,6 @@ public class MypageController {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-			log.info("패스워드가 일치함");
 
 			m.setMemberPwd(bcryptPasswordEncoder.encode(m.getMemberPwd()));
 
@@ -66,7 +67,6 @@ public class MypageController {
 
 				String changeName = saveFile(file, session);
 
-				log.info(changeName);
 				m.setChangeName(changeName);
 
 			} else {
@@ -80,7 +80,7 @@ public class MypageController {
 
 				// 만약 변경비밀번호1과 변경비밀번호2가 같다면? => 일치하므로 changePwd1을 암호화하여 updte 해준다
 				if (changePwd1.equals(changePwd2)) {
-					log.info("비밀번호 변경 로직 시작");
+
 					m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
 				} else {
 					session.setAttribute("toastError", "확인 비밀번호가 일치하지 않습니다.");
@@ -92,10 +92,8 @@ public class MypageController {
 			session.setAttribute("loginUser", m);
 
 			if (result > 0) {
-				log.info("정보 변경 성공");
 				session.setAttribute("toastSuccess", "프로필 변경 완료");
 			} else {
-				log.info("정보 변경 실패");
 				session.setAttribute("toastError", "프로필 변경 실패");
 			}
 		} else {
@@ -148,46 +146,21 @@ public class MypageController {
 		return "member/mypage/timeline";
 	}
 
+	
+
 	// 마이페이지의 BoardList를 조회합니다.
 	@RequestMapping("board")
-	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page, HttpServletRequest request,
-			Model model) {
+	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page,
+			HttpServletRequest request, @RequestParam(value = "type", defaultValue="board") String type, Model model) {
 		session.setAttribute("originalUrl", request.getRequestURI());
-
 		int pageLimit = 10;
 		int boardLimit = 10;
 
 		Member m = (Member) session.getAttribute("loginUser");
-
+		
 		if (m == null) {
 			return "redirect:/";
 		}
-
-		String memberId = m.getMemberId();
-
-		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
-
-		int listCount = mypageService.selectBoardListCount(memberId);
-		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
-		ArrayList<Board> list = mypageService.selectBoardList(pi, memberId);
-
-		model.addAttribute("pi", pi).addAttribute("list", list);
-
-		return "member/mypage/board";
-	}
-
-	// 마이페이지의 BoardList를 조회합니다.
-	@RequestMapping("boardType")
-	@ResponseBody
-	public Map<String, Object> boardList(@RequestParam(value = "page", defaultValue = "1") int page,
-			HttpServletRequest request, @RequestParam(value= "type") String type) {
-		session.setAttribute("originalUrl", request.getRequestURI());
-		System.out.println(type);
-		int pageLimit = 10;
-		int boardLimit = 10;
-
-		Member m = (Member) session.getAttribute("loginUser");
-
 		ArrayList<Board> list = new ArrayList<Board>();
 
 		String memberId = m.getMemberId();
@@ -201,39 +174,69 @@ public class MypageController {
 			listCount = mypageService.selectBoardListCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectBoardList(pi, memberId);
-			System.out.println("free");
 
-		} 
-		else if (type.equals("inreview")) {
+		} else if (type.equals("inreview")) {
 
 			listCount = mypageService.selectBoardListCount(memberId);
 
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectBoardList(pi, memberId);
-			System.out.println("inreview");
 
-		} 
-		else if (type.equals("find")) {
+		} else if (type.equals("find")) {
 
 			listCount = mypageService.selectFindListCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectFindList(pi, memberId);
-			System.out.println("find");
-			
 
 		}
 
-		Map<String, Object> response = new HashMap<>();
-		response.put("pi", pi);
-		response.put("list", list);
+		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("type", type);
 
-		return response;
+		return "member/mypage/board";
+	}
+
+	@RequestMapping(value = "boardDelete", method = RequestMethod.POST)
+	@ResponseBody
+	public String boardDelete(HttpServletRequest request, @RequestParam("ids") String ids) {
+		String memberId = ((Member) session.getAttribute("loginUser")).getMemberId();
+		String[] idArray = ids.split(",");
+
+		int[] intArray = new int[idArray.length];
+
+		for (int i = 0; i < idArray.length; i++) {
+			intArray[i] = Integer.parseInt(idArray[i]);
+		}
+
+		int result = mypageService.deleteBoard(intArray, memberId);
+		if (result > 0) {
+			return "Y";
+		} else {
+			return "N";
+		}
+
 	}
 
 	// 마이페이지의 내 찜목록 조회로 이동합니다.
 	@RequestMapping("wish")
-	public String mypageWish(HttpServletRequest request) {
+	public String mypageWish(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") int page, Model model) {
 		session.setAttribute("originalUrl", request.getRequestURI());
+		
+		int pageLimit = 10;
+		int boardLimit = 5;
+
+		Member m = (Member) session.getAttribute("loginUser");
+		
+		String memberId = m.getMemberId();
+		
+		int listCount = mypageService.selectWishListCount(memberId);
+		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
+		
+		ArrayList<Wish> list = mypageService.selectWishList(pi, memberId);
+
+		model.addAttribute("pi", pi).addAttribute("list", list);
+		
+		System.out.println(pi);
+		
 		return "member/mypage/wish";
 	}
 

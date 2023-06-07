@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
+import com.suim.member.model.vo.Wish;
 
 public interface MypageService {
 
@@ -21,6 +22,18 @@ public interface MypageService {
 	
 	//사람구해요 게시판의 게시글 리스트를 조회합니다.
 	ArrayList<Board> selectFindList(PageInfo pi, String memberId);
+
+
+	//게시글 삭제합니다.
+	int deleteBoard(int[] intArray, String memberId);
+	
+	//찜목록 아이디로 전체 갯수 조회
+	int selectWishListCount(String memberId);
+	
+	//찜목록 리스트 조회
+	ArrayList<Wish> selectWishList(PageInfo pi, String memberId);
+	
+	
 
 	
 
