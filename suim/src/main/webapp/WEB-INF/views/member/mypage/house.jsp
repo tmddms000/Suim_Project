@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	
 <!DOCTYPE html>
 <html>
@@ -7,14 +8,181 @@
 <title>마이페이지</title>
 <link href="/resources/css/user/mypage.css" rel="stylesheet" />
 <%@ include file="/WEB-INF/views/common/include.jsp"%>
+
+<style>
+  	body {
+	background-color: #f8f9fa;
+	}
+	#myhouse-container {
+        width: 1100px;
+		height : 500px;
+        margin: 0 auto;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+		display: flex;
+        justify-content: flex-start;
+    }	
+
+	#myhouse-row {	
+		display: flex;
+        justify-content: flex-start;
+		overflow: auto;
+	}
+
+	#myhouse-row::-webkit-scrollbar {
+		width: 0.2em; /* 스크롤바의 너비 */
+	}
+	#myhouse-row::-webkit-scrollbar-track {
+		background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
+	}
+	/* 스크롤바의 슬라이더(바) 스타일 설정 */
+	#myhouse-row::-webkit-scrollbar-thumb {
+		background: #888; /* 스크롤바 슬라이더의 배경색 */
+	}
+	.btn {
+		width : 65px;
+		height : 25px;
+		padding  : 0px;
+	}
+
+	/* 스크롤바 없애기; */
+	/*
+	#myhouse-row::-webkit-scrollbar {
+    width: 0.5em; 
+    background-color: transparent; 
+	}
+
+	#myhouse-row::-webkit-scrollbar-thumb {
+		background-color: transparent; 
+	}
+	*/
+
+	.card {	
+        margin-left : 20px;
+		width : 500px;
+		height: 200px;
+    }
+	.img-fluid {
+		border-radius: 5px;
+		display : flex;
+		align-items : center;
+		width  : 150px;
+		height : 150px;
+	}
+	.myhouse-img-div {
+		padding : 0px;
+		margin-left : 12px;
+		width  : 150px;
+		height : 200px;
+		display : flex;
+		align-items : center;
+	}
+	.card-body{
+		height : 200px;
+	}
+	.card-text{
+		margin-bottom : 7px;
+	}
+	 #pagingArea {
+	 	width:fit-content; margin:auto;
+	}
+	.pagination{
+		padding-top : 15px;
+	}
+	.card-form{
+		display: flex;
+		justify-content: center;
+		margin-top : 5px;
+	}
+	.card-form form {
+		width : 65px;
+		height : 25px;
+		padding  : 0px;
+		margin-left : 5px;
+	}
+</style>
+
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
 	
-
 	
+	
+	<div id="myhouse-container" class="container">
+		<div id="myhouse-row" class="row">
+		<c:choose>
+			<c:when test="${empty list}">
+				<h3 style="text-align: center;">등록된 하우스가 없습니다.</h3>
+			</c:when>
+			<c:otherwise>
+				<c:forEach var="h" items="${ list }">
+					<div class="card mb-3">
+						<a href="/detail.ho?hno= + ${h.houseNo}">
+							<div class="row myhouse-card">
+								<div class="col-md-4 myhouse-img-div">
+									<img id="myhouse-img" src="/resources/img/house/uploadFiles/${h.changeName}" class="img-fluid">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body text-center">
+										<h5 class="card-title">${h.houseName}</h5>
+										<p class="card-text">${h.houseAddress}</p>
+										<p class="card-text">${ h.deposit } / ${ h.rent }</p>
+										<p class="card-text">${ h.houseDate }</p>
+										<div class="card-form">
+											<form action="/myhouseRez.ho" method="post">
+												<input type="hidden" name="houseNo" value="${h.houseNo}">
+												<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
+											</form>	
+											<form>
+												<input type="hidden" name="houseNo" value="${h.houseNo}">
+												<button type="submit" class="btn btn-success btn-sm">수정</button>
+											</form>
+											<form>
+												<input type="hidden" name="houseNo" value="${h.houseNo}">
+												<button type="submit" class="btn btn-danger btn-sm">삭제</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>	
+		</div>			
+	</div>
+    <c:if test="${not empty list}">
+	    <div id="pagingArea">
+	        <ul class="pagination">
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq 1}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="house?cPage=${pi.currentPage - 1}">Previous</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	            <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+	                <li class="page-item"><a class="page-link" href="house?cPage=${p}">${p}</a></li>
+	            </c:forEach>
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq pi.maxPage}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="house?cPage=${pi.currentPage + 1}">Next</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	        </ul>
+	    </div>
+	</c:if>
+
+
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>

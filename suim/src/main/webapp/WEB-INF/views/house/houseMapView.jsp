@@ -163,7 +163,7 @@
 	        margin: 0 auto; /* 가운데 정렬을 위해 부모 요소를 가운데로 정렬합니다 */
 		}
 		 #reset {
-	        background-color: rgb(249, 88, 10);
+	        background-color: #FA6B6F;
 	        color: white;
 	        padding: 10px 20px;
 	        border: none;
@@ -181,7 +181,7 @@
 	    }
 	
 	    #reset, #close {
-	        background-color: rgb(249, 88, 10);
+	        background-color: #FA6B6F;
 	        color: white;
 	        padding: 10px 20px;
 	        border: none;
@@ -246,6 +246,8 @@
 	            level: 5
 	        });
 	    }
+		
+	    map.setMaxLevel(9);
 		
 	    var imageSrc = '/resources/img/house/home-marker.png', // 마커이미지의 주소입니다    
 	    	imageSize = new kakao.maps.Size(45, 45), // 마커이미지의 크기입니다
@@ -368,7 +370,7 @@
 		                    card.className = 'card';
 		                    
 		                    var cardImage = document.createElement('img');
-		                    cardImage.src = '${m.changeName}';
+		                    cardImage.src = 'resources/img/house/uploadFiles/${m.changeName}';
 		                    cardImage.className = 'card-img-top';
 		                    cardImage.alt = '...';
 		                    card.appendChild(cardImage);
@@ -565,7 +567,7 @@
 		                    card.className = 'card';
 		                    
 		                    var cardImage = document.createElement('img');
-		                    cardImage.src = '${m.changeName}';
+		                    cardImage.src = 'resources/img/house/uploadFiles/${m.changeName}';
 		                    cardImage.className = 'card-img-top';
 		                    cardImage.alt = '...';
 		                    card.appendChild(cardImage);
@@ -576,6 +578,7 @@
 		                    var cardTitle = document.createElement('h5');
 		                    cardTitle.className = 'card-title';
 		                    cardTitle.innerHTML = '${m.houseName}';
+		                    
 		                    cardBody.appendChild(cardTitle);
 		                    
 		                    var cardGender = document.createElement('p');
@@ -691,7 +694,7 @@
                                                     <div class="filter_cont">
                                                             <input type="checkbox" id="house-filter_gender_divisions_f" name="genderDivisions" value="여성전용"><label for="house-filter_gender_divisions_f">&nbsp;여성전용</label>&nbsp;
                                                             <input type="checkbox" id="house-filter_gender_divisions_m" name="genderDivisions" value="남성전용"><label for="house-filter_gender_divisions_m">&nbsp;남성전용</label>&nbsp;
-                                                            <input type="checkbox" id="house-filter_gender_divisions_mf" name="genderDivisions" value="남녀공용"><label for="house-filter_gender_division_mf">&nbsp;남녀공용</label>&nbsp;
+                                                            <input type="checkbox" id="house-filter_gender_divisions_mf" name="genderDivisions" value="남녀공용"><label for="house-filter_gender_divisions_mf">&nbsp;남녀공용</label>&nbsp;
                                                     </div>
                                                 </div>
                                                 <!-- 성별 타입 끝-->

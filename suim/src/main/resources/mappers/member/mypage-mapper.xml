@@ -37,6 +37,46 @@
 		<result column="RENT" property="rent" />
 	</resultMap>
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 내가쓴 셰어하우스 resultMap -->
+	<resultMap id="myHouseResultMap" type="house">
+	    <result column="HOUSE_NO" property="houseNo"/>
+	    <result column="HOUSE_NAME" property="houseName"/>
+	    <result column="HOUSE_ADDRESS" property="houseAddress"/>
+	    <result column="DEPOSIT" property="deposit"/>
+	    <result column="RENT" property="rent"/>
+	    <result column="ENTER_DATE" property="enterDate"/>
+	    <result column="MAX_ENTER_DATE"  property="maxEnterDate"/>
+	    <result column="MIN_STAY" property="minStay"/>
+	    <result column="MAX_STAY" property="maxStay"/>
+	    <result column="ROOM_PEOPLE" property="roomPeople"/>
+	    <result column="INC_FURNITURE" property="incFurniture"/>
+	    <result column="HOUSE_CONTENT" property="houseContent"/>
+	    <result column="RES_GENDER" property="resGender"/>
+	    <result column="RES_TYPE" property="resType"/>
+	    <result column="FLOOR" property="floor"/>
+	    <result column="HOUSE_STATUS" property="houseStatus"/>
+	    <result column="HOUSE_DATE" property="houseDate"/>
+	    <result column="MEMBER_ID" property="memberId"/>
+	   	<result column="CHANGE_NAME" property="changeName"/>
+	</resultMap>
+
+
 
 	<!-- 자유게시판 게시글 갯수 -->
 	<select id="selectBoardListCount" parameterType="string" resultType="_int">
@@ -194,6 +234,26 @@
 	</select>
 
 
+
+
+	<!-- 내가 쓴 셰어하우스 리스트 갯수 구하는 쿼리문 -->
+	<select id="selectHouseListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM HOUSE
+		WHERE HOUSE_STATUS = 'Y'
+		AND MEMBER_ID = #{memberId}
+	</select>
+
+	<!-- 내가 쓴 셰어하우스 리스트 select 쿼리문 -->
+	<select id="selectHouseList" resultMap="myHouseResultMap">
+	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
+	    FROM HOUSE h
+	    JOIN PHOTO p ON h.HOUSE_NO = p.HOUSE_NO
+	    WHERE h.HOUSE_STATUS = 'Y'
+		AND h.MEMBER_ID = #{memberId}
+	   	AND p.FILE_LEVEL = 'Y'
+	    ORDER BY HOUSE_NO DESC
+	</select>
 
 
 

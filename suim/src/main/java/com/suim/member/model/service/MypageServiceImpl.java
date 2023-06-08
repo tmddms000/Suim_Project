@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
+import com.suim.house.model.vo.House;
 import com.suim.member.model.dao.MypageDao;
 import com.suim.member.model.vo.MyWish;
 
@@ -45,6 +46,20 @@ public class MypageServiceImpl implements MypageService {
 	public ArrayList<Board> selectFindList(PageInfo pi, String memberId) {
 		return mypageDao.selectFindList(sqlSession, pi, memberId);
 	}
+
+	
+	
+	
+	@Override
+	public int selectHouseListCount(String memberId) {
+		return mypageDao.selectHouseListCount(sqlSession, memberId);
+	}
+	
+	@Override
+	public ArrayList<House> selectHouseList(PageInfo pi, String memberId) {
+		return mypageDao.selectHouseList(sqlSession, pi, memberId);
+	}
+
 
 	@Override
 	public int deleteBoard(int[] intArray, String memberId) {
