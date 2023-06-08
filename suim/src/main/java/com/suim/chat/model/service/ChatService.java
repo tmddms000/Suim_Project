@@ -20,5 +20,9 @@ public interface ChatService {
 	ArrayList<ChatLog> selectChatLog(int rno);
 	
 	ChatList selectCheck(String muser, String cuser);
-
+	
+	int selectRead(int rno, String Id);
+	
+	void setRead(int rno, String Id);
+	
 }

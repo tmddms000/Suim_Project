@@ -18,8 +18,8 @@
 		<result column="CONTENT" property="content" />
 		<result column="SEND_DATE" property="sendDate" />
 		<result column="STATUS" property="status" />
+		<result column="R_STATUS" property="rstatus" />
 	</resultMap>
-
 
 	<insert id="insertChat" parameterType="java.util.Map">
 		INSERT INTO CHAT_LIST
@@ -65,20 +65,33 @@
 	<insert id="saveChatLog" parameterType="chatlog">
 		INSERT INTO CHAT_LOG
 		(SEND_USER, RECEIVE_USER, CONTENT, SEND_DATE, CHAT_NO,
-		STATUS)
+		STATUS, R_STATUS)
 		VALUES
 		(#{sendUser}, #{receiveUser}, #{content}, DEFAULT, #{chatNo},
-		'Y')
+		'Y', 'N')
 	</insert>
 
 	<select id="selectChatLog" parameterType="_int"
 		resultMap="chatLogResultMap">
-		SELECT SEND_USER,
-		CONTENT
+		SELECT *
 		FROM CHAT_LOG
 		WHERE CHAT_NO = #{rno}
 	</select>
-
-
+	
+	 <select id="selectRead" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) AS COUNT
+		FROM CHAT_LOG
+		WHERE CHAT_NO = #{rno}
+		  AND RECEIVE_USER = #{Id}
+		  AND R_STATUS = 'N'
+    </select>
+    
+    <update id="setRead" parameterType="java.util.Map">
+	    UPDATE CHAT_LOG
+	    SET R_STATUS = 'Y'
+	    WHERE CHAT_NO = #{rno}
+	      AND RECEIVE_USER = #{Id}
+	      AND R_STATUS = 'N'
+	</update>
 
 </mapper>

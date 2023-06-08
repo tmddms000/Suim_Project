@@ -3,7 +3,7 @@
 <mapper namespace="adminHouseMapper">
 
 	<!-- HOUSE 테이블로부터 조회된 ResultSet 에 들은 데이터를 REPORT VO 로 가공해주는 용도 -->
-	<resultMap id="houseResultMap" type="house">
+	<resultMap id="adminHouseResultSet" type="house">
 		<result column="HOUSE_NO" property="houseNo" />
 		<result column="HOUSE_NAME" property="houseName" />
 		<result column="HOUSE_ADDRESS" property="houseAddress" />

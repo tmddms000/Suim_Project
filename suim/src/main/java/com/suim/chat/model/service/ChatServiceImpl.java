@@ -1,7 +1,6 @@
 package com.suim.chat.model.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +51,15 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public ChatList selectCheck(String muser, String cuser) {
 		return chatDao.selectCheck(sqlSession, muser, cuser);
+	}
+
+	@Override
+	public int selectRead(int rno, String Id) {
+		return chatDao.selectRead(sqlSession, rno, Id);
+	}
+
+	@Override
+	public void setRead(int rno, String Id) {
+		chatDao.setRead(sqlSession, rno, Id);
 	}
 }

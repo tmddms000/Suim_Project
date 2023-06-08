@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
-	<!-- 
+	<!--
 		* root-context.xml 파일
 		스프링과 관련된 전반적인 환경설정을 해주는 파일
 		서버 구동과 동시에 web.xml 파일을 거쳐서 두번째로 로딩되어 읽혀지는 문서
@@ -13,7 +13,7 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
-	<!-- 
+	<!--
 		* Spring 의 Bean
 		Spring framework 적용 전에는 개발자인 내가 직접 new 구문을 통해 객체를 생성해서 사용했었음
 		하지만 Spring framework 에서는 개발자인 내가 직접 객체를 생성할 일이 거의 없고 (가능은 함)
@@ -37,16 +37,16 @@
 	<!-- DB 연동과 관련된 객체들을 Bean 으로 등록하기 -->
 	<!-- 1단계. DB 연결을 위한 도구를 설정 -->
 	<!-- beans:bean 접두어가 생략된 형태 -->
-	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource" 
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource"
 														destroy-method="close">
 		<!-- 어느 DB 에 접속할건지 지정 -->
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@khds-d1.iptime.org:15211:xe" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
 		<property name="username" value="SUIM" />
 		<property name="password" value="SUIM" />
 	</bean>
 	
-	<!-- 
+	<!--
 		해당 BasicDataSource 객체가 필요할 때마다 내부적으로 이 코드가 실행됨
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
@@ -64,7 +64,7 @@
 	</bean>
 	
 	
-	<!-- 
+	<!--
 		해당 SqlSessionFactoryBean 객체가 필요할 때마다 내부적으로 이 코드가 실행됨
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
 		sqlSessionFactory.setConfigLocation("classpath:mybatis-config.xml");
@@ -77,17 +77,17 @@
 		<constructor-arg ref="sqlSessionFactory" />
 	</bean>
 	
-	<!-- 
+	<!--
 		해당 SqlSessionTemplate 객체가 필요할 때마다 내부적으로 이 코드가 실행됨
 		SqlSessionTemplate sqlSession = new SqlSessionTemplate(sqlSessionFactory);
 	-->
 	
-	<!-- 
+	<!--
 		* property 로 셋팅하는 경우 : setter 주입
 		* constructor-arg 로 셋팅하는 경우 : 생성자 주입
 	-->
 	
-	<!-- 
+	<!--
 		* 순수 마이바티스와의 차이점
 		- 순수 마이바티스
 		SqlSessionFactoryBuilder 객체 -> SqlSessionFactory 객체 -> SqlSession 객체
@@ -96,7 +96,7 @@
 																delete
 																selectOne
 																selectList 메소드 활용 가능
-		- MyBatis Spring 
+		- MyBatis Spring
 		SqlSessionFactoryBean 객체 -> SqlSessionTemplate 객체
 									 insert
 									 update
@@ -121,7 +121,7 @@
 	   <property name="port" value="25" />
 	   <property name="username" value="suimm012@gmail.com" />
 	   <property name="password" value="wrclnfcdosefvdrn" />
-	 
+	
 	   <!-- email 전송 시 필요한 SMTP 지정 -->
 	   <property name="javaMailProperties">
 	      <props>
@@ -131,13 +131,5 @@
 	      </props>
 	   </property>
 	</bean>
-
 	
-
 </beans>
-
-
-
-
-
-

@@ -83,14 +83,6 @@
     transition: background-color 0.3s ease;
   }
 
-  #btnDiv a.reportBtn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   #btnDiv a.white {
     background-color: #fff;
     color: #333;
