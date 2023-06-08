@@ -42,13 +42,14 @@
 	    	<mapper resource="/mappers/board/board-mapper.xml"/>
 	    	<mapper resource="/mappers/house/house-mapper.xml"/>
 	    	<mapper resource="/mappers/house/list-house-mapper.xml" />
-	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
-	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/notice/notice-mapper.xml" />
 	    	<mapper resource="/mappers/chat/chat-mapper.xml" />
 	    	<mapper resource="/mappers/notice/admin-notice-mapper.xml" />
-	    	<mapper resource="/mappers/report/report-mapper.xml"/>
 	    	
+	    	<mapper resource="/mappers/report/report-mapper.xml"/>
+	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
+	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
+	    	<mapper resource="/mappers/house/admin-house-mapper.xml"/>
 	    </mappers>
 	    
 	    

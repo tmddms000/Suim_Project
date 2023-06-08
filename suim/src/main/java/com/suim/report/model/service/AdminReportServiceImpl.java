@@ -25,25 +25,23 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public int selectListCount() {
 		return adminReportDao.selectListCount(sqlSession);
 	}
-
-	// 카테고리용 총 갯수 조회
-	@Override
-	public int selectListCount(String category) {
-		return adminReportDao.selectListCount(sqlSession, category);
-	}
 	
 	// 전체 조회용
 	@Override
 	public ArrayList<Report> selectList(PageInfo pi) {
 		return adminReportDao.selectList(sqlSession, pi);
 	}
-	
+
 	// 카테고리용 전체 조회
 	@Override
-	public ArrayList<Report> selectList(PageInfo pi, String category) {
-		return adminReportDao.selectList(sqlSession, pi, category);
+	public int selectCategoryListCount(String category) {
+		return adminReportDao.selectCategoryListCount(sqlSession, category);
 	}
-
+	@Override
+	public ArrayList<Report> selectCategoryList(PageInfo pi, String category) {
+		return adminReportDao.selectCategoryList(sqlSession, pi, category);
+	}
+	
 	@Override
 	public int insertReport(Report r) {
 		return adminReportDao.insertReport(sqlSession, r);
@@ -69,6 +67,12 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public int updateReportStatus(Report r) {
 		return adminReportDao.updateReportStatus(sqlSession, r);
 	}
+	
+	// 전체선택 승인/반려용
+	@Override
+	public int updateStatusAll(int[] intArray, String reportStatus) {
+		return adminReportDao.updateStatusAll(sqlSession, intArray, reportStatus);
+	}
 
 	// 검색용
 	@Override
@@ -79,6 +83,6 @@ public class AdminReportServiceImpl implements AdminReportService {
 	public ArrayList<Report> selectSearchList(HashMap<String, String> map, PageInfo pi) {
 		return adminReportDao.selectSearchList(sqlSession, map, pi);
 	}
-	
+
 	
 }

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminHouseMapper">
+
+	<!-- HOUSE 테이블로부터 조회된 ResultSet 에 들은 데이터를 REPORT VO 로 가공해주는 용도 -->
+	<resultMap id="houseResultMap" type="house">
+		<result column="HOUSE_NO" property="houseNo" />
+		<result column="HOUSE_NAME" property="houseName" />
+		<result column="HOUSE_ADDRESS" property="houseAddress" />
+		<result column="DEPOSIT" property="deposit" />
+		<result column="RENT" property="rent" />
+		<result column="ENTER_DATE" property="enterDate" />
+		<result column="MAX_ENTER_DATE" property="maxEnterDate" />
+		<result column="MIN_STAY" property="minStay" />
+		<result column="MAX_STAY" property="maxStay" />
+		<result column="ROOM_PEOPLE" property="roomPeople" />
+		<result column="INC_FURNITURE" property="incFurniture" />
+		<result column="HOUSE_CONTENT" property="houseContent" />
+		<result column="RES_GENDER" property="resGender" />
+		<result column="RES_TYPE" property="resType" />
+		<result column="FLOOR" property="floor" />
+		<result column="HOUSE_STATUS" property="houseStatus" />
+		<result column="HOUSE_DATE" property="houseDate" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="CHANGE_NAME" property="changeName" />
+	</resultMap>
+
+	<resultMap id="photoResultMap" type="photo">
+		<result column="PHOTO_NO" property="photoNo" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="FILE_LEVEL" property="fileLevel" />
+		<result column="FILE_STATUS" property="fileStatus" />
+	</resultMap>
+
+	<!-- 총 갯수 구하는 쿼리문 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM HOUSE
+	</select>
+	
+	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
+	<select id="selectCategoryListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM HOUSE
+		 WHERE HOUSE_STATUS = #{category}
+	</select>
+	
+	<!-- 리스트를 구해주는 쿼리문 -->
+	<select id="selectList" resultMap="adminHouseResultSet">
+		SELECT HOUSE_NO
+			 , HOUSE_NAME
+			 , HOUSE_ADDRESS
+			 , DEPOSIT
+			 , RENT
+			 , ENTER_DATE
+			 , MAX_ENTER_DATE
+			 , MIN_STAY
+			 , MAX_STAY
+			 , ROOM_PEOPLE
+			 , INC_FURNITURE
+			 , HOUSE_CONTENT
+			 , RES_GENDER
+			 , RES_TYPE
+			 , FLOOR
+			 , HOUSE_STATUS
+			 , HOUSE_DATE
+		  FROM HOUSE
+         ORDER BY HOUSE_DATE DESC
+	</select>
+	
+	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
+	<select id="selectCategoryList" parameterType="string" resultMap="adminHouseResultSet">
+		SELECT HOUSE_NO
+			 , HOUSE_TITLE
+			 , HOUSE_CONTENT
+			 , HOUSE_TYPE
+			 , HOUSE_DATE
+			 , HOUSE_STATUS
+		  FROM HOUSE
+         WHERE HOUSE_STATUS = #{category}         
+         ORDER BY HOUSE_DATE DESC
+         
+	</select>
+	
+	<!-- 블랙리스트 처리용 쿼리문 -->
+	<select id="selectBlackList">
+		SELECT MEMBER_ID, COUNT(*)
+		  FROM HOUSE
+		 WHERE MEMBER_ID = #{memberId}
+		 GROUP BY MEMBER_ID
+		HAVING HOUSE_COUNT(*) >= 3
+	</select>
+	
+	<!-- 등록용 쿼리문 -->
+	<insert id="insertHouse" parameterType="house">
+		INSERT INTO HOUSE(HOUSE_NO
+						, HOUSE_TITLE
+						, HOUSE_CONTENT
+						, HOUSE_TYPE
+						)
+				   VALUES(SEQ_HNO.NEXTVAL
+				   		, #{houseTitle}
+				   		, #{houseContent}
+				   		, #{houseType}
+				   		)
+	</insert>
+	
+	<!-- 신고 상세 조회용 쿼리문 -->
+	<select id="selectHouse" parameterType="_int" resultMap="adminHouseResultSet">
+		SELECT HOUSE_NO
+			 , HOUSE_TITLE
+			 , HOUSE_CONTENT
+			 , HOUSE_TYPE
+			 , HOUSE_DATE
+			 , HOUSE_STATUS
+		  FROM HOUSE
+		 WHERE HOUSE_NO = #{houseNo}
+	</select>
+
+	<!-- 신고 삭제용 쿼리문 -->
+	<update id="deleteHouse" parameterType="_int">
+		UPDATE HOUSE
+		   SET HOUSE_STATUS = 'N'
+		 WHERE HOUSE_NO = #{houseNo}
+	</update>
+	
+	<!-- 신고 수정용 쿼리문 -->
+	<update id="updateHouse" parameterType="house">
+		UPDATE HOUSE
+		   SET HOUSE_TITLE = #{houseTitle}
+		     , HOUSE_CONTENT = #{houseContent}
+		     , HOUSE_TYPE = #{houseType}
+		 WHERE HOUSE_NO = #{houseNo}
+	</update>
+
+	<!-- 승인/반려용 쿼리문 -->
+	<update id="updateHouseStatus" parameterType="house">
+		UPDATE HOUSE
+		   SET HOUSE_STATUS = #{houseStatus}
+		 WHERE HOUSE_NO = #{houseNo}
+	</update>
+	
+	<!-- 검색용 count 쿼리문 -->
+	<select id="selectSearchCount" parameterType="hashmap" resultType="_int">
+		SELECT COUNT(*)
+		  FROM HOUSE H
+		  JOIN MEMBER USING (MEMBER_ID)
+		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
+	</select>
+	<!-- 검색용 쿼리문 -->
+	<select id="selectSearchList" parameterType="hashmap" resultMap="adminHouseResultSet">
+		SELECT HOUSE_NO
+			 , HOUSE_TITLE
+			 , HOUSE_CONTENT
+			 , HOUSE_DATE
+			 , HOUSE_STATUS
+		  FROM HOUSE
+		  JOIN MEMBER USING (MEMBER_ID)
+		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
+		 ORDER BY HOUSE_NO DESC
+	</select>
+</mapper>

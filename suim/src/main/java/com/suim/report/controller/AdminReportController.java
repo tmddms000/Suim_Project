@@ -3,8 +3,8 @@ package com.suim.report.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
+import com.suim.member.model.vo.Member;
 import com.suim.report.model.service.AdminReportService;
 import com.suim.report.model.vo.Report;
 
@@ -29,10 +30,12 @@ public class AdminReportController {
 	
 	// 신고 리스트 조회 포워딩용
 	@RequestMapping("list.re")
-	public ModelAndView selectList(
+	public String selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-			ModelAndView mv) {
-		
+			@RequestParam(value="category", defaultValue="all") String category,
+			HttpSession session,
+			Model model) {
+/*		
 		// 페이징처리를 위한 PageInfo 객체 얻어내기
 		int listCount = adminReportService.selectListCount();
 		
@@ -48,9 +51,44 @@ public class AdminReportController {
 		  .setViewName("admin/report/report");
 		
 		return mv;
+*/		
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+
+		Member m = (Member) session.getAttribute("loginUser");
+		
+		if (m == null) {
+			return "redirect:/";
+		}
+		ArrayList<Report> list = new ArrayList<Report>();
+
+		String memberId = m.getMemberId();
+
+		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
+		int listCount = 0;
+		PageInfo pi = null;
+
+		if (category == null || category.equals("all")) {
+
+			listCount = adminReportService.selectListCount();
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminReportService.selectList(pi);
+
+		} else {
+
+			listCount = adminReportService.selectCategoryListCount(category);
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminReportService.selectCategoryList(pi, category);
+
+		}
+
+		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("category", category);
+		
+		return "admin/report/report";
 	}
 	
-	
+	/*
 	@ResponseBody
 	// 카테고리용 전체 조회용
 	@RequestMapping(value = "category.re", produces = "application/json; charset=UTF-8")
@@ -80,6 +118,7 @@ public class AdminReportController {
 		response.put("list", list);
 		return response;
 	}
+	*/
 
 	
 	@RequestMapping("detail.re")
@@ -142,7 +181,7 @@ public class AdminReportController {
 	public String updateReportStatus(Report r,
 							HttpSession session,
 							Model model) {
-		
+
 		int result = adminReportService.updateReportStatus(r);
 		
 		if(result > 0) { // 성공
@@ -150,7 +189,7 @@ public class AdminReportController {
 			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
 			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
 			
-			return "redirect:/detail.re?rno=" + r.getReportNo();
+			return "redirect:/admin/detail.re?rno=" + r.getReportNo();
 			
 		} else { // 실패
 			
@@ -159,6 +198,22 @@ public class AdminReportController {
 			
 			return "common/errorPage";
 		}
+	}
+	
+	// 전체 선택 승인/반려용
+	@ResponseBody
+	@RequestMapping("updateStatusAll.re")
+	public String updateStatusAll(String reportNo, 
+								String reportStatus,
+								HttpServletRequest request) {
+
+		String[] idArray = reportNo.split(",");
+		int[] intArray = new int[idArray.length];
+		for (int i = 0; i < idArray.length; i++) {
+			intArray[i] = Integer.parseInt(idArray[i]);
+		}
+		int result = adminReportService.updateStatusAll(intArray, reportStatus);
+		return result > 0 ? "Y" : "N";
 	}
 	
 	// 검색용

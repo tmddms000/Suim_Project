@@ -56,22 +56,24 @@
                                 </button>
                     		</form>
 							</div>
-							
+
 							<ul class="nav nav-tabs">
-								<li class="nav-item">
-									<button class="nav-link active" id="A">전체</button>
-								</li>
-								<li class="nav nav-tabs">
-									<button class="nav-link" id="N">대기</button>
-								</li>
-								<li class="nav nav-tabs">
-									<button class="nav-link" id="Y">승인</button>
-								</li>
-								<li class="nav nav-tabs">
-									<button class="nav-link" id="C">반려</button>
-								</li>
+								<li class="nav-item"><a
+									class="nav-link <c:if test="${category eq 'A'}">active</c:if>"
+									id="status-all" data-toggle="tab" href="/admin/list.re">전체</a></li>
+								<li class="nav-item"><a
+									class="nav-link <c:if test="${category eq 'W'}">active</c:if>"
+									data-toggle="tab" id="status-pending"
+									href="/admin/list.re?page=1&category=W">대기</a></li>
+								<li class="nav-item"><a
+									class="nav-link <c:if test="${category eq 'Y'}">active</c:if>"
+									data-toggle="tab" id="status-confirm"
+									href="/admin/list.re?page=1&category=Y">승인</a></li>
+								<li class="nav-item"><a
+									class="nav-link <c:if test="${category eq 'N'}">active</c:if>"
+									data-toggle="tab" id="status-reject"
+									href="/admin/list.re?page=1&category=N">반려</a></li>
 							</ul>
-							
                             <div class="tab-content pt-3" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 									<div class="table-responsive">
@@ -89,21 +91,57 @@
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
-		                                    	<c:forEach var="r" items="${ list }">
-		                    						<tr>
-			                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
-			                                            <td class="rno">${ r.reportNo }</td>
-			                                            <td>${ r.reportType }</td>
-			                                            <td>${ r.reportTitle }</td>
-			                                            <td>${ r.reportId }</td>
-			                                            <td>${ r.reportContent }</td>
-			                                            <td>${ r.reportDate }</td>
-			                                            <td>${ r.reportStatus }</td>
-			                                        </tr>
-			                                	</c:forEach>
+		                                    <c:choose>
+			                                    <c:when test="${ not empty list }">
+			                                    	<c:forEach var="r" items="${ list }">
+			                    						<tr>
+				                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName" data-id="${ r.reportNo }"></td>
+				                                            <td class="rno">${ r.reportNo }</td>
+				                                            <td>${ r.reportType }</td>
+				                                            <td>${ r.reportTitle }</td>
+				                                            <td>${ r.reportId }</td>
+				                                            <td>${ r.reportContent }</td>
+				                                            <td>${ r.reportDate }</td>
+				                                            <td class="report-status">${ r.reportStatus }</td>
+				                                        </tr>
+				                                	</c:forEach>
+				                                </c:when>
+				                            	<c:otherwise>
+				                            		<tr>
+				                            			<td colspan="8">조회된 게시글이 없습니다.</td>
+				                            		</tr>
+				                            	</c:otherwise>
+				                            </c:choose>
+				                            
 		                                    </tbody>
 		                                </table>
-		                            </div>
+		                                <div align="center">
+										    <a class="btn btn-primary confirm">승인</a>
+										    <a class="btn btn-danger reject">반려</a>
+										</div>
+										<br><br>
+									
+										<form id="postForm" action="" method="post">
+										    <input type="hidden" name="reportNo" value="${r.reportNo}">
+										    <input type="hidden" name="reportStatus" id="reportStatus" value="">
+										</form>
+										
+										<script>
+										    function postFormSubmit(value) {
+										        var form = document.getElementById("postForm");
+												
+										        var status = document.getElementById("reportStatus");
+										        status.value = value;
+										        
+										        
+										        form.action = "updateStatus.re";
+							
+										        form.submit();
+										    }
+										    
+										    
+										</script>
+			                           </div>
                                 </div>
                             </div>
                             
@@ -115,6 +153,10 @@
 
             <script>
             $(document).ready(function() {
+            	
+            	var newStatus = 'Y'; // 승인 처리 후 변경할 값
+            	
+            	
         	    // 전체선택 체크박스 클릭 이벤트
         	    $(document).on('change', 'thead input[type="checkbox"]', function() {
         	        var checkboxes = $('tbody input[type="checkbox"]');
@@ -127,134 +169,107 @@
         	        selectAllCheckbox.prop('checked', $('tbody input[type="checkbox"]:checked').length === $('tbody input[type="checkbox"]').length);
         	    });
 
-        	    $('.nav-link').click(function(e) {
-        	        if ($(this).data('toggle')) {
-        	            e.preventDefault();
-        	        }
 
-        	        $('.nav-link').removeClass('active');
-        	        $('.tab-pane').removeClass('show active');
-
-        	        $(this).addClass('active');
-
-        	        var targetTab = $(this).attr('id');
-        	        var type = "";
-
-        	        if (targetTab === "A") {
-        	            type = "미처리";
-        	        } else if (targetTab === "N") {
-        	            type = "untreated";
-        	        } else if (targetTab === "Y") {
-        	            type = "confirm";
-        	        } else if (targetTab === "C"){
-        	        	type = "companion";
-        	        }
-
-
-        	        $.ajax({
-        	            type: "GET",
-        	            url: "/admin/category.re",
-        	            data: {
-        	                type: type
-        	            },
-        	            success: function(response) {
-        	                console.log(response);
-
-        	                var tableBody = $('#reportList tbody');
-        	                tableBody.empty();
-
-        	                if (response && response.list && response.list.length > 0) {
-        	                    $.each(response.list, function(index, item) {
-        	                    	
-        	                    	console.log(response.list);
-        	                       
-
-        	                            var date = new Date(item.reportDate);
-        	                            var formattedDate = date.toISOString().split('T')[0];
-        	                            var row = "<tr data-id='" + item.reportNo + "'>" +
-        	                            "<td class='select-cell'><input type='checkbox' data-id='" + item.reportNo + "'></td>";
-        	                            row += "<td class='no-cell'>" + item.reportNo + "</td>";
-        	                            row += "<td class='type-cell'>" + item.reportType + "</td>";
-        	                            row += "<td class='title-cell'>" + item.reportTitle + "<a href=''>[1]</a></td>";
-        	                            row += "<td class='id-cell'>" + item.reportId + "</td>";
-        	                            row += "<td class='content-cell'>" + item.reportContent  + "</td>";
-        	                            row += "<td class='date-cell'>" + formattedDate + "</td>";
-        	                            row += "<td class='views-cell'>" + item.reportStatus + "</td>";
-        	                        
-
-        	                        row += "</tr>";
-
-        	                        tableBody.append(row);
-        	                    });
-        		                } else {
-        		                    var noDataHtml = "<tr><td colspan='5' class='text-center'>작성된 게시글이 없습니다.</td></tr>";
-        		                    tableBody.append(noDataHtml);
-        		                }
-        	                $('thead input[type="checkbox"]').prop('checked', false);
-        	            },
-        	            error: function(xhr, status, error) {
-        	                console.error(error);
-        	                
-        	                var tableBody = $('#reportList tbody');
-        	                tableBody.empty();
-
-        	                var noDataHtml = "<tr><td colspan='5' class='text-center'>작성된 게시글이 없습니다.</td></tr>";
-        	                tableBody.append(noDataHtml);
-
-        	                // Uncheck 전체선택 checkbox
-        	                $('tfoot input[type="checkbox"]').prop('checked', false);
-        	            }
-        	        });
-        	    });
-
-        	    // 삭제 버튼 클릭 이벤트
-        	    $(document).on('click', 'button.delete-btn', function() {
+				
+        	    // 승인 버튼 클릭 이벤트
+        	    $(document).on('click', 'a.confirm', function() {
         	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
-        	        var deleteIds = [];
+        	        var updateStatuses = [];
 
         	        checkedCheckboxes.each(function() {
-        	            deleteIds.push($(this).data('id'));
+        	        	updateStatuses.push($(this).data('id'));
         	        });
-        	        
-        	        if (deleteIds.length === 0) {
-        	            alert("삭제할 게시글을 선택해주세요.");
+        	               	        
+        	        if (updateStatuses.length === 0) {
+        	            alert("승인할 게시글을 선택해주세요.");
         	            return;
         	        }
         	        
-        	        var confirmation = confirm("게시글을 삭제하시겠습니까?");
+        	        var confirmation = confirm("일괄 승인하시겠습니까?");
         	        if (!confirmation) {
         	            return;
         	        }
 
-        	        // 삭제 처리를 위한 Ajax 요청
+        	        // 승인 처리를 위한 Ajax 요청
         	        $.ajax({
         	            type: "POST",
-        	            url: "/admin/delete.re",
+        	            url: "/admin/updateStatusAll.re",
         	            data: {
-        	                ids: deleteIds.join(",")
+        	            	reportNo : updateStatuses.join(","),
+        	                reportStatus : 'Y'
         	            },
         	            success: function(response) {
-        		            if(response === 'Y') {
-        		            	
-        		            	toastr.success("게시글이 삭제 되었습니다.");
-        		            	
-        		            	deleteIds.forEach(function(id) {
-                                    $("tr[data-id=" + id + "]").remove();
-                                });
-        		            	$('thead input[type="checkbox"]').prop('checked', false);
-        		            	
+        	            	// 응답 받은 경우
+        	                // 화면에서 해당 데이터의 상태 업데이트
+        	                if (response === 'Y') {
+        	                    // updateStatuses.forEach(function(reportNo) {
+        	                    //    $(`.rno:contains(${reportNo})`).siblings('.report-status').text('Y');
+        	                    // });
+        		            	// $('thead input[type="checkbox"]').prop('checked', false);
+        		            	// $('tbody input[type="checkbox"]').prop('checked', false);
+        		            	alert("승인되었습니다.");
+        		            	location.reload();
         		            } else {
-        		            	toastr.error("게시글 삭제에 실패했습니다.");
+        		            	alert("승인에 실패했습니다.");
         		            }
         	            },
         	            error: function() {
-        	            	toastr.error("게시글 삭제에 실패했습니다.");
+    		            	alert("승인에 실패했습니다.");
         	            }
         	            
         	        });
         	    });
-        	});
         	
+	         	// 반려 버튼 클릭 이벤트
+	    	    $(document).on('click', 'a.reject', function() {
+	    	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
+	    	        var updateStatuses = [];
+	
+	    	        checkedCheckboxes.each(function() {
+	    	        	updateStatuses.push($(this).data('id'));
+	    	        });
+	    	               	        
+	    	        if (updateStatuses.length === 0) {
+	    	            alert("반려할 게시글을 선택해주세요.");
+	    	            return;
+	    	        }
+	    	        
+	    	        var confirmation = confirm("일괄 반려하시겠습니까?");
+	    	        if (!confirmation) {
+	    	            return;
+	    	        }
+	
+	    	        // 반려 처리를 위한 Ajax 요청
+	    	        $.ajax({
+	    	            type: "POST",
+	    	            url: "/admin/updateStatusAll.re",
+	    	            data: {
+	    	            	reportNo : updateStatuses.join(","),
+	    	                reportStatus : 'N'
+	    	            },
+	    	            success: function(response) {
+	    		            if(response === 'Y') {
+	    		            	alert("반려되었습니다.");
+	    		            	location.reload();
+	    		            } else {
+	    		            	alert("반려에 실패했습니다.");
+	    		            }
+	    	            },
+	    	            error: function() {
+			            	alert("반려에 실패했습니다.");
+	    	            }
+	    	        });
+	    	    });
+    	});
+    	
+    	
+            // 상세로 넘기는 스크립트
+            $(function() {
+          	  $("#reportList>tbody>tr").click(function() {
+          	    let rno = $(this).children(".rno").text();
+          	    location.href = "detail.re?rno=" + rno;
+          	  });
+          	});
             </script>
 
 			<br>
@@ -266,13 +281,13 @@
                             <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="list.re?currentPage=${ pi.currentPage - 1 }">Previous</a></li>
                         </c:otherwise>
                     </c:choose>
                     
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                        <li class="page-item"><a class="page-link" href="list.bo?cPage=${ p }">${ p }</a></li>
+                        <li class="page-item"><a class="page-link" href="list.re?currentPage=${ p }">${ p }</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -280,7 +295,7 @@
                             <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="list.re?currentPage=${ pi.currentPage + 1 }">Next</a></li>
                         </c:otherwise>
                     </c:choose>
                 </ul>

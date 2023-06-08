@@ -27,150 +27,74 @@
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     
-                    <div class="col-12">
+                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4" width="">
                             <h6 class="mb-4">매물 관리</h6>
-                            
-                            <div class="d-flex">
-                                <div class="me-2 " style="width:150px">
-                                    <select class="form-select" onchange="changeDropdown(this)">
-                                        <option id="title" value="title">공실 여부</option>
-                                        <option id="content" value="content">글 내용</option>
-                                        <option id="writer" value="username">작성자</option>
-                                    </select>
-                                </div>
-                        
-                                <div class="input-group">
-                                    <div class="form-outline">
-                                        <input id="search-input" type="search" name="title" 
-                                               class="form-control" placeholder="검색"
-                                         onkeypress="if(event.keyCode=='13'){event.preventDefault(); searchEvt();}" />
-                                    </div>
-                                    <button id="search-button" class="btn btn-primary" onclick="searchHouse()">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
 
-                            <div class="table-responsive">
-                                <table class="table" id="houseList">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col"><input type="checkbox" id="check_all"></th>
-                                            <th scope="col">번호</th>
-                                            <th scope="col">제목</th>
-                                            <th scope="col">작성자</th>
-                                            <th scope="col">아이디</th>
-                                            <th scope="col">작성일</th>
-                                            <th scope="col">조회수</th>
-                                            <th scope="col">상태</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_1"></td>
-                                            <td scope="col" class="bno">10</td>
-                                            <td><a href="house_detail.html">제목</td>
-                                            <td>Doe</td>
-                                            <td>jhon@email.com</td>
-                                            <td>USA</td>
-                                            <td>123</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_2"></td>
-                                            <td scope="col">9</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>mark@email.com</td>
-                                            <td>UK</td>
-                                            <td>456</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_3"></td>
-                                            <td scope="col">8</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_4"></td>
-                                            <td scope="col">7</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_5"></td>
-                                            <td scope="col">6</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_6"></td>
-                                            <td scope="col">5</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_7"></td>
-                                            <td scope="col">4</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_8"></td>
-                                            <td scope="col">3</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_9"></td>
-                                            <td scope="col">2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                        <tr>
-                                            <td scope="row"><input type="checkbox" id="check_10"></td>
-                                            <td scope="col">1</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>jacob@email.com</td>
-                                            <td>AU</td>
-                                            <td>789</td>
-                                            <td>Member</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+							<div align="right" class="searchForm">
+							<form class="d-md-flex ms-4" action="search.re">
+								<div class="select">
+				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;">
+				                        <option value="REPORT_TITLE">제목</option>
+				                        <option value="REPORT_CONTENT">내용</option>
+				                        <option value="REPORT_TYPE">유형</option>
+				                        <option value="REPORT_ID">신고자</option>
+				                    </select>
+				                </div>
+								<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
+                       		 	<button type="submit">
+                                    <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
+                                </button>
+                    		</form>
+							</div>
+							
+							<ul class="nav nav-tabs">
+								<li class="nav-item">
+									<button class="nav-link active" id="A">전체</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="N">대기</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="Y">승인</button>
+								</li>
+								<li class="nav nav-tabs">
+									<button class="nav-link" id="C">반려</button>
+								</li>
+							</ul>
+							
+                            <div class="tab-content pt-3" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+									<div class="table-responsive">
+		                                <table class="table" id="houseList">
+		                                    <thead>
+		                                        <tr>
+		                                            <th scope="col"><input class="form-check-input" type="checkbox" id="selectAll_A"></th>
+		                                            <th scope="col">번호</th>
+		                                            <th scope="col">유형</th>
+		                                            <th scope="col">제목</th>
+		                                            <th scope="col">신고당한사람</th>
+		                                            <th scope="col">내용</th>
+		                                            <th scope="col">신고일</th>
+		                                            <th scope="col">상태</th>
+		                                        </tr>
+		                                    </thead>
+		                                    <tbody>
+		                                    	<c:forEach var="r" items="${ list }">
+		                    						<tr>
+			                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
+			                                            <td class="rno">${ r.reportNo }</td>
+			                                            <td>${ r.reportType }</td>
+			                                            <td>${ r.reportTitle }</td>
+			                                            <td>${ r.reportId }</td>
+			                                            <td>${ r.reportContent }</td>
+			                                            <td>${ r.reportDate }</td>
+			                                            <td>${ r.reportStatus }</td>
+			                                        </tr>
+			                                	</c:forEach>
+		                                    </tbody>
+	                                </table>
+                            	</div>
                         </div>
                     </div>
 
@@ -179,22 +103,19 @@
             <!-- Table End -->
 
             <script>
-                $(document).ready(function(){
-                    $("#check_all").click(function(){
-                        if($("#check_all").prop("checked")){
-                            $("input[type=checkbox]").prop("checked",true);
-                        }else{
-                            $("input[type=checkbox]").prop("checked",false);
-                        }
-                    });
-                });
+            $(document).ready(function() {
+        	    // 전체선택 체크박스 클릭 이벤트
+        	    $(document).on('change', 'thead input[type="checkbox"]', function() {
+        	        var checkboxes = $('tbody input[type="checkbox"]');
+        	        checkboxes.prop('checked', this.checked);
+        	    });
 
-                $(function() {
-            		$("#houseList>tbody>tr").click(function() {
-            			let bno = $(this).children(".bno").text();
-            			location.href = "detail.bo?bno=" + bno;
-            		});
-            	});
+        	    // 개별 체크박스 클릭 이벤트
+        	    $(document).on('change', 'tbody input[type="checkbox"]', function() {
+        	        var selectAllCheckbox = $('thead input[type="checkbox"]');
+        	        selectAllCheckbox.prop('checked', $('tbody input[type="checkbox"]:checked').length === $('tbody input[type="checkbox"]').length);
+        	    });
+            });
             </script>
 
             <div id="pagingArea">
