@@ -59,7 +59,9 @@
 	                            <a href="#" class="nav-link nav-text">커뮤니티</a>
 	                            <ul>
 	                                <li><a href="/list.bo">자유게시판</a></li>
-	                                <li><a href="">입주후기</a></li>
+
+	                                <li><a href="/list.in">입주후기</a></li>
+
 	                                <li><a href="/list.fi">사람구해요</a></li>
 	                            </ul>
 	                        </li>
@@ -168,7 +170,9 @@
 	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown2">
 	                                        <li><a class="dropdown-item" href="list.bo">자유게시판</a></li>
 	                                        <li><a class="dropdown-item" href="list.fi">사람구해요</a></li>
-	                                        <li><a class="dropdown-item" href="#">입주 후기 </a></li>                                            
+
+	                                        <li><a class="dropdown-item" href="list.in">입주 후기 </a></li>                                            
+
 	                                    </ul>
 	                                </li>
 	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>

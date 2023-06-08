@@ -53,6 +53,22 @@
 		<result column="FRE_DATE" property="freDate" />
 		<result column="FRE_ID" property="freId" />
 		<result column="FIND_NO" property="findNo" />
+
+	</resultMap>
+	
+		<!-- INREVIEW 테이블로부터 조회된 ResultSet 을 InReview 객체로 가공해주는 resultMap -->
+	<resultMap id="InReviewResultMap" type="inreview">
+    <result column="INR_NO" property="inrNo" />
+    <result column="INR_TITLE" property="inrTitle" />
+    <result column="MEMBER_ID" property="memberId" />
+    <result column="INR_VIEW" property="inrView" />
+    <result column="INR_DATE" property="inrDate" />
+    <result column="ORIGIN_NAME" property="originName" />
+    <result column="NICKNAME" property="nickName" />
+    <result column="INR_CONTENT" property="inrContent" />
+    <result column="CHANGE_NAME" property="changeName" />
+    <result column="THUMBNAIL" property="thumbnail" />
+
 	</resultMap>
 	
 
@@ -265,43 +281,70 @@
 	</select>
 	
 		<!-- 게시글 리스트를 구해주는 쿼리문 -->
-		<select id="selectfList" resultMap="findResultSet">
-			SELECT
-			    F.FIND_NO,
-			    F.FIND_TITLE,
-			    F.FIND_CONTENT,
-			    F.FIND_CATEGORY,
-			    F.FIND_VIEW,
-			    F.FIND_DATE,
-			    F.STATUS,
-			    F.MEMBER_ID,
-			    M.NICKNAME,
-			    M.GENDER,
-			    FA.ORIGIN_NAME,
-			    FA.CHANGE_NAME,
-			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
-			    REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-			FROM FIND F
-			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
-			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
-			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-			WHERE F.STATUS = 'Y'
-			GROUP BY
-			    F.FIND_NO,
-			    F.FIND_TITLE,
-			    F.FIND_CONTENT,
-			    F.FIND_CATEGORY,
-			    F.FIND_VIEW,
-			    F.FIND_DATE,
-			    F.STATUS,
-			    F.MEMBER_ID,
-			    M.NICKNAME,
-			    M.GENDER,
-			    FA.ORIGIN_NAME,
-			    FA.CHANGE_NAME
-			ORDER BY F.FIND_NO DESC
-
-		</select>
+			<select id="selectfList" parameterType="hashmap" resultMap="findResultSet">
+				    SELECT
+				        F.FIND_NO,
+				        F.FIND_TITLE,
+				        F.FIND_CONTENT,
+				        F.FIND_CATEGORY,
+				        F.FIND_VIEW,
+				        F.FIND_DATE,
+				        F.STATUS,
+				        F.MEMBER_ID,
+				        M.NICKNAME,
+				        M.GENDER,
+				        FA.ORIGIN_NAME,
+				        FA.CHANGE_NAME,
+				        COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
+				        REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+				    FROM FIND F
+				    JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+				    LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
+				    LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+				    WHERE F.STATUS = 'Y'
+				    
+				    <choose>
+				        <when test='gender == "M"'>
+				            AND M.GENDER = 'M'
+				        </when>    
+				        <when test='gender == "F"'>
+				            AND M.GENDER = 'F'
+				        </when>
+				        <otherwise>
+				            AND M.GENDER IN ('M', 'F')
+				        </otherwise>
+				    </choose>
+				    
+				    <choose>
+				        <when test="category == '방구해요'">
+				            AND F.FIND_CATEGORY = '방구해요'
+				        </when>
+				        <when test="category == '세놓아요'">
+				            AND F.FIND_CATEGORY = '세놓아요'
+				        </when>
+				        <otherwise>
+				            AND F.FIND_CATEGORY IN ('방구해요', '세놓아요')
+				        </otherwise>
+				    </choose>
+				    
+				    <!-- 제목검색 시 -->
+				    AND F.FIND_TITLE LIKE '%' || #{search} || '%'
+				    
+				    GROUP BY
+				        F.FIND_NO,
+				        F.FIND_TITLE,
+				        F.FIND_CONTENT,
+				        F.FIND_CATEGORY,
+				        F.FIND_VIEW,
+				        F.FIND_DATE,
+				        F.STATUS,
+				        F.MEMBER_ID,
+				        M.NICKNAME,
+				        M.GENDER,
+				        FA.ORIGIN_NAME,
+				        FA.CHANGE_NAME
+				    ORDER BY F.FIND_NO DESC
+				</select>
 
 		
 		<update id="updateBoard" parameterType="board">
@@ -312,15 +355,40 @@
 		  AND STATUS = 'Y'
 		</update>
 		
-				<!-- 사람구하기 게시글 총 갯수 구하는 쿼리문 -->
-	<select id="selectfListCount" resultType="_int">
+				<!-- 사람구하기 게시글 총 갯수 구하는 쿼리문 (조건 추가) -->
+	<select id="selectfListCount" resultType="_int" parameterType="hashmap">
 		SELECT COUNT(*)
-		  FROM FIND
-		 WHERE STATUS = 'Y'
+		  FROM FIND F
+          JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+		  WHERE F.STATUS = 'Y'
+		  <choose>
+			<when test='gender == "M"'>
+	            AND M.GENDER = 'M'
+	        </when>    
+	        <when test='gender == "F"'>
+	            AND M.GENDER = 'F'
+	        </when>
+	        <otherwise>
+	            AND M.GENDER IN ('M', 'F')
+	        </otherwise>
+	    </choose>
+	    
+	    <choose>
+	        <when test="category == '방구해요'">
+	            AND F.FIND_CATEGORY = '방구해요'
+	        </when>
+	        <when test="category == '세놓아요'">
+	            AND F.FIND_CATEGORY = '세놓아요'
+	        </when>
+	        <otherwise>
+	            AND F.FIND_CATEGORY IN ('방구해요', '세놓아요')
+	        </otherwise>
+	    </choose>
 	</select>
 	
 	
 	<select id="selectFind" parameterType="_int" resultMap="findResultSet">
+
 			SELECT
 			    F.FIND_NO,
 			    F.FIND_TITLE,
@@ -331,6 +399,7 @@
 			    F.STATUS,
 			    F.MEMBER_ID,
 			    M.NICKNAME,
+
 			    FA.ORIGIN_NAME,
 			    FA.CHANGE_NAME,
 			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
@@ -339,8 +408,10 @@
 			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
 			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
 			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+
 			WHERE F.FIND_NO = #{findNo}
 			AND F.STATUS = 'Y'
+
 			GROUP BY
 			    F.FIND_NO,
 			    F.FIND_TITLE,
@@ -351,9 +422,11 @@
 			    F.STATUS,
 			    F.MEMBER_ID,
 			    M.NICKNAME,
+
 			    FA.ORIGIN_NAME,
 			    FA.CHANGE_NAME
 			ORDER BY F.FIND_NO DESC
+
 	</select>
 	
 	<update id="increasefCount" parameterType="_int">
@@ -443,6 +516,49 @@
 		  WHERE FIND_NO = #{findNo}
 		  AND STATUS = 'Y'
 		</update>
+
+		
+		
+		<update id="increaseiCount" parameterType="_int">
+		UPDATE INREVIEW
+		   SET INR_VIEW = INR_VIEW + 1
+		 WHERE INR_NO = #{inrNo}
+		   AND STATUS = 'Y'
+	</update>
+		
+		
+<!-- 게시글 리스트를 구해주는 쿼리문 -->
+<select id="selectiList" resultMap="InReviewResultMap">
+    SELECT
+        I.INR_NO,
+        I.INR_TITLE,
+        I.INR_CONTENT,
+        I.INR_VIEW,
+        I.INR_DATE,
+        I.STATUS,
+        I.MEMBER_ID,
+        M.NICKNAME,
+        IA.ORIGIN_NAME,
+        IA.CHANGE_NAME,
+        REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+    FROM INREVIEW I
+    JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
+    LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
+    WHERE I.STATUS = 'Y'
+    GROUP BY
+        I.INR_NO,
+        I.INR_TITLE,
+        I.INR_CONTENT,
+        I.INR_VIEW,
+        I.INR_DATE,
+        I.STATUS,
+        I.MEMBER_ID,
+        M.NICKNAME,
+        IA.ORIGIN_NAME,
+        IA.CHANGE_NAME
+    ORDER BY I.INR_NO DESC
+</select>
+
 	
 
 	

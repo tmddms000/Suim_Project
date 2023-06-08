@@ -74,7 +74,7 @@
 </style>        
         
         
-<title>자유게시판</title>
+<title>입주후기</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
 
@@ -90,72 +90,65 @@
 
 	
 	 <div class="container" style="margin-top: 120px;">
-        <h1>자유게시판</h1>
+        <h1>입주후기</h1>
         <br><br>
 
 
-        <h2>베스트</h2>
-        
-			
-			
-			<div class="bestcontainer">
-			  <c:forEach var="bs" items="${blist}" varStatus="status">
-			    <c:if test="${status.index < 6}">
-			      <div class="item" style ="font-size : 18px;">
-			        <span class="number" style="font-weight : bolder;">${status.index + 1}</span>&nbsp;&nbsp;
-			        <span class="title">${bs.boardTitle}  <span class= "bno" hidden>${bs.boardNo}</span> </span>
-			        <td colspan="3"><span id="rcount">(${bs.replyCount})</span></td>
-			      </div>
-			    </c:if>
-			  </c:forEach>
-			</div>
-		
-											
-          <br><br>
+
          
 
         
 <c:if test="${not empty loginUser}">
-    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.bo">
-        글작성
+    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1196px; margin-bottom: 12px; width: 100px;" href="enrollForm.bo">
+        후기작성
     </a>
 </c:if>
         
-        <table class="table" style="text-align: center;" id="freeboard">
-        <thead>
-            <tr>
-                <th width="60px">번호</th>
-                <th width="150px">등록일</th>
-                <th width="250px">제목</th>
-                <th width="90px">작성자</th>
-                <th width="90px">조회수</th>
-            </tr>
-        </thead>
-			
-            <tbody>
-				<c:forEach var="b" items="${list}">
-				    <tr>
-				        <td class="bno">${b.boardNo}</td>
-				        <td>${b.boardDate}</td>
-				        <td>
-				            ${b.boardTitle}
-				            <span id="rcount">(${b.replyCount})</span>
-				            <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
-							<c:if test="${not empty b.boardDate and b.boardDate == today}">
-							    <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
-							</c:if>
-							
-				            <c:if test="${not empty b.thumbnail}">
-				                <span><img height="15" width="15" alt="이미지 첨부유무" src="/resources/img/board/ico_img.gif"></span>
-				            </c:if>
-				            
-				        </td>
-				        <td>${b.nickName}</td>
-				        <td>${b.boardView}</td>
-				    </tr>
-				</c:forEach>
-				        </tbody>
-        </table>
+       <!-- Gallery -->
+<div class="row">
+  <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Boat on Calm Water"
+    />
+	
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain1.webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Wintry Mountain Landscape"
+    />
+  </div>
+
+  <div class="col-lg-4 mb-4 mb-lg-0">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain2.webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Mountains in the Clouds"
+    />
+
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Boat on Calm Water"
+    />
+  </div>
+
+  <div class="col-lg-4 mb-4 mb-lg-0">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(18).webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Waves at Sea"
+    />
+
+    <img
+      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain3.webp"
+      class="w-100 shadow-1-strong rounded mb-4"
+      alt="Yosemite National Park"
+    />
+  </div>
+</div>
+<!-- Gallery -->
        
 
 		<div id="pagingArea"  style = "margin-top : 22px;">

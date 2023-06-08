@@ -74,7 +74,7 @@
 </style>        
         
         
-<title>자유게시판</title>
+<title>사람구해요</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
 
@@ -92,36 +92,41 @@
         <br><br><br><br>
 
 
-		<div class="search-find" >
-		    <form>
-		        <input type="text" placeholder="제목을 입력해주세요.">
-		        <button type="submit">
-		            <i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
-		        </button>
-		    </form>
-		</div>
-        
-    <div class="search-filter">   
-    <label for="gender">성별:</label>
-    <select id="gender" style="border-radius: 8px;">
-        <option value="">성별을 선택하세요</option>
-        <option value="M">남자</option>
-        <option value="F">여자</option>
+
+		
+   <form id="enrollForm" method="get" action="list.fi" enctype="multipart/form-data">     
+    <div class="search-filter">
+    
+    	<div class="search-find" style="">
+    	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
+		    <button type="submit">
+		   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
+		     </button>
+		</div>   
+		
+    <label for="sex">성별:</label>
+    <select id="sex" name="gender" style="border-radius: 8px;">
+        <option value="all">성별을 선택하세요</option>
+        <option value="M" >남자</option>
+        <option value="F" >여자</option>
+
     </select>
 
     &nbsp;&nbsp;
 
     <label for="condition">조건:</label>
-    <select id="condition" style="border-radius: 8px;">
+
+    <select id="condition" name="category" style="border-radius: 8px;">
         <option value="all">조건을 선택하세요</option>
-        <option value="buy">방구해요</option>
-        <option value="sell">세놓아요</option>
+        <option value="방구해요" >방구해요</option>
+        <option value="세놓아요" >세놓아요</option>
+
     </select>
     &nbsp;
 
     <button onclick="updateTableList()" class="btn btn-secondary2" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-bottom: 03px;">검색</button>
 	</div>
-
+	</form>
 
         
 
@@ -129,13 +134,18 @@
 
         <h2></h2>
         <br><br><br>
+		
 
 
 
-        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.fi">
-            글작성
-        </a>
-        
+		<c:if test="${not empty loginUser}">
+		    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.fi">
+		        글작성
+		       
+		    </a>
+		</c:if>
+		        
+
         <table class="table" style="text-align: center;" id="freeboard">
         <thead>
             <tr>
@@ -191,34 +201,33 @@
 	
        
 
-		<div id="pagingArea"  style = "margin-top : 22px;">
-                <ul class="pagination" >
-                	
-                	<c:choose>
-                		<c:when test="${ pi.currentPage eq 1 }">
-                    		<li class="page-item disabled" ><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);"><</a></li>
-                		</c:when>
-                		<c:otherwise>
-		                    <li class="page-item"><a class="page-link" href="list.fi?cPage=${ pi.currentPage - 1 }"><</a></li>
-                		</c:otherwise>
-                	</c:choose>
-                    
-                    
-                    <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="list.fi?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
-                    </c:forEach>
-                    
-                    <c:choose>
-                    	<c:when test="${ pi.currentPage eq pi.maxPage }">
-                    		<li class="page-item disabled"><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);">></a></li>
-                    	</c:when>
-                    	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.fi?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
-                    	</c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
-	</div>
+
+<div id="pagingArea" style="margin-top: 22px;">
+  <ul class="pagination">
+    <c:choose>
+      <c:when test="${pi.currentPage eq 1}">
+        <li class="page-item disabled"><a class="page-link" href="#" style="background-color: white; color: rgb(250, 107, 111);"><</a></li>
+      </c:when>
+      <c:otherwise>
+        <li class="page-item"><a class="page-link" href="list.fi?cPage=${pi.currentPage - 1}"><</a></li>
+      </c:otherwise>
+    </c:choose>
+
+    <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+      <li class="page-item"><a class="page-link" href="list.fi?cPage=${p}&search=${param.search}&gender=${param.gender}&category=${param.category}" style="background-color: white; color: rgb(250, 107, 111);">${p}</a></li>
+    </c:forEach>
+
+    <c:choose>
+      <c:when test="${pi.currentPage eq pi.maxPage}">
+        <li class="page-item disabled"><a class="page-link" href="#" style="background-color: white; color: rgb(250, 107, 111);">></a></li>
+      </c:when>
+      <c:otherwise>
+        <li class="page-item"><a class="page-link" href="list.fi?cPage=${pi.currentPage + 1}&search=${param.search}&gender=${param.gender}&category=${param.category}" style="background-color: white; color: rgb(250, 107, 111);">></a></li>
+      </c:otherwise>
+    </c:choose>
+  </ul>
+</div>
+
    
     
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -238,20 +247,20 @@
         button.classList.remove('hovered');
         });
         
-         $(function() {
-        	$("#freeboard>tbody>tr").click(function() {
-        		let fno = $(this).children(".fno").text();
-        		location.href = "detail.fi?fno=" + fno; //
-        	});
-        });
+
+         
          
          $(function() {
-        	  $(".bestcontainer .item").click(function() {
-        	    let fno = $(this).find(".fno").text();
-        	    location.href = "detail.fi?fno=" + fno;
-        	  });
-        	});
-          
+         	$("#freeboard>tbody>tr").click(function() {
+         		let fno = $(this).children(".fno").text();
+         		location.href = "detail.fi?fno=" + fno; //
+         	});
+         });
+              
+
+            
+        
+        
          
          
 

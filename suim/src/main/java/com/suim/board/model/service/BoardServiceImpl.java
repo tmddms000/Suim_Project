@@ -1,6 +1,7 @@
 package com.suim.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
+import com.suim.board.model.vo.InReview;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -96,17 +98,27 @@ public class BoardServiceImpl implements BoardService {
 	
 	//------------------------------------------------
 	//------------------사람구해요-----------------------
-
+	
 	@Override
 	public int selectfListCount() {
 		return boardDao.selectfListCount(sqlSession);
 	}
 
 	@Override
+	public int selectfListCount(HashMap<String, String> fin) {
+		return boardDao.selectfListCount(sqlSession, fin);
+	}
+
+	@Override
 	public ArrayList<Find> selectfList(PageInfo pi) {
 		return boardDao.selectfList(sqlSession, pi);
 	}
+	
+	public ArrayList<Find> selectfList(PageInfo pi,HashMap<String, String> fin) {
+		return boardDao.selectfList(sqlSession, pi,fin);
+	}
 
+	
 	@Override
 	public int increasefCount(int findNo) {
 		return boardDao.increasefCount(sqlSession, findNo);
@@ -138,6 +150,7 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.insertFind(sqlSession, f);
 	}
 
+
 	@Override
 	public int updateFind(Find f) {
 		return boardDao.updateFind(sqlSession, f);
@@ -147,8 +160,27 @@ public class BoardServiceImpl implements BoardService {
 	public Find updateFindList(int findNo) {
 		return boardDao.updateFindList(sqlSession, findNo);
 	}
+	
+	//------------------------------------------------
+	//------------------사람구해요-----------------------
+	@Override
+	public int selectiListCount() {
+		return boardDao.selectfListCount(sqlSession);
+	}
 
+	@Override
+	public int selectiListCount(HashMap<String, String> fin) {
+		return boardDao.selectiListCount(sqlSession, fin);
+	}
 
+	@Override
+	public ArrayList<InReview> selectiList(PageInfo pi) {
+		return boardDao.selectiList(sqlSession, pi);
+	}
+	
+	public ArrayList<InReview> selectiList(PageInfo pi,HashMap<String, String> fin) {
+		return boardDao.selectiList(sqlSession, pi,fin);
+	}
 
 
 	

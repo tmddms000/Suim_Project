@@ -46,7 +46,7 @@
         
 
         
-<title>자유게시판</title>
+<title>사람구해요</title>
 
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		
@@ -63,8 +63,8 @@
             <br><br>
             <h2>사람구해요 상세보기</h2>
             <br>
-
-            <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);" href="list.fi">목록으로</a>
+			
+            <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</a>
             <br><br>
 
             <table id="contentArea" algin="center" class="table">
@@ -225,6 +225,25 @@
 			}
 		});
 	}
+	
+	document.getElementById('content').addEventListener('keydown', function(event) {
+	    if (event.keyCode === 13) { // Enter 키의 keyCode는 13입니다.
+	        event.preventDefault(); // 엔터 키의 기본 동작인 줄바꿈을 막습니다.
+	        addReply(); // 등록 버튼을 클릭합니다.
+	    }
+	});
+	
+	// HTML에서 목록으로 버튼을 클릭했을 때 호출할 함수
+	function goBack() {
+	  window.history.back();
+	}
+
+	// 버튼 요소를 가져온다
+	var backButton = document.querySelector('.btn-secondary');
+
+	// 버튼을 클릭하면 goBack 함수를 호출한다
+	backButton.addEventListener('click', goBack);
+
     
     </script>
     

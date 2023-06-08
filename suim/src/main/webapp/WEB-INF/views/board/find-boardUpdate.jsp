@@ -29,7 +29,8 @@
 
 
         
-<title>자유게시판</title>
+<title>사람구해요</title>
+
 
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		
@@ -43,7 +44,9 @@
 	  <div class="content">
         <br><br><br><br>
         <div class="innerOuter">
-            <h2>자유게시판 수정하기</h2>
+
+            <h2>사람구해요 수정하기</h2>
+
             <br><br>
 
             <form id="enrollForm" method="post" action="update.fi" enctype="multipart/form-data">

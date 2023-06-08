@@ -23,6 +23,9 @@
 		<typeAlias type="com.suim.board.model.vo.Find" alias="find" />
 		<typeAlias type="com.suim.board.model.vo.findReply" alias="findreply" />
 		
+
+		<typeAlias type="com.suim.board.model.vo.InReview" alias="inreview" />
+
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.notice.model.vo.Nattachment" alias="nAttachment"/>
 		

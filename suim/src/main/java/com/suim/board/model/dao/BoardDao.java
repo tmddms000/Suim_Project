@@ -1,6 +1,7 @@
 package com.suim.board.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
+import com.suim.board.model.vo.InReview;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -71,6 +73,9 @@ public class BoardDao {
 	public int selectfListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("boardMapper.selectfListCount");
 	}
+	public int selectfListCount(SqlSessionTemplate sqlSession, HashMap<String, String> fin) {
+		return sqlSession.selectOne("boardMapper.selectfListCount" ,fin);
+	}
 	
 	public ArrayList<Find> selectfList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		
@@ -79,7 +84,18 @@ public class BoardDao {
 		
 		RowBounds rowBounds = new RowBounds(offset, limit);
 		
-		return (ArrayList)sqlSession.selectList("boardMapper.selectfList", null, rowBounds);
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectfList",null, rowBounds);
+	}
+	public ArrayList<Find> selectfList(SqlSessionTemplate sqlSession, PageInfo pi, HashMap<String, String> fin) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectfList", fin ,rowBounds);
 	}
 	public int increasefCount(SqlSessionTemplate sqlSession, int findNo) {
 		return sqlSession.update("boardMapper.increasefCount", findNo);
@@ -118,4 +134,38 @@ public class BoardDao {
 	public Find updateFindList(SqlSessionTemplate sqlSession, int findNo) {
 		return sqlSession.selectOne("boardMapper.selectFind", findNo);
 	}
+
+
+	//------------------------------------------------------------------------------
+	
+	//---------------------------이용후기---------------------------------------------
+	public int selectiListCount(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("boardMapper.selectiListCount");
+	}
+	public int selectiListCount(SqlSessionTemplate sqlSession, HashMap<String, String> fin) {
+		return sqlSession.selectOne("boardMapper.selectiListCount" ,fin);
+	}
+	
+	public ArrayList<InReview> selectiList(SqlSessionTemplate sqlSession, PageInfo pi) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectiList",null, rowBounds);
+	}
+	public ArrayList<InReview> selectiList(SqlSessionTemplate sqlSession, PageInfo pi, HashMap<String, String> fin) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		
+		return (ArrayList)sqlSession.selectList("boardMapper.selectiList", fin ,rowBounds);
+	}
+	
+
 }

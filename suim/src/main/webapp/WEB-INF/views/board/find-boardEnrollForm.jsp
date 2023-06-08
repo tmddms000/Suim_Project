@@ -46,7 +46,9 @@
 	 <div class="content">
         <br><br><br><br>
         <div class="innerOuter">
-            <h2>자유게시판 작성하기</h2>
+
+            <h2>사람구해요 작성하기</h2>
+
             <br><br>
 
             <form id="enrollForm" method="post" action="insert.fi" enctype="multipart/form-data">

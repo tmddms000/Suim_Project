@@ -3,9 +3,11 @@ package com.suim.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +15,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +30,7 @@ import com.suim.board.model.service.BoardService;
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
+import com.suim.board.model.vo.InReview;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -303,26 +304,58 @@ public class BoardController {
 		//---------------------------사람구해요--------------------------------
 		
 				@RequestMapping("list.fi")
-				public ModelAndView selectfList(
-						@RequestParam(value="cPage", defaultValue="1") int currentPage,
-						ModelAndView mv) {
+				public ModelAndView selectfList(@RequestParam(defaultValue="all") String gender, 
+												@RequestParam(defaultValue="all")String category,
+												@RequestParam(defaultValue="")String search,
+												@RequestParam(value="cPage", defaultValue="1") int currentPage,
+												HttpServletRequest request,
+						ModelAndView mv) throws UnsupportedEncodingException {
+
 					
-					int listCount = boardService.selectfListCount();
-					
+					int listCount = 0;
+					PageInfo pi = null;
 					int pageLimit = 10;
 					int boardLimit = 10;
+					ArrayList<Find> flist = new ArrayList<Find>();
+					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
 					
-					PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+					
+					HashMap<String, String> fin = new HashMap<>();
+					fin.put("gender", gender);
+					fin.put("category", category);
+					fin.put("search", search);
+					
+					
+					
+
+					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
 						
-					ArrayList<Find> flist = boardService.selectfList(pi);
+						// fin 이 필요 없는 로직
+						listCount = boardService.selectfListCount(); // 수정
+						
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						flist = boardService.selectfList(pi);
+						
+
+					} 
+					else {
+						listCount = boardService.selectfListCount(fin);
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						flist = boardService.selectfList(pi, fin);
+						
+						
+					}
 					
-					System.out.println(flist);
-					
-					mv.addObject("pi", pi)
+					mv.addObject("pi", pi) 
+
 					  .addObject("flist", flist)
+					  .addObject("url", uriWithQueryString)
 					  .setViewName("board/find-board");
 					
-					return mv;    // 첨부파일 필드
+					
+					
+					return mv;  
+
 
 				}
 				
@@ -330,6 +363,7 @@ public class BoardController {
 
 					@RequestMapping("detail.fi")
 					public ModelAndView selectFind(ModelAndView mv,
+											HttpServletRequest request,
 													int fno) {
 
 						int result = boardService.increasefCount(fno);
@@ -340,7 +374,11 @@ public class BoardController {
 
 							Find fb = boardService.selectFind(fno);
 							
-							mv.addObject("fb", fb).setViewName("board/find-boardDetail");
+							mv.addObject("fb", fb)
+							  .addObject("url", request.getRequestURI())
+							  .setViewName("board/find-boardDetail");
+							
+							
 							
 						} else { // 실패
 
@@ -470,7 +508,7 @@ public class BoardController {
 								HttpSession session,
 								Model model) {
 					
-					System.out.println("category" + " " + category);
+					
 					fb.setCategory(category);
 				int result = boardService.updateFind(fb);
 				
@@ -496,7 +534,64 @@ public class BoardController {
 				
 				}
 
-	
+	//-----------------------이용후기--------------------------------
+				@RequestMapping("list.in")
+				public ModelAndView selectiList(@RequestParam(defaultValue="all") String gender, 
+												@RequestParam(defaultValue="all")String category,
+												@RequestParam(defaultValue="")String search,
+												@RequestParam(value="cPage", defaultValue="1") int currentPage,
+												HttpServletRequest request,
+						ModelAndView mv) throws UnsupportedEncodingException {
+
+					
+					int listCount = 0;
+					PageInfo pi = null;
+					int pageLimit = 10;
+					int boardLimit = 10;
+					ArrayList<InReview> ilist = new ArrayList<InReview>();
+					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
+					
+					System.out.println(ilist);
+					
+					HashMap<String, String> fin = new HashMap<>();
+					//fin.put("gender", gender);
+					//fin.put("category", category);
+					//fin.put("search", search);
+					
+					
+					
+
+					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
+						
+						// fin 이 필요 없는 로직
+						listCount = boardService.selectiListCount(); // 수정
+						
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						ilist = boardService.selectiList(pi);
+						
+
+					} 
+					else {
+						listCount = boardService.selectiListCount(fin);
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						ilist = boardService.selectiList(pi, fin);
+						
+						
+					}
+					
+					mv.addObject("pi", pi) 
+					  .addObject("ilist", ilist)
+					  .addObject("url", uriWithQueryString)
+					  .setViewName("board/inReview-board");
+					
+					
+					
+					return mv;  
+
+					
+
+
+				}
 	
 		   
 }
