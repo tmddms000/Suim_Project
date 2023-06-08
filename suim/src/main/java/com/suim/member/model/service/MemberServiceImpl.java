@@ -123,6 +123,18 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.checkEmailLogin(sqlSession, email);
 	}
 
+	@Override
+	public String findMemberId(Member m) {
+		return memberDao.findMemberId(sqlSession, m);
+	}
+
+	@Override
+	public int findMemberPw(Member m) {
+		return memberDao.findMemberPw(sqlSession, m);
+	}
+	
+	
+
 
 
 

@@ -167,7 +167,7 @@
 								</div>
 								<div class="input_form brt _item _passwd_org">
 									<input title="기본 비밀번호 입력" type="password" name="memberPwd"
-										autocomplete="off" placeholder="기본 비밀번호 입력"> <i
+										autocomplete="off" placeholder="정보를 변경하려면 비밀번호를 입력하세요" required> <i
 										aria-hidden="true" class="zmdi zmdi-check"></i>
 									<div class="alert-block _msg"></div>
 								</div>
@@ -179,7 +179,7 @@
 								</div>
 								<div class="input_form brt _item _passwd_confirm">
 									<input title="비밀번호 확인" type="password" name="changePwd2"
-										autocomplete="off" placeholder="비밀번호 확인"> <i
+										autocomplete="off" placeholder="비밀번호 변경 확인"> <i
 										aria-hidden="true" class="zmdi zmdi-check"></i>
 									<div class="alert-block _msg"></div>
 								</div>
@@ -194,7 +194,8 @@
 								</div>
 							</div>
 							<div class="input_block form-group">
-								<label class="mini-tit" for="join_name">성별</label> <select
+								<label class="mini-tit" for="join_name">성별<span
+									style="color: red">*</span></label> <select
 									title="성별" class="form-select" id="birth_y" name="gender">
 
 									<option value="M"
@@ -208,13 +209,15 @@
 									class="input_form" type="tel" id="join_callnum" name="phone"
 									placeholder="연락처" value="${ loginUser.phone }"
 									required="required">
+									<p class="good-text">연락처는 가맹 인증 시 사용됩니다.</p>
 							</div>
 							<c:set var="birthYear" value="${loginUser.birth.substring(0, 4)}" />
 							<c:set var="birthMonth"
 								value="${loginUser.birth.substring(4, 6)}" />
 							<c:set var="birthDay" value="${loginUser.birth.substring(6, 8)}" />
 							<div class="input_block form-group">
-								<label class="mini-tit" for="join_name">생년월일</label>
+								<label class="mini-tit" for="join_name">생년월일<span
+									style="color: red">*</span></label>
 								<div class="info" id="info__birth" align="left">
 									<div style="display: inline-block; width: 120px;">
 										<select class="form-select" id="birth-year">
@@ -238,28 +241,28 @@
 							</div>
 
 							<div class="form-group">
-								<label class="mini-tit" for="area">희망지역</label>
-								<div class="col-sm-12">
-									<input type="text" class="form-control" name="area"
-										value="${loginUser.area }" id="area"
-										placeholder="희망지역을 입력해주세요" readonly
-										style="border: 1px solid #ced4da;">
-									<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
-										추천해드려요!</p>
-									<button type="button" onclick="searchAddr();">
-										<i class="fa-solid fa-magnifying-glass"
-											style="font-size: 12px"></i> 검색
-									</button>
-								</div>
-
+							  <label class="mini-tit" for="area">희망지역</label>
+							  <div class="col-sm-12">
+							    <div class="input-group">
+							      <input type="text" class="form-control" name="area" value="${loginUser.area }" id="area" placeholder="희망지역을 입력해주세요" readonly style="border: 1px solid #ced4da;">
+							      <div class="input-group-append">
+							        <button type="button" onclick="searchAddr();" style="height : 100%;">
+							          <i class="fa-solid fa-magnifying-glass" style="font-size: 12px"></i> 검색
+							        </button>
+							      </div>
+							    </div>
+							    <p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로 추천해드려요!</p>
+							  </div>
 							</div>
 							<div class="text-center">
-								<c:if test="${ not empty loginUser.naverLogin }">
-								소셜로그인 상태<br>
-									<img src="/resources/img/member/naverBtn.png"
-										style="width: 20px; height: 20px;"> 연결됨
-								<input type="hidden" name="naverLogin"
-										value="${loginUser.naverLogin}" />
+								<c:if test="${not empty loginUser.naverLogin && loginUser.naverLogin != null}">
+									  <p class="good-text">소셜로그인 상태</p>
+									  <span style="vertical-align: -5px;"><img src="/resources/img/member/naverBtn.png" style="width: 20px; height: 20px;"></span> d연결됨
+									  <input type="hidden" name="naverLogin" value="${loginUser.naverLogin}" />
+									</c:if>
+									<c:if test="${empty loginUser.naverLogin || loginUser.naverLogin == null}">
+									  <p class="good-text">소셜로그인 상태</p>
+									  <i class="fa-solid fa-circle-xmark" style="color: #ff0000;"></i> 연결되지 않음
 								</c:if>
 							</div>
 
@@ -351,7 +354,7 @@ birthYearEl.addEventListener('focus', function () {
     // Year options creation (on first click)
     if (!isOptionExisted.year) {
         isOptionExisted.year = true;
-        for (let i = 2023; i >= 1960; i--) {
+        for (let i = 2004; i >= 1960; i--) {
             const yearOption = document.createElement('option');
             yearOption.setAttribute('value', i);
             yearOption.innerText = i;
@@ -500,4 +503,16 @@ function updateBirthDate() {
 	// Read the file as a data URL
 	reader.readAsDataURL(file);
 	});
+</script>
+
+<script>
+function checkPhoneDuplicate(phone) {
+	  return $.ajax({
+	    url: "/member/emailCheck",
+	    type: "post",
+	    data: {
+	      phone: phone
+	    }
+	  });
+	}
 </script>

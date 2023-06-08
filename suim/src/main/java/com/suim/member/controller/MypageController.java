@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,9 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,11 +31,8 @@ import com.suim.member.model.service.MypageService;
 import com.suim.member.model.vo.Member;
 import com.suim.member.model.vo.MyWish;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Controller
 @RequestMapping("mypage")
-@Slf4j
 public class MypageController {
 
 	private final MemberService memberService;
@@ -52,43 +50,76 @@ public class MypageController {
 	}
 
 	// 사용자 정보 수정 메소드
-	@PostMapping("updateProfile")
+	@PostMapping("/updateProfile")
 	public String updateProfile(@RequestParam("file") MultipartFile file, Member m, String changePwd1,
 			String changePwd2, HttpServletRequest request, Model model) {
-
 		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+		
+		if (m.getMemberId() == null || m.getMemberId().trim().isEmpty()) {
+		    session.setAttribute("toastError", "아이디는 반드시 입력해야합니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		} else if (!m.getMemberId().equals(loginUser.getMemberId())) {
+		    session.setAttribute("toastError", "아이디는 수정할 수 없습니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		}
 
+		if (m.getEmail() == null || m.getEmail().trim().isEmpty()) {
+		    session.setAttribute("toastError", "이메일은 반드시 입력해야합니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		} else if (!m.getEmail().equals(loginUser.getEmail())) {
+		    session.setAttribute("toastError", "이메일은 수정할 수 없습니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		}
+
+		if (m.getMemberName() == null || m.getMemberName().trim().isEmpty()) {
+		    session.setAttribute("toastError", "이름은 반드시 입력해야합니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		}
+
+		if (m.getBirth() == null || m.getBirth().trim().isEmpty()) {
+		    session.setAttribute("toastError", "생년월일은 반드시 입력해야합니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		}
+		
+		
+		if (memberService.nickCheck(m.getNickName()) > 0 && !loginUser.getNickName().equals(m.getNickName())) {
+			session.setAttribute("toastError", "현재 사용중이거나 중복된 닉네임입니다.");
+		    return "redirect:" + session.getAttribute("originalUrl");
+		}
+		
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-
 			m.setMemberPwd(bcryptPasswordEncoder.encode(m.getMemberPwd()));
 
-			// 비밀번호가 일치하고, 파일이 비어있지 않음
-			if (!file.getOriginalFilename().equals("") && !file.isEmpty()) {
-
-				String changeName = saveFile(file, session);
-
+			if (!file.getOriginalFilename().isEmpty()) {
+				String changeName = saveFile(file);
 				m.setChangeName(changeName);
-
 			} else {
 				m.setChangeName(loginUser.getChangeName());
 			}
-
-			// 비밀번호 변경을 할수도 있고 안할수도 있기 때문에 조건 걸어준다
-			// 비밀번호가 null이 아니고, 비밀번호가
-			if (changePwd1 != null && !changePwd1.trim().isEmpty() && changePwd2 != null
-					&& !changePwd2.trim().isEmpty()) {
-
-				// 만약 변경비밀번호1과 변경비밀번호2가 같다면? => 일치하므로 changePwd1을 암호화하여 updte 해준다
-				if (changePwd1.equals(changePwd2)) {
-
-					m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
-				} else {
-					session.setAttribute("toastError", "확인 비밀번호가 일치하지 않습니다.");
-				}
+			
+			
+			if (changePwd1 != null && !changePwd1.trim().isEmpty()) {
+			    if (!changePwd1.equals(changePwd2)) {
+			        session.setAttribute("toastError", "변경확인 비밀번호가 일치하지 않습니다.");
+			        return "redirect:" + session.getAttribute("originalUrl");
+			    }
+			    if (changePwd2 == null || changePwd2.trim().isEmpty()) {
+			        session.setAttribute("toastError", "변경확인 비밀번호를 입력해주세요.");
+			        return "redirect:" + session.getAttribute("originalUrl");
+			    }
+			    m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
+			} else if (changePwd2 != null && !changePwd2.trim().isEmpty()) {
+			    if (changePwd1 == null || changePwd1.trim().isEmpty()) {
+			        session.setAttribute("toastError", "변경 비밀번호를 입력해주세요.");
+			        return "redirect:" + session.getAttribute("originalUrl");
+			    }
 			}
 
 			int result = memberService.updateMember(m);
-
 			session.setAttribute("loginUser", m);
 
 			if (result > 0) {
@@ -100,34 +131,17 @@ public class MypageController {
 			session.setAttribute("toastError", "비밀번호가 일치하지 않습니다.");
 		}
 
-		return "redirect:" + (String) session.getAttribute("originalUrl");
+		return "redirect:" + session.getAttribute("originalUrl");
 	}
 
-	public String saveFile(MultipartFile file, HttpSession session) {
-
-		// 파일명 수정 작업 후 서버에 업로드 시키기
-		// => 왠만해선 파일명이 겹치지 않게끔 !!
-
-		// MyFileRenamePolicy 에서 지정했던 로직 그대로 재현
-		// 예) "bono.jpg" => "20230511104425xxxxx.jpg"
-		// 1. 원본파일명 뽑기
-		String originName = file.getOriginalFilename(); // "bono.jpg"
-
-		// 2. 현재 시간 형식을 문자열로 뽑아내기
-		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()); // "20230511104920"
-
-		// 3. 뒤에 붙을 5자리 랜덤값 뽑기 (10000 ~ 99999 범위)
-		int ranNum = (int) (Math.random() * 90000 + 10000); // 13152
-
-		// 4. 원본파일명으로부터 확장자명 뽑기
-		String ext = originName.substring(originName.lastIndexOf(".")); // ".jpg"
-
-		// 5. 2, 3, 4 단계에서 구한 값을 모두 이어 붙이기
+	private String saveFile(MultipartFile file) {
+		String originName = file.getOriginalFilename();
+		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		int ranNum = (int) (Math.random() * 90000 + 10000);
+		String ext = originName.substring(originName.lastIndexOf("."));
 		String changeName = currentTime + ranNum + ext;
-
 		String savePath = session.getServletContext().getRealPath("/resources/img/member/uploadFiles/");
 
-		// 7. 경로와 수정파일명을 합체 후 파일을 업로드 해주기
 		try {
 			String filePath = savePath + changeName;
 			File dest = new File(filePath);
@@ -140,54 +154,42 @@ public class MypageController {
 	}
 
 	// 처음 페이지(알림 페이지)로 이동합니다.
-	@RequestMapping({ "timeline", "" })
+	@RequestMapping({ "/timeline" })
 	public String mypageAlert(HttpServletRequest request) {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/timeline";
 	}
 
-	
-
-	// 마이페이지의 BoardList를 조회합니다.
-	@RequestMapping("board")
+	@GetMapping("board")
 	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page,
-			HttpServletRequest request, @RequestParam(value = "type", defaultValue="board") String type, Model model) {
-		session.setAttribute("originalUrl", request.getRequestURI());
+			@RequestParam(value = "type", defaultValue = "board") String type, Model model) {
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/";
+		}
+
+		String memberId = loginUser.getMemberId();
 		int pageLimit = 10;
 		int boardLimit = 10;
 
-		Member m = (Member) session.getAttribute("loginUser");
-		
-		if (m == null) {
-			return "redirect:/";
-		}
-		ArrayList<Board> list = new ArrayList<Board>();
-
-		String memberId = m.getMemberId();
-
-		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
-		int listCount = 0;
-		PageInfo pi = null;
+		int listCount;
+		ArrayList<Board> list;
+		PageInfo pi;
 
 		if (type == null || type.equals("board")) {
-
 			listCount = mypageService.selectBoardListCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectBoardList(pi, memberId);
-
 		} else if (type.equals("inreview")) {
-
 			listCount = mypageService.selectBoardListCount(memberId);
-
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectBoardList(pi, memberId);
-
 		} else if (type.equals("find")) {
-
 			listCount = mypageService.selectFindListCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectFindList(pi, memberId);
-
+		} else {
+			return "redirect:/member/mypage/board"; // 잘못된 type 값일 경우에 대한 처리
 		}
 
 		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("type", type);
@@ -195,12 +197,11 @@ public class MypageController {
 		return "member/mypage/board";
 	}
 
-	@RequestMapping(value = "boardDelete", method = RequestMethod.POST)
+	@PostMapping(value = "boardDelete")
 	@ResponseBody
 	public String boardDelete(HttpServletRequest request, @RequestParam("ids") String ids) {
 		String memberId = ((Member) session.getAttribute("loginUser")).getMemberId();
 		String[] idArray = ids.split(",");
-
 		int[] intArray = new int[idArray.length];
 
 		for (int i = 0; i < idArray.length; i++) {
@@ -208,35 +209,23 @@ public class MypageController {
 		}
 
 		int result = mypageService.deleteBoard(intArray, memberId);
-		if (result > 0) {
-			return "Y";
-		} else {
-			return "N";
-		}
-
+		return result > 0 ? "Y" : "N";
 	}
 
-	// 마이페이지의 내 찜목록 조회로 이동합니다.
 	@RequestMapping("wish")
-	public String mypageWish(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+	public String mypageWish(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") int page,
+			Model model) {
 		session.setAttribute("originalUrl", request.getRequestURI());
-		
 		int pageLimit = 10;
 		int boardLimit = 5;
-
 		Member m = (Member) session.getAttribute("loginUser");
-		
 		String memberId = m.getMemberId();
-		
 		int listCount = mypageService.selectWishListCount(memberId);
 		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
-		
+    
 		ArrayList<MyWish> list = mypageService.selectWishList(pi, memberId);
 
 		model.addAttribute("pi", pi).addAttribute("list", list);
-		
-		System.out.println(pi);
-		
 		return "member/mypage/wish";
 	}
 
@@ -260,5 +249,10 @@ public class MypageController {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/reservation";
 	}
+	
+
+	
+	
+
 
 }

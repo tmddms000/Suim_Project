@@ -152,7 +152,20 @@
 		WHERE MEMBER_ID
 		= #{memberId}
 	</update>
-
+	
+	<select id="findMemberId" parameterType="member"
+		resultType="string">
+	SELECT MEMBER_ID FROM MEMBER
+	WHERE MEMBER_NAME = #{memberName}
+	AND EMAIL = #{email}	
+	</select>
+	
+	<select id="findMemberPw" parameterType="member"
+		resultType="_int">
+	SELECT COUNT(*) FROM MEMBER
+	WHERE MEMBER_ID = #{memberId}
+	AND EMAIL = #{email}	
+	</select>
 
 
 

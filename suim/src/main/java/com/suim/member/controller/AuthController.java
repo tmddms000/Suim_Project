@@ -87,6 +87,11 @@ public class AuthController {
 	public String phoneCheck(String phone) {
 		return checkDuplicate("phone", phone);
 	}
+	
+
+	
+	
+	
 
 	// 회원가입 성공
 	@RequestMapping("joinSuccess")
@@ -111,7 +116,8 @@ public class AuthController {
 			session.setAttribute("toastError", "중복된 번호가 존재합니다.");
 			return "member/signup";
 		}
-
+		
+		
 		String nickName = generateUniqueNickname();
 		String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
 
@@ -272,6 +278,38 @@ public class AuthController {
 		session.removeAttribute("loginUser");
 		return "redirect:/";
 	}
+	
+	
+	//아이디 찾기 이동
+	@GetMapping("findId")
+	public String findMemberId() {
+		return "/member/find-id";
+	}
+	
+	@PostMapping("findId")
+	@ResponseBody
+	public String findMemberId(Member m) {
+		
+		String memberId = memberService.findMemberId(m);
+		return memberId;
+	}
+	
+	@GetMapping("findPw")
+	public String findMemberPw() {
+		return "/member/find-pw";
+	}
+	
+	@PostMapping("findPw")
+	@ResponseBody
+	public int findMemberPw(Member m) {
+		int result = memberService.findMemberPw(m);
+		if(result > 0) {
+		mailSendAsync(m);
+		}
+		return result;
+	}
+	
+	
 
 	// Auth 관련 메소드들
 
@@ -336,8 +374,8 @@ public class AuthController {
 				sendMail.setText("<h1>쉐어하우스 쉼 메일인증</h1>" + "<br>쉼(SUIM)에 오신 것을 환영합니다!" + "<br>아래 [이메일 인증 확인]을 눌러주세요."
 						+ "<br><a href='http://localhost:8006/member/verifyEmail?email=" + email + "&mailKey=" + mailKey
 						+ "' target='_blank'>이메일 인증 확인</a>");
-				sendMail.setFrom("dunghasd@gmail.com", "쉼");
-				sendMail.setSubject("쉼 이메일 인증번호");
+				sendMail.setFrom("suimm012@gmail.com", "쉼");
+				sendMail.setSubject("쉼 이메일 인증번호입니다");
 				sendMail.setTo(email);
 				sendMail.send();
 			} catch (MessagingException e) {
@@ -346,6 +384,50 @@ public class AuthController {
 				log.error("기타 에러 발생: {}", e.getMessage());
 			}
 		});
+	}
+	
+	private CompletableFuture<Void> mailSendAsync(Member m) {
+
+		return CompletableFuture.runAsync(() -> {
+			try {
+				MailHandler sendMail = new MailHandler(mailSender);
+				sendMail.setText("<h1>쉐어하우스 쉼 비밀번호찾기</h1>");
+				sendMail.setFrom("suimm012@gmail.com", "쉼");
+				sendMail.setSubject("쉼 임시 비밀번호 발급입니다");
+				sendMail.setTo(m.getEmail());
+				
+				String temporaryPassword = generateTemporaryPassword();
+	            sendMail.setText("임시 비밀번호: " + temporaryPassword);
+	            sendMail.setText("임시 비밀번호로 로그인 후 바로 비밀번호를 변경해주세요");
+	            
+	            m.setMemberPwd(bcryptPasswordEncoder.encode(temporaryPassword));
+	            memberService.updateMember(m);
+				sendMail.send();
+			} catch (MessagingException e) {
+				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			} catch (Exception e) {
+				log.error("기타 에러 발생: {}", e.getMessage());
+			}
+		});
+	}
+
+	private String generateTemporaryPassword() {
+		int length = 8;
+	    
+	    // 임시 비밀번호 문자열을 구성할 문자들
+	    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    
+	    // 임시 비밀번호 문자열 생성
+	    StringBuilder password = new StringBuilder();
+	    Random random = new Random();
+	    
+	    for (int i = 0; i < length; i++) {
+	        int index = random.nextInt(characters.length());
+	        char character = characters.charAt(index);
+	        password.append(character);
+	    }
+	    
+	    return password.toString();
 	}
 
 	private String checkDuplicate(String field, String value) {
@@ -361,9 +443,12 @@ public class AuthController {
 		case "phone":
 			count = memberService.phoneCheck(value);
 			break;
+			
 		}
-
 		return (count > 0) ? "Duplicate" : "Available";
+		
 	}
+	
+	
 
 }

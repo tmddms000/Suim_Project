@@ -65,6 +65,12 @@ public interface MemberService {
 	// 로그인할때 이메일 체크
 	int checkEmailLogin(String email);
 
+	// 아이디 전송
+	String findMemberId(Member m);
+
+	// Member 정보와 일치하는지 체크
+	int findMemberPw(Member m);
+
 
 
 
