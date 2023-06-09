@@ -125,7 +125,6 @@ public class AdminNoticeController {
 	 *    			    또는 ArrayList<MultipartFile> upfile 로 얻어낼 수 있다.
 	 */
 	
-	@GetMapping
 	@RequestMapping("/insert.no")
 	public String insertNoticeBoard(Notice n,
 							Nattachment nAttach,
@@ -133,115 +132,46 @@ public class AdminNoticeController {
 							MultipartFile upfile,
 							HttpSession session,
 							Model model) {
+		
+		System.out.println("호출");
 							
 	
-	
-	
+		System.out.println("----------upfiles");
+		System.out.println(upfile);
+		System.out.println("-----upfiles");
 		
-		// 분명히 제대로 전달값을 넘겨받고자 구문을 작성했음에도 불구하고
-		// null 이 뜨는 것을 볼 수 있다.
-		// => 파일업로드에 필요한 Spring 라이브러리를 아직 연동하지 않았기 때문 (pom.xml)
-		// System.out.println(b);
-		// System.out.println(upfile);
-		// 요청 시 첨부파일을 선택했든 안했든 간에 upfile 이 null 이 아님
-		// (어찌되었든 간에 MultipartFile 타입의 객체는 생성이 된 꼴)
-		// => 단, 차이점이라고 한다면 filename 필드에 원본파일명이 있냐 없냐의 차이
-		//					   size 필드에 또한 사이즈가 0으로 잡히냐 안잡히냐의 차이
+		int result1 = adminNoticeService.insertNoticeBoard(n, nAttach);
+		int result2 = 1;
 		
-		// 단, txt 파일의 경우 내용물이 없다면 size 가 0으로 잡힘 (조건으로 기술하기 부적합함)
-		// 전달된 파일이 있을 경우 그 경우에만 파일명 수정 작업 후 서버로 업로드 할 수 있게 로직 짜기
-		// => filename 필드 기준으로 조건을 짜줄 것
-		
-		// MultipartFile 객체의 getOriginalFilename() 메소드
-		// => MultipartFile 객체로부터 filename 필드값을 리턴해주는 메소드 (getter 메소드)
-		
-		
+		System.out.println(result1);
+		System.out.println("---- result1");
 		
 		if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
 		
-		
-			
-			/*
-			// 파일명 수정 작업 후 서버에 업로드 시키기
-			// => 왠만해선 파일명이 겹치지 않게끔 !!
-			
-			// MyFileRenamePolicy 에서 지정했던 로직 그대로 재현
-			// 예) "bono.jpg" => "20230511104425xxxxx.jpg"
-			// 1. 원본파일명 뽑기
-			String originName = upfile.getOriginalFilename(); // "bono.jpg"
-			
-			// 2. 현재 시간 형식을 문자열로 뽑아내기
-			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss")
-									 .format(new Date()); // "20230511104920"
-			
-			// 3. 뒤에 붙을 5자리 랜덤값 뽑기 (10000 ~ 99999 범위)
-			int ranNum = (int)(Math.random() * 90000 + 10000); // 13152
-			
-			// 4. 원본파일명으로부터 확장자명 뽑기
-			String ext = originName.substring(originName.lastIndexOf(".")); // ".jpg"
-			
-			// 5. 2, 3, 4 단계에서 구한 값을 모두 이어 붙이기
-			String changeName = currentTime + ranNum + ext;
-			
-			// 6. 업로드 하고자 하는 서버의 물리적인 경로 알아내기
-			String savePath = session.getServletContext().getRealPath("/resources/uploadFiles/");
-			
-			// 7. 경로와 수정파일명을 합체 후 파일을 업로드 해주기
-			// MultipartFile 객체에서 제공하는 transferTo 메소드
-			// [ 표현법 ]
-			// upfile.transferTo(업로드하고자하는파일객체);
-			try {
-				upfile.transferTo(new File(savePath + changeName));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			*/ 
-		
-		
 			String changeName = saveFile(upfile, session);
 			
-			// 8. 원본파일명, 서버에 업로드된경로 + 수정파일명을 NoticeAttachment n 에 담기
 			nAttach.setOriginName(upfile.getOriginalFilename());
 			nAttach.setChangeName("resources/img/notice/" + changeName);
-
-			System.out.println("upfile 에 해한 정보는 " + upfile + " 입니다");
 			
-			System.out.println("nAttach 는 " + nAttach + "입니다.");
+			result2 = adminNoticeService.insertNoticeFile(nAttach);
+			
 		}
 		
 		
-		
-		// 이 시점 기준으로
-		// 넘어온 첨부파일이 있다면
-		// boardTitle, boardWriter, boardContent, originName, changeName
-		// 필드에 값들이 담겨 있음
-		// 넘어온 첨부파일이 없다면
-		// boardTitle, boardWriter, boardContent
-		// 필드에 값들이 담겨 있음
-		// 파일 넘기려면 어떻게 해야 되나 테스트 하기 위해 주석 처리 : int result = adminNoticeService.insertNoticeBoard(n, nAttach);
-		int result = adminNoticeService.insertNoticeBoard(n, nAttach);
-		
-		if(result  > 0) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
-			// nAttach.setNoticeNo((n.getNoticeNo()));
-			System.out.println("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ" + nAttach);
-			
-			nAttach.setCreateDate(n.getNoticeDate());
-			nAttach.setFileStatus("y");
-			nAttach.setNoticeNo(n.getNoticeNo());
-			System.out.println(n.getNoticeNo() + "이게 result 가 성공했을 때의 n 에 담겨있는 값이다.");
-			
-			
-			int fileResult = adminNoticeService.insertNoticeFile(nAttach);
+		if(result1 > 0 && result2 > 0) {
+
 			session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
 			
 			return "redirect:/notice.no"; // 내부적으로 1번 페이지로 향함
 			
-		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+		}else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
 			
 			model.addAttribute("errorMsg", "게시글 등록 실패");
 			
 			return "common/errorPage";
 		}
+		
+		
 	}
 		
 	public String saveFile(MultipartFile upfile, HttpSession session) {
@@ -287,20 +217,21 @@ public class AdminNoticeController {
 	
 	// 공지사항 업데이트폼으로 이동
 	@RequestMapping("/updateForm.no")
-	public ModelAndView updateForm(int nno /* , int nat */
-						 , ModelAndView mv, Notice n, Nattachment nAttach, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
+	public ModelAndView updateForm(int nno 
+						 , ModelAndView mv, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
 		
 		System.out.println("nno : " + nno);
 		
 		// 게시글 상세보기용 selectBoard 요청 재활용
-		n = noticeService.selectBoard(nno);
+		Notice n = noticeService.selectBoard(nno);
 		
 		System.out.println("--------");
 		System.out.println(n);
 		System.out.println("--------");
-		
-		// nAttach = noticeService.selectNoticeFile(nno);
+		// nAttach = adminNoticeService.selectForUpdateNoticeFile(natNo);
+		ArrayList<Nattachment> nAttach = noticeService.selectNoticeFile(nno);
 		System.out.println(nAttach);
+		System.out.println("--------");
 		//  System.out.println(mv);
 		mv.addObject("nAttach", nAttach);
 		mv.addObject("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
@@ -315,19 +246,34 @@ public class AdminNoticeController {
 	public String updateNotice(Model model,
 								 Notice n, 
 								MultipartFile reupfile,
-								HttpSession session/*,*/ /*
-								Nattachment nAttach */) {
-		/*
+								HttpSession session, 
+								Nattachment nAttach) {
 		
+		System.out.println("nAttach 의 원래 originName");
+		System.out.println(nAttach);
+		System.out.println("입니다.");
+		
+		System.out.println();
+		//n = noticeService.selectBoard(nno);
+		System.out.println("--------");
+		System.out.println("n 에 대한 것은 " + n + "입니다.");
+		System.out.println("--------");
+		int result = adminNoticeService.updateNotice(n);	
+		
+		// 새로운 첨부파일에 대한 insert
+		
+		// 새로운 첨부파일이 잇을 경우
 		if(!reupfile.getOriginalFilename().equals("")) {
-			
+			System.out.println("reupfile 이 있었을 경우의 reupfile 에 대한 정보 : " + reupfile);
 			// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 FILE_STATUS 를 'N' 으로 바꿔야 함.
 			if(nAttach.getOriginName() != null) {
+				System.out.println("기존에 첨부파일이 있었을 경우 " + nAttach);
+			// nAttach = adminNoticeService.selectForUpdateNoticeFile(nAttach);
 				
-				// session 객체가 필요하므로 매개변수에 HttpSession session 추가하고 작성
-				String realPath = session.getServletContext().getRealPath(nAttach.getChangeName());
-				new File(realPath).delete();
+				int deleteResult = adminNoticeService.changeFileStatus(nAttach);
+				System.out.println("deleteResult 의 값은 : " + deleteResult + " 입니다.");
 			}
+				
 			// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
 			String changeName = saveFile(reupfile, session);
 			
@@ -337,36 +283,29 @@ public class AdminNoticeController {
 			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
 			//		       경로를 지정하여 정확하게 뽑아야 함
 			nAttach.setChangeName("resources/img/notice/" + changeName);
-			}
-			int result = adminNoticeService.updateNotice(nno);
-			*/
+			
+			// System.out.println("nAttach 에 바뀐 파일 정보들이 담겼나에 대한 정보 " + nAttach);
+			// nattachment 테이블에 insert 해야함
 			
 			
-			//n = noticeService.selectBoard(nno);
-		System.out.println("--------");
-			System.out.println("n 에 대한 것은 " + n + "입니다.");
-			System.out.println("--------");
-			int result = adminNoticeService.updateNotice(n);
-			
-			System.out.println();
-			System.out.println(result + "!1111444444444444");
-				
-			if(result > 0) { // 성공
-				
-				// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
-				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
-			//	mv.setViewName(viewName);
-				return "redirect:/detail.no?nno=" + n.getNoticeNo();
-				
-			} else { // 실패
-				
-				// 에러문구 담아서 에러페이지로 포워딩
-				model.addAttribute("errorMsg", "업데이트 실패");
-				return "common/errorPage";
-				
-				
-			}
 		}
+		
+			
+		
+		if(result > 0) { // 성공
+				
+			// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
+			session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+			return "redirect:/detail.no?nno=" + n.getNoticeNo();
+				
+		} else { // 실패
+				
+			// 에러문구 담아서 에러페이지로 포워딩
+			model.addAttribute("errorMsg", "업데이트 실패");
+			return "common/errorPage";
+
+		}
+	}
 	
 	
 	/* 업데이트 할 때 매개변수 뭘 해야 할 지 몰라 새로 작성하기 위해 주석 처리

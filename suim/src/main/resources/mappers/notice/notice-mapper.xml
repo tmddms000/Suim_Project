@@ -17,7 +17,7 @@
 	
 	<resultMap id="adminNoticeResultSet" type="nAttachment">
 		<result column="NAT_NO" property="natNo" />
-		<result column="ORGIN_NAME" property="originName" />
+		<result column="ORIGIN_NAME" property="originName" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="CREATE_DATE" property="createDate" />
 		<result column="FILE_STATUS" property="fileStatus" />
@@ -65,7 +65,7 @@
 	<update id="increaseCount" parameterType="_int">
 		UPDATE NOTICE
 		   SET NOTICE_VIEW = NOTICE_VIEW + 1
-		 WHERE NOTICE_NO = #{noticeNo}
+		 WHERE NOTICE_NO = #{nno}
 		   AND NOTICE_STATUS = 'Y'
 	</update>
 	
@@ -77,7 +77,7 @@
 			 , FILE_STATUS
 			 , NOTICE_NO
 		  FROM NATTACHMENT
-		 WHERE NOTICE_NO = #{noticeNo}
+		 WHERE NOTICE_NO = #{nno}
 	</select>
 	
 	

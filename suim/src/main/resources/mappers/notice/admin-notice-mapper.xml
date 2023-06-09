@@ -68,21 +68,20 @@
 		   
 	</update>
 	
-	<select id="selectNoticeFile" parameterType="nAttachment" resultMap="adminNoticeResultSet">
-		SELECT NAT_NO
-			 , ORIGIN_NAME
-			 , CHANGE_NAME
-			 , CREATE_DATE
-			 , FILE_STATUS
-			 , NOTICE_NO
-		FROM NATTACHMENT
-	   WHERE NAT_NO = #{natNo}
-	
-	</select>
 	
 	
+	<!-- UPDAT -->
+	<update id="updateNoticeFile" parameterType="nAttachment">
+		UPDATE NATTACHMENT
+		   SET CHANGE_NAME = #{changeName}
+		 WHERE NAT_NO = #{natNo}
+		   
+	</update>
 	
-	
-	
+	<update id="changeFileStatus" parameterType="nAttachment">
+		UPDATE NATTACHMENT
+		   SET FILE_STATUS = 'N'
+		 WHERE NAT_NO = #{natNo}
+	</update>
 
 </mapper>

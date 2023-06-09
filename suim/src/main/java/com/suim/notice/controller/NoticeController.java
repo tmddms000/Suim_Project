@@ -55,8 +55,8 @@ public class NoticeController {
 	}
 
 	@RequestMapping("/detail.no")
-	public ModelAndView selectBoard(ModelAndView mv, Notice n, int nno, ArrayList<Nattachment> nAttach, HttpSession session, MultipartFile upfile) {
-		System.out.println(nno);
+	public ModelAndView selectBoard(ModelAndView mv, int nno, HttpSession session) {
+	
 	
 	// pathContext 방식
 	/*
@@ -71,19 +71,24 @@ public class NoticeController {
 		// 1. 해당 게시글 조회수 증가용 서비스 호출 및 결과 받기 (update 하고 옴)
 		int result = noticeService.increaseCount(nno);
 		
+		System.out.println("-------");
+		System.out.println(result);
+		
 		// 2. 만약 게시글 조회수가 성공적으로 증가되었다면 그제서야 select 요청
 		if(result> 0) { // 성공
-			System.out.println(result + "값");
 			// NoticeDetailView.jsp 에서 필요로 하는 응답데이터를 조회
-			System.out.println("nno 는 " + nno + "입니다.");
 		
+			ArrayList<Nattachment> nAttach = noticeService.selectNoticeFile(nno);
 			
-			nAttach = noticeService.selectNoticeFile(nno);
+			// System.out.println(nAttach);
 			
-			System.out.println(nAttach + "1");
-			n = noticeService.selectBoard(nno);
+			Notice n = noticeService.selectBoard(nno);
+			
+			System.out.println("----");
+			System.out.println(n);
+			
 			mv.addObject("nAttach", nAttach);
-			System.out.println("n은 " + n + "입니다.");
+			// System.out.println("n은 " + n + "입니다.");
 			//	   새로 넘어온 첨부파일에 대한 원본명, 수정파일명을 덮어씌우기 (필드값 셋팅)
 			
 			
@@ -93,7 +98,7 @@ public class NoticeController {
 			// mv.addObject("n", ndn);
 			// 조회된 데이터를 mv 에 담아서 포워딩 페이지 경로를 잡아주기
 			mv.addObject("n", n).setViewName("notice/noticeDetailView");
-			System.out.println(mv);
+			// System.out.println(mv);
 		} else { // 실패
 			// 에러문구를 담아서 에러페이지로 포워딩 경로 잡아주기
 			mv.addObject("errorMsg", "게시글 상세조회 실패")
@@ -101,10 +106,11 @@ public class NoticeController {
 			
 		}
 		mv.setViewName("notice/noticeDetailView");
-		System.out.println("mv 는" + mv);
+		// System.out.println("mv 는" + mv);
 		return mv;
 	}
 	
+	/*
 	public String saveFile(MultipartFile upfile, HttpSession session, Notice n) {
 		// 1. 원본파일명 뽑기
 		String originName = upfile.getOriginalFilename(); // "bono.jpg"
@@ -133,6 +139,7 @@ public class NoticeController {
 		
 		// n.setChangeName("/resources/img/notice/" + changeName);
 	}
+	*/
 	
 	
 	

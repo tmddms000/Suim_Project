@@ -7,7 +7,7 @@ public interface AdminNoticeService {
 
 	int increaseCount(int noticeNo);
 
-	Notice selectBoard(int noticeNo);
+	
 
 	// 파일과 공지사항을 둘 다 넘겨서 db 에 저장하려는 용도
 	int insertNoticeBoard(Notice n, Nattachment nAttach);
@@ -20,11 +20,10 @@ public interface AdminNoticeService {
 	
 	Nattachment selectForUpdateNoticeFile(Nattachment nAttach);
 	
-	
+	int updateNoticeFile(Nattachment nAttach);
 
+	int changeFileStatus(Nattachment nAttach);
 	
-	
-
 	
 
 

@@ -34,10 +34,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 	*/
 
 
-	@Override
-	public Notice selectBoard(int noticeNo) {
-		return adminNoticeDao.selectBoard(sqlSession, noticeNo);
-	}
+	
 
 	@Override
 	public int increaseCount(int nno) {
@@ -56,12 +53,23 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		return adminNoticeDao.updateNoticeBoard(sqlSession, n);
 	}
 
+
 	@Override
-	public Nattachment selectForUpdateNoticeFile(Nattachment nAttach) {
-		return adminNoticeDao.selectForUpdateNoticeFile(sqlSession, nAttach);
+	public int updateNoticeFile(Nattachment nAttach) {
+		return adminNoticeDao.updateNoticeFile(sqlSession, nAttach);
 	}
 
-	
+	@Override
+	public Nattachment selectForUpdateNoticeFile(Nattachment nAttach) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int changeFileStatus(Nattachment nAttach) {
+		return adminNoticeDao.changeFileStatus(sqlSession, nAttach);
+	}
+
 	
 
 	

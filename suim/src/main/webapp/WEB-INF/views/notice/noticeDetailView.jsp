@@ -94,32 +94,39 @@
                     </thead>
                     <tbody>
                         <tr rowspan="3">
+                          	
                           
-                            <td class="noticeContent" colspan="4" id="noticeFileAndContent">
+                            <td class="noticeContent" colspan="3" id="noticeFileAndContent">
                                <c:forEach items="${nAttach}" var="nAttach">
-		                          <img src="${nAttach.changeName }" style= "width : 100%;" name="nat">
-		                           ${ n.noticeContent }
+		                          <img src="${nAttach.changeName }" style= "width : 100%;" name="nno">
+		                          
 		                       </c:forEach>		                	
                             </td>
                             
                            
                             
                         </tr>
-                      	<c:forEach items="${nAttach}" var="nAttach">
+                        <tr rowspan="3">
+                        	<td class="noticeContent">
+                          		${ n.noticeContent }
+                          	</td>
+                         </tr>
+                         
+                      	<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
                          	<div align="center" style="display: inline-block;" align="right">
 				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
 				                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
 			        		</div>
+                        </c:if> 	
                          	
-                         	
-                			<form id="postForm" action="updateForm.no" method="post">
+                			<form id="postForm" action="" method="post">
 			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
 			            		<input type="hidden" name="nno" value="${ n.noticeNo }">	
-			            		<input type="hidden" name="nat" value="${ nAttach.natNo }">	            		
+			            	            		
 	            			</form>
 	            			
-				        </c:forEach>
+				       
 				        
 				        
 		               	<script>
