@@ -124,4 +124,40 @@ public class ListHouseController {
 	    return mv;
 	}
 	
+	// 셰어하우스 예약 확인
+	@RequestMapping("confirmRez.rez")
+	public ModelAndView confirmRez(ModelAndView mv, HttpServletRequest request, HttpSession session, int rno, int houseNo) {
+	
+		int result = listHouseService.confirmRez(rno);
+		
+		if (result > 0) { // 성공
+	        session.setAttribute("conMsg", "성공적으로 예약 확정 되었습니다.");
+	    } else { // 실패
+	        session.setAttribute("conMsg", "예약 확정에 실패했습니다.");
+	    }
+	
+		String confirm = request.getHeader("Referer");
+		
+	    mv.addObject("houseNo", houseNo);
+
+	    mv.setViewName("redirect:" + confirm); 
+
+	    return mv;
+	
+	}	
+	
+		// 예약취소 팝업창 컨트롤러
+		@RequestMapping("rezCancel.rez")
+		public String rezCancelPop(@RequestParam("value") int rezNo, @RequestParam("value2") String houseName,
+										HttpSession session, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
+
+		    model.addAttribute("rezNo", rezNo);
+		    model.addAttribute("houseName", houseName);
+		
+		    return "member/mypage/reservationCancel";
+		    
+		}
+		
+		// 셰어하우스 예약 취소
+	
 }

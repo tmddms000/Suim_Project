@@ -35,6 +35,7 @@
 		<result column="REZ_HOUR" property="rezHour"/>
 		<result column="MEMBER_ID" property="memberId"/>
 		<result column="REZ_STATUS" property="rezStatus"/>
+		<result column="REZ_REQUEST_DATE" property="rezRequestDate"/>
 		<result column="CANCEL_CONTENT" property="cancelContent"/>
 		<result column="DEL_STATUS" property="delStatus"/>
 		<result column="HOUSE_NO" property="houseNo"/>
@@ -113,7 +114,15 @@
 		JOIN HOUSE h ON r.HOUSE_NO = h.HOUSE_NO
 			WHERE h.HOUSE_NO = #{houseNo}
 			AND r.DEL_STATUS = 'N'
+		 ORDER BY r.REZ_NO DESC
 	</select>	
 	
+	
+	<!-- 셰어하우스 예약 확인 -->
+	<update id="confirmRez" parameterType="_int">
+		UPDATE RESERVATION
+		SET REZ_STATUS = '예약확정'
+		WHERE REZ_NO = #{rno}
+	</update>	
 	
 </mapper>
