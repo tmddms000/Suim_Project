@@ -121,28 +121,34 @@
                         </c:if> 	
                          	
                 			<form id="postForm" action="" method="post">
+                			
 			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
-			            		<input type="hidden" name="nno" value="${ n.noticeNo }">	
-			            	            		
+			            		<input type="hidden" name="nno" value="${ n.noticeNo }">
+			            		
+			            		<!-- 공지사항 파일이 있을 경우에만 삭제 처리 하기 위해 넘김 -->
+			            		<c:forEach items="${nAttach}" var="nAttach">
+			            	    	<input type="hidden" name="filePath" value="${ nAttach.changeName }"> 
+			            	    </c:forEach>
+			            	        		
 	            			</form>
 	            			
 				       
 				        
 				        
-		               	<script>
-		               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
-		               		function postFormSubmit(num) {
-		               	
-		               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-		               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
-		            				$("#postForm").attr("action", "updateForm.no").submit();
-		            			} else { // 삭제하기 버튼을 클릭했을 경우
-		            				$("#postForm").attr("action", "delete.bo").submit();
-		            			}	
-		            		}
-		               		
-		                
-		            </script>
+	               	<script>
+	               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
+	               		function postFormSubmit(num) {
+	               	
+	               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
+	               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "updateForm.no?nno=${n.noticeNo}").submit();
+	            			} else { // 삭제하기 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "delete.no?nno=${n.noticeNo}").submit();
+	            			}	
+	            		}
+	               		
+	                
+	           		</script>
 		            
 
                     </tbody>

@@ -105,7 +105,7 @@ public class NoticeController {
 			   .setViewName("common/errorPage");
 			
 		}
-		mv.setViewName("notice/noticeDetailView");
+		
 		// System.out.println("mv 는" + mv);
 		return mv;
 	}

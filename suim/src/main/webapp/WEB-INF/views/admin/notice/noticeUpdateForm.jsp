@@ -86,7 +86,7 @@
 	                            	<!-- 파일 수정 시 기존 첨부파일이 있을 경우 : 기존첨부파일의 원본명과 수정명을 같이 넘겨줄 것 -->
 	                            	<input type="hidden" name="originName" value="${ nnnn.originName }">
 	                            	<input type="hidden" name="changeName" value="${ nnnn.changeName }">
-	                            	<!--  <input type="hidden" name="natNo" value="${ nnnn.natNo }"> -->
+	                            	
 	                            
 	                            	</c:forEach>
 	                            

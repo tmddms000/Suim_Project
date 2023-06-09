@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -215,97 +216,155 @@ public class AdminNoticeController {
 			
 		}
 	
+	
+	
+	
+	
 	// 공지사항 업데이트폼으로 이동
-	@RequestMapping("/updateForm.no")
-	public ModelAndView updateForm(int nno 
-						 , ModelAndView mv, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
+		@RequestMapping("/updateForm.no")
+		public ModelAndView updateForm(int nno 
+							 , ModelAndView mv, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
+			
+			System.out.println("nno : " + nno);
+			
+			// 게시글 상세보기용 selectBoard 요청 재활용
+			Notice n = noticeService.selectBoard(nno);
+			
+			System.out.println("--------");
+			System.out.println(n);
+			System.out.println("--------");
+			// nAttach = adminNoticeService.selectForUpdateNoticeFile(natNo);
+			ArrayList<Nattachment> nAttach = noticeService.selectNoticeFile(nno);
+			System.out.println(nAttach);
+			System.out.println("--------");
+			//  System.out.println(mv);
+			mv.addObject("nAttach", nAttach);
+			mv.addObject("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
+			
+			// System.out.println(mv + "입니다.");
+			
+			mv.setViewName("admin/notice/noticeUpdateForm");
+			return mv;
+		}
 		
-		System.out.println("nno : " + nno);
+		@RequestMapping("/update.no")
+		public String updateNotice(Model model,
+									 Notice n, 
+									MultipartFile reupfile,
+									HttpSession session, 
+									Nattachment nAttach) {
+			
+			System.out.println("nAttach 의 원래 originName");
+			System.out.println(nAttach);
+			System.out.println("입니다.");
+			
+			System.out.println();
+			//n = noticeService.selectBoard(nno);
+			System.out.println("--------");
+			System.out.println("n 에 대한 것은 " + n + "입니다.");
+			System.out.println("--------");
+			int result = adminNoticeService.updateNotice(n);	
+			
+			// 새로운 첨부파일에 대한 insert
+			
+			// 새로운 첨부파일이 잇을 경우
+			/*
+			if(!reupfile.getOriginalFilename().equals("")) {
+				System.out.println("reupfile 이 있었을 경우의 reupfile 에 대한 정보 : " + reupfile);
+				// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 FILE_STATUS 를 'N' 으로 바꿔야 함.
+				if(nAttach.getOriginName() != null) {
+					System.out.println("기존에 첨부파일이 있었을 경우 " + nAttach);
+				// nAttach = adminNoticeService.selectForUpdateNoticeFile(nAttach);
+					
+					int deleteResult = adminNoticeService.changeFileStatus(nAttach);
+					System.out.println("deleteResult 의 값은 : " + deleteResult + " 입니다.");
+				}
+					
+				// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
+				String changeName = saveFile(reupfile, session);
+				
+				
+				nAttach.setOriginName(reupfile.getOriginalFilename());
+				
+				// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
+				//		       경로를 지정하여 정확하게 뽑아야 함
+				nAttach.setChangeName("resources/img/notice/" + changeName);
+				
+				// System.out.println("nAttach 에 바뀐 파일 정보들이 담겼나에 대한 정보 " + nAttach);
+				// nattachment 테이블에 insert 해야함
+				
+				
+			}
+			
+			*/
+				
+			
+			if(result > 0) { // 성공
+					
+				// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
+				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+				return "redirect:/detail.no?nno=" + n.getNoticeNo();
+					
+			} else { // 실패
+					
+				// 에러문구 담아서 에러페이지로 포워딩
+				model.addAttribute("errorMsg", "업데이트 실패");
+				return "common/errorPage";
+
+			}
+		}
 		
-		// 게시글 상세보기용 selectBoard 요청 재활용
+	
+	/**
+	 * 현재는 파일 삭제만 되고 database 에는 해당 nAttachtable 의 행의 filestatus 가 n 으로 바뀌지 않음.
+	 * @param NoticeNo
+	 * @param model
+	 * @param filePath : 파일 경로
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("delete.no")
+	public String deleteHouse(@RequestParam("nno") int nno,
+							  Model model, 
+							  String filePath,
+							  HttpSession session) {
+		
+		// 삭제하려는 해당 공지사항 번호를 조회하기 위한 것
 		Notice n = noticeService.selectBoard(nno);
 		
-		System.out.println("--------");
-		System.out.println(n);
-		System.out.println("--------");
-		// nAttach = adminNoticeService.selectForUpdateNoticeFile(natNo);
-		ArrayList<Nattachment> nAttach = noticeService.selectNoticeFile(nno);
-		System.out.println(nAttach);
-		System.out.println("--------");
-		//  System.out.println(mv);
-		mv.addObject("nAttach", nAttach);
-		mv.addObject("n", n); // void 를 String 타입으로 바꿔주고매개변수에 model 추가하고 씀
+		// 해당 공지사항의 첨부 파일을 조회해서 file_status 를 n 으로 바꾸기 위한 것.
+		//Nattachment nAttach = adminoticeService.selectNoticeFile(nno);
 		
-		// System.out.println(mv + "입니다.");
+		int result = adminNoticeService.deleteNotice(nno);
 		
-		mv.setViewName("admin/notice/noticeUpdateForm");
-		return mv;
+		if(result > 0) { // 삭제 처리 성공
+			
+	//	int result2 = adminNoticeService.changeFileStatus(nAttach);
+			
+			// delete.no 요청 시 첨부파일이 있었을 경우
+			// 서버의 실제 파일이 삭제 되는 코드
+			 
+			if(filePath != null) {
+				// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
+				String realPath = session.getServletContext().getRealPath(filePath);
+				new File(realPath).delete();
+			}
+			
+			
+			
+			session.setAttribute("alertMsg", "성공적으로 OO가 삭제되었습니다.");
+			
+			return "redirect:/notice.no";
+			
+		} else { // 삭제 처리 실패 => 에러페이지 포워딩
+			
+			model.addAttribute("errorMsg", "회원 삭제 실패");
+			
+			return "common/errorPage";
+		}
 	}
 	
-	@RequestMapping("/update.no")
-	public String updateNotice(Model model,
-								 Notice n, 
-								MultipartFile reupfile,
-								HttpSession session, 
-								Nattachment nAttach) {
-		
-		System.out.println("nAttach 의 원래 originName");
-		System.out.println(nAttach);
-		System.out.println("입니다.");
-		
-		System.out.println();
-		//n = noticeService.selectBoard(nno);
-		System.out.println("--------");
-		System.out.println("n 에 대한 것은 " + n + "입니다.");
-		System.out.println("--------");
-		int result = adminNoticeService.updateNotice(n);	
-		
-		// 새로운 첨부파일에 대한 insert
-		
-		// 새로운 첨부파일이 잇을 경우
-		if(!reupfile.getOriginalFilename().equals("")) {
-			System.out.println("reupfile 이 있었을 경우의 reupfile 에 대한 정보 : " + reupfile);
-			// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 FILE_STATUS 를 'N' 으로 바꿔야 함.
-			if(nAttach.getOriginName() != null) {
-				System.out.println("기존에 첨부파일이 있었을 경우 " + nAttach);
-			// nAttach = adminNoticeService.selectForUpdateNoticeFile(nAttach);
-				
-				int deleteResult = adminNoticeService.changeFileStatus(nAttach);
-				System.out.println("deleteResult 의 값은 : " + deleteResult + " 입니다.");
-			}
-				
-			// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
-			String changeName = saveFile(reupfile, session);
-			
-			
-			nAttach.setOriginName(reupfile.getOriginalFilename());
-			
-			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
-			//		       경로를 지정하여 정확하게 뽑아야 함
-			nAttach.setChangeName("resources/img/notice/" + changeName);
-			
-			// System.out.println("nAttach 에 바뀐 파일 정보들이 담겼나에 대한 정보 " + nAttach);
-			// nattachment 테이블에 insert 해야함
-			
-			
-		}
-		
-			
-		
-		if(result > 0) { // 성공
-				
-			// 일회성 알람 문구 담고 게시판 리스트페이지로 url 재요청
-			session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
-			return "redirect:/detail.no?nno=" + n.getNoticeNo();
-				
-		} else { // 실패
-				
-			// 에러문구 담아서 에러페이지로 포워딩
-			model.addAttribute("errorMsg", "업데이트 실패");
-			return "common/errorPage";
-
-		}
-	}
+	
 	
 	
 	/* 업데이트 할 때 매개변수 뭘 해야 할 지 몰라 새로 작성하기 위해 주석 처리

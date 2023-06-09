@@ -70,6 +70,11 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 		return adminNoticeDao.changeFileStatus(sqlSession, nAttach);
 	}
 
+	@Override
+	public int deleteNotice(int nno) {
+		return adminNoticeDao.deleteNotice(sqlSession, nno);
+	}
+
 	
 
 	

@@ -54,5 +54,9 @@ public class AdminNoticeDao {
 		return sqlSession.update("adminNoticeMapper.chageFileStatus", nAttach);
 	}
 	
+	public int deleteNotice(SqlSessionTemplate sqlSession, int nno) {
+		return sqlSession.update("adminNoticeMapper.deleteNotice", nno);
+	}
+	
 
 }

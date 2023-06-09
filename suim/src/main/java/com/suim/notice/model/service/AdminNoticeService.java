@@ -23,6 +23,13 @@ public interface AdminNoticeService {
 	int updateNoticeFile(Nattachment nAttach);
 
 	int changeFileStatus(Nattachment nAttach);
+
+	// detailNotice 로부터 nno 를 받아서 해당 공지사항과 파일도 삭제
+	int deleteNotice(int nno);
+
+
+
+
 	
 	
 

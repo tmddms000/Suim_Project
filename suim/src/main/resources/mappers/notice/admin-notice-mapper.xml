@@ -81,7 +81,13 @@
 	<update id="changeFileStatus" parameterType="nAttachment">
 		UPDATE NATTACHMENT
 		   SET FILE_STATUS = 'N'
-		 WHERE NAT_NO = #{natNo}
+		 WHERE NAT_NO = #{nAttach}
+	</update>
+	
+	<update id="deleteNotice" parameterType="notice">
+		UPDATE NOTICE
+		   SET NOTICE_STATUS = 'N'
+		 WHERE NOTICE_NO = #{nno}
 	</update>
 
 </mapper>

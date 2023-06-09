@@ -78,6 +78,7 @@
 			 , NOTICE_NO
 		  FROM NATTACHMENT
 		 WHERE NOTICE_NO = #{nno}
+		  AND FILE_STATUS = 'Y'
 	</select>
 	
 	
