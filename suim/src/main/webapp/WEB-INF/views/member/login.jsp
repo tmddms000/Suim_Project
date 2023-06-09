@@ -66,21 +66,25 @@
 
 
                     <div class="row justify-content-center mt-2">
-                        <div class="col-sm-4">
-                            <div class="text-center mt-2">
-                            <button class="image-button">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/235px-Google_%22G%22_Logo.svg.png" alt="Button Image" style="width : 30px">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;구글계정으로 로그인
-                            </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center mt-2">
-                        <div class="col-sm-4">
-                            <div id="naver_id_login" style="text-align:center"><a href="${url}">
-						<img width="300px" src="https://developers.naver.com/doc/review_201802/CK_bEFnWMeEBjXpQ5o8N_20180202_7aot50.png"/></a></div>
-                        </div>
-                    </div>
+					  <div class="col-sm-4">
+					    <div class="text-center mt-2">
+					      <a href="${google_url}" class="image-button">
+					        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/235px-Google_%22G%22_Logo.svg.png" alt="Button Image" style="width: 30px">
+					        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;구글계정으로 로그인</span>
+					      </a>
+					    </div>
+					  </div>
+					</div>
+					
+					<div class="row justify-content-center mt-2">
+					  <div class="col-sm-4">
+					    <a href="${naver_url}" class="image-button">
+					      <img style="width: 30px;" src="/resources/img/member/naverBtn.png"/>
+					      <span>&nbsp;&nbsp;네이버계정으로 로그인</span>
+					    </a>
+					  </div>
+					</div>
+                    
                     <br>
             </div>
         </div>

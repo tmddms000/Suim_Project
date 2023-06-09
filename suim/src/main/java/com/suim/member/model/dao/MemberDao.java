@@ -113,6 +113,18 @@ public class MemberDao {
 		return sqlSession.selectOne("memberMapper.findMemberPw", m);
 	}
 
+	public int googleConnectionCheck(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("memberMapper.googleConnectionCheck", email);
+	}
+
+	public int setGoogleConnection(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("memberMapper.setGoogleConnection", m);
+	}
+
+	public Member userGoogleoginPro(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.selectOne("memberMapper.userGoogleLoginPro", m);
+	}
+
 
 
 

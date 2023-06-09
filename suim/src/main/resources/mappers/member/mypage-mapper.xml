@@ -37,7 +37,18 @@
 		<result column="RENT" property="rent" />
 	</resultMap>
 	
-	
+	<resultMap id="inReviewResultSet" type="inreview">
+    <result column="INR_NO" property="inrNo" />
+    <result column="INR_TITLE" property="inrTitle" />
+    <result column="MEMBER_ID" property="memberId" />
+    <result column="INR_VIEW" property="inrView" />
+    <result column="INR_DATE" property="inrDate" />
+    <result column="ORIGIN_NAME" property="originName" />
+    <result column="NICKNAME" property="nickName" />
+    <result column="INR_CONTENT" property="inrContent" />
+    <result column="CHANGE_NAME" property="changeName" />
+    <result column="THUMBNAIL" property="thumbnail" />
+	</resultMap>
 	
 	
 	
@@ -88,47 +99,8 @@
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 	<select id="selectBoardList" parameterType="string" resultMap="boardResultSet">
-		SELECT
-		B.BOARD_NO,
-		B.BOARD_TITLE,
-
-		B.BOARD_CONTENT,
-
-		B.BOARD_VIEW,
-		B.BOARD_DATE,
-		B.STATUS,
-		B.MEMBER_ID,
-		BA.ORIGIN_NAME,
-		BA.CHANGE_NAME,
-		COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT
-		FROM BOARD B
-
-		JOIN
-		MEMBER M ON
-		(M.MEMBER_ID = B.MEMBER_ID)
-		LEFT JOIN BATTACHMENT BA ON
-		(BA.BOARD_NO =
-		B.BOARD_NO)
-		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO =
-		B.BOARD_NO)
-
-		WHERE B.STATUS = 'Y'
-		AND M.MEMBER_ID = #{memberId}
-		GROUP BY
-		B.BOARD_NO,
-		B.BOARD_TITLE,
-
-		B.BOARD_CONTENT,
-
-		B.BOARD_VIEW,
-		B.BOARD_DATE,
-		B.STATUS,
-		B.MEMBER_ID,
-		BA.ORIGIN_NAME,
-		BA.CHANGE_NAME
-
-		ORDER BY B.BOARD_NO
-		DESC
+		SELECT * FROM BOARD
+		WHERE MEMBER_ID = #{memberId}
 
 	</select>
 
@@ -142,46 +114,28 @@
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 	<select id="selectFindList" resultMap="findResultSet">
-
-		SELECT
-		F.FIND_NO,
-		F.FIND_TITLE,
-		F.FIND_CONTENT,
-
-		F.FIND_CATEGORY,
-		F.FIND_VIEW,
-		F.FIND_DATE,
-		F.STATUS,
-		F.MEMBER_ID,
-		FA.ORIGIN_NAME,
-		FA.CHANGE_NAME,
-
-		COUNT(FR.FRE_NO) AS
-		FIND_REPLY_COUNT
-		FROM FIND F
-		JOIN MEMBER M ON (M.MEMBER_ID =
-		F.MEMBER_ID)
-		LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
-		LEFT
-		JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
-		WHERE F.STATUS = 'Y'
-		AND
-		M.MEMBER_ID = #{memberId}
-		GROUP BY
-		F.FIND_NO,
-		F.FIND_TITLE,
-		F.FIND_CONTENT,
-
-		F.FIND_CATEGORY,
-		F.FIND_VIEW,
-		F.FIND_DATE,
-		F.STATUS,
-		F.MEMBER_ID,
-		FA.ORIGIN_NAME,
-		FA.CHANGE_NAME
-		ORDER BY F.FIND_NO DESC
-
+		SELECT * FROM FIND
+		WHERE MEMBER_ID = #{memberId}
 	</select>
+	
+	
+	<select id="selectInreviewCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		FROM FIND
+		WHERE STATUS = 'Y'
+		AND MEMBER_ID = #{memberId}
+	</select>
+
+
+	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+	<select id="selectInreviewList" resultMap="inReviewResultSet">
+		SELECT * FROM FIND
+		WHERE MEMBER_ID = #{memberId}
+	</select>
+	
+	
+	
+	
 	
 	<update id="deleteBoard" parameterType="hashMap">
 	    UPDATE BOARD
@@ -215,7 +169,6 @@
 
 
 
-		<!-- 자유게시판 게시글 갯수 -->
 	<select id="selectWishListCount" parameterType="string" resultType="_int">
 		SELECT COUNT(*) FROM WISH W
 		JOIN HOUSE H USING (HOUSE_NO)
@@ -224,7 +177,7 @@
 		AND W.MEMBER_ID = #{memberId}
 	</select>
 
-	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+
 	<select id="selectWishList" parameterType="string" resultMap="wishResultSet">
 		SELECT * FROM WISH W
 		JOIN HOUSE H USING (HOUSE_NO)
@@ -232,6 +185,26 @@
 		WHERE H.HOUSE_STATUS = 'Y'   
 		AND W.MEMBER_ID = #{memberId}
 	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 

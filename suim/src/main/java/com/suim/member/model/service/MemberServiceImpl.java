@@ -132,6 +132,24 @@ public class MemberServiceImpl implements MemberService {
 	public int findMemberPw(Member m) {
 		return memberDao.findMemberPw(sqlSession, m);
 	}
+
+	@Override
+	public int googleConnectionCheck(String email) {
+		return memberDao.googleConnectionCheck(sqlSession, email);
+	}
+
+
+	@Override
+	public int setGoogleConnection(Member m) {
+		return memberDao.setGoogleConnection(sqlSession, m);
+	}
+
+	@Override
+	public Member userGoogleoginPro(Member m) {
+		return memberDao.userGoogleoginPro(sqlSession, m);
+	}
+
+	
 	
 	
 

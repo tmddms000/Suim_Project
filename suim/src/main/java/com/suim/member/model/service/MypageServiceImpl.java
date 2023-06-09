@@ -77,4 +77,14 @@ public class MypageServiceImpl implements MypageService {
 		return mypageDao.selectWishList(sqlSession, pi, memberId);
 	}
 
+	@Override
+	public int selectInreviewCount(String memberId) {
+		return mypageDao.selectInreviewCount(sqlSession, memberId);
+	}
+
+	@Override
+	public ArrayList<Board> selectInreviewList(PageInfo pi, String memberId) {
+		return mypageDao.selectInreviewList(sqlSession, pi, memberId);
+	}
+
 }

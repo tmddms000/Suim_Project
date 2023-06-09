@@ -182,9 +182,9 @@ public class MypageController {
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
 			list = mypageService.selectBoardList(pi, memberId);
 		} else if (type.equals("inreview")) {
-			listCount = mypageService.selectBoardListCount(memberId);
+			listCount = mypageService.selectInreviewCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
-			list = mypageService.selectBoardList(pi, memberId);
+			list = mypageService.selectInreviewList(pi, memberId);
 		} else if (type.equals("find")) {
 			listCount = mypageService.selectFindListCount(memberId);
 			pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
@@ -223,7 +223,7 @@ public class MypageController {
 		String memberId = m.getMemberId();
 		int listCount = mypageService.selectWishListCount(memberId);
 		PageInfo pi = Pagination.getPageInfo(listCount, page, pageLimit, boardLimit);
-    
+
 		ArrayList<MyWish> list = mypageService.selectWishList(pi, memberId);
 
 		model.addAttribute("pi", pi).addAttribute("list", list);

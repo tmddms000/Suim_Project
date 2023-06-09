@@ -20,6 +20,7 @@
 		<result column="STATUS" property="status" />
 		<result column="MEMBER_COMMENT" property="memberComment" />
 		<result column="NAVERLOGIN" property="naverLogin" />
+		<result column="GOOGLELOGIN" property="googleLogin" />
 	</resultMap>
 
 	<!-- 로그인용 쿼리문 -->
@@ -120,20 +121,54 @@
 	</select>
 
 	<!-- 이메일이 일치한 회원 네이버 로그인 연동 시키기 -->
-	<select id="setNaverConnection" parameterType="map">
+	<select id="setNaverConnection" parameterType="hashmap">
 		UPDATE MEMBER
 		SET NAVERLOGIN = #{id}
 		WHERE EMAIL = #{email}
 	</select>
 
-
 	<!-- 네이버 로그인 연동이 되어있는 회원 찾기 -->
-	<select id="userNaverLoginPro" parameterType="member"
+	<select id="userNaverLoginPro" parameterType="hashmap"
 		resultMap="memberResultSet">
 		SELECT *
 		FROM MEMBER
 		WHERE EMAIL = #{email} AND NAVERLOGIN = #{id}
 	</select>
+	
+	
+	<!-- 구글 로그인이 연동되어 있는지 체크 -->
+	<select id="googleConnectionCheck" parameterType="string"
+		resultType="_int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE EMAIL = #{email}
+	</select>
+
+	<!-- 이메일이 일치한 회원 네이버 로그인 연동 시키기 -->
+	<select id="setGoogleConnection" parameterType="member">
+		UPDATE MEMBER
+		SET GOOGLELOGIN = #{googleLogin}
+		WHERE EMAIL = #{email}
+	</select>
+
+	<!-- 네이버 로그인 연동이 되어있는 회원 찾기 -->
+	<select id="userGoogleLoginPro" parameterType="member"
+		resultMap="memberResultSet">
+		SELECT *
+		FROM MEMBER
+		WHERE EMAIL = #{email} AND GOOGLELOGIN = #{googleLogin}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<!-- 회원 정보 수정용 쿼리문 -->
 	<update id="updateMember" parameterType="member">
@@ -166,17 +201,6 @@
 	WHERE MEMBER_ID = #{memberId}
 	AND EMAIL = #{email}	
 	</select>
-
-
-
-
-
-
-
-
-
-
-
 
 	<!-- 회원 탈퇴용 쿼리문 -->
 	<update id="deleteMember" parameterType="string">

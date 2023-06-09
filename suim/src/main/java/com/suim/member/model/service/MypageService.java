@@ -24,8 +24,13 @@ public interface MypageService {
 	//사람구해요 게시판의 게시글 리스트를 조회합니다.
 	ArrayList<Board> selectFindList(PageInfo pi, String memberId);
 
+	//이용 후기 게시글 갯수를 조회합니다.
+	int selectInreviewCount(String memberId);
 
-	//게시글 삭제합니다.
+	//이용 후기 게시글 리스트를 조회합니다.
+	ArrayList<Board> selectInreviewList(PageInfo pi, String memberId);
+	
+	//게시판의 게시글을 삭제합니다.
 	int deleteBoard(int[] intArray, String memberId);
 	
 	//찜목록 아이디로 전체 갯수 조회
@@ -34,6 +39,7 @@ public interface MypageService {
 	//찜목록 리스트 조회
 	ArrayList<MyWish> selectWishList(PageInfo pi, String memberId);
 	
+
 	
 
 	
@@ -43,5 +49,8 @@ public interface MypageService {
 	
 	//내가올린셰어하우스리스트 조회
 	ArrayList<House> selectHouseList(PageInfo pi, String memberId);
+
+	
+
 	
 }

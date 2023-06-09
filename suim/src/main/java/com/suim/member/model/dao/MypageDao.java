@@ -90,4 +90,17 @@ public class MypageDao {
 		return (ArrayList)sqlSession.selectList("mypageMapper.selectWishList", memberId, rowBounds);
 	}
 
+	public int selectInreviewCount(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.selectOne("mypageMapper.selectInreviewCount", memberId);
+	}
+
+	public ArrayList<Board> selectInreviewList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("mypageMapper.selectInreviewList", memberId, rowBounds);
+	}
+
 }

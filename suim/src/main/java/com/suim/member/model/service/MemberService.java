@@ -52,6 +52,13 @@ public interface MemberService {
 
 	// 회원 네이버 연동 서비스
 	Member userNaverLoginPro(Map<String, Object> apiJson);
+	
+	// 구글 회원 체크 서비스
+	int googleConnectionCheck(String email);
+	
+	int setGoogleConnection(Member m);
+	
+	Member userGoogleoginPro(Member m);
 
 	
 	// 회원가입 시 memberAuth를 insert(외래키로 연결)
