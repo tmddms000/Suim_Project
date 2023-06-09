@@ -87,6 +87,11 @@ public class AuthController {
 	public String phoneCheck(String phone) {
 		return checkDuplicate("phone", phone);
 	}
+	
+
+	
+	
+	
 
 	// 회원가입 성공
 	@RequestMapping("joinSuccess")
@@ -98,20 +103,21 @@ public class AuthController {
 		}
 
 		if (checkDuplicate("id", member.getMemberId()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 아이디가 존재합니다.");
+			session.setAttribute("toastError", "중복된 아이디가 존재합니다.");
 			return "member/signup";
 		}
 
 		if (checkDuplicate("email", member.getEmail()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 이메일이 존재합니다.");
+			session.setAttribute("toastError", "중복된 이메일이 존재합니다.");
 			return "member/signup";
 		}
 
 		if (checkDuplicate("phone", member.getPhone()).equals("Duplicate")) {
-			session.setAttribute("alertMsg", "중복된 번호가 존재합니다.");
+			session.setAttribute("toastError", "중복된 번호가 존재합니다.");
 			return "member/signup";
 		}
-
+		
+		
 		String nickName = generateUniqueNickname();
 		String encPwd = bcryptPasswordEncoder.encode(member.getMemberPwd());
 
@@ -119,27 +125,21 @@ public class AuthController {
 		member.setMemberPwd(encPwd);
 
 		int result = memberService.insertMember(member);
-		if (result > 0) {
+		String mailKey = new TempKey().getKey(30, false);
+		Email email = new Email(mailKey, member.getEmail());
+		int result2 = memberService.insertEmail(email);
+		int result3 = memberService.setEmailCode(email);
 
-			String mailKey = new TempKey().getKey(30, false);
-			Email email = new Email(mailKey, member.getEmail());
-			int result2 = memberService.insertEmail(email);
-			int result3 = memberService.setEmailCode(email);
+		CompletableFuture.runAsync(() -> {
+			try {
+				mailSendAsync(mailKey, member.getEmail());
+			} catch (Exception e) {
+				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			}
+		});
 
-			CompletableFuture.runAsync(() -> {
-				try {
-					mailSendAsync(mailKey, member.getEmail());
-				} catch (Exception e) {
-					log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-				}
-			});
-
-			session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
-			return "member/sign-success";
-		} else {
-			session.setAttribute("alertMsg", "오류가 발생했습니다. 다시 시도해주세요.");
-			return "member/signup";
-		}
+		session.setAttribute("toastSuccess", "성공적으로 회원가입이 되었습니다.");
+		return "member/sign-success";
 	}
 
 	// 로그인 페이징
@@ -158,7 +158,7 @@ public class AuthController {
 		Member loginUser = memberService.loginMember(m);
 
 		if (loginUser == null) {
-			session.setAttribute("alertMsg", "아이디를 확인해주세요");
+			session.setAttribute("toastError", "아이디를 확인해주세요");
 			return "member/login";
 
 		} else {
@@ -168,13 +168,13 @@ public class AuthController {
 
 				if (result > 0) {
 
-					session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+					session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
 					session.setAttribute("loginUser", loginUser);
 
 					return "redirect:/";
 
 				} else {
-					session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+					session.setAttribute("toastError", "아이디 인증이 되지 않았습니다");
 
 					String mailKey = new TempKey().getKey(30, false);
 					Email email = new Email(mailKey, loginUser.getEmail());
@@ -185,7 +185,7 @@ public class AuthController {
 					return "redirect:/member/verifyPage";
 				}
 			} else {
-				session.setAttribute("alertMsg", "비밀번호를 확인해주세요.");
+				session.setAttribute("toastError", "비밀번호를 확인해주세요.");
 				return "member/login";
 
 			}
@@ -200,7 +200,7 @@ public class AuthController {
 
 	@RequestMapping("verifySuccess")
 	public String verifySuccess() {
-		session.setAttribute("alertMsg", "이메일 인증이 완료됐습니다.");
+		session.setAttribute("toastSuccess", "이메일 인증이 완료됐습니다.");
 		return "/member/verifySuccess";
 	}
 
@@ -242,10 +242,10 @@ public class AuthController {
 
 				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);
 
-				session.setAttribute("alertMsg", "성공적으로 회원가입이 되었습니다.");
+				session.setAttribute("toastSuccess", "성공적으로 회원가입이 되었습니다.");
 				return "redirect:/member/verifyPage";
 			} else {
-				session.setAttribute("alertMsg", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+				session.setAttribute("toastError", "오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
 				return "member/login";
 			}
 		} else {
@@ -257,13 +257,13 @@ public class AuthController {
 
 			if (result > 0) {
 
-				session.setAttribute("alertMsg", "로그인에 성공했습니다.");
+				session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
 				session.setAttribute("loginUser", loginUser);
 
 				return "redirect:/";
 
 			} else {
-				session.setAttribute("alertMsg", "아이디 인증이 되지 않았습니다");
+				session.setAttribute("toastError", "아이디 인증이 되지 않았습니다");
 
 				int result3 = memberService.setEmailCode(sendEmail);
 				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, email);
@@ -278,6 +278,38 @@ public class AuthController {
 		session.removeAttribute("loginUser");
 		return "redirect:/";
 	}
+	
+	
+	//아이디 찾기 이동
+	@GetMapping("findId")
+	public String findMemberId() {
+		return "/member/find-id";
+	}
+	
+	@PostMapping("findId")
+	@ResponseBody
+	public String findMemberId(Member m) {
+		
+		String memberId = memberService.findMemberId(m);
+		return memberId;
+	}
+	
+	@GetMapping("findPw")
+	public String findMemberPw() {
+		return "/member/find-pw";
+	}
+	
+	@PostMapping("findPw")
+	@ResponseBody
+	public int findMemberPw(Member m) {
+		int result = memberService.findMemberPw(m);
+		if(result > 0) {
+		mailSendAsync(m);
+		}
+		return result;
+	}
+	
+	
 
 	// Auth 관련 메소드들
 
@@ -342,8 +374,8 @@ public class AuthController {
 				sendMail.setText("<h1>쉐어하우스 쉼 메일인증</h1>" + "<br>쉼(SUIM)에 오신 것을 환영합니다!" + "<br>아래 [이메일 인증 확인]을 눌러주세요."
 						+ "<br><a href='http://localhost:8006/member/verifyEmail?email=" + email + "&mailKey=" + mailKey
 						+ "' target='_blank'>이메일 인증 확인</a>");
-				sendMail.setFrom("dunghasd@gmail.com", "쉼");
-				sendMail.setSubject("쉼 이메일 인증번호");
+				sendMail.setFrom("suimm012@gmail.com", "쉼");
+				sendMail.setSubject("쉼 이메일 인증번호입니다");
 				sendMail.setTo(email);
 				sendMail.send();
 			} catch (MessagingException e) {
@@ -352,6 +384,50 @@ public class AuthController {
 				log.error("기타 에러 발생: {}", e.getMessage());
 			}
 		});
+	}
+	
+	private CompletableFuture<Void> mailSendAsync(Member m) {
+
+		return CompletableFuture.runAsync(() -> {
+			try {
+				MailHandler sendMail = new MailHandler(mailSender);
+				sendMail.setText("<h1>쉐어하우스 쉼 비밀번호찾기</h1>");
+				sendMail.setFrom("suimm012@gmail.com", "쉼");
+				sendMail.setSubject("쉼 임시 비밀번호 발급입니다");
+				sendMail.setTo(m.getEmail());
+				
+				String temporaryPassword = generateTemporaryPassword();
+	            sendMail.setText("임시 비밀번호: " + temporaryPassword);
+	            sendMail.setText("임시 비밀번호로 로그인 후 바로 비밀번호를 변경해주세요");
+	            
+	            m.setMemberPwd(bcryptPasswordEncoder.encode(temporaryPassword));
+	            memberService.updateMember(m);
+				sendMail.send();
+			} catch (MessagingException e) {
+				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			} catch (Exception e) {
+				log.error("기타 에러 발생: {}", e.getMessage());
+			}
+		});
+	}
+
+	private String generateTemporaryPassword() {
+		int length = 8;
+	    
+	    // 임시 비밀번호 문자열을 구성할 문자들
+	    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    
+	    // 임시 비밀번호 문자열 생성
+	    StringBuilder password = new StringBuilder();
+	    Random random = new Random();
+	    
+	    for (int i = 0; i < length; i++) {
+	        int index = random.nextInt(characters.length());
+	        char character = characters.charAt(index);
+	        password.append(character);
+	    }
+	    
+	    return password.toString();
 	}
 
 	private String checkDuplicate(String field, String value) {
@@ -367,9 +443,12 @@ public class AuthController {
 		case "phone":
 			count = memberService.phoneCheck(value);
 			break;
+			
 		}
-
 		return (count > 0) ? "Duplicate" : "Available";
+		
 	}
+	
+	
 
 }

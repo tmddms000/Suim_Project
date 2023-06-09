@@ -32,6 +32,7 @@ public class Find {
 	private String status;
 	private String replyCount;
 	private String memberId;
+	private String gender;
   
 	private String nickName;
 	private int freplyCount;
@@ -39,6 +40,8 @@ public class Find {
     // 첨부파일 필드
 	private String originName;
 	private String changeName;
+	private String thumbnail;
+	
 
 
 }

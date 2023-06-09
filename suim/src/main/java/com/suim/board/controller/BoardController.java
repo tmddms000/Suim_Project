@@ -3,9 +3,11 @@ package com.suim.board.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +15,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +30,7 @@ import com.suim.board.model.service.BoardService;
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
+import com.suim.board.model.vo.InReview;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -137,6 +138,8 @@ public class BoardController {
 		public String ajaxSelectReplyList(int bno) {
 			
 			ArrayList<Reply> list = boardService.selectReplyList(bno);
+			
+			
 			
 			return new Gson().toJson(list);
 		}
@@ -264,7 +267,7 @@ public class BoardController {
 			Board b = boardService.updateBoardList(bno);
 
 			
-			System.out.println(b);
+	
 			mv.addObject("b", b)
 			  .setViewName("board/free-boardUpdate");
 			
@@ -278,7 +281,7 @@ public class BoardController {
 	
 		int result = boardService.updateBoard(b);
 		
-		System.out.println(b);
+		
 		
 		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
 		
@@ -301,35 +304,66 @@ public class BoardController {
 		//---------------------------사람구해요--------------------------------
 		
 				@RequestMapping("list.fi")
-				public ModelAndView selectfList(
-						@RequestParam(value="cPage", defaultValue="1") int currentPage,
-						ModelAndView mv) {
+				public ModelAndView selectfList(@RequestParam(defaultValue="all") String gender, 
+												@RequestParam(defaultValue="all")String category,
+												@RequestParam(defaultValue="")String search,
+												@RequestParam(value="cPage", defaultValue="1") int currentPage,
+												HttpServletRequest request,
+						ModelAndView mv) throws UnsupportedEncodingException {
+
 					
-					int listCount = boardService.selectfListCount();
-					
+					int listCount = 0;
+					PageInfo pi = null;
 					int pageLimit = 10;
 					int boardLimit = 10;
+					ArrayList<Find> flist = new ArrayList<Find>();
+					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
 					
-					PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 					
-					ArrayList<Find> flist = boardService.selectfList(pi);
+					HashMap<String, String> fin = new HashMap<>();
+					fin.put("gender", gender);
+					fin.put("category", category);
+					fin.put("search", search);
+					
+					
+					
 
-					mv.addObject("pi", pi)
+					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
+						
+						// fin 이 필요 없는 로직
+						listCount = boardService.selectfListCount(); // 수정
+						
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						flist = boardService.selectfList(pi);
+						
+
+					} 
+					else {
+						listCount = boardService.selectfListCount(fin);
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						flist = boardService.selectfList(pi, fin);
+						
+						
+					}
+					
+					mv.addObject("pi", pi) 
+
 					  .addObject("flist", flist)
+					  .addObject("url", uriWithQueryString)
 					  .setViewName("board/find-board");
 					
-					return mv;    // 첨부파일 필드
+					
+					
+					return mv;  
+
 
 				}
 				
-				@RequestMapping("enrollForm.fi")
-				public String enrollFormFind() {
-					
-					return "board/find-boardEnrollForm";
-				}
+
 
 					@RequestMapping("detail.fi")
 					public ModelAndView selectFind(ModelAndView mv,
+											HttpServletRequest request,
 													int fno) {
 
 						int result = boardService.increasefCount(fno);
@@ -340,7 +374,11 @@ public class BoardController {
 
 							Find fb = boardService.selectFind(fno);
 							
-							mv.addObject("fb", fb).setViewName("board/find-boardDetail");
+							mv.addObject("fb", fb)
+							  .addObject("url", request.getRequestURI())
+							  .setViewName("board/find-boardDetail");
+							
+							
 							
 						} else { // 실패
 
@@ -388,11 +426,12 @@ public class BoardController {
 				@RequestMapping(value = "rlist.fi", produces = "application/json; charset=UTF-8")
 				public String ajaxSelectfReplyList(int fno) {
 					
-					ArrayList<findReply> filist = boardService.selectfReplyList(fno);
 					
-		
+					ArrayList<findReply> flist = boardService.selectfReplyList(fno);
 					
-					return new Gson().toJson(filist);
+					
+					
+					return new Gson().toJson(flist);
 				}
 				
 				@ResponseBody
@@ -405,8 +444,154 @@ public class BoardController {
 					
 					return (result > 0) ? "success" : "fail";
 				}
+				@RequestMapping("enrollForm.fi")
+				public String findEnrollForm() {
+					
+					return "board/find-boardEnrollForm";
+				}
 
-	
+				@RequestMapping("insert.fi")
+				public String insertFind(Find f,
+										HttpSession session,
+										Model model) {
+					
+					/*
+					 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+					 * 
+					 * String changeName = saveFile(upfile, session);
+					 * 
+					 * 
+					 * ba.setOriginName(upfile.getOriginalFilename());
+					 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
+					 */
+					
+
+					int result = boardService.insertFind(f);
+					
+		      //int result2 = boardService.insertBattachment(ba);
+					
+					if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+
+						
+						session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
+						
+						return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
+						
+					} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+						
+						model.addAttribute("errorMsg", "게시글 등록 실패");
+						
+						return "common/errorPage";
+					}
+				}
+				
+				@RequestMapping("updateForm.fi")
+				public ModelAndView updateFind(int fno,
+											ModelAndView mv) {
+					
+
+					Find fb = boardService.updateFindList(fno);
+					
+
+
+					
+					
+					mv.addObject("fb", fb)
+					  .setViewName("board/find-boardUpdate");
+					
+					return mv;
+				}
+
+				@RequestMapping("update.fi")
+				public String updateBoard(Find fb,
+									String category,
+								HttpSession session,
+								Model model) {
+					
+					
+					fb.setCategory(category);
+				int result = boardService.updateFind(fb);
+				
+			
+				
+
+				
+				
+				
+				if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+				
+				
+				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+				
+				return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
+				
+				} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 등록 실패");
+				
+				return "common/errorPage";
+				}
+				
+				}
+
+	//-----------------------이용후기--------------------------------
+				@RequestMapping("list.in")
+				public ModelAndView selectiList(@RequestParam(defaultValue="all") String gender, 
+												@RequestParam(defaultValue="all")String category,
+												@RequestParam(defaultValue="")String search,
+												@RequestParam(value="cPage", defaultValue="1") int currentPage,
+												HttpServletRequest request,
+						ModelAndView mv) throws UnsupportedEncodingException {
+
+					
+					int listCount = 0;
+					PageInfo pi = null;
+					int pageLimit = 10;
+					int boardLimit = 10;
+					ArrayList<InReview> ilist = new ArrayList<InReview>();
+					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
+					
+					System.out.println(ilist);
+					
+					HashMap<String, String> fin = new HashMap<>();
+					//fin.put("gender", gender);
+					//fin.put("category", category);
+					//fin.put("search", search);
+					
+					
+					
+
+					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
+						
+						// fin 이 필요 없는 로직
+						listCount = boardService.selectiListCount(); // 수정
+						
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						ilist = boardService.selectiList(pi);
+						
+
+					} 
+					else {
+						listCount = boardService.selectiListCount(fin);
+						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+						ilist = boardService.selectiList(pi, fin);
+						
+						
+					}
+					
+					mv.addObject("pi", pi) 
+					  .addObject("ilist", ilist)
+					  .addObject("url", uriWithQueryString)
+					  .setViewName("board/inReview-board");
+					
+					
+					
+					return mv;  
+
+					
+
+
+				}
 	
 		   
 }

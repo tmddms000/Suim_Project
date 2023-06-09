@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="reportMapper">
+
+	<!-- REPORT 테이블로부터 조회된 ResultSet 에 들은 데이터를 REPORT VO 로 가공해주는 용도 -->
+	<resultMap id="reportResultSet" type="report">
+		<result column="REPORT_NO" property="reportNo" />
+		<result column="REPORT_TITLE" property="reportTitle" />
+		<result column="REPORT_CONTENT" property="reportContent" />
+		<result column="REPORT_TYPE" property="reportType" />
+		<result column="REPORT_ID" property="reportId" />
+		<result column="REPORT_DATE" property="reportDate" />
+		<result column="REPORT_STATUS" property="reportStatus" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="HOUSE_NO" property="houseNo" />
+		<result column="FIND_NO" property="findNo" />
+		<result column="FRE_NO" property="freNo" />
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="BRE_NO" property="breNo" />
+		<result column="CHAT_NO" property="chatNo" />
+	</resultMap>
+	
+	<!-- 신고 작성용 쿼리문 -->
+	<insert id="insertReport" parameterType="report">
+		INSERT INTO REPORT (REPORT_NO, 
+		                   REPORT_TITLE, 
+		                   REPORT_CONTENT,
+                           REPORT_TYPE,
+                           REPORT_DATE,
+                           REPORT_STATUS,
+                           MEMBER_ID,
+                           REPORT_ID,
+                           HOUSE_NO,
+                           FIND_NO,
+                           FRE_NO,
+                           BOARD_NO,
+                           BRE_NO,
+                           CHAT_NO)
+				   VALUES(SEQ_REPORT_NO.NEXTVAL
+				   		, #{reportTitle}
+				   		, #{reportContent}
+                        , #{reportType}
+                        , DEFAULT
+                        , DEFAULT
+                        , #{memberId}
+                        <choose>
+                        	<when test="reportType == 'MEMBER'">
+                        		, 'dunghs'
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        	</when>
+                        	<when test="reportType == 'HOUSE'">
+	                        	, 'dunghs'
+		                        , #{houseNo, jdbcType=INTEGER}
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                    </when>
+                        	<when test="reportType == 'FIND'">
+                        		, 'dunghs'
+                        		, NULL
+		                        , #{findNo, jdbcType=INTEGER}
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                    </when>
+                        	<when test="reportType == 'FRE'">
+                        		, 'dunghs'
+                        		, NULL
+                        		, NULL
+		                        , #{freNo, jdbcType=INTEGER}
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                    </when>
+                        	<when test="reportType == 'BOARD'">
+                        		, 'dunghs'
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                        , 191
+                        		, NULL
+                        		, NULL
+		                    </when>
+                        	<when test="reportType == 'BRE'">
+                        		, 'dunghs'
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                        , #{breNo, jdbcType=INTEGER}
+                        		, NULL
+		                    </when>
+                        	<when test="reportType == 'CHAT'">
+                        		, 'dunghs'
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+                        		, NULL
+		                        , #{chatNo, jdbcType=INTEGER}
+		                    </when>
+		           		</choose>
+		           		)
+	</insert>
+	
+	<!-- 신고 파일첨부 쿼리문 -->
+	<insert id="rattachment" parameterType="rattachment">
+		INSERT INTO RATTACHMENT (RAT_NO, 
+		                        ORIGIN_NAME, 
+		                        CHANGE_NAME, 
+		                        CREATE_DATE, 
+		                        FILE_STATUS, 
+		                        REPORT_NO)
+		VALUES (SEQ_RAT_NO.NEXTVAL, 
+		        #{originName}, 
+		        #{changeName},
+		        DEFAULT, 
+		        DEFAULT, 
+		        #{reportNo})
+	</insert>
+	
+</mapper>

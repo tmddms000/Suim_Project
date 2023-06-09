@@ -1,17 +1,27 @@
 package com.suim.house.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.suim.house.model.service.ListHouseService;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
+import com.suim.house.model.vo.Reservation;
+import com.suim.member.model.vo.Member;
 
 @Controller
 public class ListHouseController {
@@ -19,6 +29,7 @@ public class ListHouseController {
 	@Autowired
 	private ListHouseService listHouseService;
 	
+	// 지도와 셰어하우스 리스트 상세 검색
 	@RequestMapping("list.ho")
 	public ModelAndView selectList(ModelAndView mv, 
 				String searchKeyword,
@@ -31,7 +42,7 @@ public class ListHouseController {
 			    @DateTimeFormat(pattern = "yyyy-MM-dd")Date openDate) {
 					
 			if (searchKeyword == null) {
-		        searchKeyword = ""; // null인 경우 빈 문자열로 초기화
+		        searchKeyword = ""; 
 			}
 			
 			ArrayList<Region> region = listHouseService.regionSelectList(searchKeyword);
@@ -57,8 +68,60 @@ public class ListHouseController {
 			   mv.addObject("maxValueResult", 300);
 		    }
 		    	
-		    mv.setViewName("house/houseMapView"); // 적절한 뷰 이름으로 업데이트하세요.
+		    mv.setViewName("house/houseMapView"); 
 		    
 		    return mv;
 	}
+	
+	// 예약신청 팝업창 컨트롤러
+	@RequestMapping("houseRez.ho")
+	public String reservationPage(@RequestParam("value") int houseNo, @RequestParam("value2") String houseName,
+									HttpSession session, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
+
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    model.addAttribute("houseNo", houseNo);
+	    model.addAttribute("loginUser", loginUser);
+	    model.addAttribute("houseName", houseName);
+
+	    return "house/houseReservation";
+
+	}
+	
+	// 예약 신청(등록) 컨트롤러
+	@RequestMapping("enrollReservation.rez")
+	public String reservationInsert(Model model, HttpServletRequest request, HttpSession session,
+									Date rezDate, String rezHour, int houseNo, String memberId) {
+		
+		 Map<String, Object> reservation = new HashMap<>();
+				 reservation.put("rezDate", rezDate);
+				 reservation.put("rezHour", rezHour);
+				 reservation.put("houseNo", houseNo);
+				 reservation.put("memberId", memberId);
+				
+		int result = listHouseService.rezInsert(reservation); 
+		
+		 if (result > 0) { // 성공
+		        session.setAttribute("alMsg", "성공적으로 예약 신청이 되었습니다.");
+		    } else { // 실패
+		        session.setAttribute("alMsg", "예약 신청에 실패했습니다.");
+		    }
+		
+		String rezPopup = request.getHeader("Referer");
+		return "redirect:" + rezPopup;
+	}
+	
+	// 셰어하우스 별 예약 신청 리스트
+	@RequestMapping("myhouseRez.ho")
+	public ModelAndView myHouseRezSelect(ModelAndView mv, int houseNo) {
+		
+		ArrayList<Reservation> list = listHouseService.myHouseRezSelect(houseNo);
+				
+	    mv.addObject("list", list);
+	    
+	    mv.setViewName("member/mypage/myHouseReservation"); 
+		
+	    return mv;
+	}
+	
 }

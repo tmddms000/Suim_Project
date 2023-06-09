@@ -9,9 +9,7 @@
 		<result column="BOARD_VIEW" property="boardView" />
 		<result column="BOARD_DATE" property="boardDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-
 		<result column="BOARD_CONTENT" property="boardContent" />
-
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="BOARD_REPLY_COUNT" property="replyCount" />
 	</resultMap>
@@ -19,20 +17,69 @@
 	<resultMap id="findResultSet" type="find">
 		<result column="FIND_NO" property="findNo" />
 		<result column="FIND_TITLE" property="findTitle" />
-		<result column="FIND_CATEGORY" property="findCategory" />
+		<result column="FIND_CATEGORY" property="category" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="FIND_VIEW" property="findView" />
 		<result column="FIND_DATE" property="findDate" />
 		<result column="ORIGIN_NAME" property="originName" />
-
-		<result column="FIND_COTENT" property="findContent" />
+		<result column="FIND_CONTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="FIND_REPLY_COUNT" property="replyCount" />
 	</resultMap>
 	
+	<resultMap id="wishResultSet" type="myWish">
+		<result column="HOUSE_NO" property="houseNo" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="HOUSE_ADDRESS" property="houseAddress" />
+		<result column="HOUSE_NAME" property="houseName" />
+		<result column="RES_GENDER" property="resGender" />
+		<result column="DEPOSIT" property="deposit" />
+		<result column="RENT" property="rent" />
+	</resultMap>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 내가쓴 셰어하우스 resultMap -->
+	<resultMap id="myHouseResultMap" type="house">
+	    <result column="HOUSE_NO" property="houseNo"/>
+	    <result column="HOUSE_NAME" property="houseName"/>
+	    <result column="HOUSE_ADDRESS" property="houseAddress"/>
+	    <result column="DEPOSIT" property="deposit"/>
+	    <result column="RENT" property="rent"/>
+	    <result column="ENTER_DATE" property="enterDate"/>
+	    <result column="MAX_ENTER_DATE"  property="maxEnterDate"/>
+	    <result column="MIN_STAY" property="minStay"/>
+	    <result column="MAX_STAY" property="maxStay"/>
+	    <result column="ROOM_PEOPLE" property="roomPeople"/>
+	    <result column="INC_FURNITURE" property="incFurniture"/>
+	    <result column="HOUSE_CONTENT" property="houseContent"/>
+	    <result column="RES_GENDER" property="resGender"/>
+	    <result column="RES_TYPE" property="resType"/>
+	    <result column="FLOOR" property="floor"/>
+	    <result column="HOUSE_STATUS" property="houseStatus"/>
+	    <result column="HOUSE_DATE" property="houseDate"/>
+	    <result column="MEMBER_ID" property="memberId"/>
+	   	<result column="CHANGE_NAME" property="changeName"/>
+	</resultMap>
+
+
 
 	<!-- 자유게시판 게시글 갯수 -->
-	<select id="selectBoardListCount" resultType="_int">
+	<select id="selectBoardListCount" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
 		FROM BOARD
 		WHERE STATUS = 'Y'
@@ -40,8 +87,7 @@
 	</select>
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
-	<select id="selectBoardList" parameterType="string"
-		resultMap="boardResultSet">
+	<select id="selectBoardList" parameterType="string" resultMap="boardResultSet">
 		SELECT
 		B.BOARD_NO,
 		B.BOARD_TITLE,
@@ -86,7 +132,7 @@
 
 	</select>
 
-	<select id="selectFindListCount" resultType="_int">
+	<select id="selectFindListCount" parameterType="string" resultType="_int">
 		SELECT COUNT(*)
 		FROM FIND
 		WHERE STATUS = 'Y'
@@ -100,7 +146,6 @@
 		SELECT
 		F.FIND_NO,
 		F.FIND_TITLE,
-
 		F.FIND_CONTENT,
 
 		F.FIND_CATEGORY,
@@ -137,9 +182,78 @@
 		ORDER BY F.FIND_NO DESC
 
 	</select>
+	
+	<update id="deleteBoard" parameterType="hashMap">
+	    UPDATE BOARD
+	    SET STATUS = 'N'
+	    WHERE BOARD_NO IN
+	    <foreach item="boardNo" collection="intArray" open="(" separator="," close=")">
+	        #{boardNo}
+	    </foreach>
+	    AND MEMBER_ID = #{memberId}
+	</update>
+	
+	<update id="deleteFind" parameterType="hashMap">
+	    UPDATE FIND
+	    SET STATUS = 'N'
+	    WHERE FIND_NO IN
+	    <foreach item="findNo" collection="intArray" open="(" separator="," close=")">
+	        #{findNo}
+	    </foreach>
+	    AND MEMBER_ID = #{memberId}
+	</update>
+	
+	<update id="deleteInreview" parameterType="hashMap">
+	    UPDATE INREVIEW
+	    SET STATUS = 'N'
+	    WHERE INR_NO IN
+	    <foreach item="inrNo" collection="intArray" open="(" separator="," close=")">
+	        #{inrNo}
+	    </foreach>
+	    AND MEMBER_ID = #{memberId}
+	</update>
 
 
 
+		<!-- 자유게시판 게시글 갯수 -->
+	<select id="selectWishListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*) FROM WISH W
+		JOIN HOUSE H USING (HOUSE_NO)
+		JOIN PHOTO P USING (HOUSE_NO)  
+		WHERE H.HOUSE_STATUS = 'Y'   
+		AND W.MEMBER_ID = #{memberId}
+	</select>
+
+	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+	<select id="selectWishList" parameterType="string" resultMap="wishResultSet">
+		SELECT * FROM WISH W
+		JOIN HOUSE H USING (HOUSE_NO)
+		JOIN PHOTO P USING (HOUSE_NO)  
+		WHERE H.HOUSE_STATUS = 'Y'   
+		AND W.MEMBER_ID = #{memberId}
+	</select>
+
+
+
+
+	<!-- 내가 쓴 셰어하우스 리스트 갯수 구하는 쿼리문 -->
+	<select id="selectHouseListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM HOUSE
+		WHERE HOUSE_STATUS = 'Y'
+		AND MEMBER_ID = #{memberId}
+	</select>
+
+	<!-- 내가 쓴 셰어하우스 리스트 select 쿼리문 -->
+	<select id="selectHouseList" resultMap="myHouseResultMap">
+	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
+	    FROM HOUSE h
+	    JOIN PHOTO p ON h.HOUSE_NO = p.HOUSE_NO
+	    WHERE h.HOUSE_STATUS = 'Y'
+		AND h.MEMBER_ID = #{memberId}
+	   	AND p.FILE_LEVEL = 'Y'
+	    ORDER BY HOUSE_NO DESC
+	</select>
 
 
 

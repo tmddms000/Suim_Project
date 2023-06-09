@@ -15,5 +15,6 @@ public class ChatLog {
     private String content;
     private Date sendDate;
     private int chatNo;
-    private char status;
+    private String status;
+    private String rstatus;
 }

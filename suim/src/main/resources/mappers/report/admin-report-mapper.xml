@@ -33,6 +33,13 @@
          ORDER BY REPORT_DATE DESC
 	</select>
 	
+	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
+	<select id="selectCategoryListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM REPORT
+		 WHERE REPORT_STATUS = #{category}
+	</select>
+	
 	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
 	<select id="selectCategoryList" parameterType="string" resultMap="adminReportResultSet">
 		SELECT REPORT_NO
@@ -107,6 +114,18 @@
 		   SET REPORT_STATUS = #{reportStatus}
 		 WHERE REPORT_NO = #{reportNo}
 	</update>
+	
+	<!-- 전체선택용 승인/반려용 쿼리문 -->
+	<update id="updateStatusAll" parameterType="hashMap">
+		UPDATE REPORT
+		   SET REPORT_STATUS = #{reportStatus}
+		 WHERE REPORT_NO IN
+			 <foreach item="reportNo" collection="intArray" open="(" separator="," close=")">
+		        #{reportNo}
+		    </foreach>
+	</update>
+	
+	
 	
 	<!-- 검색용 count 쿼리문 -->
 	<select id="selectSearchCount" parameterType="hashmap" resultType="_int">

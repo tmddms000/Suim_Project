@@ -2,6 +2,7 @@ package com.suim.report.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -13,10 +14,10 @@ import com.suim.report.model.vo.Report;
 @Repository
 public class AdminReportDao {
 
+	// 신고 총 갯수 조회
 	public int selectListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("adminReportMapper.selectListCount");
 	}
-	
 	// 전체 조회용 selectList
 	public ArrayList<Report> selectList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		
@@ -27,9 +28,14 @@ public class AdminReportDao {
 		
 		return (ArrayList)sqlSession.selectList("adminReportMapper.selectList", null, rowBounds);
 	}
+		
+	// 카테고리용 총 갯수 조회
+	public int selectCategoryListCount(SqlSessionTemplate sqlSession, String category) {
+		return sqlSession.selectOne("adminReportMapper.selectCategoryListCount", category);
+	}
 	
 	// 카테고리용 selectList
-	public ArrayList<Report> selectList(SqlSessionTemplate sqlSession, PageInfo pi, String category) {
+	public ArrayList<Report> selectCategoryList(SqlSessionTemplate sqlSession, PageInfo pi, String category) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
@@ -59,6 +65,13 @@ public class AdminReportDao {
 	// 승인/반려 처리용
 	public int updateReportStatus(SqlSessionTemplate sqlSession, Report r) {
 		return sqlSession.update("adminReportMapper.updateReportStatus", r);
+	}
+	// 전체선택용 승인/반려용
+	public int updateStatusAll(SqlSessionTemplate sqlSession, int[] intArray, String reportStatus) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("reportStatus", reportStatus);
+		map.put("intArray", intArray);
+		return sqlSession.update("adminReportMapper.updateStatusAll", map);
 	}
 	
 	// 검색용

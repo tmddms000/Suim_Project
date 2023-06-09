@@ -1,6 +1,7 @@
 package com.suim.board.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
@@ -8,6 +9,7 @@ import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
+import com.suim.board.model.vo.InReview;
 
 public interface BoardService {
 	
@@ -49,6 +51,8 @@ public interface BoardService {
 	// 댓글 수량 
 	int ReplyCount(int boardNo);
 	
+	
+	
 	// 게시글 업데이트
 	int updateBoard(Board b);
 	
@@ -63,8 +67,12 @@ public interface BoardService {
 	// 게시글의 총 갯수 조회
 	int selectfListCount();
 	
+	int selectfListCount(HashMap<String, String> fin);
+	
 	// 게시글 리스트 조회
 	ArrayList<Find> selectfList(PageInfo pi);
+	
+	ArrayList<Find> selectfList(PageInfo pi, HashMap<String, String> fin);
 	
 	// 게시글 상세조회 서비스
 	
@@ -82,5 +90,31 @@ public interface BoardService {
 	// 댓글 작성 서비스 (Ajax)
 	int insertfReply(findReply fr);
 	
+	// 게시글 등록
+	int insertFind(Find f);
+	
+	// 게시글 업데이트
+	int updateFind(Find f);
+	
+	// 상세페이지 조회
+	Find updateFindList(int findNo);
+	
+
+	//------------------------------------------------
+	
+	//------------------이용후기-----------------------
+	
+	// 게시판 리스트 조회 서비스 (+ 페이징처리)
+	// 게시글의 총 갯수 조회
+	int selectiListCount();
+	
+	int selectiListCount(HashMap<String, String> fin);
+	
+	// 게시글 리스트 조회
+	ArrayList<InReview> selectiList(PageInfo pi);
+	
+	ArrayList<InReview> selectiList(PageInfo pi, HashMap<String, String> fin);
+	
+
 
 }

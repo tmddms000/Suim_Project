@@ -16,4 +16,12 @@ public class Report {
 	private String reportId;
 	private Date reportDate;
 	private String reportStatus;
+	
+	private String memberId;
+	private int houseNo;
+	private int findNo;
+	private int freNo;
+	private int boardNo;
+	private int breNo;
+	private int chatNo;
 }

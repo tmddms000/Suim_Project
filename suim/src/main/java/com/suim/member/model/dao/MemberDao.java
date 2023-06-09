@@ -105,6 +105,14 @@ public class MemberDao {
 		return sqlSession.selectOne("emailMapper.selectBoardListCount");
 	}
 
+	public String findMemberId(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.selectOne("memberMapper.findMemberId", m);
+	}
+
+	public int findMemberPw(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.selectOne("memberMapper.findMemberPw", m);
+	}
+
 
 
 

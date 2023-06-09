@@ -29,7 +29,19 @@
 		<result column="LONGITUDE" property="longitude"/>
 	</resultMap>
 	
+	<resultMap id="reservationResultMap" type="reservation">
+		<result column="REZ_NO" property="rezNo"/>
+		<result column="REZ_DATE" property="rezDate"/>
+		<result column="REZ_HOUR" property="rezHour"/>
+		<result column="MEMBER_ID" property="memberId"/>
+		<result column="REZ_STATUS" property="rezStatus"/>
+		<result column="CANCEL_CONTENT" property="cancelContent"/>
+		<result column="DEL_STATUS" property="delStatus"/>
+		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="HOUSE_NAME" property="houseName"/>
+	</resultMap>
 	
+	<!-- 지도와 셰어하우스 리스트 상세 검색  -->
 	<select id="selectList" resultMap="houseResultMap">
 	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
 	    FROM HOUSE h
@@ -68,11 +80,11 @@
 
 	   	 	AND p.FILE_LEVEL = 'Y'
 	   	 	AND h.HOUSE_STATUS = 'Y'
-			
 	    </where>
 	    ORDER BY HOUSE_NO DESC
 	</select>
 		
+	<!-- 지역 정보 조회 서비스 -->
 	<select id="regionSelectList" resultMap="regionResultMap">
 		SELECT LATITUDE,
 				LONGITUDE
@@ -80,6 +92,28 @@
 		WHERE REGION_NAME LIKE '%' || #{searchKeyword} || '%' AND ROWNUM = 1
 	</select>
 	
+	<!-- 예약 정보 입력 서비스 -->
+	<insert id="reservationInsert" parameterType="java.util.Map">
+		INSERT INTO RESERVATION(REZ_NO,
+								REZ_DATE,
+								REZ_HOUR,
+								MEMBER_ID,
+								HOUSE_NO)
+		VALUES(SEQ_REZ_NO.NEXTVAL,	
+					#{rezDate},
+					#{rezHour},
+					#{memberId},
+					#{houseNo})					
+	</insert>
+	
+	<!-- 셰어하우스 별 예약 신청 리스트 -->
+	<select id="myHouseRezSelect" resultMap="reservationResultMap">
+		SELECT r.*, h.HOUSE_NAME 
+		FROM RESERVATION r
+		JOIN HOUSE h ON r.HOUSE_NO = h.HOUSE_NO
+			WHERE h.HOUSE_NO = #{houseNo}
+			AND r.DEL_STATUS = 'N'
+	</select>	
 	
 	
 </mapper>

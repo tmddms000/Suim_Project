@@ -37,15 +37,15 @@
                     <a href="list.me" class="nav-item nav-link"><i class="fa fa-th me-2"></i>회원 관리</a>
 
                     <div class="nav-item dropdown">
-                        <a href="list.ho" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>매물 관리</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>쉐어하우스 관리</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="list.de" class="dropdown-item">예약금 관리</a>
+                            <a href="list.ho" class="dropdown-item">쉐어하우스 관리</a>
                             <a href="typography.html" class="dropdown-item">매출 통계</a>
                         </div>
                     </div>
 
-                    <!-- <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>매물 관리</a>
-                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>예약금 관리</a> -->
+                    <!-- <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>쉐어하우스 관리</a>
+                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>쉐어하우스 관리</a> -->
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>커뮤니티 관리</a>
                         <div class="dropdown-menu bg-transparent border-0">

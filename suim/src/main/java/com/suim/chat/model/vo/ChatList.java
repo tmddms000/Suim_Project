@@ -16,4 +16,5 @@ public class ChatList {
     private Date cDate;
     private char sCuser;
     private char sMuser;
+    private int unreadCount; // 추가된 변수
 }

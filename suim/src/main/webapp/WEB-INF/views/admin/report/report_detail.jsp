@@ -115,27 +115,30 @@
             <br>
 
             <div align="center">
-			    <a class="btn btn-primary" onclick="postFormSubmit(1);">승인</a>
-			    <a class="btn btn-danger" onclick="postFormSubmit(2);">반려</a>
+			    <a class="btn btn-primary" onclick="postFormSubmit('Y');">승인</a>
+			    <a class="btn btn-danger" onclick="postFormSubmit('N');">반려</a>
 			</div>
 			<br><br>
 			
 			<form id="postForm" action="" method="post">
-			    <input type="hidden" name="rno" value="${r.reportNo}">
+			    <input type="hidden" name="reportNo" value="${r.reportNo}">
+			    <input type="hidden" name="reportStatus" id="reportStatus" value="">
 			</form>
 			
 			<script>
-			    function postFormSubmit(num) {
+			    function postFormSubmit(value) {
 			        var form = document.getElementById("postForm");
+					
+			        var status = document.getElementById("reportStatus");
+			        status.value = value;
 			        
-			        if (num == 1) {
-			            form.action = "updateStatus.re";
-			        } else {
-			            form.action = "delete.re";
-			        }
 			        
+			        form.action = "updateStatus.re";
+
 			        form.submit();
 			    }
+			    
+			    
 			</script>
 
 
