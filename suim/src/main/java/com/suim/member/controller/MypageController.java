@@ -273,7 +273,7 @@ public class MypageController {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/reservation";
 	}
-	
+		
 
 	
 	

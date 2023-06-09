@@ -137,16 +137,16 @@
 												<input type="hidden" name="houseNo" value="${h.houseNo}">
 												<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
 											</form>	
-											<form>
-												<input type="hidden" name="houseNo" value="${h.houseNo}">
-												<button type="submit" class="btn btn-success btn-sm">수정</button>
+											<form action="/houseEdit.ho" method="post">
+												<input type="hidden" name="hno" value="${h.houseNo}">
+												<button type="submit" class="btn btn-success  btn-sm">수정</button>
 											</form>
 											<form>
 												<input type="hidden" name="houseNo" value="${h.houseNo}">
 												<button type="submit" class="btn btn-danger btn-sm">삭제</button>
 											</form>
 										</div>
-									</div>
+									</div>	
 								</div>
 							</div>
 						</a>

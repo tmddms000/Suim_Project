@@ -29,4 +29,7 @@ public interface ListHouseService {
 	// 셰어하우스 별 예약 신청 리스트
 	ArrayList<Reservation> myHouseRezSelect(int houseNo);
 	
+	// 셰어하우스 예약 확인
+	int confirmRez(int rno);
+	
 }

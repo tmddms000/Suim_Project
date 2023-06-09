@@ -57,6 +57,11 @@ public class ListHouseDao {
 			
 			return (ArrayList)sqlSession.selectList("listHouseMapper.myHouseRezSelect", houseNo);			
 		}
+		
+		// 셰어하우스 예약 확인
+		public int confirmRez(SqlSessionTemplate sqlSession, int rno) {
+			return sqlSession.update("listHouseMapper.confirmRez", rno);
+		}
 	
 	
 }

@@ -43,6 +43,11 @@ public class ListHouseServiceImpl implements ListHouseService{
 		return listHouseDao.myHouseRezSelect(sqlSession, houseNo);
 	}
 
+	@Override
+	public int confirmRez(int rno) {
+		return listHouseDao.confirmRez(sqlSession, rno);
+	}
+
 
 
 	
