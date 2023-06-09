@@ -31,6 +31,9 @@ import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.InReview;
+
+import com.suim.board.model.vo.InReviewReply;
+
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -303,295 +306,462 @@ public class BoardController {
 
 		//---------------------------사람구해요--------------------------------
 		
-				@RequestMapping("list.fi")
-				public ModelAndView selectfList(@RequestParam(defaultValue="all") String gender, 
-												@RequestParam(defaultValue="all")String category,
-												@RequestParam(defaultValue="")String search,
-												@RequestParam(value="cPage", defaultValue="1") int currentPage,
-												HttpServletRequest request,
-						ModelAndView mv) throws UnsupportedEncodingException {
 
-					
-					int listCount = 0;
-					PageInfo pi = null;
-					int pageLimit = 10;
-					int boardLimit = 10;
-					ArrayList<Find> flist = new ArrayList<Find>();
-					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
-					
-					
-					HashMap<String, String> fin = new HashMap<>();
-					fin.put("gender", gender);
-					fin.put("category", category);
-					fin.put("search", search);
-					
-					
-					
+		@RequestMapping("list.fi")
+		public ModelAndView selectfList(@RequestParam(defaultValue="all") String gender, 
+										@RequestParam(defaultValue="all")String category,
+										@RequestParam(defaultValue="")String search,
+										@RequestParam(value="cPage", defaultValue="1") int currentPage,
+										HttpServletRequest request,
+				ModelAndView mv) throws UnsupportedEncodingException {
 
-					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
-						
-						// fin 이 필요 없는 로직
-						listCount = boardService.selectfListCount(); // 수정
-						
-						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-						flist = boardService.selectfList(pi);
-						
+			
+			int listCount = 0;
+			PageInfo pi = null;
+			int pageLimit = 10;
+			int boardLimit = 10;
+			ArrayList<Find> flist = new ArrayList<Find>();
+			String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
+			
+			
+			HashMap<String, String> fin = new HashMap<>();
+			fin.put("gender", gender);
+			fin.put("category", category);
+			fin.put("search", search);
+			
+			
+			
 
-					} 
-					else {
-						listCount = boardService.selectfListCount(fin);
-						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-						flist = boardService.selectfList(pi, fin);
-						
-						
-					}
-					
-					mv.addObject("pi", pi) 
-
-					  .addObject("flist", flist)
-					  .addObject("url", uriWithQueryString)
-					  .setViewName("board/find-board");
-					
-					
-					
-					return mv;  
-
-
-				}
+			if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
+				
+				// fin 이 필요 없는 로직
+				listCount = boardService.selectfListCount(); // 수정
+				
+				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+				flist = boardService.selectfList(pi);
 				
 
-
-					@RequestMapping("detail.fi")
-					public ModelAndView selectFind(ModelAndView mv,
-											HttpServletRequest request,
-													int fno) {
-
-						int result = boardService.increasefCount(fno);
-						
-					
-
-						if(result > 0) { // 성공
-
-							Find fb = boardService.selectFind(fno);
-							
-							mv.addObject("fb", fb)
-							  .addObject("url", request.getRequestURI())
-							  .setViewName("board/find-boardDetail");
-							
-							
-							
-						} else { // 실패
-
-							mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
-						}
-						
-						return mv;
-					}
-					
-				@RequestMapping("delete.fi")
-				public String deleteFind(int fno,
-										  Model model,
-										  String filePath,
-										  HttpSession session) {
-					
-					
-					int result = boardService.deleteFind(fno);
-					
-					
-					
-					if(result > 0) { // 삭제 처리 성공
-						
-						// delete.bo 요청 시 첨부파일이 있었을 경우
-						// 서버에 보관중인 첨부 파일 실물 (수정파일명) 을 삭제 처리까지 같이 하고 싶음!!
-						if(!filePath.equals("")) {
-							// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
-							String realPath = session.getServletContext().getRealPath(filePath);
-							new File(realPath).delete();
-						}
-						
-
-						session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
-						
-						return "redirect:/list.fi";
-						
-					} else { // 삭제 처리 실패 => 에러페이지 포워딩
-						
-						model.addAttribute("errorMsg", "게시글 삭제 실패");
-						
-						return "common/errorPage";
-					}
-				}
+			} 
+			else {
+				listCount = boardService.selectfListCount(fin);
+				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+				flist = boardService.selectfList(pi, fin);
 				
-				@ResponseBody
-				@RequestMapping(value = "rlist.fi", produces = "application/json; charset=UTF-8")
-				public String ajaxSelectfReplyList(int fno) {
-					
-					
-					ArrayList<findReply> flist = boardService.selectfReplyList(fno);
-					
-					
-					
-					return new Gson().toJson(flist);
-				}
 				
-				@ResponseBody
-				@RequestMapping(value = "rinsert.fi", produces = "text/html; charset=UTF-8")
-				public String ajaxInsertfReply(findReply fr) {
-					
+			}
+			
+			mv.addObject("pi", pi) 
 
-					
-					int result = boardService.insertfReply(fr);
-					
-					return (result > 0) ? "success" : "fail";
-				}
-				@RequestMapping("enrollForm.fi")
-				public String findEnrollForm() {
-					
-					return "board/find-boardEnrollForm";
-				}
+			  .addObject("flist", flist)
+			  .addObject("url", uriWithQueryString)
+			  .setViewName("board/find-board");
+			
+			
+			
+			return mv;  
 
-				@RequestMapping("insert.fi")
-				public String insertFind(Find f,
-										HttpSession session,
-										Model model) {
-					
-					/*
-					 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
-					 * 
-					 * String changeName = saveFile(upfile, session);
-					 * 
-					 * 
-					 * ba.setOriginName(upfile.getOriginalFilename());
-					 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
-					 */
-					
-
-					int result = boardService.insertFind(f);
-					
-		      //int result2 = boardService.insertBattachment(ba);
-					
-					if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
-
-						
-						session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
-						
-						return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
-						
-					} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
-						
-						model.addAttribute("errorMsg", "게시글 등록 실패");
-						
-						return "common/errorPage";
-					}
-				}
-				
-				@RequestMapping("updateForm.fi")
-				public ModelAndView updateFind(int fno,
-											ModelAndView mv) {
-					
-
-					Find fb = boardService.updateFindList(fno);
-					
+		}
+		
 
 
-					
-					
-					mv.addObject("fb", fb)
-					  .setViewName("board/find-boardUpdate");
-					
-					return mv;
-				}
+			@RequestMapping("detail.fi")
+			public ModelAndView selectFind(ModelAndView mv,
+									HttpServletRequest request,
+											int fno) {
 
-				@RequestMapping("update.fi")
-				public String updateBoard(Find fb,
-									String category,
-								HttpSession session,
-								Model model) {
-					
-					
-					fb.setCategory(category);
-				int result = boardService.updateFind(fb);
+
+				int result = boardService.increasefCount(fno);
 				
 			
+
+				if(result > 0) { // 성공
+
+					Find fb = boardService.selectFind(fno);
+					
+					mv.addObject("fb", fb)
+					  .addObject("url", request.getRequestURI())
+					  .setViewName("board/find-boardDetail");
+					
+					
+					
+				} else { // 실패
+
+					mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
+				}
+				
+				return mv;
+			}
+			
+		@RequestMapping("delete.fi")
+		public String deleteFind(int fno,
+								  Model model,
+								  String filePath,
+								  HttpSession session) {
+			
+			
+			int result = boardService.deleteFind(fno);
+			
+			
+			
+			if(result > 0) { // 삭제 처리 성공
+				
+				// delete.bo 요청 시 첨부파일이 있었을 경우
+				// 서버에 보관중인 첨부 파일 실물 (수정파일명) 을 삭제 처리까지 같이 하고 싶음!!
+				if(!filePath.equals("")) {
+					// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
+					String realPath = session.getServletContext().getRealPath(filePath);
+					new File(realPath).delete();
+				}
 				
 
+				session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
 				
+				return "redirect:/list.fi";
 				
+			} else { // 삭제 처리 실패 => 에러페이지 포워딩
 				
-				if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+				model.addAttribute("errorMsg", "게시글 삭제 실패");
 				
+				return "common/errorPage";
+			}
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rlist.fi", produces = "application/json; charset=UTF-8")
+		public String ajaxSelectfReplyList(int fno) {
+			
+			
+			ArrayList<findReply> flist = boardService.selectfReplyList(fno);
+			
+			
+			
+			return new Gson().toJson(flist);
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rinsert.fi", produces = "text/html; charset=UTF-8")
+		public String ajaxInsertfReply(findReply fr) {
+			
+
+			
+			int result = boardService.insertfReply(fr);
+			
+			return (result > 0) ? "success" : "fail";
+		}
+		@RequestMapping("enrollForm.fi")
+		public String findEnrollForm() {
+			
+			return "board/find-boardEnrollForm";
+		}
+
+		@RequestMapping("insert.fi")
+		public String insertFind(Find f,
+								HttpSession session,
+								Model model) {
+			
+			/*
+			 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+			 * 
+			 * String changeName = saveFile(upfile, session);
+			 * 
+			 * 
+			 * ba.setOriginName(upfile.getOriginalFilename());
+			 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
+			 */
+			
+
+			int result = boardService.insertFind(f);
+			
+      //int result2 = boardService.insertBattachment(ba);
+			
+			if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+
 				
-				session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+				session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
 				
 				return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
 				
-				} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+			} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
 				
 				model.addAttribute("errorMsg", "게시글 등록 실패");
 				
 				return "common/errorPage";
-				}
-				
-				}
+			}
+		}
+		
+		@RequestMapping("updateForm.fi")
+		public ModelAndView updateFind(int fno,
+									ModelAndView mv) {
+			
+
+			Find fb = boardService.updateFindList(fno);
+			
+
+
+			
+			
+			mv.addObject("fb", fb)
+			  .setViewName("board/find-boardUpdate");
+			
+			return mv;
+		}
+
+
+		@RequestMapping("update.fi")
+		public String updateBoard(Find fb,
+							String category,
+						HttpSession session,
+						Model model) {
+			
+			
+			fb.setCategory(category);
+		int result = boardService.updateFind(fb);
+		
+	
+		
+
+		
+		
+		
+		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+		
+		
+		session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+		
+		return "redirect:/list.fi"; // 내부적으로 1번 페이지로 향함
+		
+		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+		
+		model.addAttribute("errorMsg", "게시글 등록 실패");
+		
+		return "common/errorPage";
+		}
+		
+		}
 
 	//-----------------------이용후기--------------------------------
-				@RequestMapping("list.in")
-				public ModelAndView selectiList(@RequestParam(defaultValue="all") String gender, 
-												@RequestParam(defaultValue="all")String category,
-												@RequestParam(defaultValue="")String search,
-												@RequestParam(value="cPage", defaultValue="1") int currentPage,
-												HttpServletRequest request,
-						ModelAndView mv) throws UnsupportedEncodingException {
+		@RequestMapping("list.in")
+		public ModelAndView selectiList(@RequestParam(defaultValue="") String gender, 
+										@RequestParam(defaultValue="")String category,
+										@RequestParam(defaultValue="")String search,
+										@RequestParam(value="cPage", defaultValue="1") int currentPage,
+										HttpServletRequest request,
+				ModelAndView mv) throws UnsupportedEncodingException {
 
-					
-					int listCount = 0;
-					PageInfo pi = null;
-					int pageLimit = 10;
-					int boardLimit = 10;
-					ArrayList<InReview> ilist = new ArrayList<InReview>();
-					String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
-					
-					System.out.println(ilist);
-					
-					HashMap<String, String> fin = new HashMap<>();
-					//fin.put("gender", gender);
-					//fin.put("category", category);
-					//fin.put("search", search);
-					
-					
-					
+			
+			int listCount = 0;
+			PageInfo pi = null;
+			int pageLimit = 10;
+			int boardLimit = 9;
+			ArrayList<InReview> ilist = new ArrayList<InReview>();
+			String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
+			
+			
+			
+			HashMap<String, String> fin = new HashMap<>();
+			//fin.put("gender", gender);
+			//fin.put("category", category);
+			//fin.put("search", search);
+			
+			
+			
 
-					if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
-						
-						// fin 이 필요 없는 로직
-						listCount = boardService.selectiListCount(); // 수정
-						
-						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-						ilist = boardService.selectiList(pi);
-						
+			if(gender.equals("") && category.equals("") && search.equals("")) { // 전체조회로직
+				
+				// fin 이 필요 없는 로직
+				listCount = boardService.selectiListCount(); // 수정
+				
+				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+				ilist = boardService.selectiList(pi);
 
-					} 
-					else {
-						listCount = boardService.selectiListCount(fin);
-						pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-						ilist = boardService.selectiList(pi, fin);
-						
-						
-					}
-					
-					mv.addObject("pi", pi) 
-					  .addObject("ilist", ilist)
-					  .addObject("url", uriWithQueryString)
-					  .setViewName("board/inReview-board");
-					
-					
-					
-					return mv;  
+				
+			} 
+			else {
+				listCount = boardService.selectiListCount(fin);
+				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+				ilist = boardService.selectiList(pi, fin);
+				
+				
+			}
+			
+			mv.addObject("pi", pi) 
+			  .addObject("ilist", ilist)
+			  .addObject("url", uriWithQueryString)
+			  .setViewName("board/inReview-board");
+			
+			
+			
+			return mv;  
 
-					
+			
 
 
+		}
+		
+		@RequestMapping("detail.in")
+		public ModelAndView selectInReview(ModelAndView mv,
+										int ino) {
+
+			int result = boardService.increaseInCount(ino);
+			
+
+
+			if(result > 0) { // 성공
+
+				InReview i = boardService.selectInReview(ino);
+				
+				mv.addObject("i", i).setViewName("board/inReview-boardDetail");
+				
+			} else { // 실패
+
+				mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
+			}
+			
+			return mv;
+		}
+		
+		@RequestMapping("delete.in")
+		public String deleteInReview(int ino,
+								  Model model,
+								  String filePath,
+								  HttpSession session) {
+			
+			
+			int result = boardService.deleteInReview(ino);
+			
+			if(result > 0) { // 삭제 처리 성공
+				
+				// delete.bo 요청 시 첨부파일이 있었을 경우
+				// 서버에 보관중인 첨부 파일 실물 (수정파일명) 을 삭제 처리까지 같이 하고 싶음!!
+				if(!filePath.equals("")) {
+					// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
+					String realPath = session.getServletContext().getRealPath(filePath);
+					new File(realPath).delete();
 				}
+				
+
+				session.setAttribute("alertMsg", "성공적으로 게시글이 삭제되었습니다.");
+				
+				return "redirect:/list.in";
+				
+			} else { // 삭제 처리 실패 => 에러페이지 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 삭제 실패");
+				
+				return "common/errorPage";
+			}
+		}
+		
+		@RequestMapping("enrollForm.in")
+		public String enrollFormInReview() {
+			
+			return "board/inReview-boardEnrollForm";
+		}
+		
+		@RequestMapping("insert.in")
+		public String insertInReview(InReview i,
+								 Battachment ba,
+								MultipartFile upfile,
+								HttpSession session,
+								Model model) {
+			
+			/*
+			 * if(!upfile.getOriginalFilename().equals("")) { // 넘어온 첨부파일이 있을 경우
+			 * 
+			 * String changeName = saveFile(upfile, session);
+			 * 
+			 * 
+			 * ba.setOriginName(upfile.getOriginalFilename());
+			 * ba.setChangeName("resources/img/board/fileupload/" + changeName); }
+			 */
+			
+
+			int result = boardService.insertInReview(i);
+			
+      //int result2 = boardService.insertBattachment(ba);
+			
+			if(result > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+
+				
+				session.setAttribute("alertMsg", "성공적으로 게시글이 등록되었습니다.");
+				
+				return "redirect:/list.in"; // 내부적으로 1번 페이지로 향함
+				
+			} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+				
+				model.addAttribute("errorMsg", "게시글 등록 실패");
+				
+				return "common/errorPage";
+			}
+		}
+		
+		
+		@RequestMapping("updateForm.in")
+		public ModelAndView updateInReview(int ino,
+									ModelAndView mv) {
+			
+			
+			InReview i = boardService.updateInReivewList(ino);
+			
+				
+	
+			mv.addObject("i", i)
+			  .setViewName("board/inReview-boardUpdate");
+			
+			return mv;
+		}
+
+
+		@RequestMapping("update.in")
+		public String updateInReview(InReview i,
+						HttpSession session,
+						Model model) {
+			
+				
+	
+		int result = boardService.updateInReivew(i);
+		
+		
+		
+		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
+		
+		
+		session.setAttribute("alertMsg", "성공적으로 게시글이 수정되었습니다.");
+		
+		return "redirect:/list.in"; // 내부적으로 1번 페이지로 향함
+		
+		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+		
+		model.addAttribute("errorMsg", "게시글 등록 실패");
+		
+		return "common/errorPage";
+		}
+		
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rlist.in", produces = "application/json; charset=UTF-8")
+		public String ajaxSelectInReviewReplyList(int ino) {
+			
+			
+			ArrayList<InReviewReply> list = boardService.selectInReviewReplyList(ino);
+			
+			
+			
+			return new Gson().toJson(list);
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rinsert.in", produces = "text/html; charset=UTF-8")
+		public String ajaxInsertInReviewReply(InReviewReply ir) {
+			
+
+			
+			int result = boardService.insertInReviewReply(ir);
+			
+			return (result > 0) ? "success" : "fail";
+		}
+
 	
 		   
 }

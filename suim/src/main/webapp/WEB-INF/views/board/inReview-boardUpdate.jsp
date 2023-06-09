@@ -29,7 +29,7 @@
 
 
         
-<title>사람구해요</title>
+<title>이용후기</title>
 
 
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
@@ -45,40 +45,26 @@
         <br><br><br><br>
         <div class="innerOuter">
 
-            <h2>사람구해요 수정하기</h2>
+            <h2>이용후기 수정하기</h2>
 
             <br><br>
 
-            <form id="enrollForm" method="post" action="update.fi" enctype="multipart/form-data">
-            <input type="hidden" name="findNo" value="${ fb.findNo }">
+            <form id="enrollForm" method="post" action="update.in" enctype="multipart/form-data">
+            <input type="hidden" name="inrNo" value="${ i.inrNo }">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="findTitle" required value="${ fb.findTitle }"></td>
+                        <td><input type="text" id="title" class="form-control" name="inrTitle" required value="${ i.inrTitle }"></td>
                     </tr>
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
                         <td><input type="text" id="writer" class="form-control" value="${loginUser.nickName}" name="memberId" readonly></td>
                     </tr>
-                    
-				<tr>
-				    <th style="width: 80px;"><label for="category">카테고리</label></th>
-				    <td>
-				        <input type="checkbox" id="personNeeded" name="category" value="방구해요" ${fb.category eq '방구해요' ? 'checked' : ''} style="transform: scale(1.5);" onclick="uncheckOtherCheckbox('personNeeded');">
-				        <label for="personNeeded" style="font-size: 20px;">방구해요</label>
-				        <input type="checkbox" id="roomAvailable" name="category" value="세놓아요" ${fb.category eq '세놓아요' ? 'checked' : ''} style="transform: scale(1.5);" onclick="uncheckOtherCheckbox('roomAvailable');">
-				        <label for="roomAvailable" style="font-size: 20px;">세놓아요</label>
-				    </td>
-				</tr>
 
-
-
-
-			
                     <tr>
                         <th><label for="content">내용</label></th>
                         <td>
-                            <textarea id="summernote" class="form-control" name="findContent" rows="10" style="resize:none; height: 200px;"  required>${ fb.findContent }</textarea>
+                            <textarea id="summernote" class="form-control" name="inrContent" rows="10" style="resize:none; height: 200px;"  required>${ i.inrContent }</textarea>
                         </td>
                     </tr>
                 </table>

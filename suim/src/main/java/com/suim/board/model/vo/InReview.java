@@ -15,8 +15,10 @@ import lombok.ToString;
 public class InReview {
 	
 	private int inrNo;
-	private int inrTitle;
-	private int inrContent;
+
+	private String inrTitle;
+	private String inrContent;
+
 	private int inrView;
 	private Date inrDate;
 	private String status;

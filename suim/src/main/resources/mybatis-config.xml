@@ -25,6 +25,8 @@
 		
 
 		<typeAlias type="com.suim.board.model.vo.InReview" alias="inreview" />
+		<typeAlias type="com.suim.board.model.vo.InReviewReply" alias="inreviewreply" />
+
 
 		<typeAlias type="com.suim.notice.model.vo.Notice" alias="notice" />
 		<typeAlias type="com.suim.notice.model.vo.Nattachment" alias="nAttachment"/>

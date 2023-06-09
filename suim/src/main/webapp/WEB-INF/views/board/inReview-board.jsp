@@ -69,6 +69,23 @@
 
 		}
 
+		.container .row {
+		    margin-bottom: 130px; /* 가로 간격 설정 */
+		  }
+		
+		.container .col-lg-4 {
+		    margin-bottom: 130px; /* 세로 간격 설정 */
+		  }
+
+		.card:hover {
+	    transform: scale(1.05);
+	    transition: transform 0.3s ease;
+	    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	    cursor: pointer;
+	  }
+		
+		
+
 
 
 </style>        
@@ -99,55 +116,42 @@
 
         
 <c:if test="${not empty loginUser}">
-    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1196px; margin-bottom: 12px; width: 100px;" href="enrollForm.bo">
+
+    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1184px; margin-bottom: 12px; width: 100px;" href="enrollForm.in">
+
         후기작성
     </a>
 </c:if>
         
        <!-- Gallery -->
-<div class="row">
-  <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Boat on Calm Water"
-    />
+
+       
+<div class="container">
+  <c:forEach var="i" items="${ilist}" varStatus="status">
+    <c:if test="${status.index % 3 == 0}">
+      <div class="row">
+    </c:if>
+    
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+      <div class="card" onclick="redirectToDetail('${i.inrNo}')"> <!-- Added onclick event -->
+      	<input type="hidden" name="inrNo" class="ino" value="${ i.inrNo }">
+        <img src="${i.thumbnail}" class="card-img-top" alt="Boat on Calm Water" />
+        <div class="card-body">
+          <h5 class="card-title" style="text-align: center; margin-top: 10px;">
+            <span style="font-size: 18px; font-weight: bold;">[후기]</span>&nbsp; ${i.inrTitle}
+          </h5>
+        </div>
+      </div>
+    </div>
 	
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain1.webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Wintry Mountain Landscape"
-    />
-  </div>
-
-  <div class="col-lg-4 mb-4 mb-lg-0">
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain2.webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Mountains in the Clouds"
-    />
-
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Boat on Calm Water"
-    />
-  </div>
-
-  <div class="col-lg-4 mb-4 mb-lg-0">
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(18).webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Waves at Sea"
-    />
-
-    <img
-      src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain3.webp"
-      class="w-100 shadow-1-strong rounded mb-4"
-      alt="Yosemite National Park"
-    />
-  </div>
+    <c:if test="${status.index % 3 == 2 || status.last}">
+      </div>
+    </c:if>
+  </c:forEach>
 </div>
+	
+   
+
 <!-- Gallery -->
        
 
@@ -159,13 +163,17 @@
                     		<li class="page-item disabled" ><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);"><</a></li>
                 		</c:when>
                 		<c:otherwise>
-		                    <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }"><</a></li>
+
+		                    <li class="page-item"><a class="page-link" href="list.in?cPage=${ pi.currentPage - 1 }"><</a></li>
+
                 		</c:otherwise>
                 	</c:choose>
                     
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="list.bo?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
+
+                    	<li class="page-item"><a class="page-link" href="list.in?cPage=${ p }" style="background-color : white; color : rgb(250, 107, 111);">${ p }</a></li>
+
                     </c:forEach>
                     
                     <c:choose>
@@ -173,13 +181,17 @@
                     		<li class="page-item disabled"><a class="page-link" href="#" style="background-color : white; color : rgb(250, 107, 111);">></a></li>
                     	</c:when>
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
+
+                    		<li class="page-item"><a class="page-link" href="list.in?cPage=${ pi.currentPage + 1 }" style="background-color : white; color : rgb(250, 107, 111);"> ></a></li>
+
                     	</c:otherwise>
                     </c:choose>
                 </ul>
             </div>
 
-    </div>
+
+   
+
     
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <script>
@@ -198,17 +210,16 @@
         button.classList.remove('hovered');
         });
         
-         $(function() {
-        	$("#freeboard>tbody>tr").click(function() {
-        		let bno = $(this).children(".bno").text();
-        		location.href = "detail.bo?bno=" + bno; //
-        	});
-        });
+
+        function redirectToDetail(inrNo) {
+            location.href = "detail.in?ino=" + inrNo;
+          }
          
          $(function() {
         	  $(".bestcontainer .item").click(function() {
-        	    let bno = $(this).find(".bno").text();
-        	    location.href = "detail.bo?bno=" + bno;
+        	    let ino = $(this).find(".ino").text();
+        	    location.href = "detail.in?ino=" + ino;
+
         	  });
         	});
          

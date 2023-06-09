@@ -57,7 +57,9 @@
 	</resultMap>
 	
 		<!-- INREVIEW 테이블로부터 조회된 ResultSet 을 InReview 객체로 가공해주는 resultMap -->
-	<resultMap id="InReviewResultMap" type="inreview">
+
+	<resultMap id="InReviewResultSet" type="inreview">
+
     <result column="INR_NO" property="inrNo" />
     <result column="INR_TITLE" property="inrTitle" />
     <result column="MEMBER_ID" property="memberId" />
@@ -68,6 +70,19 @@
     <result column="INR_CONTENT" property="inrContent" />
     <result column="CHANGE_NAME" property="changeName" />
     <result column="THUMBNAIL" property="thumbnail" />
+
+
+	</resultMap>
+	 <!-- INREVIEWREPLY 테이블로부터 조회된 ResultSet 을 INREVIEW 객체로 가공해주는 resultMap -->
+	<resultMap id="inReviewReplyResultSet" type="inreviewreply">
+	
+		<result column="IRE_NO" property="ireNo" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="IRE_CONTENT" property="ireContent" />
+		<result column="IRE_DATE" property="ireDate" />
+		<result column="IRE_ID" property="ireId" />
+		<result column="INR_NO" property="inrNo" />
+
 
 	</resultMap>
 	
@@ -527,37 +542,152 @@
 	</update>
 		
 		
-<!-- 게시글 리스트를 구해주는 쿼리문 -->
-<select id="selectiList" resultMap="InReviewResultMap">
-    SELECT
-        I.INR_NO,
-        I.INR_TITLE,
-        I.INR_CONTENT,
-        I.INR_VIEW,
-        I.INR_DATE,
-        I.STATUS,
-        I.MEMBER_ID,
-        M.NICKNAME,
-        IA.ORIGIN_NAME,
-        IA.CHANGE_NAME,
-        REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-    FROM INREVIEW I
-    JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
-    LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
-    WHERE I.STATUS = 'Y'
-    GROUP BY
-        I.INR_NO,
-        I.INR_TITLE,
-        I.INR_CONTENT,
-        I.INR_VIEW,
-        I.INR_DATE,
-        I.STATUS,
-        I.MEMBER_ID,
-        M.NICKNAME,
-        IA.ORIGIN_NAME,
-        IA.CHANGE_NAME
-    ORDER BY I.INR_NO DESC
-</select>
+
+		<!-- 게시글 리스트를 구해주는 쿼리문 -->
+		<select id="selectiList" resultMap="InReviewResultSet">
+		    SELECT
+		        I.INR_NO,
+		        I.INR_TITLE,
+		        I.INR_CONTENT,
+		        I.INR_VIEW,
+		        I.INR_DATE,
+		        I.STATUS,
+		        I.MEMBER_ID,
+		        M.NICKNAME,
+		        IA.ORIGIN_NAME,
+		        IA.CHANGE_NAME,
+		        REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		    FROM INREVIEW I
+		    JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
+		    LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
+		    WHERE I.STATUS = 'Y'
+		    GROUP BY
+		        I.INR_NO,
+		        I.INR_TITLE,
+		        I.INR_CONTENT,
+		        I.INR_VIEW,
+		        I.INR_DATE,
+		        I.STATUS,
+		        I.MEMBER_ID,
+		        M.NICKNAME,
+		        IA.ORIGIN_NAME,
+		        IA.CHANGE_NAME
+		    ORDER BY I.INR_NO DESC
+		</select>
+		
+		
+	<update id="increaseInCount" parameterType="_int">
+		UPDATE INREVIEW
+		   SET INR_VIEW = INR_VIEW + 1
+		 WHERE INR_NO = #{inrNo}
+		   AND STATUS = 'Y'
+	</update>
+	
+	<select id="selectInReview" parameterType="_int" resultMap="InReviewResultSet">
+
+			SELECT
+			    I.INR_NO,
+			    I.INR_TITLE,
+			    I.INR_CONTENT,
+			    I.INR_VIEW,
+			    I.INR_DATE,
+			    I.STATUS,
+			    I.MEMBER_ID,
+			    M.NICKNAME,
+			    IA.ORIGIN_NAME,
+			    IA.CHANGE_NAME,
+			    REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM INREVIEW I
+			JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
+			LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
+			WHERE I.INR_NO = #{inrNo}
+			AND I.STATUS = 'Y'
+			GROUP BY
+			    I.INR_NO,
+			    I.INR_TITLE,
+			    I.INR_CONTENT,
+			    I.INR_VIEW,
+			    I.INR_DATE,
+			    I.STATUS,
+			    I.MEMBER_ID,
+			    M.NICKNAME,
+
+			    IA.ORIGIN_NAME,
+			    IA.CHANGE_NAME
+			ORDER BY I.INR_NO DESC
+
+	</select>
+	
+	<update id="deleteInReview" parameterType="_int">
+		UPDATE INREVIEW
+		   SET STATUS = 'N'
+		 WHERE INR_NO = #{inrNo}
+	</update>
+	
+		<insert id="insertInReview" parameterType="inreview">
+		    INSERT INTO INREVIEW (
+			        INR_NO,
+			        INR_TITLE,
+			        INR_CONTENT,
+			        INR_VIEW,
+			        INR_DATE,
+			        STATUS,
+			        MEMBER_ID
+			    )
+			    VALUES (
+			        SEQ_BNO.NEXTVAL,
+			        #{inrTitle},
+			        #{inrContent},
+			        DEFAULT,
+			        DEFAULT,
+			        DEFAULT,
+			        #{memberId}
+			    )
+		
+	</insert>
+	
+	<update id="updateInReivew" parameterType="inreview">
+		  UPDATE INREVIEW
+		  SET INR_TITLE = #{inrTitle},
+		      INR_CONTENT = #{inrContent}
+		  WHERE INR_NO = #{inrNo}
+		  AND STATUS = 'Y'
+	</update>
+	
+		<select id="selectInReviewReplyList" parameterType="_int" resultMap="inReviewReplyResultSet">
+			SELECT 
+			    IR.IRE_NO,
+			    IR.IRE_CONTENT,
+			    IR.IRE_DATE,
+			    IR.STATUS,
+			    IR.INR_NO,
+			    IR.IRE_ID,
+			    M.NICKNAME
+			FROM 
+			    INREVIEW_REPLY IR
+			JOIN 
+			    MEMBER M ON (M.MEMBER_ID = IR.IRE_ID)
+			WHERE 
+			    IR.STATUS = 'Y'
+			    AND IR.INR_NO = #{inrNo}
+			ORDER BY 
+			    IR.IRE_NO DESC
+		</select>
+
+
+	<insert id="insertInReviewReply" parameterType="inreviewreply">
+		INSERT INTO INREVIEW_REPLY(IRE_NO
+						, IRE_CONTENT
+						, INR_NO
+						, IRE_ID
+						)
+				   VALUES(SEQ_INR_RE.NEXTVAL
+				   		, #{ireContent}
+				   		, #{inrNo}
+				   		, #{memberId}
+				   		)
+	</insert> 
+
 
 	
 

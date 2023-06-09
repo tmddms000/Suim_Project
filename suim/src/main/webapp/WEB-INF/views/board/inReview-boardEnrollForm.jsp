@@ -9,6 +9,9 @@
 	   <script src="/resources/js/summernote/summernote-lite.js"></script>
 	   <script src="/resources/js/summernote/lang/summernote-ko-KR.js"></script>
 	   <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
+	   
+	   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+	   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 	    
         <link rel="stylesheet" href="/resources/css/board/board.css">
 
@@ -31,7 +34,7 @@
         
         
         
-<title>사람구해요 작성</title>
+<title>이용후기</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
 
@@ -46,35 +49,24 @@
 	 <div class="content">
         <br><br><br><br>
         <div class="innerOuter">
-
-            <h2>사람구해요 작성하기</h2>
-
+            <h2>이용후기 작성하기</h2>
             <br><br>
 
-            <form id="enrollForm" method="post" action="insert.fi" enctype="multipart/form-data">
+            <form id="enrollForm" method="post" action="insert.in" enctype="multipart/form-data">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="findTitle" value="" required></td>
+                        <td><input type="text" id="title" class="form-control" name="inrTitle" value="" required></td>
                     </tr>
                     
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
                         <td><input type="text" id="writer" class="form-control" value="${loginUser.memberId}" name="memberId" readonly></td>
                     </tr>
-                    <tr>
-					    <th style="width: 80px;"><label for="category">카테고리</label></th>
-					    <td>
-					        <input type="checkbox" id="personNeeded" name="category" value="방구해요" style="transform: scale(1.5);"  checked onclick="uncheckOtherCheckbox('personNeeded');">
-					        <label for="personNeeded" style="font-size: 20px;">방구해요</label>
-					        <input type="checkbox" id="roomAvailable" name="category" value="세놓아요" style="transform: scale(1.5);" onclick="uncheckOtherCheckbox('roomAvailable');">
-					        <label for="roomAvailable" style="font-size: 20px;">세놓아요</label>
-					    </td>
-					</tr>
 
                     <tr>
                         <th><label for="content">내용</label></th>
-                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="findContent" required></textarea></td>
+                        <td><textarea id="summernote" class="form-control" rows="10" style="resize:none;" name="inrContent" required></textarea></td>
                     </tr>
                 </table>
                 <br>
@@ -168,52 +160,38 @@
 	    	                document.getElementById('personNeeded').checked = false;
 	    	            }
 	    	        }
-	    	     // 등록하기 버튼과 필수 입력 필드들을 선택합니다.
-	    	        const enrollForm = document.getElementById('enrollForm');
-	    	        const titleInput = document.getElementById('title');
-	    	        const categoryInputs = document.querySelectorAll('input[name="category"]');
-	    	        const contentTextarea = document.getElementById('summernote');
-	    	        const submitButton = document.querySelector('button[type="submit"]');
 
-	    	        // 등록하기 버튼 클릭 이벤트를 처리하는 함수
-	    	        function handleSubmitButtonClick(event) {
-	    	          const isTitleEmpty = titleInput.value.trim() === '';
-	    	          const isCategoryEmpty = !isCategorySelected();
-	    	          const isContentEmpty = contentTextarea.value.trim() === '';
-
-	    	          if (isTitleEmpty || isCategoryEmpty || isContentEmpty) {
-	    	            let errorMessage = '';
-	    	            if (isTitleEmpty) {
-	    	              errorMessage += '제목 ';
+	    	        document.getElementById("enrollForm").addEventListener("submit", function(event) {
+	    	            // summernote 내용 가져오기
+	    	            var content = document.getElementById("summernote").value;
+	    	            
+	    	            // 내용에 이미지 태그가 최소 하나 이상 있는 경우에만 폼 제출
+	    	            if (hasImageTag(content)) {
+	    	                return true;  // 폼 제출
+	    	            } else {
+	    	                event.preventDefault();  // 폼 제출 방지
+	    	                
+	    	                // 경고창 표시
+	    	                Swal.fire({
+								  title: '경고!',
+								  text: '이미지 1개이상 꼭 등록해주세요!',
+								  imageUrl: 'https://unsplash.it/400/200',
+								  imageWidth: 400,
+								  imageHeight: 200,
+								  imageAlt: 'Custom image',
+								})
+	    	                return false;
 	    	            }
-	    	            if (isCategoryEmpty) {
-	    	              errorMessage += '카테고리 ';
-	    	            }
-	    	            if (isContentEmpty) {
-	    	              errorMessage += '내용 ';
-	    	            }
-	    	            errorMessage += '을 입력해야 등록할 수 있습니다.';
-	    	            alert(errorMessage);
-
-	    	            // 등록하기 버튼의 기본 동작인 폼 제출을 취소합니다.
-	    	            event.preventDefault();
-	    	          }
+	    	        });
+	    	        
+	    	        // 내용에 이미지 태그 확인 함수
+	    	        function hasImageTag(content) {
+	    	            var div = document.createElement("div");
+	    	            div.innerHTML = content;
+	    	            var images = div.getElementsByTagName("img");
+	    	            return (images.length > 0);
 	    	        }
-
-	    	        // 카테고리가 선택되었는지 확인하는 함수
-	    	        function isCategorySelected() {
-	    	          let isAnyCategorySelected = false;
-	    	          categoryInputs.forEach((input) => {
-	    	            if (input.checked) {
-	    	              isAnyCategorySelected = true;
-	    	            }
-	    	          });
-	    	          return isAnyCategorySelected;
-	    	        }
-
-	    	        // 등록하기 버튼 클릭 이벤트를 감지하여 처리합니다.
-	    	        submitButton.addEventListener('click', handleSubmitButtonClick);
-
+	          
 	         
       </script>
 	

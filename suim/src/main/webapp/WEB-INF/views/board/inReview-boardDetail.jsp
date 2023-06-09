@@ -46,7 +46,7 @@
         
 
         
-<title>자유게시판</title>
+<title>이용후기 상세</title>
 
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		
@@ -61,33 +61,32 @@
         <br><br>
         <div class="innerOuter">
             <br><br>
-            <h2>게시판 상세보기</h2>
+            <h2>이용후기 상세보기</h2>
             <br>
 
-            <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</a>
+<button class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</button>
             <br><br>
 
             <table id="contentArea" algin="center" class="table">
                 <tr>
                     <th width="100">제목</th>
-                    <td colspan="3">${ b.boardTitle }</td>
+                    <td colspan="3">${ i.inrTitle }</td>
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${ b.memberId }</td>
+                    <td>${ i.memberId }</td>
                     <th>작성일</th>
-                    <td>${ b.boardDate }</td>
+                    <td>${ i.inrDate }</td>
                 </tr>
                 <tr>
-      
+      				<th>글번호</th>
+                       <td>
+                        ${ i.inrNo}
+                    </td>
                  
                     <th>조회수</th>
                     <td>
-                        ${ b.boardView }
-                    </td>
-                     <th></th>
-                    <td>
-                      
+                        ${ i.inrView}
                     </td>
                 </tr>
                 <tr>
@@ -95,11 +94,11 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td colspan="4"><p style="height:150px;">${ b.boardContent }</p></td>
+                    <td colspan="4"><p style="height:150px;">${ i.inrContent }</p></td>
                 </tr>
             </table>
             <br>
-			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq b.memberId) }">
+			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq i.memberId) }">
             <div align="center">
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 		                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
@@ -108,8 +107,8 @@
             <br><br>
             
          		<form id="postForm" action="" method="post">
-	            	<input type="hidden" name="bno" value="${ b.boardNo }">
-	            	<input type="hidden" name="filePath" value="${ b.changeName }">
+	            	<input type="hidden" name="ino" value="${ i.inrNo }">
+	            	<input type="hidden" name="filePath" value="${ i.changeName }">
 	            </form>
 	            <script>
 	            	// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
@@ -117,9 +116,9 @@
 	            		
 	            		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
 	            		if(num == 1) { // 수정하기 버튼을 클릭했을 경우
-	            			$("#postForm").attr("action", "updateForm.bo").submit();
+	            			$("#postForm").attr("action", "updateForm.in").submit();
 	            		} else { // 삭제하기 버튼을 클릭했을 경우
-	            			$("#postForm").attr("action", "delete.bo").submit();
+	            			$("#postForm").attr("action", "delete.in").submit();
 	            		}
 	            	}
 	            </script>
@@ -162,7 +161,7 @@
     
     <script>
 
-	$(function() {
+    $(function() {
 		// 댓글 리스트 조회용 함수 호출
 		selectReplyList(); // setInterval 로 마찬가지로 실시간 조회 효과를 줄 수 있다.
 	});
@@ -175,10 +174,10 @@
 			// 즉, 유효한 내용이 한자라도 있을 경우
 			
 			$.ajax({
-				url : "rinsert.bo",
+				url : "rinsert.in",
 				data : {
-					boardNo : ${ b.boardNo },
-					breContent : $("#content").val(),
+					inrNo : ${ i.inrNo },
+					ireContent : $("#content").val(),
 					memberId : "${ loginUser.memberId }"
 				},
 				type : "post", 
@@ -202,8 +201,8 @@
 	function selectReplyList() { // 해당 게시글에 딸린 댓글리스트 조회용 ajax
 		
 		$.ajax({
-			url : "rlist.bo",
-			data : {bno : ${ b.boardNo }},
+			url : "rlist.in",
+			data : {ino : ${ i.inrNo }},
 			type : "get",
 			success : function(result) {
 				
@@ -214,8 +213,8 @@
 				for(let i = 0; i < result.length; i++) {
 					resultStr += "<tr>"
 							   + 	"<td>" + result[i].nickName + "</td>"
-							   + 	"<td>" + result[i].breContent + "</td>"
-							   + 	"<td>" + result[i].breDate + "</td>"
+							   + 	"<td>" + result[i].ireContent + "</td>"
+							   + 	"<td>" + result[i].ireDate + "</td>"
 							   + "</tr>";
 				}
 				
@@ -227,6 +226,7 @@
 			}
 		});
 	}
+	
 	document.getElementById('content').addEventListener('keydown', function(event) {
 	    if (event.keyCode === 13) { // Enter 키의 keyCode는 13입니다.
 	        event.preventDefault(); // 엔터 키의 기본 동작인 줄바꿈을 막습니다.
@@ -234,19 +234,13 @@
 	    }
 	});
 	
-	// HTML에서 목록으로 버튼을 클릭했을 때 호출할 함수
-	function goBack() {
-	  window.history.back();
-	}
+	document.addEventListener('DOMContentLoaded', function() {
+		  var backButton = document.querySelector('.btn-secondary');
 
-	// 버튼 요소를 가져온다
-	var backButton = document.querySelector('.btn-secondary');
-
-	// 버튼을 클릭하면 goBack 함수를 호출한다
-
-	//backButton.addEventListener('click', goBack);
-
-    
+		  backButton.addEventListener('click', function() {
+		    history.back();
+		  });
+		});
     </script>
     
 

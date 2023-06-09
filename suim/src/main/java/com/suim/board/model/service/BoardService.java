@@ -6,6 +6,8 @@ import java.util.HashMap;
 import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
+import com.suim.board.model.vo.InReview;
+import com.suim.board.model.vo.InReviewReply;
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -115,6 +117,30 @@ public interface BoardService {
 	
 	ArrayList<InReview> selectiList(PageInfo pi, HashMap<String, String> fin);
 	
+	// 게시글 상세조회 서비스
+	// 게시글 조회수 증가
+	int increaseInCount(int inrNo);
+	// 게시글 상세 조회
+	InReview selectInReview(int inrNo);
+	
+	// 게시글 삭제 서비스
+	int deleteInReview(int inrNo);
+	
+	// 게시글 등록
+	int insertInReview(InReview i);
+	
+	// 게시글 업데이트
+	int updateInReivew(InReview i);
+	
+	// 상세페이지 조회
+	InReview updateInReivewList(int inrNo);
+	
+	// 댓글 리스트 조회 서비스 (Ajax)
+	ArrayList<InReviewReply> selectInReviewReplyList(int inrNo);
+	
+	// 댓글 작성 서비스 (Ajax)
+	int insertInReviewReply(InReviewReply ir);
+
 
 
 }

@@ -190,7 +190,7 @@ body{
   width: 270px;
   background-color: #fff;
   position: relative;
-  top: -100px; /* ¿øÇÏ´Â À§Ä¡·Î Á¶Á¤ÇØÁÖ¼¼¿ä */
+  top: -100px; /* ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½ */
 }
 
 .search-find form {
@@ -218,7 +218,7 @@ body{
 }
 
     .search-filter {
-        font-size: 17px; /* ¿øÇÏ´Â Å©±â·Î ¼³Á¤ÇÏ¼¼¿ä */
+        font-size: 17px; 
     }
 
 

@@ -9,6 +9,8 @@
 	   <script src="/resources/js/summernote/summernote-lite.js"></script>
 	   <script src="/resources/js/summernote/lang/summernote-ko-KR.js"></script>
 	   <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
+	   
+	   
 	    
         <link rel="stylesheet" href="/resources/css/board/board.css">
 
@@ -49,7 +51,7 @@
             <h2>자유게시판 작성하기</h2>
             <br><br>
 
-            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data">
+            <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <table algin="center">
                     <tr>
                         <th><label for="title">제목</label></th>
@@ -150,8 +152,28 @@
 	    					}
 	    				});
 	    			}
-	      
+	    	        
+	    	        function validateForm() {
+	    	            var title = document.getElementById("title").value;
+	    	            var content = document.getElementById("summernote").value;
 
+	    	            if (title === "" && content === "") {
+	    	                alert("제목과 내용을 입력해주세요.");
+	    	                return false;
+	    	            }
+
+	    	            if (title === "") {
+	    	                alert("제목을 입력해주세요.");
+	    	                return false;
+	    	            }
+
+	    	            if (content === "") {
+	    	                alert("내용을 입력해주세요.");
+	    	                return false;
+	    	            }
+
+	    	            return true;
+	    	        }
 	          
 	         
       </script>
