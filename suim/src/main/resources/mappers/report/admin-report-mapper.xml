@@ -12,6 +12,7 @@
 		<result column="REPORT_DATE" property="reportDate" />
 		<result column="REPORT_STATUS" property="reportStatus" />
 		<result column="REPORT_COUNT" property="reportCount" />
+		<result column="THUMBNAIL" property="thumbnail" />
 	</resultMap>
 
 	<!-- 총 갯수 구하는 쿼리문 -->
@@ -22,6 +23,7 @@
 	
 	<!-- 리스트를 구해주는 쿼리문 -->
 	<select id="selectList" resultMap="adminReportResultSet">
+<!-- 
 		SELECT REPORT_NO
 			 , REPORT_TITLE
 			 , REPORT_CONTENT
@@ -31,6 +33,37 @@
 			 , REPORT_STATUS
 		  FROM REPORT
          ORDER BY REPORT_DATE DESC
+-->
+		<!-- 신고 목록에 이미지 노출용 쿼리문 -->
+		SELECT
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME,
+			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM REPORT R
+			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+			GROUP BY
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME
+			ORDER BY R.REPORT_NO DESC
 	</select>
 	
 	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
@@ -42,17 +75,36 @@
 	
 	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
 	<select id="selectCategoryList" parameterType="string" resultMap="adminReportResultSet">
-		SELECT REPORT_NO
-			 , REPORT_TITLE
-			 , REPORT_CONTENT
-			 , REPORT_TYPE
-			 , REPORT_ID
-			 , REPORT_DATE
-			 , REPORT_STATUS
-		  FROM REPORT
-         WHERE REPORT_STATUS = #{category}         
-         ORDER BY REPORT_DATE DESC
-         
+         SELECT
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME,
+			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM REPORT R
+			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+			WHERE REPORT_STATUS = #{category}   
+			GROUP BY
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME
+			ORDER BY R.REPORT_NO DESC
 	</select>
 	
 	<!-- 블랙리스트 처리용 쿼리문 -->
@@ -80,15 +132,36 @@
 	
 	<!-- 신고 상세 조회용 쿼리문 -->
 	<select id="selectReport" parameterType="_int" resultMap="adminReportResultSet">
-		SELECT REPORT_NO
-			 , REPORT_TITLE
-			 , REPORT_CONTENT
-			 , REPORT_TYPE
-			 , REPORT_ID
-			 , REPORT_DATE
-			 , REPORT_STATUS
-		  FROM REPORT
-		 WHERE REPORT_NO = #{reportNo}
+		SELECT
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME,
+			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM REPORT R
+			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+			WHERE R.REPORT_NO = #{reportNo}
+			GROUP BY
+			    R.REPORT_NO,
+			    R.REPORT_TITLE,
+			    R.REPORT_CONTENT,
+			    R.REPORT_TYPE,
+			    R.REPORT_ID,
+			    R.REPORT_DATE,
+			    REPORT_STATUS,
+			    R.MEMBER_ID,
+			    M.NICKNAME,
+			    RA.ORIGIN_NAME,
+			    RA.CHANGE_NAME
+			ORDER BY R.REPORT_NO DESC
 	</select>
 
 	<!-- 신고 삭제용 쿼리문 -->
@@ -148,4 +221,6 @@
 		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
 		 ORDER BY REPORT_NO DESC
 	</select>
+	
+
 </mapper>

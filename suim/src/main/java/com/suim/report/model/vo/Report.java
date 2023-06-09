@@ -24,4 +24,6 @@ public class Report {
 	private int boardNo;
 	private int breNo;
 	private int chatNo;
+	
+	private String thumbnail;
 }

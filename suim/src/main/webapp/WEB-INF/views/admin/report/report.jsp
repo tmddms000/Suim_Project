@@ -39,7 +39,7 @@
                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4" width="">
                             <h6 class="mb-4">신고 관리</h6>
-
+							
 							<div align="right" class="searchForm">
 							<form class="d-md-flex ms-4" action="search.re">
 								<div class="select">
@@ -100,7 +100,7 @@
 				                                            <td>${ r.reportType }</td>
 				                                            <td>${ r.reportTitle }</td>
 				                                            <td>${ r.reportId }</td>
-				                                            <td>${ r.reportContent }</td>
+				                                            <td><img src="/${ r.thumbnail }"></img></td>
 				                                            <td>${ r.reportDate }</td>
 				                                            <td class="report-status">${ r.reportStatus }</td>
 				                                        </tr>

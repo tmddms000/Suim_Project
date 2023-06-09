@@ -151,6 +151,7 @@ public class AdminMemberController {
 	}
 	
 	
+	
 	// 회원 상세보기 - 가맹 신청 조회용
 
 	// 회원 상세보기 - 예치금 조회용

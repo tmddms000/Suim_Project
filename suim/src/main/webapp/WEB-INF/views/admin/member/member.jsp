@@ -6,6 +6,9 @@
 	#memberList {text-align:center;}
 	#memberList>tbody>tr:hover {cursor:pointer;}
 	#pagingArea {width:fit-content; margin:auto;}
+	form input {width:150px!important;}
+	form button {border:none!important;}
+	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
 </style>
 
 	<%@ include file="../common/include.jsp" %>
@@ -62,7 +65,6 @@
 		                                            <th scope="col">가입일</th>
 		                                            <th scope="col">상태</th>
 		                                            <th scope="col">블랙회원</th>
-		                                            <th scope="col">권한 변경</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
@@ -77,16 +79,15 @@
 			                                            <td>${ m.enrollDate }</td>
 			                                            <td>${ m.status }</td>
 			                                            <td>
-			                                                <div class="form-check form-switch">
-			                                                	<input class="form-check-input" type="checkbox" role="switch">
-			                                            	</div>
-			                                            </td>
-			                                            <td>
-			                                            	<selet>
-			                                            		<option>관리자</option>
-			                                            		<option>사용자</option>
-			                                            	</selet>
-			                                            </td>
+												            <c:choose>
+												                <c:when test="${m.blacklistFlag eq 1}">
+												                    <span class="badge bg-danger">블랙회원</span>
+												                </c:when>
+												                <c:otherwise>
+												                    <span class="badge bg-success">일반회원</span>
+												                </c:otherwise>
+												            </c:choose>
+												        </td>
 			                                        </tr>
 			                                	</c:forEach>
 		                                    </tbody>
@@ -113,10 +114,8 @@
                             $("input[type=checkbox]").prop("checked",false);
                         }
                     });
-                });
-
-                $(document).ready(function(){
-                // $(function() {
+                    
+                    // 상세 페이지로 이동용
             		$("#memberList>tbody>tr").click(function() {
             			var id = $(this).children(".memberId").text();
             			location.href = "detail.me?id=" + id;	

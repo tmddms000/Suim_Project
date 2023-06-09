@@ -48,92 +48,87 @@
 	                        <div class="bg-light rounded h-100 p-4">
 	                            <h6 class="mb-4">회원 정보 보기</h6>
 	                            
-	                            <nav>
-	                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-	                                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-	                                        aria-selected="true">회원 정보</button>
-	                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-profile" type="button" role="tab"
-	                                        aria-controls="nav-profile" aria-selected="false">가맹 신청 내역</button>
-	                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-contact1" type="button" role="tab"
-	                                        aria-controls="nav-profile" aria-selected="false" onclick="payment();">예치금 내역</button>
-	                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-	                                        data-bs-target="#nav-contact2" type="button" role="tab"
-	                                        aria-controls="nav-profile" aria-selected="false">게시글 내역</button>
-	                                </div>
-                            	</nav>
+	                            <ul class="nav nav-tabs">
+									<li class="nav-item"><a
+										class="nav-link <c:if test="${category eq 'A'}">active</c:if>"
+										id="status-all" data-toggle="tab" href="/admin/detail.me?id=${ m.memberId }">회원 정보</a></li>
+									<li class="nav-item"><a
+										class="nav-link <c:if test="${category eq 'W'}">active</c:if>"
+										data-toggle="tab" id="status-pending"
+										href="/admin/list.re?page=1&category=W">가맹 신청 내역</a></li>
+									<li class="nav-item"><a
+										class="nav-link <c:if test="${category eq 'Y'}">active</c:if>"
+										data-toggle="tab" id="status-confirm"
+										href="/admin/list.re?page=1&category=Y">예치금 내역</a></li>
+									<li class="nav-item"><a
+										class="nav-link <c:if test="${category eq 'N'}">active</c:if>"
+										data-toggle="tab" id="status-reject"
+										href="/admin/list.re?page=1&category=N">게시글 내역</a></li>
+								</ul>
 	                            <div class="tab-content pt-3" id="nav-tabContent">
 	                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 										<br>
 										<div class="table-responsive">
-			                                <table class="table">
-		                                        <tr>
-		                                            <th scope="col" width="200">이름</th>
-		                                            <td>${ m.memberName }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">닉네임</th>
-		                                            <td>${ m.nickName }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">전화번호</th>
-		                                            <td>${ m.phone }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">이메일</th>
-		                                            <td>${ m.email }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">성별</th>
-		                                            <td>${ m.gender }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">선호지역</th>
-		                                            <td>${ m.area }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">생년월일</th>
-		                                            <td>${ m.birth }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">가입일</th>
-		                                            <td>${ m.enrollDate }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">회원 정보 수정 날짜</th>
-		                                            <td>${ m.modifyDate }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">최근 로그인 날짜</th>
-		                                            <td>${ m.loginDate }</td>
-		                                        </tr>
-		                                        <tr>
-		                                            <th scope="row">상태</th>
-		                                            <td>${ m.status }</td>
-		                                        </tr>
-			                                </table>
-			                        	</div>
+											<!-- 왼쪽 테이블 -->
+		                					<div class="col-sm-12 col-xl-6 memberTableLeft">
+				                                <table class="table" id="memberList">
+			                                        <tr>
+			                                            <th scope="col" width="200">이름</th>
+			                                            <td>${ m.memberName }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">닉네임</th>
+			                                            <td>${ m.nickName }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">전화번호</th>
+			                                            <td>${ m.phone }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">이메일</th>
+			                                            <td>${ m.email }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">성별</th>
+			                                            <td>${ m.gender }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">선호지역</th>
+			                                            <td>${ m.area }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">생년월일</th>
+			                                            <td>${ m.birth }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">가입일</th>
+			                                            <td>${ m.enrollDate }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">회원 정보 수정 날짜</th>
+			                                            <td>${ m.modifyDate }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">최근 로그인 날짜</th>
+			                                            <td>${ m.loginDate }</td>
+			                                        </tr>
+			                                        <tr>
+			                                            <th scope="row">상태</th>
+			                                            <td>${ m.status }</td>
+			                                        </tr>
+				                                </table>
+				                        	</div>
+				                        	<!-- 오른쪽 테이블 -->
+				                			<div class="col-sm-12 col-xl-6 memberTableRight">
+				                                <table class="table">
+				                                    <tr>
+			                                            <th scope="row">프로필 사진</th>
+						                                <td><img src="${ m.changeName }" style="border-radius:200px;"></img></td>
+			                                        </tr>
+				                                </table>
+				                        	</div>
+				                        </div>
 			                        </div>
-	                                <div class="tab-pane fade" id="nav-contact1" role="tabpanel" aria-labelledby="nav-contact-tab">
-	                                    <table id="contentArea" algin="center" class="table">
-							                <tr>
-							                	<th>주문번호</th>
-							                	<th>주문자</th>
-							                	<th>가격</th>
-							                	<th>결제일</th>
-							                	<th>상태</th>
-							                </tr>
-							                <tr>
-							                    <td>${ p.paymentNo }</td>
-							                    <td>${ p.memberId }</td>
-							                    <td>${ p.price }</td>
-							                    <td>${ p.paymentDate }</td>
-							                    <td>${ p.paymentStatus }</td>
-							                </tr>
-							            </table>
-	                                </div>
 	                            </div>
 	                        </div>
 	                    </div>

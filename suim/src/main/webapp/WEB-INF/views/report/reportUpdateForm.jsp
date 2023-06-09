@@ -114,47 +114,47 @@
  			    // 코드보기, 확대해서보기, 도움말
  			    ['view', ['codeview','fullscreen', 'help']]
  			  ];
-
- 		// 툴바생략
- 		var setting = {
- 	            height : 300,
- 	            minHeight : null,
- 	            maxHeight : null,
- 	            focus : true,
- 	            lang : 'ko-KR',
- 	            toolbar : toolbar,
- 	            //콜백 함수
- 	            callbacks : { 
- 	            	onImageUpload : function(files, editor, welEditable) {
- 	            // 파일 업로드(다중업로드를 위해 반복문 사용)
- 	            for (var i = files.length - 1; i >= 0; i--) {
- 	            uploadSummernoteImageFile(files[i],
- 	            this);
- 	            		}
- 	            	}
- 	            }
- 	         };
- 	        $('#summernote').summernote(setting);
- 	        });
- 	        
- 	        function uploadSummernoteImageFile(file, el) {
- 				data = new FormData();
- 				data.append("file", file);
- 				$.ajax({
- 					data : data,
- 					type : "POST",
- 					url : "/uploadSummernoteImageFile",
- 					contentType : false,
- 					enctype : 'multipart/form-data',
- 					processData : false,
- 					success : function(data) {
- 						$(el).summernote('editor.insertImage', data.url);
- 					}
- 				});
- 			}
+ 		
+		// 툴바생략
+		var setting = {
+	            height : 300,
+	            minHeight : null,
+	            maxHeight : null,
+	            focus : true,
+	            lang : 'ko-KR',
+	            toolbar : toolbar,
+	            //콜백 함수
+	            callbacks : { 
+	            	onImageUpload : function(files, editor, welEditable) {
+	            // 파일 업로드(다중업로드를 위해 반복문 사용)
+	            for (var i = files.length - 1; i >= 0; i--) {
+	            	uploadSummerNoteImageFile(files[i],
+	            this);
+	            		}
+	            	}
+	            }
+	         };
+	        $('#summernote').summernote(setting);
+	        });
+	        
+	        function uploadSummerNoteImageFile(file, el) {
+				data = new FormData();
+				data.append("file", file);
+				$.ajax({
+					data : data,
+					type : "POST",
+					url : "/uploadSummerNoteImageFile",
+					contentType : false,
+					enctype : 'multipart/form-data',
+					processData : false,
+					success : function(data) {
+						$(el).summernote('editor.insertImage', data.url);
+					}
+				});
+			}
    
         
- 	       $('#reportcontent').summernote('editor.insertText', "${board_data.BOARD_COTENT}")
+ 	     //  $('#reportcontent').summernote('editor.insertText', "${report_data.REPORT_COTENT}")
 	</script>
 
 	<script src="/resources/js/summernote/summernote-lite.js"></script>

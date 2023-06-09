@@ -19,7 +19,6 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.house.model.service.AdminHouseService;
 import com.suim.house.model.vo.House;
-import com.suim.report.model.vo.Report;
 
 @RequestMapping("/admin")
 @Controller
@@ -28,13 +27,12 @@ public class AdminHouseController {
 	@Autowired
 	private AdminHouseService adminHouseService;
 	
-	// 신고 리스트 조회 포워딩용
+	// 리스트 조회 포워딩용
 	@RequestMapping("list.ho")
 	public ModelAndView selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
 			ModelAndView mv) {
 		
-		// 페이징처리를 위한 PageInfo 객체 얻어내기
 		int listCount = adminHouseService.selectListCount();
 		
 		int pageLimit = 10;
@@ -46,7 +44,7 @@ public class AdminHouseController {
 
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
-		  .setViewName("admin/report/report");
+		  .setViewName("admin/house/house");
 		
 		return mv;
 	}
@@ -129,7 +127,6 @@ public class AdminHouseController {
 	public String updateForm(@RequestParam("hno") int houseNo,
 						   Model model) {
 		
-		// 게시글 상세보기용 selectMember 요청 재활용
 		House h = adminHouseService.selectHouse(houseNo);
 		
 		model.addAttribute("h", h);
@@ -143,7 +140,6 @@ public class AdminHouseController {
 						@RequestParam(value="currentPage", defaultValue="1") int currentPage,
 						ModelAndView mv) {
 		
-		// 페이징처리를 위한 PageInfo 객체 얻어내기
 		int listCount = adminHouseService.selectListCount();
 		
 		int pageLimit = 10;

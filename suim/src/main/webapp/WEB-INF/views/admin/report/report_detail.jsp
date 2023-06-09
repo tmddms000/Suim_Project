@@ -91,14 +91,7 @@
 		                                <table class="table">
 		                                    <tr>
 	                                            <th scope="row">첨부파일</th>
-	                                            <c:choose>
-													<c:when test="${empty changeName}">
-														<img src="../../../resources/img/admin/user.jpg"/>
-													</c:when>
-													<c:otherwise>
-														<img src="${changeName}"/>
-													</c:otherwise>
-												</c:choose>
+				                                <td><img src="/${ r.thumbnail }"></img></td>
 	                                        </tr>
 		                                </table>
 		                        	</div>

@@ -67,7 +67,7 @@ public class ReportController {
 		
 		String changeName = currentTime + ranNum + ext;
 		
-		String savePath = session.getServletContext().getRealPath("resources/img/report/fileupload/");
+		String savePath = session.getServletContext().getRealPath("resources/img/report/uploadFiles/");
 		
 		try {
 			upfile.transferTo(new File(savePath + changeName));
@@ -75,18 +75,16 @@ public class ReportController {
 			e.printStackTrace();
 		}
 		
-		return changeName;
+		return "/resources/img/report/uploadFiles/" + changeName;
 	}
 	
 	@RequestMapping(value="/uploadSummerNoteImageFile", produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String uploadSummerNoteImageFile(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) {
 	    JsonObject jsonObject = new JsonObject();
-
 	    // 내부경로로 저장
 	    String contextRoot = new HttpServletRequestWrapper(request).getRealPath("/");
-	    String fileRoot = contextRoot + "resources/img/report/fileupload/";
-
+	    String fileRoot = contextRoot + "resources/img/report/uploadFiles/";
 	    String originalFileName = multipartFile.getOriginalFilename();    // 오리지날 파일명
 	    String extension = originalFileName.substring(originalFileName.lastIndexOf("."));    // 파일 확장자
 	    String savedFileName = UUID.randomUUID() + extension;    // 저장될 파일 명
@@ -95,7 +93,7 @@ public class ReportController {
 	    try {
 	        InputStream fileStream = multipartFile.getInputStream();
 	        FileUtils.copyInputStreamToFile(fileStream, targetFile);    // 파일 저장
-	        jsonObject.addProperty("url", "resources/img/report/fileupload/" + savedFileName); // contextroot + resources + 저장할 내부 폴더명
+	        jsonObject.addProperty("url", "resources/img/report/uploadFiles/" + savedFileName); // contextroot + resources + 저장할 내부 폴더명
 	        jsonObject.addProperty("responseCode", "success");
 	        
 	    } catch (IOException e) {

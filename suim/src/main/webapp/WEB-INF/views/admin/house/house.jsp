@@ -1,5 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<style>
+	#houseList {text-align:center;}
+	#houseList>tbody>tr:hover {cursor:pointer;}
+	#pagingArea {width:fit-content; margin:auto;}
+	form input {width:150px!important;}
+	form button {border:none!important;}
+	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
+</style>
 
 	<%@ include file="../common/include.jsp" %>
 
@@ -29,16 +39,15 @@
                     
                      <div class="col-12">
                         <div class="bg-light rounded h-100 p-4" width="">
-                            <h6 class="mb-4">매물 관리</h6>
+                            <h6 class="mb-4">쉐어하우스 관리</h6>
 
 							<div align="right" class="searchForm">
-							<form class="d-md-flex ms-4" action="search.re">
+							<form class="d-md-flex ms-4" action="search.ho">
 								<div class="select">
 				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;">
-				                        <option value="REPORT_TITLE">제목</option>
-				                        <option value="REPORT_CONTENT">내용</option>
-				                        <option value="REPORT_TYPE">유형</option>
-				                        <option value="REPORT_ID">신고자</option>
+				                        <option value="HOUSE_NAME">이름</option>
+				                        <option value="RES_GENDER">성별</option>
+				                        <option value="RES_TYPE">유형</option>
 				                    </select>
 				                </div>
 								<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
@@ -73,25 +82,42 @@
 		                                            <th scope="col">번호</th>
 		                                            <th scope="col">유형</th>
 		                                            <th scope="col">제목</th>
-		                                            <th scope="col">신고당한사람</th>
+		                                            <th scope="col">신청자</th>
 		                                            <th scope="col">내용</th>
 		                                            <th scope="col">신고일</th>
 		                                            <th scope="col">상태</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
-		                                    	<c:forEach var="r" items="${ list }">
-		                    						<tr>
-			                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
-			                                            <td class="rno">${ r.reportNo }</td>
-			                                            <td>${ r.reportType }</td>
-			                                            <td>${ r.reportTitle }</td>
-			                                            <td>${ r.reportId }</td>
-			                                            <td>${ r.reportContent }</td>
-			                                            <td>${ r.reportDate }</td>
-			                                            <td>${ r.reportStatus }</td>
-			                                        </tr>
-			                                	</c:forEach>
+		                                    <c:choose>
+			                                    <c:when test="${ not empty list }">
+			                                    	<c:forEach var="h" items="${ list }">
+			                    						<tr>
+				                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
+				                                            <td class="rno">${ h.houseNo }</td>
+				                                            <td>${ h.houseName }</td>
+				                                            <td>${ h.houseAddress }</td>
+				                                            <td>${ h.deposit }</td>
+				                                            <td>${ h.rent }</td>
+				                                            <td>${ h.enterDate }</td>
+				                                            <td>${ h.maxEnterDate }</td>
+				                                            <td>${ h.minStay }</td>
+				                                            <td>${ h.maxStay }</td>
+				                                            <td>${ h.roomPeople }</td>
+				                                            <td>${ h.incFurniture }</td>
+				                                            <td>${ h.resGender }</td>
+				                                            <td>${ h.resType }</td>
+				                                            <td>${ h.houseStatus }</td>
+				                                            <td>${ h.housDate }</td>
+				                                        </tr>
+				                                	</c:forEach>
+				                                </c:when>
+				                            	<c:otherwise>
+				                            		<tr>
+				                            			<td colspan="8">조회된 게시글이 없습니다.</td>
+				                            		</tr>
+				                            	</c:otherwise>
+				                            </c:choose>
 		                                    </tbody>
 	                                </table>
                             	</div>
@@ -126,13 +152,13 @@
                             <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage - 1 }">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="list.ho?cPage=${ pi.currentPage - 1 }">Previous</a></li>
                         </c:otherwise>
                     </c:choose>
                     
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                        <li class="page-item"><a class="page-link" href="list.bo?cPage=${ p }">${ p }</a></li>
+                        <li class="page-item"><a class="page-link" href="list.ho?cPage=${ p }">${ p }</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -140,7 +166,7 @@
                             <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.bo?cPage=${ pi.currentPage + 1 }">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="list.ho?cPage=${ pi.currentPage + 1 }">Next</a></li>
                         </c:otherwise>
                     </c:choose>
                 </ul>

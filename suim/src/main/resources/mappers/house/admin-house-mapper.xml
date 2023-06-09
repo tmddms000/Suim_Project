@@ -25,15 +25,6 @@
 		<result column="CHANGE_NAME" property="changeName" />
 	</resultMap>
 
-	<resultMap id="photoResultMap" type="photo">
-		<result column="PHOTO_NO" property="photoNo" />
-		<result column="ORIGIN_NAME" property="originName" />
-		<result column="CHANGE_NAME" property="changeName" />
-		<result column="CREATE_DATE" property="createDate" />
-		<result column="FILE_LEVEL" property="fileLevel" />
-		<result column="FILE_STATUS" property="fileStatus" />
-	</resultMap>
-
 	<!-- 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -70,68 +61,95 @@
          ORDER BY HOUSE_DATE DESC
 	</select>
 	
-	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
-	<select id="selectCategoryList" parameterType="string" resultMap="adminHouseResultSet">
-		SELECT HOUSE_NO
-			 , HOUSE_TITLE
-			 , HOUSE_CONTENT
-			 , HOUSE_TYPE
-			 , HOUSE_DATE
-			 , HOUSE_STATUS
-		  FROM HOUSE
-         WHERE HOUSE_STATUS = #{category}         
-         ORDER BY HOUSE_DATE DESC
-         
-	</select>
-	
-	<!-- 블랙리스트 처리용 쿼리문 -->
-	<select id="selectBlackList">
-		SELECT MEMBER_ID, COUNT(*)
-		  FROM HOUSE
-		 WHERE MEMBER_ID = #{memberId}
-		 GROUP BY MEMBER_ID
-		HAVING HOUSE_COUNT(*) >= 3
-	</select>
-	
 	<!-- 등록용 쿼리문 -->
 	<insert id="insertHouse" parameterType="house">
 		INSERT INTO HOUSE(HOUSE_NO
-						, HOUSE_TITLE
-						, HOUSE_CONTENT
-						, HOUSE_TYPE
+						 , HOUSE_NAME
+						 , HOUSE_ADDRESS
+						 , DEPOSIT
+						 , RENT
+						 , ENTER_DATE
+						 , MAX_ENTER_DATE
+						 , MIN_STAY
+						 , MAX_STAY
+						 , ROOM_PEOPLE
+						 , INC_FURNITURE
+						 , HOUSE_CONTENT
+						 , RES_GENDER
+						 , RES_TYPE
+						 , FLOOR
+						 , HOUSE_STATUS
+						 , HOUSE_DATE
 						)
 				   VALUES(SEQ_HNO.NEXTVAL
-				   		, #{houseTitle}
+				   		, #{houseName}
+				   		, #{houseAddress}
+				   		, #{deposit}
+				   		, #{rent}
+				   		, #{enterDate}
+				   		, #{maxEnterDate}
+				   		, #{minStay}
+				   		, #{maxStay}
+				   		, #{roomPeople}
+				   		, #{incFurniture}
 				   		, #{houseContent}
-				   		, #{houseType}
+				   		, #{resGender}
+				   		, #{resType}
+				   		, #{floor}
+				   		, #{houseStatus}
+				   		, SYSDATE
 				   		)
 	</insert>
 	
-	<!-- 신고 상세 조회용 쿼리문 -->
+	<!-- 상세 조회용 쿼리문 -->
 	<select id="selectHouse" parameterType="_int" resultMap="adminHouseResultSet">
 		SELECT HOUSE_NO
-			 , HOUSE_TITLE
+			 , HOUSE_NAME
+			 , HOUSE_ADDRESS
+			 , DEPOSIT
+			 , RENT
+			 , ENTER_DATE
+			 , MAX_ENTER_DATE
+			 , MIN_STAY
+			 , MAX_STAY
+			 , ROOM_PEOPLE
+			 , INC_FURNITURE
 			 , HOUSE_CONTENT
-			 , HOUSE_TYPE
-			 , HOUSE_DATE
+			 , RES_GENDER
+			 , RES_TYPE
+			 , FLOOR
 			 , HOUSE_STATUS
+			 , HOUSE_DATE
 		  FROM HOUSE
 		 WHERE HOUSE_NO = #{houseNo}
 	</select>
 
-	<!-- 신고 삭제용 쿼리문 -->
+	<!-- 삭제용 쿼리문 -->
 	<update id="deleteHouse" parameterType="_int">
 		UPDATE HOUSE
 		   SET HOUSE_STATUS = 'N'
 		 WHERE HOUSE_NO = #{houseNo}
 	</update>
 	
-	<!-- 신고 수정용 쿼리문 -->
+	<!-- 수정용 쿼리문 -->
 	<update id="updateHouse" parameterType="house">
 		UPDATE HOUSE
-		   SET HOUSE_TITLE = #{houseTitle}
+		   SET HOUSE_NAME = #{houseName}
+		     , HOUSE_ADDRESS = #{houseAddress}
+		     , DEPOSIT = #{deposit}
+		     , RENT = #{rent}
+		     , ENTER_DATE = #{enterDate}
+		     , MAX_ENTER_DATE = #{maxEnterDate}
+		     , MIN_STAY = #{minStay}
+		     , maxStay = #{maxStay}
+		     , ROOM_PEOPLE = #{roomPeople}
+		     , INC_FURNITURE = #{incFurniture}
 		     , HOUSE_CONTENT = #{houseContent}
-		     , HOUSE_TYPE = #{houseType}
+		     , RES_GENDER = #{resGender}
+		     , RES_TYPE = #{resType}
+		     , FLOOR = #{floor}
+			 , HOUSE_STATUS = #{houseStatus}
+			 , HOUSE_DATE = SYSDATE
 		 WHERE HOUSE_NO = #{houseNo}
 	</update>
 
@@ -152,10 +170,22 @@
 	<!-- 검색용 쿼리문 -->
 	<select id="selectSearchList" parameterType="hashmap" resultMap="adminHouseResultSet">
 		SELECT HOUSE_NO
-			 , HOUSE_TITLE
+			 , HOUSE_NAME
+			 , HOUSE_ADDRESS
+			 , DEPOSIT
+			 , RENT
+			 , ENTER_DATE
+			 , MAX_ENTER_DATE
+			 , MIN_STAY
+			 , MAX_STAY
+			 , ROOM_PEOPLE
+			 , INC_FURNITURE
 			 , HOUSE_CONTENT
-			 , HOUSE_DATE
+			 , RES_GENDER
+			 , RES_TYPE
+			 , FLOOR
 			 , HOUSE_STATUS
+			 , HOUSE_DATE
 		  FROM HOUSE
 		  JOIN MEMBER USING (MEMBER_ID)
 		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
