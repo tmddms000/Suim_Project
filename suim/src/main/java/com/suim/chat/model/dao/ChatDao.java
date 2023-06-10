@@ -48,5 +48,19 @@ public class ChatDao {
         params.put("cuser", cuser);
         
        return sqlSession.selectOne("chatMapper.selectIchat", params);
-	}
+	}	
+    
+    public int selectRead(SqlSessionTemplate sqlSession, int rno, String Id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("rno", rno);
+        params.put("Id", Id);
+        return sqlSession.selectOne("chatMapper.selectRead", params);
+    }
+    
+    public void setRead(SqlSessionTemplate sqlSession, int rno, String Id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("rno", rno);
+        params.put("Id", Id);
+        sqlSession.insert("chatMapper.setRead", params);
+    }
 }

@@ -1,7 +1,6 @@
 package com.suim.house.model.vo;
 
 import java.sql.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

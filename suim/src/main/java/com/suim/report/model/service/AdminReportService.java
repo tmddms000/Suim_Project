@@ -14,12 +14,14 @@ public interface AdminReportService {
 	// 신고 리스트 조회 서비스 (+ 페이징처리)
 	// 신고 총 갯수 조회
 	int selectListCount();
+
 	// 신고 리스트 조회
 	ArrayList<Report> selectList(PageInfo pi);
 	
-	// 카테고리용 전체 조회
-	ArrayList<Report> selectList(PageInfo pi, String category);
-	
+	// 카테고리마다 ajax말고 그냥 전체 조회
+	int selectCategoryListCount(String category);
+	ArrayList<Report> selectCategoryList(PageInfo pi, String category);
+
 	// 신고 작성하기 서비스
 	int insertReport(Report r);
 	
@@ -39,6 +41,10 @@ public interface AdminReportService {
 	// 승인/반려 처리용
 	int updateReportStatus(Report r);
 
+	// 전체 선택 승인/반려용
+	int updateStatusAll(int[] intArray, String reportStatus);
+	
+	
 	// 검색용
 	int selectSearchCount(HashMap<String, String> map);
 	

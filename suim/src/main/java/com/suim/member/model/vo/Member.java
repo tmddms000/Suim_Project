@@ -2,15 +2,11 @@ package com.suim.member.model.vo;
 
 import java.sql.Date;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
-@Setter
-@Getter
-@ToString
+@Data
 public class Member {
 	//회원의 정보를 받아오기 위한 VO 입니다
 
@@ -31,5 +27,6 @@ public class Member {
 	
 	private String memberComment;
 	private String naverLogin;
+	private String googleLogin;
 	
 }

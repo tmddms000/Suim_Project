@@ -28,6 +28,7 @@
 	
 	<!-- 리스트를 구해주는 쿼리문 -->
 	<select id="selectList" resultMap="adminMemberResultSet">
+	<!-- 
 		SELECT MEMBER_ID
 			 , MEMBER_NAME
 			 , NICKNAME
@@ -41,29 +42,39 @@
 			 , STATUS
 		  FROM MEMBER
 		 ORDER BY ENROLL_DATE DESC
+	-->
+		SELECT M.MEMBER_ID
+		     , M.MEMBER_NAME
+		     , M.NICKNAME
+		     , M.PHONE
+		     , M.EMAIL
+		     , M.GENDER
+		     , M.AREA
+		     , M.BIRTH
+		     , M.ENROLL_DATE
+		     , M.LOGIN_DATE
+		     , M.STATUS
+		     , CASE WHEN B.MEMBER_ID IS NULL THEN 0 ELSE 1 END AS BLACKLIST_FLAG
+		FROM MEMBER M
+		LEFT JOIN (
+		    SELECT R.MEMBER_ID
+		    FROM REPORT R
+		    JOIN MEMBER USING(MEMBER_ID)
+		    GROUP BY R.MEMBER_ID
+		    HAVING COUNT(*) >= 5
+		) B ON M.MEMBER_ID = B.MEMBER_ID
+		ORDER BY M.ENROLL_DATE DESC;
 	</select>
 	
 	<!-- 블랙리스트 처리용 쿼리문 -->
 	<select id="selectBlackList">
-		SELECT MEMBER_ID
-		  FROM REPORT
+         SELECT MEMBER_ID
+           FROM REPORT R
+           JOIN MEMBER USING(MEMBER_ID)
+          WHERE MEMBER_ID = #{memberId}
+          GROUP BY MEMBER_ID
+         HAVING COUNT(*) >= 5
 	</select>
-	
-	<!-- 등록용 쿼리문 -->
-	<insert id="insertMember" parameterType="member">
-		INSERT INTO MEMBER(MEMBER_ID
-						, MEMBER_TITLE
-						, MEMBER_WRITER
-						, MEMBER_CONTENT
-						, ORIGIN_NAME
-						, CHANGE_NAME)
-				   VALUES(SEQ_BNO.NEXTVAL
-				   		, #{boardTitle}
-				   		, #{boardWriter}
-				   		, #{boardContent}
-				   		, #{originName}
-				   		, #{changeName})
-	</insert>
 	
 	<!-- 회원 상세 조회용 쿼리문 -->
 	<select id="selectMember" parameterType="string" resultMap="adminMemberResultSet">
@@ -88,22 +99,6 @@
 	<update id="deleteMember" parameterType="string">
 		UPDATE MEMBER
 		   SET STATUS = '탈퇴'
-		 WHERE MEMBER_ID = #{memberId}
-	</update>
-	
-	<!-- 회원 수정용 쿼리문 -->
-	<update id="updateMember" parameterType="member">
-		UPDATE MEMBER
-		   SET MEMBER_NAME = #{memberName}
-		     , NICKNAME = #{nickName}
-		     , PHONE = #{phone}
-		     , EMAIL = #{email}
-		     , GENDER = #{gender}
-		     , AREA = #{area}
-		     , BIRTH = #{birth}
-		     , MODIFY_DATE = SYSDATE
-		     , CHANGE_NAME = #{changeName}
-		     , STATUS = #{status}
 		 WHERE MEMBER_ID = #{memberId}
 	</update>
 	

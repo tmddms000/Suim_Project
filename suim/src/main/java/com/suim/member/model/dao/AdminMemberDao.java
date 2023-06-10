@@ -21,7 +21,7 @@ public class AdminMemberDao {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
 		
-		RowBounds rowBounds = new RowBounds(offset, limit);
+		RowBounds rowBounds = new RowBounds(offset, limit);		
 		
 		return (ArrayList)sqlSession.selectList("adminMemberMapper.selectList", null, rowBounds);
 	}

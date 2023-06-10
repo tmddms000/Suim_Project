@@ -91,14 +91,7 @@
 		                                <table class="table">
 		                                    <tr>
 	                                            <th scope="row">첨부파일</th>
-	                                            <c:choose>
-													<c:when test="${empty changeName}">
-														<img src="../../../resources/img/admin/user.jpg"/>
-													</c:when>
-													<c:otherwise>
-														<img src="${changeName}"/>
-													</c:otherwise>
-												</c:choose>
+				                                <td><img src="/${ r.thumbnail }"></img></td>
 	                                        </tr>
 		                                </table>
 		                        	</div>
@@ -115,27 +108,30 @@
             <br>
 
             <div align="center">
-			    <a class="btn btn-primary" onclick="postFormSubmit(1);">승인</a>
-			    <a class="btn btn-danger" onclick="postFormSubmit(2);">반려</a>
+			    <a class="btn btn-primary" onclick="postFormSubmit('Y');">승인</a>
+			    <a class="btn btn-danger" onclick="postFormSubmit('N');">반려</a>
 			</div>
 			<br><br>
 			
 			<form id="postForm" action="" method="post">
-			    <input type="hidden" name="rno" value="${r.reportNo}">
+			    <input type="hidden" name="reportNo" value="${r.reportNo}">
+			    <input type="hidden" name="reportStatus" id="reportStatus" value="">
 			</form>
 			
 			<script>
-			    function postFormSubmit(num) {
+			    function postFormSubmit(value) {
 			        var form = document.getElementById("postForm");
+					
+			        var status = document.getElementById("reportStatus");
+			        status.value = value;
 			        
-			        if (num == 1) {
-			            form.action = "updateStatus.re";
-			        } else {
-			            form.action = "delete.re";
-			        }
 			        
+			        form.action = "updateStatus.re";
+
 			        form.submit();
 			    }
+			    
+			    
 			</script>
 
 

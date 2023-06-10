@@ -11,7 +11,8 @@
 <link href="/resources/css/house/house.css" rel="stylesheet" />
 <!-- Example assets -->
 <link rel="stylesheet" type="text/css"
-	href="/resources/css/house/jcarousel.connected-carousels.css">'
+	href="/resources/css/house/jcarousel.connected-carousels.css">
+'
 
 <script type="text/javascript"
 	src="/resources/js/house/vendor/jquery/jquery.js"></script>
@@ -77,9 +78,10 @@
 						<div class="stage">
 							<div class="carousel carousel-stage">
 								<ul>
-									<c:forEach var ="p" items ="${plist }">
-									<li><img src="/resources/img/house/uploadFiles/${p.changeName}" width="600"
-										height="400" alt=""></li>
+									<c:forEach var="p" items="${plist }">
+										<li><img
+											src="/resources/img/house/uploadFiles/${p.changeName}"
+											width="600" height="400" alt=""></li>
 									</c:forEach>
 								</ul>
 							</div>
@@ -93,9 +95,10 @@
 								class="next next-navigation">&rsaquo;</a>
 							<div class="carousel carousel-navigation">
 								<ul>
-									<c:forEach var ="p" items ="${plist }">
-										<li><img src="/resources/img/house/uploadFiles/${p.changeName}" width="50" 
-										height="50" alt=""></li>
+									<c:forEach var="p" items="${plist }">
+										<li><img
+											src="/resources/img/house/uploadFiles/${p.changeName}"
+											width="50" height="50" alt=""></li>
 									</c:forEach>
 								</ul>
 							</div>
@@ -105,125 +108,48 @@
 			</aside>
 			<article class="right">
 				<!-- 오른쪽 영역 내용 -->
-				 <!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
-  				<c:if test="${loginUser.memberId == h.memberId}">
-				<div id="btnDiv">
-					<!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
-					<a id="hEdit" class="white" href="houseEdit.ho?hno= + ${h.houseNo }">수정</a> 
-					<a class="white" id="houseDel" href="houseEdit?no=${h.houseNo }"
-						onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a> 
-					<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
-						src="/resources/img/house/ico_report.png">
-					</a>
-				</div>
+				<c:if test="${loginUser.memberId == h.memberId}">
+					<div id="btnDiv">
+						<!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
+						<a id="hEdit" class="white" href="houseEdit.ho?hno=${h.houseNo}">수정</a>
+						<a class="white" id="houseDel" href="houseEdit?no=${h.houseNo}"
+							onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a>
+					</div>
 				</c:if>
 
-				
-				<script>
-					$(document).ready(
-							function() {
-								// 신고 버튼 클릭 시 새로운 팝업창 열기
-								$('#reportBtn').click(
-										function() {
-											// 팝업창에 보여질 URL
-											var popupUrl = "신고팝업창의URL";
-
-											// 새로운 팝업창 열기
-											window.open(popupUrl, "신고 팝업창",
-													"width=500,height=500");
-										});
-							});
-				</script>
-
+				<c:if test="${loginUser.memberId != h.memberId && loginUser != null}">
+					<div>
+						<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
+						style="margin-left: 225px; position: relative; top: -22px;"
+							src="/resources/img/house/ico_report.png">
+						</a>
+					</div>
+				</c:if>
 
 				<div id="peopleExplain">
 					<ul class="peopleList">
-						<li class="profileImage">
-    						<img src="${h.changeName}" id="profilepic" 
-    						onerror="this.src='/resources/img/common/default_profile.png'" />
+						<li class="profileImage"><img src="${h.changeName}"
+							id="profilepic"
+							onerror="this.src='/resources/img/common/default_profile.png'" />
 						</li>
 						<li class="userId">${h.memberId }</li>
 						<li class="actionButton">
-							<button class="q_btn green applyInsert">예약하기</button>
+							<button type="button" class="q_btn green applyInsert" onclick="rezPopup()">예약하기</button>
 						</li>
 						<li class="actionButton">
-					    <button class="q_btn white likeInsert" onclick="heart(${h.houseNo})">
-					        <i class="fa-regular fa-heart"></i>찜하기
-					    </button>
+							<button class="q_btn white likeInsert"
+								onclick="heart(${h.houseNo})">
+								<i class="fa-regular fa-heart"></i>찜하기
+							</button>
 						</li>
 						<li class="actionButton">
 							<button class="q_btn white" id="chatBtn">소통하기</button>
 						</li>
 					</ul>
 				</div>
-				
-					<script>
-					$(document).ready(function() {
-						  <c:if test="${lo > 0}">
-						    var heartIcon = $(".fa-heart");
-						    heartIcon.removeClass("fa-regular").addClass("fa-solid fa-bounce").css("color", "#ED0707");
-						    heartIcon.one("animationiteration webkitAnimationIteration oanimationiteration", function() {
-				          $(this).removeClass("fa-bounce");
-						    });
-						  </c:if>
-						});
-					function heart(hno) {
-					    var heartIcon = $(".fa-heart");
-					    var isLiked = heartIcon.hasClass("fa-solid");
-					    var type = isLiked ? "unlike" : "like"; // 하트가 칠해져 있다면 "unlike", 칠해져 있지 않다면 "like" 지정
-						console.log("${h}");
-					    $.ajax({
-					        url: "heart.ho", // 서블릿으로 전송
-					        type: "get",
-					        data: {
-					            hno: hno, // 메뉴번호랑 타입(like, unlike) 전달
-					            type: type
-					        },
-					        success: function(response) {
-					            if (response === "success") { // 성공적인 응답일 경우
-					              if (isLiked) { // like 상태일 경우 기존 상태를 지우고 unlike 상태로 변환
-					                heartIcon.removeClass("fa-solid").addClass("fa-regular fa-bounce").css("color", "");
-					              } else { // unlike 상태일 경우 기존 상태를 지우고 like 상태로 변환
-					                heartIcon.removeClass("fa-regular").addClass("fa-solid fa-bounce").css("color", "#ED0707");
-					              }
-					              heartIcon.one("animationiteration webkitAnimationIteration oanimationiteration", function() {
-					                $(this).removeClass("fa-bounce");
-					              });
-					            }
-					          },
-					          error: function(xhr, status, error) {
-					            if (xhr.status === 401) {
-					              alert("로그인 후 이용해주세요.");
-					            } else {
-					              alert("서버에서 에러가 발생했습니다.");
-					            }
-					          }
-					        });
-					      }
-					
-					
-					$(document).ready(function() {
-					    $("#chatBtn").click(function() {
-					        var muser = "${h.memberId}"; // JSP 표현식으로부터 값을 가져옴
-					        var isLoggedIn = "${Id}"; // JSP 표현식에서 중괄호({})를 제거하여 JavaScript 변수에 할당
-
-					        if (isLoggedIn) {
-					            // 로그인 상태인 경우 채팅 페이지로 이동
-					            window.location.href = "house.ch?muser=" + muser;
-					        } else {
-					            // 로그인이 필요한 기능이므로 로그인되지 않은 경우 알림창을 표시
-					            alert("로그인 후 이용해주세요.");
-					        }
-					    });
-					});
-					      </script>
 			</article>
 		</section>
-
-
-
-
-
+		
 		<section class="bottom">
 			<!-- 아래쪽 영역 내용 -->
 
@@ -256,7 +182,7 @@
 							<!-- A타입 / 16인실, B타입 / 12인, C타입 / 3인실, D타입 / 1인실 등 -->
 							<td>${h.deposit }</td>
 							<td>${h.rent }</td>
-							<td>${h.enterDate } ~ ${h.maxEnterDate}</td>
+							<td>${h.enterDate }~${h.maxEnterDate}</td>
 							<td>${h.minStay }</td>
 							<td>${h.maxStay }</td>
 							<td>${h.floor }</td>
@@ -265,8 +191,7 @@
 					</tbody>
 				</table>
 			</div>
-
-
+			
 			<div class="middle_FacInfo">
 				<p class="f_title">시설 정보</p>
 				<div class="facility-container">
@@ -330,56 +255,151 @@
 				</div>
 			</div>
 
-
 			<!--지도 부분 -->
 			<div class="middle_MapInfo">
 				<p class="m_title">위치 정보</p>
 				<div id="map"
 					style="height: 400px; width: 70%; border-radius: 3px; border: 1px solid #ddd;"></div>
 			</div>
-			<script>
-				var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
-					center : new kakao.maps.LatLng(37.534219, 126.901577), // 지도의 중심좌표
-					level : 5
-				// 지도의 확대 레벨
-				});
-				// 주소-좌표 변환 객체 생성합니다
-				var geocoder = new kakao.maps.services.Geocoder();
-
-				geocoder
-						.addressSearch(
-								'${h.houseAddress}',
-								function(result, status) {
-
-									// 정상적으로 검색이 완료됐으면 
-									if (status === kakao.maps.services.Status.OK) {
-
-										var coords = new kakao.maps.LatLng(
-												result[0].y, result[0].x);
-
-										// 결과값으로 받은 위치를 마커로 표시합니다
-										var marker = new kakao.maps.Marker({
-											map : map,
-											position : coords
-										});
-
-										// 인포윈도우로 장소에 대한 설명을 표시합니다
-										var infowindow = new kakao.maps.InfoWindow(
-												{
-													content : '<div style="width:150px;text-align:center;padding:6px 0;">${h.houseName}</div>'
-												});
-										infowindow.open(map, marker);
-
-										// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-										map.setCenter(coords);
-									}
-								});
-			</script>
-
-
 		</section>
 	</div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
+
+	<script>
+	$(document).ready(function() {
+		  $('#reportBtn').click(function() {
+		    var popupUrl = "report.ho";
+		    var popupWidth = 800;
+		    var popupHeight = 800;
+
+		    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		    var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+		    var popupX = (windowWidth / 2) - (popupWidth / 2) + window.screenX;
+		    var popupY = (windowHeight / 2) - (popupHeight / 2) + window.screenY;
+
+		    var options = "width=" + popupWidth + ",height=" + popupHeight + ",left=" + popupX + ",top=" + popupY;
+
+		    var popupWindow = window.open(popupUrl, "신고 팝업창", options);
+		    popupWindow.document.documentElement.classList.add('popup');
+		  });
+		});
+
+
+
+$(document).ready(function() {
+			  <c:if test="${lo > 0}">
+			    var heartIcon = $(".fa-heart");
+			    heartIcon.removeClass("fa-regular").addClass("fa-solid fa-bounce").css("color", "#ED0707");
+			    heartIcon.one("animationiteration webkitAnimationIteration oanimationiteration", function() {
+	          $(this).removeClass("fa-bounce");
+			    });
+			  </c:if>
+			});
+		function heart(hno) {
+		    var heartIcon = $(".fa-heart");
+		    var isLiked = heartIcon.hasClass("fa-solid");
+		    var type = isLiked ? "unlike" : "like"; // 하트가 칠해져 있다면 "unlike", 칠해져 있지 않다면 "like" 지정
+			console.log("${h}");
+		    $.ajax({
+		        url: "heart.ho", // 서블릿으로 전송
+		        type: "get",
+		        data: {
+		            hno: hno, // 메뉴번호랑 타입(like, unlike) 전달
+		            type: type
+		        },
+		        success: function(response) {
+		            if (response === "success") { // 성공적인 응답일 경우
+		              if (isLiked) { // like 상태일 경우 기존 상태를 지우고 unlike 상태로 변환
+		                heartIcon.removeClass("fa-solid").addClass("fa-regular fa-bounce").css("color", "");
+		              } else { // unlike 상태일 경우 기존 상태를 지우고 like 상태로 변환
+		                heartIcon.removeClass("fa-regular").addClass("fa-solid fa-bounce").css("color", "#ED0707");
+		              }
+		              heartIcon.one("animationiteration webkitAnimationIteration oanimationiteration", function() {
+		                $(this).removeClass("fa-bounce");
+		              });
+		            }
+		          },
+		          error: function(xhr, status, error) {
+		            if (xhr.status === 401) {
+		              alert("로그인 후 이용해주세요.");
+		            } else {
+		              alert("서버에서 에러가 발생했습니다.");
+		            }
+		          }
+		        });
+		      }
+		
+		
+		$(document).ready(function() {
+		    $("#chatBtn").click(function() {
+		        var muser = "${h.memberId}"; // JSP 표현식으로부터 값을 가져옴
+		        var isLoggedIn = "${Id}"; // JSP 표현식에서 중괄호({})를 제거하여 JavaScript 변수에 할당
+
+		        if (isLoggedIn) {
+		            // 로그인 상태인 경우 채팅 페이지로 이동
+		            window.location.href = "house.ch?muser=" + muser;
+		        } else {
+		            // 로그인이 필요한 기능이므로 로그인되지 않은 경우 알림창을 표시
+		            alert("로그인 후 이용해주세요.");
+		        }
+		    });
+		});
+
+var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
+		center : new kakao.maps.LatLng(37.534219, 126.901577), // 지도의 중심좌표
+		level : 5
+	// 지도의 확대 레벨
+	});
+	// 주소-좌표 변환 객체 생성합니다
+	var geocoder = new kakao.maps.services.Geocoder();
+
+	geocoder
+			.addressSearch(
+					'${h.houseAddress}',
+					function(result, status) {
+
+						// 정상적으로 검색이 완료됐으면 
+						if (status === kakao.maps.services.Status.OK) {
+
+							var coords = new kakao.maps.LatLng(
+									result[0].y, result[0].x);
+
+							// 결과값으로 받은 위치를 마커로 표시합니다
+							var marker = new kakao.maps.Marker({
+								map : map,
+								position : coords
+							});
+
+							// 인포윈도우로 장소에 대한 설명을 표시합니다
+							var infowindow = new kakao.maps.InfoWindow(
+									{
+										content : '<div style="width:150px;text-align:center;padding:6px 0;">${h.houseName}</div>'
+									});
+							infowindow.open(map, marker);
+
+							// 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+							map.setCenter(coords);
+						}
+					});
+	
+	function rezPopup() {
+        var houseNo = "${h.houseNo}";
+        var houseName = "${h.houseName}";
+        var popupUrl = "houseRez.ho?value=" + encodeURIComponent(houseNo) + "&value2=" + encodeURIComponent(houseName);
+        if ("${loginUser}" == "") {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/detail.ho?hno=" + encodeURIComponent(houseNo);
+        } else {
+        	  var width = 500;
+              var height = 500;
+              var left = (screen.width - width) / 2;
+              var top = (screen.height - height) / 2;
+              var popup = window.open(popupUrl, "popup", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+        }
+    }
+	
+	</script>
 </html>

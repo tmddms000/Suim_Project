@@ -115,9 +115,11 @@
          
 
         
-        <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.bo">
-            글작성
-        </a>
+<c:if test="${not empty loginUser}">
+    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.bo">
+        글작성
+    </a>
+</c:if>
         
         <table class="table" style="text-align: center;" id="freeboard">
         <thead>
@@ -216,6 +218,8 @@
         	    location.href = "detail.bo?bno=" + bno;
         	  });
         	});
+         
+         
           
          
          

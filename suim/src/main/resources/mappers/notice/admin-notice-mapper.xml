@@ -59,15 +59,35 @@
 		 WHERE NOTICE_NO = #{noticeNo}
 	</select>
 	
+	<!-- 공지사항 업데이트용 파일 -->
 	<update id="updateNoticeBoard" parameterType="notice">
 		UPDATE NOTICE
-		   SET NOTICE_TITLE = {n.noticeTitle}
-		   	 , NOTICE_CONTENT = {n.noticeContent}
-		 WHERE NOTICE_NO = #{notice_no}
+		   SET NOTICE_TITLE = #{noticeTitle}
+		   	 , NOTICE_CONTENT = #{noticeContent}
+		 WHERE NOTICE_NO = #{noticeNo}
 		   
 	</update>
 	
 	
 	
+	<!-- UPDAT -->
+	<update id="updateNoticeFile" parameterType="nAttachment">
+		UPDATE NATTACHMENT
+		   SET CHANGE_NAME = #{changeName}
+		 WHERE NAT_NO = #{natNo}
+		   
+	</update>
+	
+	<update id="changeFileStatus" parameterType="nAttachment">
+		UPDATE NATTACHMENT
+		   SET FILE_STATUS = 'N'
+		 WHERE NAT_NO = #{nAttach}
+	</update>
+	
+	<update id="deleteNotice" parameterType="notice">
+		UPDATE NOTICE
+		   SET NOTICE_STATUS = 'N'
+		 WHERE NOTICE_NO = #{nno}
+	</update>
 
 </mapper>

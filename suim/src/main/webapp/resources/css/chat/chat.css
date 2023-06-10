@@ -1,0 +1,156 @@
+.my-chat {
+	background-color: #007AFF;
+	color: white;
+	text-align: right;
+	margin-bottom: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 20px;
+}
+
+.my-message {
+	text-align: right;
+}
+
+.other-message {
+	text-align: left;
+}
+
+.other-chat {
+	background-color: #F4F4F8;
+	color: black;
+	margin-bottom: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	font-size: 20px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.container_chat {
+	display: flex;
+	height: 100vh;
+}
+
+.chat-list {
+	margin-top: 90px;
+	width: 15%;
+	background-color: #f2f2f2;
+	padding: 20px;
+	box-sizing: border-box;
+	margin-left: 50px;
+}
+
+.chat-list h2 {
+	margin-top: 0;
+	color: #333;
+}
+
+.chat-list ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.chat-list li {
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.chat-list li:hover {
+	background-color: #e5e5e5;
+}
+
+.chat-window {
+	width: 70%;
+	padding: 20px;
+	box-sizing: border-box;
+	margin: auto; /* 가운데로 정렬 */
+}
+
+.chat-window h2 {
+	margin-top: 0;
+	color: #333;
+}
+
+.chat-window .messages {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 10px;
+	height: 400px; /* 원하는 높이로 설정 */
+	overflow-y: auto; /* 내용이 넘칠 경우 스크롤 생성 */
+}
+
+.chat-window .messages p {
+	margin: 5px 0;
+}
+
+.chat-window .input-area {
+	display: flex; /* 자식 요소들을 가로 방향으로 정렬 */
+	align-items: center; /* 자식 요소들을 수직 중앙 정렬 */
+	margin-top: 10px;
+}
+
+.chat-window textarea {
+	flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	resize: none; /* 사용자 크기 조정 비활성화 */
+}
+
+.chat-window input[type="submit"] {
+	padding: 15px 30px; /* 버튼의 패딩을 조정하여 크기 변경 */
+	background-color: #FA6B6F;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+	margin-left: 10px; /* 입력창과 전송 버튼 사이의 간격 조정 */
+}
+
+#leaveButton {
+	background-color: #FA6B6F; /* 배경색 설정 */
+	color: #fff; /* 글자색 설정 */
+	border: none; /* 테두리 제거 */
+	border-radius: 4px; /* 모서리를 둥글게 처리 */
+	font-size: 23px;
+	margin-bottom: 5px;
+}
+
+#leaveButton:hover {
+	background-color: #E34C4C; /* 호버 상태 배경색 변경 */
+}
+
+.unread-count {
+  position: relative;
+  display: inline-block;
+  top: -25px;
+  right: -78px;
+  transform: translate(50%, -50%);
+  padding: 4px 8px;
+  background-color: #FA6B6F; /* 배경색 설정 */
+  color: #ffffff; /* 텍스트 색상 설정 */
+  border-radius: 50%;
+}
+.select-user-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 32px;
+}
+.message-date {
+  font-size: 0.4em; /* 원하는 크기로 조정하세요 */
+  margin-right: 5px; /* 시간과 콘텐츠 사이의 간격 조정 */
+}
+.message-prefix {
+  font-size: 12px; /* 폰트 크기를 원하는 값으로 설정하세요 */
+}

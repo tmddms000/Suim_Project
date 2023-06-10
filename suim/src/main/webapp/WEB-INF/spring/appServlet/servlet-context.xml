@@ -28,6 +28,27 @@
 
 	<beans:bean id="naverLoginBO" class="com.suim.common.api.NaverLoginBO" />
 	
+		<!-- google Class Bean설정 추가 -->
+	<!-- 클라이언트ID와 보안비밀 세팅-->
+	<beans:bean id="googleConnectionFactory"
+		class="org.springframework.social.google.connect.GoogleConnectionFactory">
+		<beans:constructor-arg value="973249404961-glcrhac5dh3lall32j4fdgcti4qemf4d.apps.googleusercontent.com" />
+		<beans:constructor-arg value="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" />
+	</beans:bean>
+	<!-- 승인된 자바스크립트 원본과 승인된 리디렉션 URI -->
+	<beans:bean id="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+		<beans:property name="scope" value="https://www.googleapis.com/auth/plus.login" />
+		<beans:property name="redirectUri" value="http://localhost:8006/member/loginGoogle" />
+	</beans:bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<!-- 스프링에서 기본으로 제공하는 multipartResolver는 CommonsMultipartResolver 이므로, 순수한 multipartResolver를 사용하기 위해 빈 이름으로 "multipartResolver"를 등록해야함 + 프로퍼티를 이용 최대 가능한 업로드 사이즈 지정함 -->
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -52,5 +73,11 @@
 	    	<beans:bean class="com.suim.common.interceptor.LoginInterceptor" id="LoginInterceptor" />
 		</interceptor>
 	</interceptors>
+	
+	
+	
+	
+	
+	
 	
 </beans:beans>
