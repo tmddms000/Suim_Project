@@ -11,7 +11,6 @@
 		<typeAlias type="com.suim.member.model.vo.Email" alias="email" />
 		<typeAlias type="com.suim.member.model.vo.MyWish" alias="myWish" />
 
-		<typeAlias type="com.suim.member.model.vo.Member" alias="member" />
 		<typeAlias type="com.suim.house.model.vo.House" alias="house" />
 		<typeAlias type="com.suim.house.model.vo.Photo" alias="photo" />
 		<typeAlias type="com.suim.house.model.vo.Wish" alias="wish" />
@@ -33,6 +32,7 @@
 		
 		<typeAlias type="com.suim.report.model.vo.Report" alias="report" />
 		<typeAlias type="com.suim.report.model.vo.Rattachment" alias="rattachment"/>
+		<typeAlias type="com.suim.admin.model.vo.AdminMain" alias="admin"/>
 
 		<typeAlias type="com.suim.chat.model.vo.ChatList" alias="chatList" />
 		<typeAlias type="com.suim.chat.model.vo.ChatLog" alias="chatlog" />
@@ -56,6 +56,7 @@
 	    	<mapper resource="/mappers/member/admin-member-mapper.xml"/>
 	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/house/admin-house-mapper.xml"/>
+	    	<mapper resource="/mappers/admin/admin-main-mapper.xml"/>
 	    </mappers>
 	    
 	    
