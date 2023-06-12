@@ -181,10 +181,10 @@ input[type="submit"], button {
 				    </label>
 				    <select name="minStay" id="minStay" required>
 				        <option value="">선택하세요</option>
-				        <option value="1~3개월" selected="${h.minStay == '1~3개월'}">1~3 개월</option>
-				        <option value="4~6개월" selected="${h.minStay == '4~6개월'}">4~6 개월</option>
-				        <option value="7~12개월" selected="${h.minStay == '7~12개월'}">7~12 개월</option>
-				        <option value="1년이상" selected="${h.minStay == '1년이상'}">1년 이상</option>
+				        <option value="1~3개월" ${h.minStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
+				        <option value="4~6개월" ${h.minStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
+				        <option value="7~12개월" ${h.minStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
+				        <option value="1년이상" ${h.minStay == '1년이상' ? 'selected' : ''}>1년이상</option>
 				    </select>
 				</li>
 				
@@ -194,10 +194,10 @@ input[type="submit"], button {
 				    </label>
 				    <select name="maxStay" id="maxStay" required>
 				        <option value="">선택하세요</option>
-				        <option value="1~3개월" selected="${h.maxStay == '1~3개월'}">1~3 개월</option>
-				        <option value="4~6개월" selected="${h.maxStay == '4~6개월'}">4~6 개월</option>
-				        <option value="7~12개월" selected="${h.maxStay == '7~12개월'}">7~12 개월</option>
-				        <option value="1년이상" selected="${h.maxStay == '1년이상'}">1년 이상</option>
+				        <option value="1~3개월" ${h.maxStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
+				        <option value="4~6개월" ${h.maxStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
+				        <option value="7~12개월" ${h.maxStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
+				        <option value="1년이상" ${h.maxStay == '1년이상' ? 'selected' : ''}>1년이상</option>
 				    </select>
 				</li>
 			</ul>

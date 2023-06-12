@@ -62,4 +62,10 @@ public class ChatServiceImpl implements ChatService {
 	public void setRead(int rno, String Id) {
 		chatDao.setRead(sqlSession, rno, Id);
 	}
+
+	@Override
+	public void deleteChat(int rno) {
+		chatDao.deleteChat(sqlSession, rno);
+		
+	}
 }

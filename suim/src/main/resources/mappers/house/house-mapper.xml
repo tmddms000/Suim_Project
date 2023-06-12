@@ -22,6 +22,8 @@
 		<result column="HOUSE_DATE" property="houseDate" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="ENROLL_STATUS" property="enrollStatus" />
 	</resultMap>
 
 	<resultMap id="photoResultMap" type="photo">
@@ -46,6 +48,7 @@
 		INNER JOIN MEMBER M ON
 		H.MEMBER_ID = M.MEMBER_ID
 		WHERE H.HOUSE_NO = #{hno}
+		AND H.ENROLL_STATUS = '등록완료'
 	</select>
 
 	<select id="checkHeart" parameterType="_int"
@@ -141,7 +144,9 @@
 		FLOOR = #{floor},
 		HOUSE_STATUS = 'Y',
 		HOUSE_DATE = SYSDATE,
+		ENROLL_STATUS = '심사중',
 		MEMBER_ID = #{memberId}
+		
 		WHERE HOUSE_NO = #{houseNo}
 	</update>
 
@@ -151,8 +156,15 @@
 		CHANGE_NAME = #{changeName},
 		CREATE_DATE = SYSDATE,
 		FILE_LEVEL = #{fileLevel},
-		FILE_STATUS = 'Y'
+		FILE_STATUS = 'Y',
+		ENROLL_STATUS = '심사중'
 		WHERE HOUSE_NO = #{houseNo} AND PHOTO_NO =#{photoNo}
+	</update>
+	
+	<update id="delete" parameterType="_int">
+    UPDATE HOUSE
+    SET HOUSE_STATUS = 'N'
+    WHERE HOUSE_NO = #{hno}
 	</update>
 
 </mapper>

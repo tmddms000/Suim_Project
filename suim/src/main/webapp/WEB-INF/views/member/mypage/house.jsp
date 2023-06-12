@@ -130,20 +130,30 @@
 									<div class="card-body text-center">
 										<h5 class="card-title">${h.houseName}</h5>
 										<p class="card-text">${h.houseAddress}</p>
+										<c:if test = "${h.enrollStatus ne '등록완료'}">
+										<p class="card-text">${ h.enrollStatus }</p>
+										</c:if>
+										<c:if test = "${h.enrollStatus eq '등록완료'}">
 										<p class="card-text">${ h.deposit } / ${ h.rent }</p>
+										</c:if>
 										<p class="card-text">${ h.houseDate }</p>
 										<div class="card-form">
 											<form action="/myhouseRez.ho" method="post">
 												<input type="hidden" name="houseNo" value="${h.houseNo}">
+												<c:if test = "${h.enrollStatus eq '등록완료'}">
 												<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
+												</c:if>
+												<c:if test = "${h.enrollStatus eq '심사완료'}">
+												<button type="submit" class="btn btn-primary btn-sm">결제하기</button>
+												</c:if>
 											</form>	
-											<form action="/houseEdit.ho" method="post">
+											<form action="/houseEdit.ho" method="post" onsubmit="return confirm('수정하시겠습니까?');">
 												<input type="hidden" name="hno" value="${h.houseNo}">
 												<button type="submit" class="btn btn-success  btn-sm">수정</button>
 											</form>
-											<form>
-												<input type="hidden" name="houseNo" value="${h.houseNo}">
-												<button type="submit" class="btn btn-danger btn-sm">삭제</button>
+											<form action="/delete.ho" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+											  <input type="hidden" name="hno" value="${h.houseNo}">
+											  <button type="submit" class="btn btn-danger btn-sm">삭제</button>
 											</form>
 										</div>
 									</div>	

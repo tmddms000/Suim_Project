@@ -60,4 +60,8 @@ public class HouseDao {
 	public int updatePhoto(SqlSessionTemplate sqlSession, Photo p) {
 		return sqlSession.update("houseMapper.updatePhoto", p);
 	}
+	
+	public int delete(SqlSessionTemplate sqlSession, int hno) {
+		return sqlSession.update("houseMapper.delete", hno);
+	}
 }

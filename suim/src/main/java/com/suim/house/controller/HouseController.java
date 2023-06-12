@@ -33,7 +33,14 @@ public class HouseController {
 	
 	@RequestMapping("detail.ho")
 	public ModelAndView selectList(ModelAndView mv, int hno, HttpSession session) {
+		
 	    House h = houseService.selectHouse(hno);
+	    
+	    if (!h.getEnrollStatus().equals("등록완료")) {
+	    	session.setAttribute("alertMsg", "현재 심사중입니다.");
+	    	mv.setViewName("redirect:/mypage/house");
+	    	return mv;
+	    }
 	    
 	    ArrayList<Wish> list = houseService.checkHeart(h.getHouseNo());
 	    ArrayList<Photo> plist = houseService.selectPhoto(hno);
@@ -119,7 +126,7 @@ public class HouseController {
 	    
 	    if(result > 0) { // 게시글 등록 성공 => 게시글 목록보기 요청
 	        session.setAttribute("alertMsg", "성공적으로 방이 등록되었습니다.");
-	        return "redirect:list.ho";
+	        return "redirect:/mypage/house";
 	    } else { // 게시글 등록 실패 => 에러문구 담아서 에러페이지 포워딩
 	        model.addAttribute("errorMsg", "방 등록에 실패하였습니다.");
 	        return "common/errorPage";
@@ -158,9 +165,16 @@ public class HouseController {
 		}
 	
 	@RequestMapping("houseEdit.ho")
-	public ModelAndView selectList(ModelAndView mv, int hno) {
+	public ModelAndView houseEdit(ModelAndView mv, int hno, HttpSession session) {
 	
 	    House h = houseService.selectHouse(hno);
+	    
+	    if (!h.getEnrollStatus().equals("등록완료")) {
+	    	session.setAttribute("alertMsg", "현재 심사중입니다.");
+	    	mv.setViewName("redirect:/mypage/house");
+	    	return mv;
+	    }
+		
 	    ArrayList<Photo> plist = houseService.selectPhoto(hno);
 	    
 	    mv.addObject("plist", plist);
@@ -173,6 +187,7 @@ public class HouseController {
 	public String updateHouse(House h, int hno, int photoNo1, int photoNo2, int photoNo3, int photoNo4, int photoNo5, int photoNo6,
 	        MultipartFile image1, MultipartFile image2, MultipartFile image3, MultipartFile image4, MultipartFile image5, MultipartFile image6,
 	        HttpSession session, Model model) {
+	
 				
 		int [] photoNos = {photoNo1, photoNo2, photoNo3, photoNo4, photoNo5, photoNo6,};
 	    MultipartFile[] images = {image1, image2, image3, image4, image5, image6};    
@@ -211,10 +226,17 @@ public class HouseController {
 
 	    if (result > 0) {
 	        session.setAttribute("alertMsg", "성공적으로 방 정보가 수정되었습니다.");
-	        return "redirect:list.ho";
+	        return "redirect:/mypage/house";
 	    } else {
 	        model.addAttribute("errorMsg", "방 정보 수정에 실패하였습니다.");
 	        return "common/errorPage";
 	    }
+	}
+	
+    @RequestMapping("delete.ho")
+	public ModelAndView deleteChat(ModelAndView mv, int hno) {
+		houseService.delete(hno);
+		mv.setViewName("redirect:/mypage/house");
+		return mv;
 	}
 }
