@@ -52,7 +52,9 @@
             <br><br>
 
             <form id="enrollForm" method="post" action="insert.bo" enctype="multipart/form-data" onsubmit="return validateForm()">
-                <table algin="center">
+
+                <table align="center">
+
                     <tr>
                         <th><label for="title">제목</label></th>
                         <td><input type="text" id="title" class="form-control" name="boardTitle" value="" required></td>

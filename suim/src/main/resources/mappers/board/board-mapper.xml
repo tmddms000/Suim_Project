@@ -484,7 +484,7 @@
 						, FIND_NO
 						, FRE_ID
 						)
-				   VALUES(SEQ_BRE_NO.NEXTVAL
+				   VALUES(SEQ_FRE_NO.NEXTVAL
 				   		, #{freContent}
 				   		, #{findNo}
 				   		, #{memberId}
