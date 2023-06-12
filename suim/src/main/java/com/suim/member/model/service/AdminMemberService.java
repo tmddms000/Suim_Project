@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.vo.Member;
+import com.suim.report.model.vo.Report;
 
 public interface AdminMemberService {
 
@@ -24,6 +25,12 @@ public interface AdminMemberService {
 	// 회원 상세 조회
 	Member selectMember(String memberId);
 
+	// 탈퇴용
+	int updateMemberStatus(Member m);
+
+	// 전체 선택 탈퇴용
+	int updateStatusAll(int[] intArray, String memberStatus);
+	
 	// 회원 삭제 서비스
 	int deleteMember(String memberId);
 

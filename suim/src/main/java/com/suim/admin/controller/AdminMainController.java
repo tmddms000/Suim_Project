@@ -13,7 +13,7 @@ public class AdminMainController {
 	@Autowired
 	private AdminMainService adminMainService;
 	
-	@RequestMapping("admin/dashboard")
+	@RequestMapping("admin")
 	public void selectChart() {
 		AdminMain am = new AdminMain();
 		am = adminMainService.selectChart();

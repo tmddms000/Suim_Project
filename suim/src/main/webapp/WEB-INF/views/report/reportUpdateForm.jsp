@@ -49,7 +49,7 @@
                        		<select class="form-select form-select-sm mb-3" name="reportType" id="type" required onchange="updateHiddenInput()">
 		                        <option value="">선택</option>
 		                        <option value="MEMBER">회원</option>
-		                        <option value="HOUSE">매물</option>
+		                        <option value="HOUSE">셰어하우스</option>
 		                        <option value="BOARD">자유게시판</option>
 		                        <option value="BRE">자유게시판 댓글</option>
 		                        <option value="FIND">사람구해요</option>

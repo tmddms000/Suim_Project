@@ -64,15 +64,15 @@
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq 'W'}">active</c:if>"
 									data-toggle="tab" id="status-pending"
-									href="/admin/list.re?page=1&category=W">대기</a></li>
+									href="/admin/list.re?currentPage=1&category=W">대기</a></li>
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq 'Y'}">active</c:if>"
 									data-toggle="tab" id="status-confirm"
-									href="/admin/list.re?page=1&category=Y">승인</a></li>
+									href="/admin/list.re?currentPage=1&category=Y">승인</a></li>
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq 'N'}">active</c:if>"
 									data-toggle="tab" id="status-reject"
-									href="/admin/list.re?page=1&category=N">반려</a></li>
+									href="/admin/list.re?currentPage=1&category=N">반려</a></li>
 							</ul>
                             <div class="tab-content pt-3" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -85,28 +85,43 @@
 		                                            <th scope="col">유형</th>
 		                                            <th scope="col">제목</th>
 		                                            <th scope="col">신고당한사람</th>
-		                                            <th scope="col">내용</th>
 		                                            <th scope="col">신고일</th>
 		                                            <th scope="col">상태</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
+		                                    
 		                                    <c:choose>
 			                                    <c:when test="${ not empty list }">
 			                                    	<c:forEach var="r" items="${ list }">
 			                    						<tr>
 				                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName" data-id="${ r.reportNo }"></td>
 				                                            <td class="rno">${ r.reportNo }</td>
-				                                            <td>${ r.reportType }</td>
+				                                            <td>
+					                                            <c:choose>
+									                                <c:when test="${r.reportType == 'MEMBER'}">회원</c:when>
+									                                <c:when test="${r.reportType == 'HOUSE'}">셰어하우스</c:when>
+									                                <c:when test="${r.reportType == 'BOARD'}">자유게시판</c:when>
+									                                <c:when test="${r.reportType == 'BRE'}">자유게시판 댓글</c:when>
+									                                <c:when test="${r.reportType == 'FIND'}">사람구해요</c:when>
+									                                <c:when test="${r.reportType == 'FRE'}">사람구해요 댓글</c:when>
+									                                <c:when test="${r.reportType == 'CHAT'}">채팅방</c:when>
+											                    </c:choose>
+								                            </td>
 				                                            <td>${ r.reportTitle }</td>
 				                                            <td>${ r.reportId }</td>
-				                                            <td><img src="/${ r.thumbnail }"></img></td>
 				                                            <td>${ r.reportDate }</td>
-				                                            <td class="report-status">${ r.reportStatus }</td>
+				                                            <td class="report-status">
+				                                            	<c:choose>
+									                                <c:when test="${r.reportStatus == 'W'}">대기</c:when>
+									                                <c:when test="${r.reportStatus == 'Y'}">승인</c:when>
+									                                <c:when test="${r.reportStatus == 'N'}">반려</c:when>
+									                            </c:choose>
+				                                            </td>
 				                                        </tr>
 				                                	</c:forEach>
 				                                </c:when>
-				                            	<c:otherwise>
+					                            <c:otherwise>
 				                            		<tr>
 				                            			<td colspan="8">조회된 게시글이 없습니다.</td>
 				                            		</tr>
@@ -260,46 +275,43 @@
 	    	            }
 	    	        });
 	    	    });
-    	});
+    		});
     	
-    	
-            // 상세로 넘기는 스크립트
-            $(function() {
-          	  $("#reportList>tbody>tr").click(function() {
-          	    let rno = $(this).children(".rno").text();
-          	    location.href = "detail.re?rno=" + rno;
-          	  });
-          	});
+            $(document).ready(function(){
+                // 상세 페이지로 이동용
+                $("#reportList>tbody>tr").click(function(e) {
+                    if ($(e.target).is('input[type="checkbox"]')) {
+                        e.stopPropagation();
+                    } else {
+                        var rno = $(this).children(".rno").text();
+                        location.href = "detail.re?rno=" + rno;
+                    }
+                });
+            	
+             	// 전체선택 체크박스 클릭 이벤트
+        	    $(document).on('change', 'thead input[type="checkbox"]', function() {
+        	        var checkboxes = $('tbody input[type="checkbox"]');
+        	        checkboxes.prop('checked', this.checked);
+        	    });
+        	});
             </script>
 
 			<br>
-            <div id="pagingArea">
-                <ul class="pagination">
-                    
-                    <c:choose>
-                        <c:when test="${ pi.currentPage eq 1 }">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.re?currentPage=${ pi.currentPage - 1 }">Previous</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                    
-                    
-                    <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                        <li class="page-item"><a class="page-link" href="list.re?currentPage=${ p }">${ p }</a></li>
-                    </c:forEach>
-                    
-                    <c:choose>
-                        <c:when test="${ pi.currentPage eq pi.maxPage }">
-                            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="list.re?currentPage=${ pi.currentPage + 1 }">Next</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
+			<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
+				<ul class="pagination justify-content-center">
+					<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
+						<a class="page-link" href="<c:url value='/admin/list.re?currentPage=${pi.currentPage - 1}&category=${category}'/>">&lt;</a>
+					</li>
+					<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+						<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
+							<a class="page-link" href="<c:url value='/admin/list.re?currentPage=${p}&category=${category}'/>">${p}</a>
+						</li>
+					</c:forEach>
+					<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
+						<a class="page-link" href="<c:url value='/admin/list.re?currentPage=${pi.currentPage + 1}&category=${category}'/>">&gt;</a>
+					</li>
+				</ul>
+			</nav>
 
             <br clear="both"><br>
             

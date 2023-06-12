@@ -18,6 +18,7 @@
 		<result column="LOGIN_DATE" property="loginDate" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="STATUS" property="status" />
+		<result column="BLACKLIST_FLAG" property="blacklistFlag" />
 	</resultMap>
 
 	<!-- 총 갯수 구하는 쿼리문 -->
@@ -28,21 +29,6 @@
 	
 	<!-- 리스트를 구해주는 쿼리문 -->
 	<select id="selectList" resultMap="adminMemberResultSet">
-	<!-- 
-		SELECT MEMBER_ID
-			 , MEMBER_NAME
-			 , NICKNAME
-			 , PHONE
-			 , EMAIL
-			 , GENDER
-			 , AREA
-			 , BIRTH
-			 , ENROLL_DATE
-			 , LOGIN_DATE
-			 , STATUS
-		  FROM MEMBER
-		 ORDER BY ENROLL_DATE DESC
-	-->
 		SELECT M.MEMBER_ID
 		     , M.MEMBER_NAME
 		     , M.NICKNAME
@@ -54,16 +40,15 @@
 		     , M.ENROLL_DATE
 		     , M.LOGIN_DATE
 		     , M.STATUS
-		     , CASE WHEN B.MEMBER_ID IS NULL THEN 0 ELSE 1 END AS BLACKLIST_FLAG
-		FROM MEMBER M
-		LEFT JOIN (
-		    SELECT R.MEMBER_ID
-		    FROM REPORT R
-		    JOIN MEMBER USING(MEMBER_ID)
-		    GROUP BY R.MEMBER_ID
-		    HAVING COUNT(*) >= 5
-		) B ON M.MEMBER_ID = B.MEMBER_ID
-		ORDER BY M.ENROLL_DATE DESC;
+		     , CASE WHEN R.REPORT_COUNT >= 5 THEN 'BLACKLISTED' ELSE NULL END AS BLACKLIST_FLAG
+		  FROM MEMBER M
+		  LEFT JOIN (
+			    SELECT REPORT_ID, COUNT(*) AS REPORT_COUNT
+			    FROM REPORT
+			    GROUP BY REPORT_ID
+			    HAVING COUNT(*) >= 5
+			) R ON M.MEMBER_ID = R.REPORT_ID
+		 ORDER BY M.ENROLL_DATE DESC
 	</select>
 	
 	<!-- 블랙리스트 처리용 쿼리문 -->
@@ -94,6 +79,23 @@
 		  FROM MEMBER
 		 WHERE MEMBER_ID = #{memberId}
 	</select>
+
+	<!-- 탈퇴용 쿼리문 -->
+	<update id="updateMemberStatus" parameterType="member">
+		UPDATE MEMBER
+		   SET MEMBER_STATUS = #{memberStatus}
+		 WHERE MEMBER_ID = #{memberId}
+	</update>
+	
+	<!-- 전체선택용 탈퇴용 쿼리문 -->
+	<update id="updateStatusAll" parameterType="hashMap">
+		UPDATE MEMBER
+		   SET MEMBER_STATUS = #{memberStatus}
+		 WHERE MEMBER_ID IN
+			 <foreach item="memberId" collection="intArray" open="(" separator="," close=")">
+		        #{memberId}
+		    </foreach>
+	</update>
 
 	<!-- 회원 삭제용 쿼리문 -->
 	<update id="deleteMember" parameterType="string">

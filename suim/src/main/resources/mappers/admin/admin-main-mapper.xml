@@ -13,4 +13,12 @@
 		  FROM MEMBER
 		UNION
 	</select>
+	<select id="getCountForLastWeek" resultType="java.util.List" parameterType="String">
+	    SELECT
+	      <foreach item="i" index="idx" collection="dates" separator=",">
+	        COUNT(CASE WHEN TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') = #{today} THEN 1 END) AS $=day#{i}
+	      </foreach>
+	    FROM MEMBER
+	    WHERE ENROLL_DATE >= TRUNC(SYSDATE) - 7
+	</select>
 </mapper>
