@@ -16,7 +16,8 @@ public class Reservation {
 	private int rezNo;
 	private Date rezDate;
 	private String rezHour;
-	private String memberId;
+	private String sendMemberId;
+	private String recMemberId;
 	private String rezStatus;
 	private Date rezRequestDate;
 	private String cancelContent;

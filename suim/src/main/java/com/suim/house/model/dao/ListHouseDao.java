@@ -5,14 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 
+import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
-import com.suim.house.model.vo.Wish;
 
 @Repository
 public class ListHouseDao {
@@ -50,18 +51,43 @@ public class ListHouseDao {
 		// 예약 정보 입력 서비스
 		public int rezInsert(SqlSessionTemplate sqlSession, Map<String, Object> reservation) {
 			
-			return sqlSession.insert("listHouseMapper.reservationInsert", reservation );
+			return sqlSession.insert("listHouseMapper.reservationInsert", reservation);
+		}
+		
+		// 셰어하우스 별 예약 신청 리스트 갯수
+		public int selectHouseRezListCount(SqlSessionTemplate sqlSession, int houseNo) {
+			return sqlSession.selectOne("listHouseMapper.selectHouseRezListCount", houseNo);
 		}
 		
 		// 셰어하우스 별 예약 신청 리스트
-		public ArrayList<Reservation> myHouseRezSelect(SqlSessionTemplate sqlSession, int houseNo) {
+		public ArrayList<Reservation> selectHouseRezList(SqlSessionTemplate sqlSession, PageInfo pi, int houseNo) {
 			
-			return (ArrayList)sqlSession.selectList("listHouseMapper.myHouseRezSelect", houseNo);			
+			int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+			int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+			
+			RowBounds rowBounds = new RowBounds(offset, limit);
+			
+			return (ArrayList)sqlSession.selectList("listHouseMapper.myHouseRezSelect", houseNo, rowBounds);			
+		}
+		
+		// 예약 취소를 위한 셰어하우스 정보 select
+		public ArrayList<Reservation> selectRezOne(SqlSessionTemplate sqlSession, int rezNo) {
+			return (ArrayList)sqlSession.selectList("listHouseMapper.selectRezOne", rezNo);
 		}
 		
 		// 셰어하우스 예약 확인
 		public int confirmRez(SqlSessionTemplate sqlSession, int rno) {
 			return sqlSession.update("listHouseMapper.confirmRez", rno);
 		}
-
+	
+		// 셰어하우스 예약 취소
+		public int rezCancel(SqlSessionTemplate sqlSession, Map<String, Object> rezCancel) {
+			return sqlSession.update("listHouseMapper.rezCancel", rezCancel);
+		}
+		
+		// 멤버 이메일 주소 가져오기
+		public String memberEmail(SqlSessionTemplate sqlSession, String memberId) {
+			return sqlSession.selectOne("listHouseMapper.memberEmail", memberId);
+		}
+	
 }

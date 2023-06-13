@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
+import com.suim.house.model.vo.Reservation;
 import com.suim.member.model.dao.MypageDao;
 import com.suim.member.model.vo.MyWish;
 
@@ -85,6 +86,17 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public ArrayList<Board> selectInreviewList(PageInfo pi, String memberId) {
 		return mypageDao.selectInreviewList(sqlSession, pi, memberId);
+	}
+	
+
+	@Override
+	public int selectRezListCount(String memberId) {
+		return mypageDao.selectRezListCount(sqlSession, memberId);
+	}
+
+	@Override
+	public ArrayList<Reservation> selectRezList(PageInfo pi, String memberId) {
+		return  mypageDao.selectRezList(sqlSession, pi, memberId);
 	}
 
 }

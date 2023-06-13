@@ -82,7 +82,7 @@
 	
 	.button-container {
 		display: flex;
-		justify-content: center;
+		justify-content: center;s
 		margin-top: 20px;
 	}
 	
@@ -128,7 +128,8 @@
 				</ul>
 				
 				<input type="hidden" name="houseNo" value="${houseNo}">
-				<input type="hidden" name="memberId" value="${loginUser.memberId}">
+				<input type="hidden" name="sendMemberId" value="${loginUser.memberId}">
+				<input type="hidden" name="recMemberId" value="${memberId}">
 				
 				<div class="button-container">
 					<input type="submit" value="등록">
@@ -146,10 +147,28 @@
 		<c:if test="${ not empty alMsg }">
 			<script>
 				alert('${ alMsg }');
+				window.close(); // 팝업 닫기
 			</script>
 			<c:remove var="alMsg" scope="session" />
 		</c:if>
+		
+	<script>
+		function updateMinDate() {
+			  var now = Date.now();
+			  var timeOff = new Date().getTimezoneOffset() * 60000;
+			  var today = new Date(now - timeOff).toISOString().split("T")[0];
 	
+			  document.getElementById("rezDate").setAttribute("min", today);
+			}
+	
+			document.getElementById("rezDate").addEventListener("change", updateMinDate);
+	
+			// 페이지 로드 시 최소값 업데이트
+			updateMinDate();
+	
+			// 매일 자정마다 최소값 업데이트
+		setInterval(updateMinDate, 24 * 60 * 60 * 1000);
+	</script>
 		
 </body>
 </html>

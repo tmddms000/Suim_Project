@@ -393,7 +393,8 @@ var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표�
 	function rezPopup() {
         var houseNo = "${h.houseNo}";
         var houseName = "${h.houseName}";
-        var popupUrl = "houseRez.ho?value=" + encodeURIComponent(houseNo) + "&value2=" + encodeURIComponent(houseName);
+        var memberId = "${h.memberId}";
+        var popupUrl = "houseRez.ho?value=" + encodeURIComponent(houseNo) + "&value2=" + encodeURIComponent(houseName) + "&value3=" + encodeURIComponent(memberId);
         if ("${loginUser}" == "") {
             alert("로그인이 필요합니다.");
             window.location.href = "/detail.ho?hno=" + encodeURIComponent(houseNo);

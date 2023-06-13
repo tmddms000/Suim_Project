@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
+import com.suim.house.model.vo.Reservation;
 import com.suim.member.model.vo.MyWish;
 
 public interface MypageService {
@@ -49,6 +50,12 @@ public interface MypageService {
 	
 	//내가올린셰어하우스리스트 조회
 	ArrayList<House> selectHouseList(PageInfo pi, String memberId);
+	
+	//내가 예약한 셰어하우스 리스트갯수 조회
+	int selectRezListCount(String memberId);
+		
+	//내가 예약한 셰어하우스 리스트 조회
+	ArrayList<Reservation> selectRezList(PageInfo pi, String memberId);
 
 	
 

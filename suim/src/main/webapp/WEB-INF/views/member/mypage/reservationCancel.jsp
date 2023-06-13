@@ -108,15 +108,18 @@
 	<h2>${houseName}</h2>
 		<h2>예약 취소하기</h2>
 		<div class="rez-div" id="rez-div">
-			<form action="enrollReservation.rez" method="post">
+			<form action="rezCancel.rez" method="post">
 				<ul class="form_box">
 					<li>
-						<label for="rezDate"><span class="red_txt">*</span>예약 취소사유:</label><br> 
+						<label for="cancelContent"><span class="red_txt">*</span>예약 취소사유:</label><br> 
 						<textarea id="cancelContent" class="cancelContent" rows="9" name="cancelContent" required></textarea>
 					</li>	
 				</ul>
 				
-				<input type="hidden" name="rezNo" value="${rezNo}">
+				<input type="hidden" name="houseName" value="${houseName}">
+				<input type="hidden" name="rezNo" value="${r[0].rezNo}">
+				<input type="hidden" name="sendMemberId" value="${r[0].sendMemberId}">
+				<input type="hidden" name="recMeberId" value="${r[0].recMemberId}">
 				
 				<div class="button-container">
 					<button type="submit">예약 취소하기</button>
@@ -131,11 +134,13 @@
 		    }
 		</script>	
 		
-		<c:if test="${ not empty alMsg }">
+		<c:if test="${ not empty canMsg }">
 			<script>
-				alert('${ alMsg }');
+				alert('${ canMsg }');
+				window.close(); // 팝업 닫기
+				window.opener.location.reload(); // 팝업을 열었던 페이지 새로고침
 			</script>
-			<c:remove var="alMsg" scope="session" />
+			<c:remove var="canMsg" scope="session" />
 		</c:if>
 	
 	

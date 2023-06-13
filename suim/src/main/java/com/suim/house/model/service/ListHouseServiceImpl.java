@@ -8,11 +8,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.dao.ListHouseDao;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
-import com.suim.house.model.vo.Wish;
 
 @Service
 public class ListHouseServiceImpl implements ListHouseService{
@@ -40,24 +40,31 @@ public class ListHouseServiceImpl implements ListHouseService{
 	}
 
 	@Override
-	public ArrayList<Reservation> myHouseRezSelect(int houseNo) {
-		return listHouseDao.myHouseRezSelect(sqlSession, houseNo);
+	public int selectHouseRezListCount(int houseNo) {
+		return listHouseDao.selectHouseRezListCount(sqlSession, houseNo);
 	}
-
+	
+	@Override
+	public ArrayList<Reservation> selectHouseRezList(PageInfo pi, int houseNo) {
+		return listHouseDao.selectHouseRezList(sqlSession, pi, houseNo);
+	}
+	@Override
+	public ArrayList<Reservation> selectRezOne(int rezNo) {
+		return listHouseDao.selectRezOne(sqlSession, rezNo);
+	}
 	@Override
 	public int confirmRez(int rno) {
 		return listHouseDao.confirmRez(sqlSession, rno);
 	}
-	
 
+	@Override
+	public int rezCancel(Map<String, Object> rezCancel) {
+		return listHouseDao.rezCancel(sqlSession, rezCancel);
+	}
 
-
-	
-
-	
-
-
-	
-	
+	@Override
+	public String memberEmail(String memberId) {
+		return listHouseDao.memberEmail(sqlSession, memberId);
+	}
 
 }

@@ -22,7 +22,7 @@
 	    <result column="HOUSE_DATE" property="houseDate"/>
 	    <result column="MEMBER_ID" property="memberId"/>
 	   	<result column="CHANGE_NAME" property="changeName"/>
-	   	<result column="ENROLL_STATUS" property="enrollStatus"/>
+	   	<result column="ENROLL_STATUS" property="enrollStatus"/>  	
 	</resultMap>
 	
 	<resultMap id="regionResultMap" type="com.suim.house.model.vo.Region">
@@ -34,7 +34,8 @@
 		<result column="REZ_NO" property="rezNo"/>
 		<result column="REZ_DATE" property="rezDate"/>
 		<result column="REZ_HOUR" property="rezHour"/>
-		<result column="MEMBER_ID" property="memberId"/>
+		<result column="SEND_MEMBER_ID" property="sendMemberId"/>
+		<result column="REC_MEMBER_ID" property="recMemberId"/>
 		<result column="REZ_STATUS" property="rezStatus"/>
 		<result column="REZ_REQUEST_DATE" property="rezRequestDate"/>
 		<result column="CANCEL_CONTENT" property="cancelContent"/>
@@ -43,10 +44,10 @@
 		<result column="HOUSE_NAME" property="houseName"/>
 	</resultMap>
 	
+
 	<!-- 지도와 셰어하우스 리스트 상세 검색  -->
 	<select id="selectList" resultMap="houseResultMap">
 	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
-	    ,h.ENROLL_STATUS
 	    FROM HOUSE h
 	    JOIN PHOTO p ON h.HOUSE_NO = p.HOUSE_NO
 	    <where>
@@ -101,14 +102,24 @@
 		INSERT INTO RESERVATION(REZ_NO,
 								REZ_DATE,
 								REZ_HOUR,
-								MEMBER_ID,
+								SEND_MEMBER_ID,
+								REC_MEMBER_ID,
 								HOUSE_NO)
 		VALUES(SEQ_REZ_NO.NEXTVAL,	
 					#{rezDate},
 					#{rezHour},
-					#{memberId},
+					#{sendMemberId},
+					#{recMemberId},
 					#{houseNo})					
 	</insert>
+	
+	<!-- 셰어하우스 별 예약 신청 리스트 갯수 -->
+	<select id="selectHouseRezListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVATION
+		WHERE HOUSE_NO = #{houseNo}
+		AND DEL_STATUS = 'N'
+	</select>
 	
 	<!-- 셰어하우스 별 예약 신청 리스트 -->
 	<select id="myHouseRezSelect" resultMap="reservationResultMap">
@@ -120,12 +131,33 @@
 		 ORDER BY r.REZ_NO DESC
 	</select>	
 	
+	<!-- 예약번호에 따른 검색 -->
+	<select id="selectRezOne" resultMap="reservationResultMap">
+		SELECT *
+		FROM RESERVATION
+		WHERE REZ_NO = #{rezNo}
+		AND DEL_STATUS = 'N'
+	</select>
 	
-	<!-- 셰어하우스 예약 확인 -->
+	<!-- 셰어하우스 예약 확정 -->
 	<update id="confirmRez" parameterType="_int">
 		UPDATE RESERVATION
 		SET REZ_STATUS = '예약확정'
-		WHERE REZ_NO = #{rno}
-	</update>	
+		WHERE REZ_NO = #{rezNo}
+	</update>
+	
+	<!-- 셰어하우스 예약 취소 -->	
+	<update id="rezCancel" parameterType="java.util.Map">
+		UPDATE RESERVATION
+		SET REZ_STATUS = '예약취소', CANCEL_CONTENT = #{cancelContent}
+		WHERE REZ_NO = #{rezNo}
+	</update>
+	
+	<!-- 멤버 이메일 불러오기 -->
+	<select id="memberEmail" parameterType="String" resultType="String">
+		SELECT EMAIL
+		FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+	</select>
 	
 </mapper>

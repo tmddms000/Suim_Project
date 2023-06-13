@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 	
 <!DOCTYPE html>
 <html>
@@ -39,40 +40,38 @@
 
     td {
         padding: 8px;
-        vertical-align: middle;
+        text-align: center;
+        vertical-align: middle;        
     }
+    
     
     .small {
         font-size: 12px;
     }
-    
-    .houseTitle-cell {
+     .reserveNo-cell{
+        width : 50px;
+    }
+    .houseTitle-th {
         width: 250px;
     }
-    .houseAddress{
-        width : 350px;
+    .rezDate-cell{
+        width : 150px;
     }
     
-    .select-cell {
-        width: 35px;
+    .rezHour-cell{
+        width : 150px;
     }
-    
-    .houseNo-cell {
-        width: 100px;
-        font-size: 10px;
+    .memberId-cell{
+        width : 150px;
     }
-    
-    .houseDeposit{
+    .rezRequestDate-cell{
+    	width : 150px;
+    }
+     .rezStatus-cell{
         width : 100px;
     }
-    .houseRent{
-        width : 100px;
-    }
-
-
-    .houseDate-cell, .views-cell {
-        font-size: 12px;
-        text-align: center;
+     .rezStatusBtn-cell{
+        width : 200px;
     }
     
     .table thead th {
@@ -82,7 +81,49 @@
     .text-right {
         text-align: right;
     }
+     .rez-confirm, .rez-cancel {
+	        background-color: #FA6B6F;
+	        color: white;
+	        padding: 10px 20px;
+	        border: none;
+	        border-radius: 5px;
+	        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
+	        font-weight: bold;
+	        cursor: pointer;
+	        transition: background-color 0.3s ease;
+	        width: 70px;
+	        height: 25px;
+	        font-size: 13px;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        padding : 5px 10px;
+	    }
+	 .button-container button:disabled {
+	        opacity: 0.6;
+	        cursor: not-allowed;
+	    }
+	
+	    .button-container button:not(:disabled):hover {
+	        background-color: rgb(216, 69, 9);
+	    }   
+	    .button-container {
+		  display: flex; /* 가로로 나란히 정렬 */
+		  gap: 10px; /* 버튼 사이 간격 */
+		  justify-content: center; /* 가로 가운데 정렬 */
+		}  
+		.form-container form {
+		  display: inline; /* 인라인 요소로 설정하여 가로로 나란히 배치 */
+		}
+		#pagingArea {
+	 	width:fit-content; margin:auto;
+		}
+		.pagination{
+			padding-top : 15px;
+		}	    	
+    
     </style>
+
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
@@ -93,60 +134,91 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th scope="col" class="select-cell"></th>
-					<th scope="col" class="houseNo-cell"></th>
+					<th scope="col" class="reserveNo-cell"></th>
 					<th scope="col" class="houseTitle-th text-center">쉐어하우스 이름</th>
-                    <th scope="col" class="houseAddress">주소</th>
-                    <th scope="col" class="houseDeposit">보증금</th>
-                    <th scope="col" class="houseRent">월세</th>
-					<th scope="col" class="houseDate-cell">등록일</th>
+                    <th scope="col" class="rezDate-cell">예약 일</th>
+                    <th scope="col" class="rezHour-cell">예약 시간</th>
+                    <th scope="col" class="rezRequestDate-cell">예약 신청일</th>
+					<th scope="col" class="rezStatus-cell">예약 상태</th>
+					<th scope="col" class="rezStatusBtn-cell">예약 상태 변경</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td class="select-cell"><input type="checkbox"></td>
-					<td class="houseNo-cell">41</td>
-					<td class="houseTitle-cell">가입인사 입니다.</td>
-                    <td class="houseAddress-cell"></td>
-                    <td class="houseDeposit-cell"></td>
-                    <td class="houseRent-cell"></td>
-					<td class="houseDate-cell">2023.06.04.</td>
-				</tr>
-				<tr>
-					<td class="select-cell"><input type="checkbox"></td>
-					<td class="houseNo-cell">2</td>
-					<td class="houseTitle-cell">오늘 쉐어하우스 입주했음요</td>
-                    <td class="houseAddress-cell"></td>
-                    <td class="houseDeposit-cell"></td>
-                    <td class="houseRent-cell"></td>
-					<td class="houseDate-cell">2023.06.04.</td>
-				</tr>
-				<tr>
-					<td class="select-cell"><input type="checkbox"></td>
-					<td class="houseNo-cell">1</td>
-					<td class="houseTitle-cell">안녕하세용</td>
-                    <td class="houseAddress-cell"></td>
-                    <td class="houseDeposit-cell"></td>
-                    <td class="houseRent-cell"></td>
-					<td class="houseDate-cell">2023.06.03.</td>
-				</tr>
+				  <c:forEach var="r" items="${ list }">
+                    	<tr>
+                    		<td class="reserveNo-cell">${ r.rezNo }</td>
+            				<td class="houseTitle-th">${ r.houseName }</td>
+                    		<td class="rezDate-cell">${ r.rezDate }</td>
+                    		<td class="rezHour-cell">${ r.rezHour }</td>
+                    		<td class="rezRequestDate-cell">${ r.rezRequestDate }</td>
+							<td class="rezStatus-cell">${ r.rezStatus }</td>
+                    		<td class="rezStatusBtn-cell">
+                    			<c:if test="${ r.rezStatus eq '예약신청' }">
+	                    			<div class="button-container">
+										 <button type="submit" class="rez-cancel" onclick="rezCancelPopup(${r.rezNo}, '${r.houseName}')">예약 취소</button>
+									</div>
+                    			</c:if>
+                    			<c:if test="${ r.rezStatus eq '예약확정' }">
+	                    			<div class="button-container">
+										  	<button type="submit" class="rez-cancel" onclick="rezCancelPopup(${r.rezNo}, '${r.houseName}')">예약 취소</button>
+									</div>
+                    			</c:if>
+                    			<c:if test="${ r.rezStatus eq '예약취소' }">
+	                    			<div class="button-container">
+										  	<button type="submit" class="rez-cancel" onclick="rezCancelPopup(${r.rezNo}, '${r.houseName}')" disabled>예약 취소</button>
+									</div>
+                    			</c:if>
+                    		</td>
+                    	</tr>
+                  </c:forEach>
 			</tbody>
-
-			<tfoot>
-				<!-- 왼쪽엔 전체검색(checkbox), 오른쪽엔 글쓰기, 목록 버튼 -->
-				<tr>
-					<td colspan="3"><input type="checkbox"> <span
-						class="small" style="margin-left: 8px;">전체선택</span></td>
-
-					<td colspan="5" class="text-right">
-						<button type="button" class="">예약 취소</button>
-					</td>
-                </tr>
-			</tfoot>
 		</table>
 	</div>
-
-
+	 <c:if test="${not empty list}">
+	    <div id="pagingArea">
+	        <ul class="pagination">
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq 1}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="reservation?cPage=${pi.currentPage - 1}">Previous</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	            <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+	                <li class="page-item"><a class="page-link" href="reservation?cPage=${p}">${p}</a></li>
+	            </c:forEach>
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq pi.maxPage}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="reservation?cPage=${pi.currentPage + 1}">Next</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	        </ul>
+	    </div>
+	</c:if>
+	
+	<c:if test="${ not empty conMsg }">
+		<script>
+				alert('${ conMsg }');
+		</script>
+			<c:remove var="conMsg" scope="session" />
+	</c:if>
+	
+	<script>
+		function rezCancelPopup(rezNo, houseName) {
+		
+			var popupUrl = "/rezCancelPop.rez?value=" + encodeURIComponent(rezNo) + "&value2=" + encodeURIComponent(houseName);
+									        
+			var width = 500;
+			var height = 500;
+			var left = (screen.width - width) / 2;
+			var top = (screen.height - height) / 2;
+			var popup = window.open(popupUrl, "popup", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+		}
+	</script>
 	
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>

@@ -116,8 +116,13 @@
 		.form-container form {
 		  display: inline; /* 인라인 요소로 설정하여 가로로 나란히 배치 */
 		}
-			    	
-    
+		#pagingArea {
+	 	width:fit-content; margin:auto;
+		}
+		.pagination{
+			padding-top : 15px;
+		}	    
+			 
     </style>
 
 </head>
@@ -148,7 +153,7 @@
             				<td class="houseTitle-th">${ r.houseName }</td>
                     		<td class="rezDate-cell">${ r.rezDate }</td>
                     		<td class="rezHour-cell">${ r.rezHour }</td>
-                    		<td class="memberId-cell">${ r.memberId }</td>
+                    		<td class="memberId-cell">${ r.sendMemberId }</td>
                     		<td class="rezRequestDate-cell">${ r.rezRequestDate }</td>
 							<td class="rezStatus-cell">${ r.rezStatus }</td>
                     		<td class="rezStatusBtn-cell">
@@ -186,6 +191,32 @@
 			</tbody>
 		</table>
 	</div>
+	<c:if test="${not empty list}">
+	    <div id="pagingArea">
+	        <ul class="pagination">
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq 1}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="myhouseRez.ho?cPage=${pi.currentPage - 1}&amp;houseNo=${houseNo}">Previous</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	            <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+	                <li class="page-item"><a class="page-link" href="myhouseRez.ho?cPage=${p}&amp;houseNo=${houseNo}">${p}</a></li>
+	            </c:forEach>
+	            <c:choose>
+	                <c:when test="${pi.currentPage eq pi.maxPage}">
+	                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+	                </c:when>
+	                <c:otherwise>
+	                    <li class="page-item"><a class="page-link" href="myhouseRez.ho?cPage=${pi.currentPage + 1}&amp;houseNo=${houseNo}">Next</a></li>
+	                </c:otherwise>
+	            </c:choose>
+	        </ul>
+	    </div>
+	</c:if>
+	
 	
 	<c:if test="${ not empty conMsg }">
 		<script>
@@ -196,9 +227,8 @@
 	
 	<script>
 		function rezCancelPopup(rezNo, houseName) {
-		
-			var popupUrl = "rezCancel.rez?value=" + encodeURIComponent(rezNo) + "&value2=" + encodeURIComponent(houseName);
-									        
+			
+			var popupUrl = "rezCancelPop.rez?value=" + encodeURIComponent(rezNo) + "&value2=" + encodeURIComponent(houseName);
 			var width = 500;
 			var height = 500;
 			var left = (screen.width - width) / 2;
