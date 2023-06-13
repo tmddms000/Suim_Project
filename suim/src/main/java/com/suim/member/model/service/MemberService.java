@@ -24,7 +24,7 @@ public interface MemberService {
 	int updateMember(Member m);
 	
 	// 회원탈퇴 서비스 (update)
-	int deleteMember(String userId);
+	int deleteMember(String memberId);
 	
 	// 아이디중복체크 서비스 (select)
 	int idCheck(String checkId);
@@ -77,6 +77,11 @@ public interface MemberService {
 
 	// Member 정보와 일치하는지 체크
 	int findMemberPw(Member m);
+	
+	int updateLoginDate(String memberId);
+
+	//MemberId에 따른 멤버 한명 조회
+	Member selectMember(String memberId);
 
 
 

@@ -18,6 +18,8 @@
 		<result column="MODIFY_DATE" property="modifyDate" />
 		<result column="LOGIN_DATE" property="loginDate" />
 		<result column="STATUS" property="status" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="MEMBER_POINT" property="memberPoint" />
 		<result column="MEMBER_COMMENT" property="memberComment" />
 		<result column="NAVERLOGIN" property="naverLogin" />
 		<result column="GOOGLELOGIN" property="googleLogin" />
@@ -28,7 +30,16 @@
 		resultMap="memberResultSet">
 		SELECT * FROM MEMBER
 		WHERE MEMBER_ID = #{memberId}
+		AND STATUS = '일반'
 	</select>
+	
+	<select id="selectMember" parameterType="String"
+		resultMap="memberResultSet">
+		SELECT * FROM MEMBER
+		WHERE MEMBER_ID = #{memberId}
+		AND STATUS = '일반'
+	</select>
+	
 
 	<!-- 일반 회원가입용 쿼리문 -->
 	<insert id="insertMember"
@@ -133,6 +144,7 @@
 		SELECT *
 		FROM MEMBER
 		WHERE EMAIL = #{email} AND NAVERLOGIN = #{id}
+		AND STATUS = '일반'
 	</select>
 	
 	
@@ -151,12 +163,13 @@
 		WHERE EMAIL = #{email}
 	</select>
 
-	<!-- 네이버 로그인 연동이 되어있는 회원 찾기 -->
+	<!-- 구글 로그인 연동이 되어있는 회원 찾기 -->
 	<select id="userGoogleLoginPro" parameterType="member"
 		resultMap="memberResultSet">
 		SELECT *
 		FROM MEMBER
 		WHERE EMAIL = #{email} AND GOOGLELOGIN = #{googleLogin}
+		AND STATUS = '일반'
 	</select>
 	
 	
@@ -201,22 +214,28 @@
 	WHERE MEMBER_ID = #{memberId}
 	AND EMAIL = #{email}	
 	</select>
+	
+	
+	<!-- 로그인 업데이트 쿼리문 -->
+	<update id="updateLoginDate" parameterType="string">
+		UPDATE MEMBER
+		SET LOGIN_DATE
+		= SYSDATE
+		WHERE MEMBER_ID = #{memberId}
+	</update>
+	
+	
+	
+	
 
 	<!-- 회원 탈퇴용 쿼리문 -->
 	<update id="deleteMember" parameterType="string">
 		UPDATE MEMBER
 		SET STATUS
-		= 'N'
+		= '탈퇴'
 		, MODIFY_DATE = SYSDATE
-		WHERE USER_ID = #{userId}
+		WHERE MEMBER_ID = #{memberId}
 	</update>
 
-
-	<!-- 회원 전체 조회용 쿼리문 -->
-	<select id="selectMemberList" resultMap="memberResultSet">
-		SELECT *
-		FROM MEMBER
-		WHERE STATUS = 'Y'
-	</select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.suim.member.model.vo;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,12 @@ public class Member {
 	private String gender;
 	private String area;
 	private String birth;
-	private Date enrollDate;
-	private Date modifyDate;
-	private Date loginDate;
+	private Timestamp enrollDate;
+	private Timestamp modifyDate;
+	private Timestamp loginDate;
 	private String changeName;
+
+	private int memberPoint;
 	private String status;
 	private String blacklistFlag;
 	

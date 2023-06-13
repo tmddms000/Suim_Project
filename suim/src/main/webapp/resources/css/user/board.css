@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+.table-container {
+	max-width: 1320px;
+	margin: 0 auto;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th {
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px 5px;
+}
+
+th.title-th {
+	text-align: left;
+}
+
+th.views-th {
+	font-size: 12px;
+	text-align: center;
+}
+
+td {
+	padding: 8px;
+	vertical-align: middle;
+}
+
+.small {
+	font-size: 12px;
+}
+
+.title-cell {
+	width: 920px;
+	font-size: 12px;
+}
+
+.select-cell {
+	width: 35px;
+}
+
+.boardno-cell {
+	width: 40px;
+	font-size: 10px;
+}
+
+.date-cell {
+	width: 200px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.views-cell {
+	width: 160px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.table thead th {
+	border-top: 1px solid #666;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.reply-cell {
+	color: red;
+	font-size: 10px;
+}
+
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button
+	{
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+@media
+(
+max-width
+:
+767px)
+{
+a.page-link {
+	font-size: 12px;
+}
+}

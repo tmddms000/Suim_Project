@@ -24,7 +24,7 @@
 		<result column="ORIGIN_NAME" property="originName" />
 		<result column="FIND_CONTENT" property="findContent" />
 		<result column="CHANGE_NAME" property="changeName" />
-		<result column="FIND_REPLY_COUNT" property="replyCount" />
+		<result column="FIND_REPLY_COUNT" property="freplyCount" />
 	</resultMap>
 	
 	<resultMap id="wishResultSet" type="myWish">
@@ -48,6 +48,7 @@
     <result column="INR_CONTENT" property="inrContent" />
     <result column="CHANGE_NAME" property="changeName" />
     <result column="THUMBNAIL" property="thumbnail" />
+    <result column="INREVIEW_REPLY_COUNT" property="replyCount" />
 	</resultMap>
 	
 	
@@ -100,9 +101,12 @@
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 	<select id="selectBoardList" parameterType="string" resultMap="boardResultSet">
-		SELECT * FROM BOARD
-		WHERE MEMBER_ID = #{memberId}
-
+		SELECT B.BOARD_NO, COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT, B.BOARD_TITLE, B.BOARD_VIEW, B.BOARD_DATE
+		FROM BOARD B
+		LEFT JOIN BOARD_REPLY BR ON B.BOARD_NO = BR.BOARD_NO
+		WHERE B.MEMBER_ID = #{memberId}
+		AND B.STATUS = 'Y'
+		GROUP BY B.BOARD_NO, B.BOARD_TITLE, B.BOARD_VIEW, B.BOARD_DATE
 	</select>
 
 	<select id="selectFindListCount" parameterType="string" resultType="_int">
@@ -115,8 +119,12 @@
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 	<select id="selectFindList" resultMap="findResultSet">
-		SELECT * FROM FIND
-		WHERE MEMBER_ID = #{memberId}
+		SELECT F.FIND_NO, COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT, F.FIND_TITLE, F.FIND_VIEW, F.FIND_DATE
+		FROM FIND F
+		LEFT JOIN FIND_REPLY FR ON F.FIND_NO = FR.FIND_NO
+		WHERE F.MEMBER_ID = #{memberId}
+		AND F.STATUS = 'Y'
+		GROUP BY F.FIND_NO, F.FIND_TITLE, F.FIND_VIEW, F.FIND_DATE
 	</select>
 	
 	
@@ -130,8 +138,12 @@
 
 	<!-- 게시글 리스트를 구해주는 쿼리문 -->
 	<select id="selectInreviewList" resultMap="inReviewResultSet">
-		SELECT * FROM FIND
-		WHERE MEMBER_ID = #{memberId}
+		SELECT I.INR_NO, COUNT(IR.IRE_NO) AS INREVIEW_REPLY_COUNT, I.INR_TITLE, I.INR_VIEW, I.INR_DATE
+		FROM INREVIEW I
+		LEFT JOIN INREVIEW_REPLY IR ON I.INR_NO = IR.INR_NO
+		WHERE I.MEMBER_ID = #{memberId}
+		AND I.STATUS = 'Y'
+		GROUP BY I.INR_NO, I.INR_TITLE, I.INR_VIEW, I.INR_DATE
 	</select>
 	
 	

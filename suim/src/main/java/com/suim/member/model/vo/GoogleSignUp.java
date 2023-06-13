@@ -1,6 +1,6 @@
 package com.suim.member.model.vo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -12,9 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class GoogleSignUp {
-
 	
-	
+	public GoogleSignUp(String memberId, String memberName, String nickName, String email, String changeName, String googleLogin) {
+		super();
+		this.memberId = memberId;
+		this.memberName = memberName;
+		this.nickName = nickName;
+		this.email = email;
+		this.changeName = changeName;
+		this.googleLogin = googleLogin;
+	}
 	private String memberId;
 
 	@NotBlank(message = "비밀번호를 공백으로 할 수 없습니다.")
@@ -45,9 +52,11 @@ public class GoogleSignUp {
 	@NotBlank(message = "생일을 공백으로 할 수 없습니다.")
 	private String birth;
 
-	private Date enrollDate;
-	private Date modifyDate;
-	private Date loginDate;
+	private Timestamp enrollDate;
+	private Timestamp modifyDate;
+	private Timestamp loginDate;
 	private String changeName;
+	private int memberPoint;
 	private String status;
+	private String googleLogin;
 }

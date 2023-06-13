@@ -63,39 +63,38 @@ public class MypageController {
 			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
 			return "redirect:/member/login";
 		}
-		
+
 		if (m.getMemberId() == null || m.getMemberId().trim().isEmpty()) {
-		    session.setAttribute("toastError", "아이디는 반드시 입력해야합니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "아이디는 반드시 입력해야합니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		} else if (!m.getMemberId().equals(loginUser.getMemberId())) {
-		    session.setAttribute("toastError", "아이디는 수정할 수 없습니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "아이디는 수정할 수 없습니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		}
 
 		if (m.getEmail() == null || m.getEmail().trim().isEmpty()) {
-		    session.setAttribute("toastError", "이메일은 반드시 입력해야합니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "이메일은 반드시 입력해야합니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		} else if (!m.getEmail().equals(loginUser.getEmail())) {
-		    session.setAttribute("toastError", "이메일은 수정할 수 없습니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "이메일은 수정할 수 없습니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		}
 
 		if (m.getMemberName() == null || m.getMemberName().trim().isEmpty()) {
-		    session.setAttribute("toastError", "이름은 반드시 입력해야합니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "이름은 반드시 입력해야합니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		}
 
 		if (m.getBirth() == null || m.getBirth().trim().isEmpty()) {
-		    session.setAttribute("toastError", "생년월일은 반드시 입력해야합니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			session.setAttribute("toastError", "생년월일은 반드시 입력해야합니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
 		}
-		
-		
+
 		if (memberService.nickCheck(m.getNickName()) > 0 && !loginUser.getNickName().equals(m.getNickName())) {
 			session.setAttribute("toastError", "현재 사용중이거나 중복된 닉네임입니다.");
-		    return "redirect:" + session.getAttribute("originalUrl");
+			return "redirect:" + session.getAttribute("originalUrl");
 		}
-		
+
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 			m.setMemberPwd(bcryptPasswordEncoder.encode(m.getMemberPwd()));
 
@@ -105,23 +104,22 @@ public class MypageController {
 			} else {
 				m.setChangeName(loginUser.getChangeName());
 			}
-			
-			
+
 			if (changePwd1 != null && !changePwd1.trim().isEmpty()) {
-			    if (!changePwd1.equals(changePwd2)) {
-			        session.setAttribute("toastError", "변경확인 비밀번호가 일치하지 않습니다.");
-			        return "redirect:" + session.getAttribute("originalUrl");
-			    }
-			    if (changePwd2 == null || changePwd2.trim().isEmpty()) {
-			        session.setAttribute("toastError", "변경확인 비밀번호를 입력해주세요.");
-			        return "redirect:" + session.getAttribute("originalUrl");
-			    }
-			    m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
+				if (!changePwd1.equals(changePwd2)) {
+					session.setAttribute("toastError", "변경확인 비밀번호가 일치하지 않습니다.");
+					return "redirect:" + session.getAttribute("originalUrl");
+				}
+				if (changePwd2 == null || changePwd2.trim().isEmpty()) {
+					session.setAttribute("toastError", "변경확인 비밀번호를 입력해주세요.");
+					return "redirect:" + session.getAttribute("originalUrl");
+				}
+				m.setMemberPwd(bcryptPasswordEncoder.encode(changePwd1));
 			} else if (changePwd2 != null && !changePwd2.trim().isEmpty()) {
-			    if (changePwd1 == null || changePwd1.trim().isEmpty()) {
-			        session.setAttribute("toastError", "변경 비밀번호를 입력해주세요.");
-			        return "redirect:" + session.getAttribute("originalUrl");
-			    }
+				if (changePwd1 == null || changePwd1.trim().isEmpty()) {
+					session.setAttribute("toastError", "변경 비밀번호를 입력해주세요.");
+					return "redirect:" + session.getAttribute("originalUrl");
+				}
 			}
 
 			int result = memberService.updateMember(m);
@@ -159,8 +157,14 @@ public class MypageController {
 	}
 
 	// 처음 페이지(알림 페이지)로 이동합니다.
-	@RequestMapping({ "/timeline" })
+	@GetMapping({ "/timeline"})
 	public String mypageAlert(HttpServletRequest request) {
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+		
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/timeline";
 	}
@@ -170,7 +174,8 @@ public class MypageController {
 			@RequestParam(value = "type", defaultValue = "board") String type, Model model) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser == null) {
-			return "redirect:/";
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
 		}
 
 		String memberId = loginUser.getMemberId();
@@ -197,6 +202,8 @@ public class MypageController {
 			return "redirect:/member/mypage/board"; // 잘못된 type 값일 경우에 대한 처리
 		}
 
+		
+
 		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("type", type);
 
 		return "member/mypage/board";
@@ -205,6 +212,12 @@ public class MypageController {
 	@PostMapping(value = "boardDelete")
 	@ResponseBody
 	public String boardDelete(HttpServletRequest request, @RequestParam("ids") String ids) {
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+				
 		String memberId = ((Member) session.getAttribute("loginUser")).getMemberId();
 		String[] idArray = ids.split(",");
 		int[] intArray = new int[idArray.length];
@@ -217,10 +230,17 @@ public class MypageController {
 		return result > 0 ? "Y" : "N";
 	}
 
-	@RequestMapping("wish")
+	@GetMapping("wish")
 	public String mypageWish(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") int page,
 			Model model) {
 		session.setAttribute("originalUrl", request.getRequestURI());
+		
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+		
 		int pageLimit = 10;
 		int boardLimit = 5;
 		Member m = (Member) session.getAttribute("loginUser");
@@ -235,39 +255,75 @@ public class MypageController {
 	}
 
 	// 마이페이지의 내 정보 조회로 이동합니다.
-	@RequestMapping("profile")
+	@GetMapping("profile")
 	public String mypageProfile(HttpServletRequest request) {
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+		
+		
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/profile";
 	}
 
+	@PostMapping("deleteMember")
+	public String DeleteMember(String memberPwd) {
+
+
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+
+		if (bcryptPasswordEncoder.matches(memberPwd, loginUser.getMemberPwd())) {
+
+			int result = memberService.deleteMember(loginUser.getMemberId());
+
+			if (result > 0) {
+				session.setAttribute("toastSuccess", "성공적으로 탈퇴처리 되었습니다. 쉼을 이용해주셔서 감사합니다.");
+				session.removeAttribute("loginUser");
+				return "redirect:/";
+			} else {
+				session.setAttribute("toastError", "오류가 발생했습니다. 잠시 후에 시도해주세요.");
+				return "redirect:/mypage/profile";
+			}
+
+		} else {
+			// 삭제 실패
+			session.setAttribute("toastError", "비밀번호가 일치하지 않습니다.");
+			return "redirect:/mypage/profile";
+		}
+	}
+	
+
 	// 마이페이지의 내 셰어하우스 조회로 이동합니다.
 	@RequestMapping("house")
-	public String mypageHouse(@RequestParam(value="cPage", defaultValue="1") int currentPage,
-								HttpServletRequest request, Model model) {
-		
-		session.setAttribute("originalUrl", request.getRequestURI());
-		
-		 	int pageLimit = 5;
-		    int boardLimit = 6;
-		   
-		    
-		    Member m = (Member) session.getAttribute("loginUser");
-		    
-		    String memberId = m.getMemberId();
-		    
-		    int listCount = 0;
-		    PageInfo pi = null;
-		   
-		    listCount = mypageService.selectHouseListCount(memberId);
-		    
-		    pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+	public String mypageHouse(@RequestParam(value = "cPage", defaultValue = "1") int currentPage,
+			HttpServletRequest request, Model model) {
 
-		    ArrayList<House> list = mypageService.selectHouseList(pi, memberId);
-		    
-		    model.addAttribute("pi", pi)
-		    	 .addAttribute("list", list);
-		   
+		session.setAttribute("originalUrl", request.getRequestURI());
+
+		int pageLimit = 5;
+		int boardLimit = 6;
+
+		Member m = (Member) session.getAttribute("loginUser");
+
+		String memberId = m.getMemberId();
+
+		int listCount = 0;
+		PageInfo pi = null;
+
+		listCount = mypageService.selectHouseListCount(memberId);
+
+		pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+
+		ArrayList<House> list = mypageService.selectHouseList(pi, memberId);
+
+		model.addAttribute("pi", pi).addAttribute("list", list);
+
 		return "member/mypage/house";
 	}
 
@@ -277,6 +333,7 @@ public class MypageController {
 		session.setAttribute("originalUrl", request.getRequestURI());
 		return "member/mypage/reservation";
 	}
+
 		
 
 	   @RequestMapping("delete.ho")
@@ -285,6 +342,5 @@ public class MypageController {
 			mv.setViewName("redirect:/mypage/house");
 			return mv;
 		}
-
 
 }

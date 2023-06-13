@@ -29,144 +29,141 @@
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-	<div class="container main" style="margin-bottom: 120px;">
-		<div class="row justify-content-center">
-			<div class="col">
-				<h2 class="text-center mb-4" style="margin-left: 60px;">회원가입</h2>
-				<form:form action="/member/joinSuccess" modelAttribute="member"
-					method="POST" onsubmit="return validate()">
-
-					
-					<div class="form-group row mb-3">
-						<label for="password" class="col-sm-4 col-form-label text-end">비밀번호<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5">
-							<form:input type="password" autocomplete="new-password"
-								class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
-								path="memberPwd" />
-
-							<!-- <p class="error-text">최소 10자 이상 입력</p> -->
-							<p class="error-text" id="info_pw"></p>
-							<form:errors class="form-error" path="memberPwd"/>
-						</div>
-					</div>
-					<div class="form-group row mb-3">
-						<label for="password-check"
-							class="col-sm-4 col-form-label text-end">비밀번호확인<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5">
-							<form:input type="password" autocomplete="new-password"
-								class="form-control" id="password-check" name="pwdConfirm"
-								placeholder="비밀번호를 한번 더 입력해주세요" path="pwdConfirm" />
-							<!-- <p class="error-text">최소 10자 이상 입력</p> -->
-							<p class="error-text" id="info_pw_check"></p>
-							<form:errors class="form-error" path="pwdConfirm"/>
-						</div>
-					</div>
-					<div class="form-group row mb-3">
-						<label for="name" class="col-sm-4 col-form-label text-end">이름<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5">
-							<form:input type="text" autocomplete="off" class="form-control"
-								id="name" placeholder="이름을 입력해주세요" path="memberName" />
-							<p class="error-text" id="info_name"></p>
-							<form:errors class="form-error" path="memberName"/>
-						</div>
-					</div>
-					
-					<div class="form-group row mb-3">
-						<label for="phone" class="col-sm-4 col-form-label text-end">휴대폰<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5">
-							<form:input type="text" class="form-control" id="phone"
-								placeholder="번호를 입력해주세요" path="phone" />
-							<p class="error-text" id="info_phone"></p>
-							<form:errors class="form-error" path="phone"/>
-						</div>
-						<div class="col-sm-3 p-0">
-							<button type="button" class="join-btn" id="phoneDuplicateButton">인증하기</button>
-						</div>
-					</div>
-
-					<div class="form-group row mb-3">
-						<label for="area" class="col-sm-4 col-form-label text-end">희망지역<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5">
-							<input type="text" class="form-control" name="area"
-								id="area" placeholder="희망지역을 입력해주세요" disabled>
-							<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
-								추천해드려요!</p>
-						</div>
-						<div class="col-sm-3 p-0">
-							<button type="button" class="join-btn" onclick="searchAddr();">
-								<i class="fa-solid fa-magnifying-glass" style="font-size: 12px"></i>
-								검색
-							</button>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="flexRadioDefault1"
-							class="col-sm-4 col-form-label text-end">성별<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5 d-flex align-items-center">
-							<input class="form-check-input offset-3"
-								style="width: 25px; height: 25px;" type="radio" value="M"
-								name="gender" id="flexRadioDefault1" checked>
-							<label class="form-check-label" for="flexRadioDefault1">
-								&nbsp;남자 </label> <input class="form-check-input offset-3"
-								style="width: 25px; height: 25px;" type="radio" value="F"
-								name="gender" id="flexRadioDefault2"> <label
-								class="form-check-label" for="flexRadioDefault2">
-								&nbsp;여자 </label>
-						</div>
-
-					</div>
-					<br>
-					<div class="form-group row">
-						<label for="birth-year" class="col-sm-4 col-form-label text-end">생년월일<span
-							class="text-red">*</span></label>
-						<div class="col-sm-5 d-flex align-items-center offset-1">
-							<div class="info" id="info__birth" align="center">
-								<div style="display: inline-block">
-									<select class="form-select" id="birth-year">
-										<option disabled selected>출생 연도</option>
-									</select>
-								</div>
-								<div style="display: inline-block">
-									<select class="form-select" id="birth-month">
-										<option disabled selected>월</option>
-									</select>
-								</div>
-								<div style="display: inline-block">
-									<select class="form-select" id="birth-day">
-										<option disabled selected>일</option>
-									</select>
-								</div>
-								<div class="error-msg"></div>
-                
-								<form:input type="hidden" name="birthDate" id="birth-date-input"
-									path="birth" />
-								<form:errors class="form-error" path="birth"/>
-
+		<div class="container" style="margin-top : 140px; margin-bottom: 60px;">
+			<div class="row justify-content-center">
+				<div class="col">
+					<h2 class="text-center mb-4" style="margin-left: 60px;">회원가입</h2>
+					<form:form action="/member/joinGoogle" modelAttribute="member"
+						method="POST" onsubmit="return validate()">
+	
+						
+						<div class="form-group row mb-3">
+							<label for="password" class="col-sm-4 col-form-label text-end">비밀번호<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5">
+								<form:input type="password" autocomplete="new-password"
+									class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
+									path="memberPwd" />
+	
+								<!-- <p class="error-text">최소 10자 이상 입력</p> -->
+								<p class="error-text" id="info_pw"></p>
+								<form:errors class="form-error" path="memberPwd"/>
 							</div>
 						</div>
-					</div>
-
-					<br>
-					<br>
-
-
-					<div class="text-center mt-4">
-
-						<button type="submit" class="btn btn-primary btn-block submit-btn"
-							disabled>가입하기</button>
-
-					</div>
-				</form:form>
-				<br> <br> <br>
+						<div class="form-group row mb-3">
+							<label for="password-check"
+								class="col-sm-4 col-form-label text-end">비밀번호확인<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5">
+								<form:input type="password" autocomplete="new-password"
+									class="form-control" id="password-check" name="pwdConfirm"
+									placeholder="비밀번호를 한번 더 입력해주세요" path="pwdConfirm" />
+								<!-- <p class="error-text">최소 10자 이상 입력</p> -->
+								<p class="error-text" id="info_pw_check"></p>
+								<form:errors class="form-error" path="pwdConfirm"/>
+							</div>
+						</div>
+	
+						
+						<div class="form-group row mb-3">
+							<label for="phone" class="col-sm-4 col-form-label text-end">휴대폰<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5">
+								<form:input type="text" class="form-control" id="phone"
+									placeholder="번호를 입력해주세요" path="phone" />
+								<p class="error-text" id="info_phone"></p>
+								<form:errors class="form-error" path="phone"/>
+							</div>
+							<div class="col-sm-3 p-0">
+								<button type="button" class="join-btn" id="phoneDuplicateButton">인증하기</button>
+							</div>
+						</div>
+	
+						<div class="form-group row mb-3">
+							<label for="area" class="col-sm-4 col-form-label text-end">희망지역<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5">
+								<input type="text" class="form-control" name="area"
+									id="area" placeholder="희망지역을 입력해주세요" disabled>
+								<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
+									추천해드려요!</p>
+							</div>
+							<div class="col-sm-3 p-0">
+								<button type="button" class="join-btn" onclick="searchAddr();">
+									<i class="fa-solid fa-magnifying-glass" style="font-size: 12px"></i>
+									검색
+								</button>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="flexRadioDefault1"
+								class="col-sm-4 col-form-label text-end">성별<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5 d-flex align-items-center">
+								<input class="form-check-input offset-3"
+									style="width: 25px; height: 25px;" type="radio" value="M"
+									name="gender" id="flexRadioDefault1" checked>
+								<label class="form-check-label" for="flexRadioDefault1">
+									&nbsp;남자 </label> <input class="form-check-input offset-3"
+									style="width: 25px; height: 25px;" type="radio" value="F"
+									name="gender" id="flexRadioDefault2"> <label
+									class="form-check-label" for="flexRadioDefault2">
+									&nbsp;여자 </label>
+							</div>
+	
+						</div>
+						<br>
+						<div class="form-group row">
+							<label for="birth-year" class="col-sm-4 col-form-label text-end">생년월일<span
+								class="text-red">*</span></label>
+							<div class="col-sm-5 d-flex align-items-center offset-1">
+								<div class="info" id="info__birth" align="center">
+									<div style="display: inline-block">
+										<select class="form-select" id="birth-year">
+											<option disabled selected>출생 연도</option>
+										</select>
+									</div>
+									<div style="display: inline-block">
+										<select class="form-select" id="birth-month">
+											<option disabled selected>월</option>
+										</select>
+									</div>
+									<div style="display: inline-block">
+										<select class="form-select" id="birth-day">
+											<option disabled selected>일</option>
+										</select>
+									</div>
+									<div class="error-msg"></div>
+	                
+									<form:input type="hidden" name="birthDate" id="birth-date-input"
+										path="birth" />
+									<form:errors class="form-error" path="birth"/>
+	
+								</div>
+							</div>
+						</div>
+	
+						<br>
+						<br>
+	
+	
+						<div class="text-center mt-4">
+						
+						<input type="hidden" id="id" name="memberId" value="${member.memberId}">
+						<input type="hidden" id="name" name="memberName" value="${member.memberName}">
+						<input type="hidden" id="email" name="email" value="${member.email}">
+						<input type="hidden" id="changeName" name="changeName" value="${member.changeName }">
+	
+							<button type="submit" class="btn btn-primary btn-block submit-btn"
+								disabled>가입하기</button>
+						</div>
+						<br>
+					<p class="text-center" style="margin-left : 100px;"></p>
+					</form:form>
+				</div>
+				
 			</div>
 		</div>
-	</div>
 	
 
 	<script>

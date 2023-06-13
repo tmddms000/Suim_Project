@@ -9,6 +9,133 @@
 
 </style>
 
+	<script type="text/javascript">
+		var socket = null;
+		
+		$(document).ready(function(){ //페이지가 새로고침 되면 웹소켓을 연결시킨다.
+			
+		if(${loginUser != null}){
+			connectWs();
+			addMessageToNotificationList('${loginUser.memberId}');
+			}
+		console.log('연결 확인');
+		});
+		
+		function connectWs(){
+		var ws = new SockJS("/notification");
+		socket = ws;
+		
+		ws.onopen = function() {
+			 console.log('open');
+			 
+			 };
+		
+		
+		
+			 ws.onmessage = function(event) {
+				 
+				 addMessageToNotificationList(event.data);
+				 
+			 }				 
+			
+		
+		
+		
+			ws.onclose = function() {
+			    console.log('close');
+		 };
+		};
+
+		
+		
+		
+		
+		
+		function addMessageToNotificationList(message) {
+			console.log(message);
+			  // AJAX 요청 보내기
+			  $.ajax({
+			    url: '/selectRecentNotification', // 변경된 데이터를 가져올 URL
+			    method: 'GET',
+			    dataType: 'json',
+			    data : {
+			    	receiverId : '${loginUser.memberId}'
+			    },
+			    
+			    success: function(data) {
+			    	console.log(data);
+			    	
+			      // 서버로부터 받은 데이터로 목록 업데이트
+			      selectRecentNotification(data);
+			    },
+			    error: function(error) {
+			      console.error('웹소켓 에러 발생:', error);
+			    }
+			  });
+			};
+
+	 function selectRecentNotification(data) {
+		  // 받은 데이터를 사용하여 목록 업데이트
+		  var notificationList = $('#notificationList');
+		  notificationList.empty(); // 목록 비우기
+
+		  // 데이터를 순회하면서 목록에 추가
+		  for (var i = 0; i < data.length; i++) {
+		    var notification = data[i];
+		    var senderId = notification.senderId;
+		    var createdTime = new Date(notification.createdTime);
+		    var content = notification.content;
+		    var postType = notification.postType;
+		    var postNo = notification.postNo;
+		    var receiverId = notification.receiverId;
+
+		    var notificationText = '';
+		    if (postType === 'board') {
+		
+		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')">' + senderId + '님이 ' + createdTime.toLocaleString() + '에 자유게시판의 "' + content + '"에 댓글을 달았습니다.</a>';
+
+		    console.log(notificationText)
+		    } else {
+		      // 다른 postType에 대한 처리를 추가할 수 있습니다.
+		    }
+
+		    var notificationItem = $('<li></li>').html(notificationText);
+		    notificationList.prepend(notificationItem);
+		  }
+
+		  // 모달 창 표시
+		  $('#notificationModal').css('display', 'block');
+		};
+		
+		function notificationDelete(linkUrl, postNo, postType, receiverId) {
+			  // AJAX 요청 보내기
+			  $.ajax({
+			    url: '/notificationDelete', // 댓글 알림 삭제를 처리하는 URL
+			    method: 'POST',
+			    data: {
+			      postNo: postNo, // 게시물 번호 전달
+			      postType: postType, // 게시물 유형 전달
+			      receiverId: receiverId // 수신자 ID 전달
+			    },
+			    dataType: 'json',
+			    success: function(response) {
+			      // 요청이 성공하면 링크로 이동
+			      if (response.success) {
+			        console.log('댓글 알림이 삭제되었습니다.');
+
+			        // 링크로 이동
+			        window.location.href = linkUrl;
+			      } else {
+			        console.error('댓글 알림 삭제 실패:', response.message);
+			      }
+			    },
+			    error: function(error) {
+			      console.error('댓글 알림 삭제 요청 실패:', error);
+			    }
+			  });
+			}
+	</script>
+
 
 	<c:if test="${ not empty alertMsg }">
 		<script>
@@ -41,14 +168,89 @@
 	  </script>
 	</c:if>
 	
+	
+	
+	<button id="notificationButton"><i class="fas fa-bell"></i></button>
+
+<style>
+#notificationButton {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 24px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index : 9999;
+}
+
+#notificationModal {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  z-index: 9999;
+  overflow-y: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+</style>
+
+
+	<div id="notificationModal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>알림</h3>
+    <ul id="notificationList"></ul>
+  </div>
+</div>
+	
+<script>
+
+$('#notificationButton').click(function() {
+	  $('#notificationModal').css('display', 'block');
+	});
+
+	// 모달 창 닫기 버튼 클릭 시 모달 창 숨김
+	$('#notificationModal .close').click(function() {
+  $('#notificationModal').css('display', 'none');
+});
+
+</script>
+
+	
+	
+	
+	
+	
 	<header>
 	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
 	            <div class="header container px-4 px-lg-5">
 	                <a class="navbar-brand" href="/"><img class="logo" src="/resources/img/common/sim5.png"></a>
 	                
 	                <ul class="nav nav-pills navi">
-	                    
+          
 	                        <li class="nav-item"><a href="" class="nav-link nav-text">방 찾기</a></li>
+
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">쉼</a>
 	                            <ul>

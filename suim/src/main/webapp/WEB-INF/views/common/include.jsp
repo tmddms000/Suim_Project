@@ -21,6 +21,7 @@
      	<link rel="stylesheet"
 		href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 		<script>
 		toastr.options = {
                 "positionClass": "toast-center-center"
