@@ -2,6 +2,7 @@ package com.suim.board.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -11,9 +12,7 @@ import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.InReview;
-
 import com.suim.board.model.vo.InReviewReply;
-
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -68,6 +67,17 @@ public class BoardDao {
 	public int ReplyCount(SqlSessionTemplate sqlSession, int boardNo) {
 		return sqlSession.selectOne("boardMapper.ReplyCount", boardNo);
 	}
+	
+	public int  deleteReply(SqlSessionTemplate sqlSession, int breNo) {
+		return sqlSession.update("boardMapper.deleteReply", breNo);
+	}
+	
+    public int updateReply(SqlSessionTemplate sqlSession,int bre, String content) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("bre", bre);
+        params.put("content", content);
+        return sqlSession.update("updateReply", params);
+    }
 	
 	//------------------------------------------------------------------------------
 	
@@ -137,6 +147,17 @@ public class BoardDao {
 	public Find updateFindList(SqlSessionTemplate sqlSession, int findNo) {
 		return sqlSession.selectOne("boardMapper.selectFind", findNo);
 	}
+	
+	public int  deletefReply(SqlSessionTemplate sqlSession, int freNo) {
+		return sqlSession.update("boardMapper.deletefReply", freNo);
+	}
+	
+    public int updatefReply(SqlSessionTemplate sqlSession,int fre, String content) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fre", fre);
+        params.put("content", content);
+        return sqlSession.update("updatefReply", params);
+    }
 
 
 	//------------------------------------------------------------------------------
@@ -203,6 +224,17 @@ public class BoardDao {
 		return sqlSession.insert("boardMapper.insertInReviewReply", ir);
 	
 	}
+	
+	public int  deleteiReply(SqlSessionTemplate sqlSession, int inrNo) {
+		return sqlSession.update("boardMapper.deleteiReply", inrNo);
+	}
+	
+    public int updateiReply(SqlSessionTemplate sqlSession,int ireNo, String content) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("ireNo", ireNo);
+        params.put("content", content);
+        return sqlSession.update("updateiReply", params);
+    }
 
 
 }

@@ -255,22 +255,23 @@
 		
 
  	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
-			SELECT 
+			SELECT
 			    BR.BRE_NO,
 			    BR.BRE_CONTENT,
 			    BR.BRE_DATE,
 			    BR.STATUS,
 			    BR.BOARD_NO,
 			    BR.BRE_ID,
-			    M.NICKNAME
-			FROM 
+			    M.NICKNAME,
+			    M.MEMBER_ID
+			FROM
 			    BOARD_REPLY BR
-			JOIN 
+			JOIN
 			    MEMBER M ON (M.MEMBER_ID = BR.BRE_ID)
-			WHERE 
+			WHERE
 			    BR.STATUS = 'Y'
 			    AND BR.BOARD_NO = #{boardNo}
-			ORDER BY 
+			ORDER BY
 			    BR.BRE_NO DESC
 	</select>
 
@@ -294,6 +295,18 @@
 			 WHERE STATUS = 'Y'
 	         AND BOARD_NO = #{boardNo}
 	</select>
+	
+	<update id="deleteReply" parameterType="_int">
+		UPDATE BOARD_REPLY
+		   SET STATUS = 'N'
+		 WHERE BRE_NO = #{breNo}
+	</update>
+	
+		<update id="updateReply" parameterType="reply">
+		UPDATE BOARD_REPLY
+		   SET BRE_CONTENT = #{content}
+		 WHERE BRE_NO = #{bre}
+		</update>
 	
 		<!-- 게시글 리스트를 구해주는 쿼리문 -->
 			<select id="selectfList" parameterType="hashmap" resultMap="findResultSet">
@@ -465,7 +478,8 @@
 			    FR.STATUS,
 			    FR.FIND_NO,
 			    FR.FRE_ID,
-			    M.NICKNAME
+			    M.NICKNAME,
+			    M.MEMBER_ID
 			FROM 
 			    FIND_REPLY FR
 			JOIN 
@@ -490,6 +504,20 @@
 				   		, #{memberId}
 				   		)
 	</insert> 
+	
+		<update id="deletefReply" parameterType="_int">
+		UPDATE FIND_REPLY
+		   SET STATUS = 'N'
+		 WHERE FRE_NO = #{freNo}
+	</update>
+	
+		<update id="updatefReply" parameterType="find">
+		UPDATE FIND_REPLY
+		   SET FRE_CONTENT = #{content}
+		 WHERE FRE_NO = #{fre}
+		</update>
+	
+	
 	
 	<select id="findReplyCount" resultType="_int">
 			  SELECT COUNT(*)
@@ -554,6 +582,7 @@
 		        I.STATUS,
 		        I.MEMBER_ID,
 		        M.NICKNAME,
+		        M.MEMBER_ID,
 		        IA.ORIGIN_NAME,
 		        IA.CHANGE_NAME,
 		        REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
@@ -570,6 +599,7 @@
 		        I.STATUS,
 		        I.MEMBER_ID,
 		        M.NICKNAME,
+		        M.MEMBER_ID,
 		        IA.ORIGIN_NAME,
 		        IA.CHANGE_NAME
 		    ORDER BY I.INR_NO DESC
@@ -594,6 +624,7 @@
 			    I.STATUS,
 			    I.MEMBER_ID,
 			    M.NICKNAME,
+			    M.MEMBER_ID,
 			    IA.ORIGIN_NAME,
 			    IA.CHANGE_NAME,
 			    REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
@@ -611,6 +642,7 @@
 			    I.STATUS,
 			    I.MEMBER_ID,
 			    M.NICKNAME,
+			    M.MEMBER_ID,
 
 			    IA.ORIGIN_NAME,
 			    IA.CHANGE_NAME
@@ -662,7 +694,8 @@
 			    IR.STATUS,
 			    IR.INR_NO,
 			    IR.IRE_ID,
-			    M.NICKNAME
+			    M.NICKNAME,
+			    M.MEMBER_ID
 			FROM 
 			    INREVIEW_REPLY IR
 			JOIN 
@@ -687,6 +720,22 @@
 				   		, #{memberId}
 				   		)
 	</insert> 
+	
+	
+	<update id="updateiReply" parameterType="inreview">
+		UPDATE INREVIEW_REPLY
+		   SET IRE_CONTENT = #{content}
+		 WHERE IRE_NO = #{ireNo}
+	</update>
+	
+	<update id="deleteiReply" parameterType="_int">
+		UPDATE INREVIEW_REPLY
+		   SET STATUS = 'N'
+		 WHERE IRE_NO = #{ireNo}
+	</update>
+	
+	
+
 
 
 	

@@ -138,12 +138,11 @@
 
 
 
-		<c:if test="${not empty loginUser}">
-		    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.fi">
-		        글작성
-		       
-		    </a>
-		</c:if>
+		
+    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" onclick="checkLogin()">
+        글작성
+    </a>
+		
 		        
 
         <table class="table" style="text-align: center;" id="freeboard">
@@ -160,41 +159,52 @@
         </thead>
 
         <tbody>
-				<c:forEach var="fb" items="${flist}">
-				    <tr>
-				        <td class="fno">${fb.findNo}</td>
-				        <td>${fb.findDate}</td>
-				        <td>${fb.category}</td>
-				        <td>
-				        <c:choose>
-						  <c:when test="${fb.gender == 'M'}">
-						    남자
-						  </c:when>
-						  <c:when test="${fb.gender == 'F'}">
-						    여자
-						  </c:when>
-						  <c:otherwise>
-						    성별 정보 없음
-						  </c:otherwise>
-						</c:choose>
-						</td>
-				        <td>
-				            ${fb.findTitle}
-				            <span id="rcount">(${fb.freplyCount})</span>
-				            <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
-							<c:if test="${not empty fb.findDate and fb.findDate == today}">
-							    <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
-							</c:if>
-							
-				            <c:if test="${not empty fb.thumbnail}">
-				                <span><img height="15" width="15" alt="이미지 첨부유무" src="/resources/img/board/ico_img.gif"></span>
-				            </c:if>
-				            
-				        </td>
-				        <td>${fb.memberId}</td>
-				        <td>${fb.findView}</td>
-				    </tr>
-				</c:forEach>
+				<c:if test="${empty flist}">
+    <tr>
+        <td colspan="8">게시글이 없습니다.</td>
+    </tr>
+</c:if>
+<c:if test="${not empty flist}">
+    <c:forEach var="fb" items="${flist}">
+        <tr>
+            <td class="fno">${fb.findNo}</td>
+            <td>${fb.findDate}</td>
+            <td>${fb.category}</td>
+            <td>
+                <c:choose>
+                    <c:when test="${fb.gender == 'M'}">
+                        남자
+                    </c:when>
+                    <c:when test="${fb.gender == 'F'}">
+                        여자
+                    </c:when>
+                    <c:otherwise>
+                        성별 정보 없음
+                    </c:otherwise>
+                </c:choose>
+            </td>
+            <td>
+                <c:if test="${empty fb.findTitle}">
+                    게시글이 없습니다.
+                </c:if>
+                <c:if test="${not empty fb.findTitle}">
+                    ${fb.findTitle}
+                    <span id="rcount">(${fb.freplyCount})</span>
+                    <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
+                    <c:if test="${not empty fb.findDate and fb.findDate == today}">
+                        <span><img height="15" width="15" alt="최신등록일자" src="/resources/img/board/ico_new.gif"></span>	
+                    </c:if>
+                    <c:if test="${not empty fb.thumbnail}">
+                        <span><img height="15" width="15" alt="이미지 첨부유무" src="/resources/img/board/ico_img.gif"></span>
+                    </c:if>
+                </c:if>
+            </td>
+            <td>${fb.memberId}</td>
+            <td>${fb.findView}</td>
+        </tr>
+    </c:forEach>
+</c:if>
+
 				        </tbody>
         </table>
 	
@@ -256,13 +266,107 @@
          		location.href = "detail.fi?fno=" + fno; //
          	});
          });
-              
+         
+      // 페이지 로드 시 저장된 옵션 가져오기
+         document.addEventListener("DOMContentLoaded", function() {
+           var storedGender = localStorage.getItem("selectedGender");
+           var storedCategory = localStorage.getItem("selectedCategory");
 
-            
-        
-        
+           if (storedGender) {
+             document.getElementById("sex").value = storedGender;
+           }
+
+           if (storedCategory) {
+             document.getElementById("condition").value = storedCategory;
+           }
+         });
+
+         function updateTableList() {
+           // 선택된 값 가져오기
+           var gender = document.getElementById("sex").value;
+           var category = document.getElementById("condition").value;
+
+           // 선택된 값 localStorage에 저장
+           localStorage.setItem("selectedGender", gender);
+           localStorage.setItem("selectedCategory", category);
+
+           // 선택된 값에 따라 데이터 처리 및 결과 노출
+           var results = []; // 결과를 저장할 배열
+
+           // 예시로서, 선택된 성별과 조건에 따라 결과를 설정
+           if (gender === "M" && category === "방구해요") {
+             results = ["남자 - 방구해요 결과 1", "남자 - 방구해요 결과 2"];
+           } else if (gender === "M" && category === "세놓아요") {
+             results = ["남자 - 세놓아요 결과 1", "남자 - 세놓아요 결과 2"];
+           } else if (gender === "F" && category === "방구해요") {
+             results = ["여자 - 방구해요 결과 1", "여자 - 방구해요 결과 2"];
+           } else if (gender === "F" && category === "세놓아요") {
+             results = ["여자 - 세놓아요 결과 1", "여자 - 세놓아요 결과 2"];
+           }
+
+           // 결과 노출
+           var resultContainer = document.getElementById("resultContainer");
+           resultContainer.innerHTML = ""; // 이전 결과 초기화
+
+           if (results.length > 0) {
+             for (var i = 0; i < results.length; i++) {
+               var resultItem = document.createElement("p");
+               resultItem.textContent = results[i];
+               resultContainer.appendChild(resultItem);
+             }
+           } else {
+             var noResults = document.createElement("p");
+             noResults.textContent = "검색 결과가 없습니다.";
+             resultContainer.appendChild(noResults);
+           }
+
+           // 폼 제출 방지
+           event.preventDefault();
+         }
          
-         
+         document.addEventListener("DOMContentLoaded", function() {
+        	  var storedGender = localStorage.getItem("selectedGender");
+        	  var storedCategory = localStorage.getItem("selectedCategory");
+
+        	  // 이전에 저장된 옵션을 가져오고, 해당 옵션이 유효한 경우에만 선택합니다.
+        	  if (storedGender && document.getElementById("sex").querySelector(`option[value="${storedGender}"]`)) {
+        	    document.getElementById("sex").value = storedGender;
+        	  }
+
+        	  if (storedCategory && document.getElementById("condition").querySelector(`option[value="${storedCategory}"]`)) {
+        	    document.getElementById("condition").value = storedCategory;
+        	  }
+
+        	  // 폼 제출 시 선택된 옵션을 저장합니다.
+        	  document.getElementById("enrollForm").addEventListener("submit", function() {
+        	    var gender = document.getElementById("sex").value;
+        	    var category = document.getElementById("condition").value;
+
+        	    localStorage.setItem("selectedGender", gender);
+        	    localStorage.setItem("selectedCategory", category);
+        	  });
+        	});
+
+        	// 페이지 로드 시 localStorage의 값을 초기화합니다.
+        	window.addEventListener("load", function() {
+        	  localStorage.removeItem("selectedGender");
+        	  localStorage.removeItem("selectedCategory");
+        	});
+        	
+        	 function checkLogin() {
+                 // 이 부분에 로그인 여부를 체크하는 로직을 구현합니다.
+                 var isLoggedIn = ${not empty loginUser}; // loginUser 변수를 사용하여 로그인 여부를 체크
+
+                 if (isLoggedIn) {
+                     // 로그인된 경우
+                     window.location.href = "enrollForm.fi"; // 글작성 페이지로 이동
+                 } else {
+                     // 로그인되지 않은 경우
+                     alert("글을 작성하려면 로그인이 필요합니다.");
+                     window.location.href = "/member/login"; // 로그인 페이지로 이동
+                 }
+             }
+
 
       </script>  
       

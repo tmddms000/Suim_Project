@@ -95,6 +95,17 @@ public class BoardServiceImpl implements BoardService {
 	public Board updateBoardList(int boardNo) {
 		return boardDao.updateBoardList(sqlSession, boardNo);
 	}
+	
+	@Override
+	public int deleteReply(int breNo) {
+		return boardDao.deleteReply(sqlSession, breNo);
+
+	}
+
+	@Override
+	public int updateReply(int boardNo, String content) {
+		return boardDao.updateReply(sqlSession, boardNo,content);
+	}
 
 	
 	
@@ -146,6 +157,16 @@ public class BoardServiceImpl implements BoardService {
 	public int insertfReply(findReply fr) {
 		return boardDao.insertfReply(sqlSession, fr);
 	}
+	
+	@Override
+	public int deletefReply(int freNo) {
+		return boardDao.deletefReply(sqlSession, freNo);
+	}
+
+	@Override
+	public int updatefReply(int freNo, String content) {
+		return boardDao.updatefReply(sqlSession, freNo, content);
+	}
 
 	@Override
 	public int insertFind(Find f) {
@@ -164,7 +185,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	//------------------------------------------------
-	//------------------사람구해요-----------------------
+	//------------------이용후기-------------------------
 	@Override
 	public int selectiListCount() {
 		return boardDao.selectfListCount(sqlSession);
@@ -228,6 +249,19 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.insertInReviewReply(sqlSession, ir);
 
 	}
+
+	@Override
+	public int deleteiReply(int ireNo) {
+		return boardDao.deleteiReply(sqlSession, ireNo);
+	}
+
+	@Override
+	public int updateiReply(int ireNo, String content) {
+		return boardDao.updateiReply(sqlSession, ireNo, content);
+	}
+
+
+
 
 
 	

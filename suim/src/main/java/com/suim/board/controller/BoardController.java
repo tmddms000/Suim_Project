@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +32,7 @@ import com.suim.board.model.vo.Battachment;
 import com.suim.board.model.vo.Board;
 import com.suim.board.model.vo.Find;
 import com.suim.board.model.vo.InReview;
-
 import com.suim.board.model.vo.InReviewReply;
-
 import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
@@ -141,9 +140,7 @@ public class BoardController {
 		public String ajaxSelectReplyList(int bno) {
 			
 			ArrayList<Reply> list = boardService.selectReplyList(bno);
-			
-			
-			
+
 			return new Gson().toJson(list);
 		}
 		
@@ -151,12 +148,35 @@ public class BoardController {
 		@RequestMapping(value = "rinsert.bo", produces = "text/html; charset=UTF-8")
 		public String ajaxInsertReply(Reply r) {
 			
-
 			
 			int result = boardService.insertReply(r);
 			
 			return (result > 0) ? "success" : "fail";
 		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rdelete.bo", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxDeleteReply(@RequestParam("bre") int bre) {
+			
+		    int result = boardService.deleteReply(bre);
+		    
+		    
+		    return (result > 0) ? "success" : "fail";
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rupdate.bo", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxUpdateReply(@RequestParam("bre") int bre,
+		                              @RequestParam("content") String content) {
+
+		    int result = boardService.updateReply(bre, content);
+		    
+
+		    return (result > 0) ? "success" : "fail";
+		}
+		
+		
+		
 		
 		@RequestMapping(value="/uploadSummernoteImageFile", produces = "application/json; charset=utf8")
 		@ResponseBody
@@ -324,6 +344,7 @@ public class BoardController {
 			String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
 			
 			
+			
 			HashMap<String, String> fin = new HashMap<>();
 			fin.put("gender", gender);
 			fin.put("category", category);
@@ -448,6 +469,28 @@ public class BoardController {
 			
 			return (result > 0) ? "success" : "fail";
 		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rdelete.fi", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxDeletefReply(@RequestParam("fre") int bre) {
+			
+		    int result = boardService.deletefReply(fre);
+		    
+		    
+		    return (result > 0) ? "success" : "fail";
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rupdate.fi", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxUpdatefReply(@RequestParam("fre") int fre,
+		                              @RequestParam("content") String content) {
+
+		    int result = boardService.updatefReply(fre, content);
+		    
+
+		    return (result > 0) ? "success" : "fail";
+		}
+		
 		@RequestMapping("enrollForm.fi")
 		public String findEnrollForm() {
 			
@@ -516,11 +559,6 @@ public class BoardController {
 			
 			fb.setCategory(category);
 		int result = boardService.updateFind(fb);
-		
-	
-		
-
-		
 		
 		
 		if(result > 0 ) { // 성공 => 일회성 알람문구 띄운 뒤 게시글 리스트페이지로 url 재요청
@@ -761,6 +799,29 @@ public class BoardController {
 			
 			return (result > 0) ? "success" : "fail";
 		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rdelete.in", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxDeleteiReply(@RequestParam("ire") int ireNo) {
+			
+		    int result = boardService.deleteiReply(ireNo);
+		    
+		    
+		    return (result > 0) ? "success" : "fail";
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "rupdate.in", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
+		public String ajaxUpdateiReply(@RequestParam("ire") int ireNo,
+		                              @RequestParam("content") String content) {
+
+		    int result = boardService.updateiReply(ireNo, content);
+		    
+
+		    return (result > 0) ? "success" : "fail";
+		}
+		
+		
 
 	
 		   

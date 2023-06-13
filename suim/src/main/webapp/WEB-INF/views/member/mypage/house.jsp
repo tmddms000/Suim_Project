@@ -146,6 +146,9 @@
 												<c:if test = "${h.enrollStatus eq '심사완료'}">
 												<button type="submit" class="btn btn-primary btn-sm">결제하기</button>
 												</c:if>
+											</form>
+											<form method="post" action="/kakaoPay" onsubmit="return confirm('결제하시겠습니까?');">
+											    <button>카카오페이로 결제하기</button>
 											</form>	
 											<form action="/houseEdit.ho" method="post" onsubmit="return confirm('수정하시겠습니까?');">
 												<input type="hidden" name="hno" value="${h.houseNo}">

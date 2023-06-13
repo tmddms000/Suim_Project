@@ -53,6 +53,9 @@ public interface BoardService {
 	// 댓글 수량 
 	int ReplyCount(int boardNo);
 	
+	int deleteReply(int breNo);
+	
+	int updateReply(int breNo, String content);
 	
 	
 	// 게시글 업데이트
@@ -91,6 +94,10 @@ public interface BoardService {
 	
 	// 댓글 작성 서비스 (Ajax)
 	int insertfReply(findReply fr);
+	
+	int deletefReply(int freNo);
+	
+	int updatefReply(int freNo, String content);
 	
 	// 게시글 등록
 	int insertFind(Find f);
@@ -140,6 +147,10 @@ public interface BoardService {
 	
 	// 댓글 작성 서비스 (Ajax)
 	int insertInReviewReply(InReviewReply ir);
+	
+	int deleteiReply(int ireNo);
+	
+	int updateiReply(int ireNo, String content);
 
 
 

@@ -2,6 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%@ page import="java.util.Date" %>
 
 
@@ -115,13 +117,12 @@
          
 
         
-<c:if test="${not empty loginUser}">
 
-    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1184px; margin-bottom: 12px; width: 100px;" href="enrollForm.in">
 
-        후기작성
+    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1184px;  margin-bottom: 10px; width: 100px;" onclick="checkLogin()">
+       후기작성
     </a>
-</c:if>
+
         
        <!-- Gallery -->
 
@@ -135,11 +136,22 @@
     <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
       <div class="card" onclick="redirectToDetail('${i.inrNo}')"> <!-- Added onclick event -->
       	<input type="hidden" name="inrNo" class="ino" value="${ i.inrNo }">
-        <img src="${i.thumbnail}" class="card-img-top" alt="Boat on Calm Water" />
+        <img src="${i.thumbnail}" class="card-img-top" alt="Boat on Calm Water" style="width: 100%; height: 350px;" />
+
         <div class="card-body">
-          <h5 class="card-title" style="text-align: center; margin-top: 10px;">
-            <span style="font-size: 18px; font-weight: bold;">[후기]</span>&nbsp; ${i.inrTitle}
-          </h5>
+			<h5 class="card-title" style="text-align: center; margin-top: 10px; width: 100%; height: 30px;">
+			  <span style="font-size: 18px; font-weight: bold;">
+			    [후기]
+			  </span>
+			  <c:choose>
+			    <c:when test="${fn:length(i.inrTitle) > 15}">
+			      ${fn:substring(i.inrTitle, 0, 15)}...
+			    </c:when>
+			    <c:otherwise>
+			      ${i.inrTitle}
+			    </c:otherwise>
+			  </c:choose>
+			</h5>
         </div>
       </div>
     </div>
@@ -223,7 +235,20 @@
         	  });
         	});
          
-         
+    	 function checkLogin() {
+             // 이 부분에 로그인 여부를 체크하는 로직을 구현합니다.
+             var isLoggedIn = ${not empty loginUser}; // loginUser 변수를 사용하여 로그인 여부를 체크
+
+             if (isLoggedIn) {
+                 // 로그인된 경우
+                 window.location.href = "enrollForm.fi"; // 글작성 페이지로 이동
+             } else {
+                 // 로그인되지 않은 경우
+                 alert("글을 작성하려면 로그인이 필요합니다.");
+                 window.location.href = "/member/login"; // 로그인 페이지로 이동
+             }
+         }
+
           
          
          

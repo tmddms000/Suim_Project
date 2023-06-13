@@ -8,6 +8,7 @@
 
 	    <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
         <link rel="stylesheet" href="/resources/css/board/board.css">
+      
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
         <!-- 나중에 한번에 include 할 부분 -->
         <!-- 부트스트랩 -->
@@ -42,6 +43,17 @@
 
         table * {margin:5px;}
         table {width:100%;}
+        
+        .deleteButton {
+    	font-size: 10px; /* 원하는 크기로 조정하세요 */
+    	padding: 1px 3px; /* 원하는 패딩 값을 적용하세요 */
+		}
+		
+		#updateButton {
+    	font-size: 10px; /* 원하는 크기로 조정하세요 */
+    	padding: 1px 3px; /* 원하는 패딩 값을 적용하세요 */
+    	
+		}
     </style>       
         
 
@@ -67,7 +79,7 @@
             <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</a>
             <br><br>
 
-            <table id="contentArea" algin="center" class="table">
+            <table id="contentArea" align="center" class="table">
                 <tr>
                     <th width="100">제목</th>
                     <td colspan="3">${ b.boardTitle }</td>
@@ -102,8 +114,12 @@
 			<c:if test="${ (not empty loginUser) and (loginUser.memberId eq b.memberId) }">
             <div align="center">
                 <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-		                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
-		                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+		                <a class="btn btn-primary" onclick="postFormSubmit(1);" >수정하기</a>
+		                <a class="btn btn-danger" onclick="postFormSubmit(2);" >삭제하기</a>
+		                <!-- <a class="btn btn-danger" id="apibtn" >결제하기</a> -->
+<%-- 		              <form method="post" action="/kakaoPay" onsubmit="return confirm('결제하시겠습니까?');">
+						<button>카카오페이로 결제하기</button>
+					</form>	 --%>
             </div>
             <br><br>
             
@@ -159,6 +175,27 @@
         <br><br>
 
       </div>
+      
+      <!-- 모달 창 -->
+		<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h5 class="modal-title" id="updateModalLabel">댓글 수정</h5>
+		                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		            </div>
+		            <div class="modal-body">
+		                <form id="updateForm">
+		                    <div class="mb-3">
+		                        <label for="updateContent" class="form-label" >댓글 내용</label>
+		                        <textarea class="form-control" id="updateContent" rows="3" name="content"></textarea>
+		                    </div>
+		                    <button type="submit" class="btn btn-primary">수정하기</button>
+		                </form>
+		            </div>
+		        </div>
+		    </div>
+		</div>
     
     <script>
 
@@ -270,34 +307,205 @@
 		}
 	}
 	
-	function selectReplyList() { // 해당 게시글에 딸린 댓글리스트 조회용 ajax
+	
+	function addReply() { // 댓글 작성용 ajax
 		
-		$.ajax({
-			url : "rlist.bo",
-			data : {bno : ${ b.boardNo }},
-			type : "get",
-			success : function(result) {
-				
-				
-				
-				let resultStr = "";
-				
-				for(let i = 0; i < result.length; i++) {
-					resultStr += "<tr>"
-							   + 	"<td>" + result[i].nickName + "</td>"
-							   + 	"<td>" + result[i].breContent + "</td>"
-							   + 	"<td>" + result[i].breDate + "</td>"
-							   + "</tr>";
+
+		
+		if($("#content").val().trim().length != 0) {
+			// 즉, 유효한 내용이 한자라도 있을 경우
+			
+			$.ajax({
+				url : "rinsert.bo",
+				data : {
+					boardNo : ${ b.boardNo },
+					breContent : $("#content").val(),
+					memberId : "${ loginUser.memberId }"
+				},
+				type : "post", 
+				success : function(result) {
+					
+					if(result == "success") {
+						selectReplyList();
+						$("#content").val("");
+					}
+				},
+				error : function() {
+					console.log("댓글 작성용 ajax 통신 실패!");
 				}
-				
-				$("#replyArea>tbody").html(resultStr);
-				$("#rcount").text(result.length);
-			},
-			error : function() {
-				console.log("댓글리스트 조회용 ajax 통신 실패!");
-			}
-		});
+			});
+			
+		} else {
+			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");
+		}
 	}
+	
+	function selectReplyList() {
+	    $.ajax({
+	        url: "rlist.bo",
+	        data: { bno: `${b.boardNo}` },
+	        type: "get",
+	        success: function(result) {
+	            let resultStr = "";
+	            const loginUser = "${loginUser.memberId}"; // 현재 사용자의 식별자 또는 닉네임을 가져와서 할당해주세요.
+	            
+	            for (let i = 0; i < result.length; i++) {
+	                resultStr += "<tr data-id=" + result[i].breNo + ">" +
+	                    "<td>" + result[i].nickName + "</td>" +
+	                    "<td>" + result[i].breContent + "</td>" +
+	                    "<td>" + result[i].breDate + "</td>";
+
+	                if (result[i].memberId == loginUser) {
+	                    resultStr += "<td><button class='btn btn-danger deleteButton' data-id='" + result[i].memberId + "' style='float:right; background-color: rgb(250, 107, 111); font-size: 11px; padding: 4px 8px;'>" +
+	                        "<span style='font-weight: bold;'>삭제</span>" +
+	                        "</button></td>";
+	                    resultStr += "<td><button class='btn btn-secondary updateButton' data-id='" + result[i].memberId + "' data-content='" + result[i].breContent + "' style='float:right; background-color: #7464a1; font-size: 11px; padding: 4px 8px;'>" +
+	                        "<span style='font-weight: bold;'>수정</span>" +
+	                        "</button></td>";
+	                }
+	                resultStr += "</tr>";
+	            }
+
+	            $("#replyArea>tbody").html(resultStr);
+	            $("#rcount").text(result.length);
+	           
+	        }
+	    });
+
+	}
+	
+
+	// 추가된 부분: 삭제 버튼 클릭 이벤트 처리
+	$(document).off("click", ".deleteButton").on("click", ".deleteButton", function() {
+	    let memberId = $(this).data("id");
+	    let tr = $(this).closest("tr");
+	    let breNo = tr.data("id");
+	    console.log(breNo);
+	    
+	    
+	    $.ajax({
+	        url: "rdelete.bo",
+	        data: { bre: breNo },
+	        type: "post",
+	        success: function(response) {
+	            // 삭제 성공한 경우 해당 댓글을 테이블에서 제거
+	            tr.remove();
+
+	            // 삭제 후 댓글 목록을 다시 로드
+	            selectReplyList();
+
+	            // Show success message using alert
+	            alert("성공적으로 삭제 되었습니다.");
+	        },
+	        error: function(xhr, status, error) {
+	            // 오류 발생 시 처리할 내용
+	            console.log(error);
+
+	            // Show error message using alert
+	            alert("An error occurred while deleting the reply.");
+	        }
+	    });
+
+	    // Confirmation prompt before deleting
+	    var confirmation = confirm("삭제하시겠습니까?");
+
+	    if (confirmation) {
+	        // Execute the deletion
+	        $.ajax({
+	            url: "rdelete.bo",
+	            data: { bre: breNo },
+	            type: "post",
+	            success: function(response) {
+	                // 삭제 성공한 경우 해당 댓글을 테이블에서 제거
+	                tr.remove();
+					
+	                // 삭제 후 댓글 목록을 다시 로드
+	                selectReplyList();
+
+	                // Show success message using alert
+	                alert("성공적으로 삭제 되었습니다.");
+	            },
+	            error: function(xhr, status, error) {
+	                // 오류 발생 시 처리할 내용
+	                console.log(error);
+
+	                // Show error message using alert
+	                alert("An error occurred while deleting the reply.");
+	            }
+	        });
+	    }
+
+	});
+
+	    
+	    
+
+	// 수정 버튼 클릭 이벤트 처리
+	$(document).off("click", ".updateButton").on("click", ".updateButton", function() {
+	    let memberId = $(this).data("id");
+	    let content = $(this).data("content");
+	    let breNo = $(this).closest("tr").data("id");
+	    
+
+	    // 모달 창 열기
+	    $("#updateModal").modal("show");
+
+	    // 모달의 입력 필드에 content 값 설정
+	    $("#updateContent").val(content);
+
+	    // 수정하기 버튼 클릭 이벤트 처리
+	    $("#updateForm").off("submit").on("submit", function(e) {
+	        e.preventDefault();
+
+	        let updateContent = $("#updateContent").val();
+	        
+	        // 알림 대화상자 표시
+	        
+	            // AJAX로 서버에 수정된 내용 전송 및 처리
+	            
+	            $.ajax({
+	                url: "rupdate.bo",
+	                data: { bre: breNo, content: updateContent },
+	                type: "post",
+	                success: function(response) {
+	                        // 댓글 내용 업데이트
+	                      
+							let tr = $(this).closest("tr");
+							
+						    tr.find("td:nth-child(2)").html(updateContent); // 수정된 댓글 내용으로 업데이트
+
+						    // ...
+
+						    // 수정된 댓글이 리스트에 실시간으로 반영되도록 추가
+						    let targetRow = $("tr[data-id='" + breNo + "']");
+						    targetRow.find("td:nth-child(2)").html(updateContent);
+							console.log(updateContent);
+	                        // 모달 창 닫기
+	                        $("#updateModal").modal("hide");
+							
+	                        alert("댓글이 수정되었습니다.");
+
+	                },
+	                error: function() {
+	                    alert("댓글 수정에 실패하였습니다.");
+	                }
+	           });
+	        
+	    });
+
+	    // 모달 창 닫힐 때 입력 필드 초기화
+	    $("#updateModal").on("hidden.bs.modal", function() {
+	        $("#updateContent").val("");
+	    });
+	});
+
+
+	   
+
+
+
+	
+	
 	document.getElementById('content').addEventListener('keydown', function(event) {
 	    if (event.keyCode === 13) { // Enter 키의 keyCode는 13입니다.
 	        event.preventDefault(); // 엔터 키의 기본 동작인 줄바꿈을 막습니다.
@@ -314,8 +522,43 @@
 	var backButton = document.querySelector('.btn-secondary');
 
 	// 버튼을 클릭하면 goBack 함수를 호출한다
+	backButton.addEventListener('click', goBack);
+	
+	
+		$(function() {
+		  $('#apibtn').click(function() {
+		    $.ajax({
+		      url: '/jq/kakaopay.cls',
+		      dataType: "json",
+		      success: function(data) {
+		    	  alert(data.next_redirect_pc_url);
+/*         	var box = data.next_redirect_pc_url;
+		        window.open(box); */
+		    	  
+		      },
+		      error: function(error) {
+		        alert(error);
+		      }
+		    });
+		  });
+		});
+		  // Enter 키를 눌렀을 때 동작할 함수
+		  function handleEnterKey(event) {
+		    if (event.keyCode === 13) {
+		      event.preventDefault(); // 기본 동작인 폼 제출 방지
+		      document.getElementById("submitButton").click(); // "수정하기" 버튼 클릭
+		    }
+		  }
 
-	//backButton.addEventListener('click', goBack);
+		  // "수정하기" 버튼에 클릭 이벤트 리스너 추가
+		  document.getElementById("submitButton").addEventListener("click", function () {
+		    // 수정하기 버튼을 클릭했을 때 수행할 동작
+		    // 여기에 원하는 동작을 추가하세요
+		    console.log("수정하기 버튼이 클릭되었습니다.");
+		  });
+
+		  // 엔터 키 이벤트 리스너 추가
+		  document.addEventListener("keydown", handleEnterKey);
 
     
     </script>
