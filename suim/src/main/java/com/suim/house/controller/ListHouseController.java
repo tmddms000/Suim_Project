@@ -32,6 +32,8 @@ public class ListHouseController {
 	
 	@Autowired
 	private ListHouseService listHouseService;
+	@Autowired
+	private HouseService HouseService;
 	
 	// 지도와 셰어하우스 리스트 상세 검색
 	@RequestMapping("list.ho")
@@ -119,13 +121,22 @@ public class ListHouseController {
 	@RequestMapping("myhouseRez.ho")
 	public ModelAndView myHouseRezSelect(ModelAndView mv, int houseNo) {
 		
+		House h = HouseService.selectHouse(houseNo);
+		
+		if (h.getEnrollStatus().equals("심사완료")) {
+			mv.addObject("h", h);
+			mv.setViewName("/house/kakao"); 
+			return mv;
+		} else {
+		
 		ArrayList<Reservation> list = listHouseService.myHouseRezSelect(houseNo);
-				
+		
 	    mv.addObject("list", list);
 	    
 	    mv.setViewName("member/mypage/myHouseReservation"); 
 		
 	    return mv;
+		}
 	}
 	
 	// 셰어하우스 예약 확인

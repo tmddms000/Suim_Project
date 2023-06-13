@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,17 +20,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.suim.common.mail.MailHandler;
 import com.suim.house.model.service.HouseService;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Photo;
 import com.suim.house.model.vo.Wish;
 import com.suim.member.model.vo.Member;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class HouseController {
+	
+	private final JavaMailSender mailSender;
+	
 	@Autowired
 	private HouseService houseService;
+	
+	@Autowired
+	public HouseController(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
 	
 	@RequestMapping("detail.ho")
 	public ModelAndView selectList(ModelAndView mv, int hno, HttpSession session) {
@@ -247,4 +259,52 @@ public class HouseController {
 		mv.setViewName("redirect:/mypage/house");
 		return mv;
 	}
+    
+    @RequestMapping("payment")
+	public ModelAndView payment(ModelAndView mv, int hno, HttpSession session) {
+		houseService.payment(hno);
+		House h = houseService.selectHouse(hno);
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		  String email = loginUser.getEmail();
+		
+		  try {
+			    MailHandler sendMail = new MailHandler(mailSender);
+			    
+			    // HTML 형식으로 메일 내용을 작성합니다.
+			    String htmlContent = "<html>"
+			            + "<head>"
+			            + "<style>"
+			            + "body { font-family: Arial, sans-serif; }"
+			            + "h3 { color: #333; }"
+			            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+			            + "</style>"
+			            + "</head>"
+			            + "<body>"
+			            + "<h3>결제가 완료되었습니다.</h3>"
+			            + "<div class='message'>"
+			            + "<p>안녕하세요, 쉼입니다.</p>"
+			            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
+			            + "<p>더욱 편안한 휴식을 즐기실 수 있도록 최선을 다하겠습니다.</p>"
+			            + "<p>감사합니다!</p>"
+			            + "</div>"
+			            + "</body>"
+			            + "</html>";
+
+			    sendMail.setText(htmlContent);
+			    sendMail.setFrom("suimm012@gmail.com", "쉼");
+			    sendMail.setSubject(h.getHouseName() + "의 결제가 완료되었습니다.");
+			    sendMail.setTo(email);
+			    sendMail.send();
+			                
+			} catch (MessagingException e) {
+			    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+			} catch (Exception e) {
+			    log.error("기타 에러 발생: {}", e.getMessage());
+			}
+		
+		
+		mv.setViewName("redirect:/mypage/house");
+		return mv;
+	}
+    
 }
