@@ -211,7 +211,8 @@
 		var receiverId = "${b.memberId}";
 		var senderId = "${loginUser.memberId}";
 		var postNo = "${b.boardNo}";
-		var postType = "board";
+		var postContent = $("#content").val();
+		var postType = "board"; 
 		
 		
 		
@@ -240,7 +241,8 @@
 						
 						if(senderId != receiverId){
 			           		if(socket){
-			        			let socketMsg = postType+","+senderId+","+receiverId+","+postNo+","+content;
+			        			let socketMsg = postType+","+senderId+","+receiverId+","+postNo+","+content+","+postContent;
+	
 			        			console.log(socketMsg);
 			        			socket.send(socketMsg);
 			           		}
@@ -267,7 +269,8 @@
 				        	'receiverId' : receiverId,
 				        	'senderId' : senderId,
 				        	'postNo' : postNo,
-				        	'postType' : postType
+				        	'postType' : postType,
+				        	'postContent' : postContent
 				        },
 				        dataType : "json", 
 				        success : function(alram){

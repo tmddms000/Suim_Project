@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.suim.chat.model.dao.ChatDao;
 import com.suim.common.model.dao.NotificationDao;
 import com.suim.common.model.vo.Notification;
+import com.suim.common.model.vo.PageInfo;
 
 @Service
 public class NotificationServiceImpl implements NotificationService{
@@ -33,14 +34,17 @@ public class NotificationServiceImpl implements NotificationService{
 	}
 
 	@Override
-	public List<Notification> selectRecentNotification(String memberId) {
-		return notificationDao.selectRecentNotification(sqlSession, memberId);
+	public List<Notification> selectRecentNotification(String receiverId, PageInfo pi) {
+		return notificationDao.selectRecentNotification(sqlSession, receiverId, pi);
 	}
+	
 
 	@Override
 	public int notificationDelete(Notification no) {
 		return notificationDao.notificationDelete(sqlSession, no);
 	}
+
+
 
 	
 	

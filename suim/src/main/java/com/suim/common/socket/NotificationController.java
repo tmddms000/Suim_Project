@@ -1,15 +1,20 @@
 package com.suim.common.socket;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.suim.common.model.service.NotificationService;
 import com.suim.common.model.vo.Notification;
+import com.suim.common.model.vo.PageInfo;
+import com.suim.common.template.Pagination;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,24 +36,29 @@ public class NotificationController {
 		
 		return alram;
 	}
-
-//알람수
-	@ResponseBody
-	@RequestMapping(value = "/notificationCount", method=RequestMethod.GET)
-	public int notificationCount (String receiverId) throws Exception{
-		
-		int alram = service.notificationCount(receiverId);
-		
-		return alram;
-	}	
-	
 	
 	//알람목록
 	@ResponseBody
 	@RequestMapping(value = "/selectRecentNotification", method=RequestMethod.GET)
-	public List<Notification> selectRecentNotification(String receiverId) throws Exception{
-							
-		return service.selectRecentNotification(receiverId);
+	public Map<String, Object> selectRecentNotification(String receiverId, @RequestParam(value="page", defaultValue="1")int currentPage) throws Exception{
+		
+
+		int listCount = service.notificationCount(receiverId);
+		
+		int pageLimit = 5;
+		int boardLimit = 5;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		List<Notification> notificationList = service.selectRecentNotification(receiverId, pi);
+		
+		Map<String, Object> response = new HashMap<>();
+	    response.put("list", notificationList);
+	    response.put("pi", pi);
+	    response.put("listCount", listCount);
+		
+		
+		return response;
 	}	
 	
 	

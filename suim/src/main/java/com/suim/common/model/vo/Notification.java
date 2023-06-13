@@ -15,6 +15,8 @@ public class Notification {
 	public String senderId;
 	public int postNo;
 	public String postType;
+	public String postContent;
 	public Timestamp createdTime;
+	
 
 }

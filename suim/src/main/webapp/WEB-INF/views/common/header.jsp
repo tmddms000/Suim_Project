@@ -8,8 +8,9 @@
 }
 
 .notification {
+  height : 100px;
   display: block;
-  padding: 10px;
+  padding: 8px;
   background-color: #f7f7f7;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -25,11 +26,26 @@
 
 .notification .time {
   color: #888;
-  margin-left: 10px;
+
+}
+
+.notification .title {
+  font-weight: bold;
 }
 
 .notification .content {
-  font-weight: bold;
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  overflow: hidden; /* 넘치는 부분을 감춤 */
+  text-overflow: ellipsis;
+  width : 100% !important;
+}
+
+.alarm-pagination {
+    position: fixed;
+    bottom: 65px;
+    right: 50px;
+
+
 }
 
 </style>
@@ -47,7 +63,9 @@
 		if(${loginUser != null}){
 			connectWs();
 			addMessageToNotificationList('${loginUser.memberId}');
-			notificationCount();
+
+			$('#notificationButton').show();
+
 			}
 
 		});
@@ -63,7 +81,8 @@
 			ws.onmessage = function(event) {
 				 
 				 addMessageToNotificationList(event.data);
-				 notificationCount();
+
+
 				 if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
 				      vibrateButton();
 				    }
@@ -78,32 +97,173 @@
 
 		function addMessageToNotificationList(message) {
 
-			  // AJAX 요청 보내기
 			  $.ajax({
-			    url: '/selectRecentNotification', // 변경된 데이터를 가져올 URL
+			    url: '/selectRecentNotification',
 			    method: 'GET',
 			    dataType: 'json',
-			    data : {
-			    	receiverId : '${loginUser.memberId}'
+			    data: {
+			      receiverId: '${loginUser.memberId}'
 			    },
-			    
 			    success: function(data) {
-			    	
-			      // 서버로부터 받은 데이터로 목록 업데이트
+
 			      selectRecentNotification(data);
 			      if (!isFirstLoad && !isVibrating) {
-			          vibrateButton();
-			        }
-			        isUpdatingNotification = false;
-			  		
-			   
-			      
+			        vibrateButton();
+			      }
+			      isUpdatingNotification = false;
+
 			    },
 			    error: function(error) {
-			      console.error('웹소켓 에러 발생:', error);
+			      console.error('웹소켓 오류가 발생했습니다:', error);
 			    }
 			  });
-			};
+			}
+
+
+		function selectRecentNotification(data) {
+			console.log(data);
+			// 응답으로부터 필요한 데이터 추출
+			var notificationList = data.list;
+			var listCount = data.listCount;
+			var pi = data.pi;
+
+			// 데이터를 사용하여 목록 업데이트
+			var notificationListElement = $('#notificationList');
+			notificationListElement.empty(); // 목록 초기화
+
+			if (listCount === 0) {
+			var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 없습니다.');
+			notificationListElement.prepend(notificationItem);
+			return;
+			}
+			
+			notificationList.reverse();
+			// 데이터를 반복하여 목록에 추가
+			for (var i = 0; i < notificationList.length; i++) {
+			var notification = notificationList[i];
+			var senderId = notification.senderId;
+			var createdTime = new Date(notification.createdTime);
+			var timeDifference = getTimeDifference(createdTime);
+			var title = notification.content;
+			var postType = notification.postType;
+			var postNo = notification.postNo;
+			var receiverId = notification.receiverId;
+			var postContent = notification.postContent;
+			   
+			
+			var notificationText = '';
+		    if (postType === 'board') {
+		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 자유게시판의 ' +  '<span class="title">' + title + '</span>' + ' 게시글에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<span class="time">' + timeDifference + '</span>' + '</a>';
+
+		    } else {
+		      // You can add handling for other postTypes.
+		    }
+
+
+		    var notificationItem = $('<li style="list-style-type: none"></li>').html(notificationText);
+		    notificationListElement.prepend(notificationItem);
+		    
+		    
+		    var countElement = $('<span style="font-size: 14px; ">').addClass('notification-count').text(listCount);
+		      $('#notificationButton .notification-count').remove();
+		      $('#notificationButton').append(countElement);
+		      createPagination(pi.startPage, pi.endPage, pi.currentPage, pi.maxPage);
+
+		  }
+			
+			
+		
+			
+			
+
+		  // Combine the data and update the list count and pagination values
+		  var response = {
+		    listCount: listCount,
+		    pi: pi
+		  };
+
+		  // Perform any additional actions with the combined data, if needed
+
+		  // Example:
+		  // updatePagination(response);
+
+		  // Perform any additional actions with the updated list count, if needed
+
+		  // Example:
+		  // updateListCount(listCount);
+		}
+		
+		function createPagination(startPage, endPage, currentPage, maxPage) {
+			  var paginationContainer = document.getElementById("paginationContainer");
+			  paginationContainer.innerHTML = ""; // 기존 페이지네이션 초기화
+
+			  var paginationList = document.createElement("ul");
+			  paginationList.classList.add("pagination");
+
+			  // 이전 페이지 링크
+			  var previousPageItem = createPaginationItem(currentPage - 1, "이전", currentPage === 1);
+			  paginationList.appendChild(previousPageItem);
+
+			  // 페이지 숫자 링크
+			  for (var i = startPage; i <= endPage; i++) {
+			    var pageItem = createPaginationItem(i, i, i === currentPage);
+			    paginationList.appendChild(pageItem);
+			  }
+
+			  // 다음 페이지 링크
+			  var nextPageItem = createPaginationItem(currentPage + 1, "다음", currentPage === maxPage);
+			  paginationList.appendChild(nextPageItem);
+
+			  paginationContainer.appendChild(paginationList);
+			}
+
+			// 페이지네이션 아이템 생성 함수
+			function createPaginationItem(pageNumber, label, isDisabled) {
+			  var listItem = document.createElement("li");
+			  listItem.classList.add("page-item");
+
+			  var link = document.createElement("a");
+			  link.classList.add("page-link");
+			  link.href = "#";
+			  link.textContent = label;
+
+			  listItem.appendChild(link);
+
+			  if (isDisabled) {
+			    listItem.classList.add("disabled");
+			  } else {
+			    // 페이지 클릭 이벤트 처리
+			    link.addEventListener("click", function (event) {
+			      event.preventDefault();
+			      // 페이지 클릭 시 필요한 동작 수행
+			      // 예: 해당 페이지의 알림 목록 조회 등
+			      selectNotificationPage(pageNumber);
+			    });
+			  }
+
+			  return listItem;
+			}
+		
+			
+			function selectNotificationPage(page) {
+				$.ajax({
+				    url: '/selectRecentNotification',
+				    method: 'GET',
+				    dataType: 'json',
+				    data: {
+				      receiverId: '${loginUser.memberId}',
+				      page : page
+				    },
+				    success: function(data) {
+				      selectRecentNotification(data);
+
+				    },
+				    error: function(error) {
+				      console.error('웹소켓 오류가 발생했습니다:', error);
+				    }
+				  });
+				}
+	
 
 			
 			function vibrateButton() {
@@ -127,53 +287,30 @@
 				}
 			
 			
+			function getTimeDifference(timestamp) {
+				  var currentDate = new Date();
+				  var notificationDate = new Date(timestamp);
+				  var timeDifference = currentDate - notificationDate;
+				  var seconds = Math.floor(timeDifference / 1000);
+				  var minutes = Math.floor(seconds / 60);
+				  var hours = Math.floor(minutes / 60);
+				  var days = Math.floor(hours / 24);
+
+				  if (days > 0) {
+				    return days + "일 전";
+				  } else if (hours > 0) {
+				    return hours + "시간 전";
+				  } else if (minutes > 0) {
+				    return minutes + "분 전";
+				  } else if (seconds > 0){ 
+				    return seconds + "초 전";
+				  } else {
+				    return "방금 전";
+				  }
+				}	
 			
-
-
-	 function selectRecentNotification(data) {
-		  // 받은 데이터를 사용하여 목록 업데이트
-		  var notificationList = $('#notificationList');
-		  notificationList.empty(); // 목록 비우기
-
-		  
-		  if (data.length === 0) {
-	    	  var notificationItem = $('<li style="list-style-type: none; padding-top : 350px; font-weight : bold; font-size : 20px;">').text('알림이 존재하지 않습니다.');
-	    	  notificationList.prepend(notificationItem);
-	    	  return;
-	    	}
-
-		  // 데이터를 순회하면서 목록에 추가
-		  for (var i = 0; i < data.length; i++) {
-		    var notification = data[i];
-		    var senderId = notification.senderId;
-		    var createdTime = new Date(notification.createdTime);
-		    var content = notification.content;
-		    var postType = notification.postType;
-		    var postNo = notification.postNo;
-		    var receiverId = notification.receiverId;
-
-		    
-		    
-		    
-		   
-
-
-		    var notificationText = '';
-		    if (postType === 'board') {
-		
-
-		    	 notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 ' + createdTime.toLocaleString() + '에 자유게시판의 <span class="content">' + content + '</span>에 댓글을 달았습니다. <span class="time">' + createdTime.toLocaleString() + '</span></a>';
-
-		    } else {
-		      // 다른 postType에 대한 처리를 추가할 수 있습니다.
-		    }
-
-		    var notificationItem = $('<li style="list-style-type : none"></li>').html(notificationText);
-		    notificationList.prepend(notificationItem);
-		  }
-
-		  
-		};
+			
+				
 		
 		
 		function notificationCount() {
@@ -266,14 +403,13 @@
 	
 	
 	
-	<button id="notificationButton"><i class="fas fa-bell"></i></button>
+	<button id="notificationButton" style="display : none;"><i class="fas fa-bell"></i></button>
 
 <style>
 #notificationButton {
   position: fixed;
   right: 10px;
-
-  bottom: 41px;
+  bottom: 10px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -310,13 +446,13 @@
 }
 
 .modal-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 .close {
   position: absolute;
-  top: 10px;
-  right: 20px;
+  top: 0px;
+  right: 5px;
   font-size: 24px;
   cursor: pointer;
 }
@@ -352,16 +488,23 @@
 </style>
 
 
-	<div id="notificationModal">
 
-	<div class="modal-header justify-content-center" style="border-bottom : 1px solid #e0e0e0; height : 60px;">
-	<h3>알림</h3>
+<div id="notificationModal">
+	<div class="modal-header justify-content-center" style="height : 40px;">
+	<h4>알림</h4>
 	<span class="close">&times;</span>
 	</div>
   <div class="modal-content">
-
     <ul id="notificationList"></ul>
   </div>
+  <nav aria-label="Page navigation example" id="paginationContainer">
+      <ul class="pagination alarm-pagination">
+      </ul>
+      </nav>
+  
+  <div class="modal-footer">
+      <button id="deleteAllButton" class="delete-all-button" style="position: fixed; width: 80px; height: 30px; bottom: 25px; right: 170px;">모두 읽음</button>
+    </div>
 </div>
 	
 <script>

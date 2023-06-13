@@ -43,13 +43,14 @@ public class EchoHandler extends TextWebSocketHandler {
 		if (StringUtils.isNotEmpty(msg)) {
 			logger.info("if문 들어옴?");
 			String[] strs = msg.split(",");
-			if(strs != null && strs.length == 5) {
+			if(strs != null && strs.length == 6) {
 				
 				String cmd = strs[0];
 				String replyWriter = strs[1];
 				String boardWriter = strs[2];
 				String bno = strs[3];
 				String title = strs[4];
+				String content = strs[5];
 				logger.info("length 성공?"+cmd);
 				
 				WebSocketSession replyWriterSession = userSessionsMap.get(replyWriter);
@@ -62,7 +63,7 @@ public class EchoHandler extends TextWebSocketHandler {
 					logger.info("메시지 잘 보내지나?");
 					TextMessage tmpMsg = new TextMessage(replyWriter + "님이 자유게시판의"
 							+ "<a href='/detail.bo?bno="+ bno + "'  style=\"color: black\">"
-							+ title+"에 댓글을 달았습니다.</a>");
+							+ title+"에 댓글을 달았습니다. 내용 : " + content + "</a>");
 					boardWriterSession.sendMessage(tmpMsg);
 				}
 				
