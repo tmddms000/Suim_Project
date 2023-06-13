@@ -122,6 +122,9 @@
 		WHERE B.MEMBER_ID = #{memberId}
 		AND B.STATUS = 'Y'
 		GROUP BY B.BOARD_NO, B.BOARD_TITLE, B.BOARD_VIEW, B.BOARD_DATE
+
+		ORDER BY B.BOARD_DATE DESC
+
 	</select>
 
 	<select id="selectFindListCount" parameterType="string" resultType="_int">
@@ -140,6 +143,9 @@
 		WHERE F.MEMBER_ID = #{memberId}
 		AND F.STATUS = 'Y'
 		GROUP BY F.FIND_NO, F.FIND_TITLE, F.FIND_VIEW, F.FIND_DATE
+
+		ORDER BY F.FIND_DATE DESC
+
 	</select>
 	
 	
@@ -159,6 +165,8 @@
 		WHERE I.MEMBER_ID = #{memberId}
 		AND I.STATUS = 'Y'
 		GROUP BY I.INR_NO, I.INR_TITLE, I.INR_VIEW, I.INR_DATE
+
+		ORDER BY I.INR_DATE DESC
 	</select>
 	
 	

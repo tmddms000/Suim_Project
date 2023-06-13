@@ -7,18 +7,49 @@
  	margin-left: 25px;
 }
 
+.notification {
+  display: block;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+.notification:hover {
+  background-color: #eaeaea;
+}
+
+.notification .time {
+  color: #888;
+  margin-left: 10px;
+}
+
+.notification .content {
+  font-weight: bold;
+}
+
 </style>
 
 	<script type="text/javascript">
 		var socket = null;
+
+		var isFirstLoad = true;
+		var isUpdatingNotification = false;
+		var isVibrating = false;
+
 		
 		$(document).ready(function(){ //페이지가 새로고침 되면 웹소켓을 연결시킨다.
 			
 		if(${loginUser != null}){
 			connectWs();
 			addMessageToNotificationList('${loginUser.memberId}');
+			notificationCount();
 			}
-		console.log('연결 확인');
+
 		});
 		
 		function connectWs(){
@@ -26,33 +57,27 @@
 		socket = ws;
 		
 		ws.onopen = function() {
-			 console.log('open');
-			 
-			 };
-		
-		
-		
-			 ws.onmessage = function(event) {
+
+		};	
+			
+			ws.onmessage = function(event) {
 				 
 				 addMessageToNotificationList(event.data);
-				 
-			 }				 
-			
-		
-		
-		
+				 notificationCount();
+				 if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
+				      vibrateButton();
+				    }
+				    isFirstLoad = false;
+			 };
 			ws.onclose = function() {
-			    console.log('close');
+
 		 };
 		};
 
 		
-		
-		
-		
-		
+
 		function addMessageToNotificationList(message) {
-			console.log(message);
+
 			  // AJAX 요청 보내기
 			  $.ajax({
 			    url: '/selectRecentNotification', // 변경된 데이터를 가져올 URL
@@ -63,10 +88,16 @@
 			    },
 			    
 			    success: function(data) {
-			    	console.log(data);
 			    	
 			      // 서버로부터 받은 데이터로 목록 업데이트
 			      selectRecentNotification(data);
+			      if (!isFirstLoad && !isVibrating) {
+			          vibrateButton();
+			        }
+			        isUpdatingNotification = false;
+			  		
+			   
+			      
 			    },
 			    error: function(error) {
 			      console.error('웹소켓 에러 발생:', error);
@@ -74,10 +105,42 @@
 			  });
 			};
 
+			
+			function vibrateButton() {
+				  if (isVibrating) {
+				    return;
+				  }
+				  isVibrating = true;
+
+				  var counter = 0;
+				  var intervalId = setInterval(function() {
+				    if (counter >= 5) {
+				      clearInterval(intervalId);
+				      $('#notificationButton').removeClass('vibrate');
+				      isVibrating = false;
+				      return;
+				    }
+
+				    $('#notificationButton').toggleClass('vibrate');
+				    counter++;
+				  }, 500); // Repeat every 500ms (adjust as needed)
+				}
+			
+			
+			
+
+
 	 function selectRecentNotification(data) {
 		  // 받은 데이터를 사용하여 목록 업데이트
 		  var notificationList = $('#notificationList');
 		  notificationList.empty(); // 목록 비우기
+
+		  
+		  if (data.length === 0) {
+	    	  var notificationItem = $('<li style="list-style-type: none; padding-top : 350px; font-weight : bold; font-size : 20px;">').text('알림이 존재하지 않습니다.');
+	    	  notificationList.prepend(notificationItem);
+	    	  return;
+	    	}
 
 		  // 데이터를 순회하면서 목록에 추가
 		  for (var i = 0; i < data.length; i++) {
@@ -89,23 +152,55 @@
 		    var postNo = notification.postNo;
 		    var receiverId = notification.receiverId;
 
+		    
+		    
+		    
+		   
+
+
 		    var notificationText = '';
 		    if (postType === 'board') {
 		
-		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')">' + senderId + '님이 ' + createdTime.toLocaleString() + '에 자유게시판의 "' + content + '"에 댓글을 달았습니다.</a>';
 
-		    console.log(notificationText)
+		    	 notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 ' + createdTime.toLocaleString() + '에 자유게시판의 <span class="content">' + content + '</span>에 댓글을 달았습니다. <span class="time">' + createdTime.toLocaleString() + '</span></a>';
+
 		    } else {
 		      // 다른 postType에 대한 처리를 추가할 수 있습니다.
 		    }
 
-		    var notificationItem = $('<li></li>').html(notificationText);
+		    var notificationItem = $('<li style="list-style-type : none"></li>').html(notificationText);
 		    notificationList.prepend(notificationItem);
 		  }
 
-		  // 모달 창 표시
-		  $('#notificationModal').css('display', 'block');
+		  
 		};
+		
+		
+		function notificationCount() {
+			var notificationList = $('#notificationList');
+			 $.ajax({
+				    url: '/notificationCount',
+				    method: 'GET',
+				    dataType: 'json',
+				    data : {
+				    	receiverId : '${loginUser.memberId}'
+				    },
+				    success: function(data) {
+				    	
+				    	var count = data;
+
+				          // Display the updated count next to the notificationButton
+				          var countElement = $('<span style="font-size: 14px; ">').addClass('notification-count').text(count);
+
+				          
+				          $('#notificationButton .notification-count').remove(); // Remove the previous count
+				          $('#notificationButton').append(countElement);
+				          
+				    }
+			 });
+		};
+		
+				
 		
 		function notificationDelete(linkUrl, postNo, postType, receiverId) {
 			  // AJAX 요청 보내기
@@ -121,7 +216,8 @@
 			    success: function(response) {
 			      // 요청이 성공하면 링크로 이동
 			      if (response.success) {
-			        console.log('댓글 알림이 삭제되었습니다.');
+
+
 
 			        // 링크로 이동
 			        window.location.href = linkUrl;
@@ -176,17 +272,26 @@
 #notificationButton {
   position: fixed;
   right: 10px;
-  bottom: 10px;
-  width: 50px;
-  height: 50px;
+
+  bottom: 41px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background-color: #f0f0f0;
-  color: #333;
-  font-size: 24px;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 32px;
+
   border: none;
   outline: none;
   cursor: pointer;
   z-index : 9999;
+
+  box-shadow : rgba(255, 255, 255, 0.12) 0px 0px 2px 0px inset, rgba(0, 0, 0, 0.05) 0px 0px 2px 1px, rgba(0, 0, 0, 0.22) 0px 4px 20px;
+}
+
+#notificationButton:hover {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+
 }
 
 #notificationModal {
@@ -197,7 +302,9 @@
   width: 300px;
   height: 100%;
   background-color: #fff;
-  z-index: 9999;
+
+  z-index: 9998;
+
   overflow-y: auto;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
@@ -213,27 +320,72 @@
   font-size: 24px;
   cursor: pointer;
 }
+
+
+@keyframes vibrate {
+  0% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  25% {
+    transform: translate(2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  50% {
+    transform: translate(2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  75% {
+    transform: translate(-2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  100% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+}
+
+.vibrate {
+  animation: vibrate 0.1s infinite linear;
+}
+
 </style>
 
 
 	<div id="notificationModal">
+
+	<div class="modal-header justify-content-center" style="border-bottom : 1px solid #e0e0e0; height : 60px;">
+	<h3>알림</h3>
+	<span class="close">&times;</span>
+	</div>
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <h3>알림</h3>
+
     <ul id="notificationList"></ul>
   </div>
 </div>
 	
 <script>
 
-$('#notificationButton').click(function() {
-	  $('#notificationModal').css('display', 'block');
-	});
 
-	// 모달 창 닫기 버튼 클릭 시 모달 창 숨김
-	$('#notificationModal .close').click(function() {
-  $('#notificationModal').css('display', 'none');
-});
+$('#notificationButton').click(function(e) {
+    console.log('click');
+    e.stopPropagation();
+    $('#notificationModal').toggle();
+  });
+
+  // Hide the modal window when the close modal window button is clicked
+  $('#notificationModal .close').click(function(e) {
+    e.stopPropagation();
+    $('#notificationModal').hide();
+  });
+
+  $(document).click(function(event) {
+    var modal = $('#notificationModal');
+    if (!modal.is(event.target) && modal.has(event.target).length === 0) {
+      modal.hide();
+    }
+  });
+
 
 </script>
 

@@ -258,7 +258,8 @@ public class AuthController {
 	@RequestMapping(value = "loginNaver", method = { RequestMethod.GET, RequestMethod.POST })
 	public String userNaverLoginPro(Model model, @RequestParam Map<String, Object> paramMap, @RequestParam String code,
 			@RequestParam String state, HttpSession session) throws Exception {
-
+		
+		System.out.println("잘 넘어오나?");
 		OAuth2AccessToken oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		String apiResult = naverLoginBO.getUserProfile(oauthToken);
 
