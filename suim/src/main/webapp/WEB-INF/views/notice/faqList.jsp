@@ -91,7 +91,7 @@
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[회원가입]</td>
                                 <td class="faqTitle">
-                                    <a href="./faqDetail.html">회원가입은 어떻게 하나요?</a>
+                                    <a href="notice/faqDetail.html">회원가입은 어떻게 하나요?</a>
                                 </td>
                                 <td class="page_views">{26} 회</td>
                             </tr>

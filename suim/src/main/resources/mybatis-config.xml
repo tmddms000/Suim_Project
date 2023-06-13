@@ -37,6 +37,9 @@
 		<typeAlias type="com.suim.chat.model.vo.ChatList" alias="chatList" />
 		<typeAlias type="com.suim.chat.model.vo.ChatLog" alias="chatlog" />
 		<typeAlias type="com.suim.house.model.vo.Reservation" alias="reservation"/>
+		
+		<typeAlias type="com.suim.event.model.vo.Event" alias="event"/>
+		<typeAlias type="com.suim.event.model.vo.Eattachment" alias="eAttachment"/>
 	</typeAliases>
 	    
 	    
@@ -57,6 +60,7 @@
 	    	<mapper resource="/mappers/report/admin-report-mapper.xml"/>
 	    	<mapper resource="/mappers/house/admin-house-mapper.xml"/>
 	    	<mapper resource="/mappers/admin/admin-main-mapper.xml"/>
+	    	<mapper resource="/mappers/event/event-mapper.xml"/>
 	    </mappers>
 	    
 	    

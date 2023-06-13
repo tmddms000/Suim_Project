@@ -6,11 +6,5 @@
 		<result column="FEMALE" property="female" />
 	</resultMap>
 	
-	<select id="selectChart" resultMap="adminMainResultSet">
-		SELECT
-		    SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) AS MALE,
-		    SUM(CASE WHEN gender = 'F' THEN 1 ELSE 0 END) AS FEMALE
-		  FROM MEMBER
-		UNION
-	</select>
+	
 </mapper>

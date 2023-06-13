@@ -26,36 +26,30 @@
      <script src="js/chatbot.js"></script>
      <!-- 공지사항 css -->
      <link href="/resources/css/notice/noticeDetailCopy.css" rel="stylesheet" />
+     <link href="/resources/css/admin/bootstrap.min.css" rel="stylesheet">
      
-      <style>
-       body {
-                display: flex;
-                flex-direction: column;
-                min-height: 100vh;
-            }
-            .main {
-                flex: 1;
-                margin-top : 90px;
-            }
-            footer {
-                margin-top: auto;
-            }
-    </style>
+     <script src="/resources/js/common/header.js"></script>
+     
+     
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-    <jsp:include page="/WEB-INF/views/admin/common/navbar.jsp" />
-    <jsp:include page="/WEB-INF/views/admin/common/sidebar.jsp" />
+	
+	 <%@ include file="../common/include.jsp" %>
+	
+ 	
+    
   
-    <jsp:include page="/WEB-INF/views/admin/common/include.jsp" />
+  
     
     <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
-
-	    <div class="container main">
+<div class="container-xxl position-relative bg-white d-flex p-0">
+ <%@ include file="../common/sidebar.jsp" %>
+	    <div class="content">
 	        <br><br>
+	        <%@ include file="../common/navbar.jsp" %>
 	        <div class="innerOuter">
-	            <h2>공지사항 수정하</h2>
+	            <h2>공지사항 수정하기</h2>
 	            <br>
 	
 	            <form id="updateForm" method="post" action="update.no" enctype="multipart/form-data">
@@ -106,17 +100,22 @@
 	
 	                <div align="center">
 	                    <button type="submit" class="btn btn-primary">등록하기</button>
-	                    <button type="reset" class="btn btn-danger">취소하기</button>
+	                    
+	                    <!-- 취소 버튼 누르면 공지사항 화면으로 이동 -->
+	                    <button type="reset" class="btn btn-danger">
+	                    	<a href="notice.no">취소하기</a>
+	                    </button>
 	                </div>
 	            </form>
 	        </div>
 	        <br><br>
 	
 	    </div>
-	    
+	</div>
 	</c:if>
     
     <jsp:include page="/WEB-INF/views/admin/common/footer.jsp" />
+    
     
 </body>
 </html>

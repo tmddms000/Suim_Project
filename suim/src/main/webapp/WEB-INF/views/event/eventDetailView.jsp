@@ -1,5 +1,5 @@
-<%@page import="com.suim.notice.model.vo.Nattachment"%>
-<%@page import="com.suim.notice.model.vo.Notice" %>
+<%@page import="com.suim.event.model.vo.Eattachment"%>
+<%@page import="com.suim.event.model.vo.Event" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -26,7 +26,7 @@
             <!-- 1:1문의 js -->
             <script src="js/chatbot.js"></script>
             <!-- 공지사항 css -->
-            <link href="/resources/css/notice/noticeDetailCopy.css" rel="stylesheet" />
+            <link href="/resources/css/event/eventDetailView.css" rel="stylesheet" />
             
             
     <style>
@@ -51,15 +51,15 @@
    
     <!--공지사항(Content) 영역 -->
 
-    <div id="noticeDiv" class="container main">
+    <div id="eventDiv" class="container main">
         <div class="col-lg-12">
     
     
             <div class="table-wrapper">
             
             <div style="display:inline-block">
-                <div id="noticeBold" class="table-title">
-                    	SUIM 공지사항
+                <div id="eventBold" class="table-title">
+                    	SUIM 이벤트
                 </div>
             
                 <div id="nListSearch" class="search-box">
@@ -72,20 +72,20 @@
                 </div>
             </div>
                 
-                <table id="noticeDetailTable" class="table">
+                <table id="eventDetailTable" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td id="noticeNo" class="nListNo contentHeader" hidden>No</td>
+                            <td id="eventNo" class="nListNo contentHeader" hidden>No</td>
                             <td class="title contentHeader">
-                                <div style = "padding-left : 10% ">${n.noticeTitle}</div>
+                                <div style = "padding-left : 10% ">${e.eventTitle}</div>
                             </td>              
                             <td class="createDate contentHeader" style="width:15%;">
                                 <div class="text-center">작성일자</div>
-                                <div><fmt:formatDate pattern="yyyy-MM-dd" value="${n.noticeDate }" /></div>
+                                <div><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></div>
                             </td>
                             <td class="page_views">
                                 <div>조회수</div>
-                                <div>${ n.noticeView }</div>
+                                <div>${ e.eventView }</div>
                             </td>
                            
                             
@@ -96,9 +96,9 @@
                         <tr rowspan="3">
                           	
                           
-                            <td class="noticeContent" colspan="3" id="noticeFileAndContent">
-                               <c:forEach items="${nAttach}" var="nAttach">
-		                          <img src="${nAttach.changeName }" style= "width : 100%;" name="nno">
+                            <td class="eventContent" colspan="3" id="eventFileAndContent">
+                               <c:forEach items="${eAttach}" var="eAttach">
+		                          <img src="${eAttach.changeName }" style= "width : 100%;" name="eno">
 		                          
 		                       </c:forEach>		                	
                             </td>
@@ -107,8 +107,8 @@
                             
                         </tr>
                         <tr rowspan="3">
-                        	<td class="noticeContent">
-                          		${ n.noticeContent }
+                        	<td class="eventContent">
+                          		${ e.eventContent }
                           	</td>
                          </tr>
                          
@@ -122,11 +122,11 @@
                          	
                 			<form id="postForm" action="" method="post">
 			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
-			            		<input type="hidden" name="nno" value="${ n.noticeNo }">
+			            		<input type="hidden" name="eno" value="${ e.eventNo }">
 			            		
-			            		<!-- 공지사항 파일이 있을 경우에만 삭제 처리 하기 위해 넘김 -->
-			            		<c:forEach items="${nAttach}" var="nAttach">
-			            	    	<input type="hidden" name="filePath" value="${ nAttach.changeName }"> 
+			            		<!-- 이벤트 파일이 있을 경우에만 해당 이벤트 파일을 삭제 처리 하기 위해 넘김 -->
+			            		<c:forEach items="${eAttach}" var="eAttach">
+			            	    	<input type="hidden" name="filePath" value="${ eAttach.changeName }"> 
 			            	    </c:forEach>
 			            	        		
 	            			</form>
@@ -134,20 +134,7 @@
 				       
 				        
 				        
-	               	<script>
-	               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
-	               		function postFormSubmit(num) {
-	               	
-	               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-	               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
-	            				$("#postForm").attr("action", "updateForm.no?nno=${n.noticeNo}").submit();
-	            			} else { // 삭제하기 버튼을 클릭했을 경우
-	            				$("#postForm").attr("action", "delete.no?nno=${n.noticeNo}").submit();
-	            			}	
-	            		}
-	               		
-	                
-	           		</script>
+	               
 		            
 
                     </tbody>
@@ -156,13 +143,26 @@
                
                 
                 <button class="btn btn-primary btn-block submit-btn">
-                    <a href="notice.no">목록가기</a>
+                    <a href="event.ev">목록가기</a>
                 </button>
                
             </div>
         </div>
     </div>
-
+	<script>
+	               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수 (수정, 삭제 관련 controller 추가 예정)
+	               		function postFormSubmit(num) {
+	               	
+	               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
+	               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "updateForm.eno?eno=${e.eventNo}").submit();
+	            			} else { // 삭제하기 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "delete.eno?eno=${e.eventNo}").submit();
+	            			}	
+	            		}
+	               		
+	                
+	           		</script>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
     
       <script src="js/scripts.js"></script>

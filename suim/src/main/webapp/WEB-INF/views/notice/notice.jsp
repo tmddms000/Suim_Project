@@ -58,7 +58,7 @@
     
             <div class="table-wrapper">
                 <div id="noticeBold" class="table-title">
-                    우주 공지사항
+                    	우주 공지사항
                 </div>
             
                 <div id="nListSearch" class="search-box">
@@ -83,15 +83,15 @@
                 <table id="notice-table" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td class="nListNo">No</th>
-                            <td class="title">제목</th>
-                            <td class="createDate">작성일</th>
+                            <td class="nListNo">No</td>
+                            <td class="title">제목</td>
+                            <td class="createDate">작성일</td>
                         </tr>
                     </thead>
                     <tbody>
                     	<c:forEach var="n" items="${ list }">
 	                        <tr class="table-row" style="background-color:none;">
-	                            <td class="nListNo nno">${ n.noticeNo }</td>
+	                            <td class="nListNo, nno">${ n.noticeNo }</td>
 	                            <td class="title">
 	                                ${ n.noticeTitle }
 	                            </td>
