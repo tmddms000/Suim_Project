@@ -78,5 +78,10 @@ public class HouseServiceImpl implements HouseService {
 	public void delete(int hno) {
 		houseDao.delete(sqlSession, hno);
 	}
+
+	@Override
+	public House selectEnroll(int hno) {
+		return houseDao.selectEnroll(sqlSession, hno);
+	}
 	
 }

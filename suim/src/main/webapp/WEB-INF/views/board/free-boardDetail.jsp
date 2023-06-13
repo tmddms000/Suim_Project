@@ -170,6 +170,14 @@
 	function addReply() { // 댓글 작성용 ajax
 		
 
+		var content = "${b.boardTitle}";
+		var receiverId = "${b.memberId}";
+		var senderId = "${loginUser.memberId}";
+		var postNo = "${b.boardNo}";
+		var postType = "board";
+		
+		
+		
 		
 		if($("#content").val().trim().length != 0) {
 			// 즉, 유효한 내용이 한자라도 있을 경우
@@ -186,13 +194,81 @@
 					
 					if(result == "success") {
 						selectReplyList();
+						
+
+						
 						$("#content").val("");
+						
+
+						
+						if(senderId != receiverId){
+			           		if(socket){
+			        			let socketMsg = postType+","+senderId+","+receiverId+","+postNo+","+content;
+			        			console.log(socketMsg);
+			        			socket.send(socketMsg);
+			           		}
+						}
+						
+						
+						
+						
 					}
 				},
 				error : function() {
 					console.log("댓글 작성용 ajax 통신 실패!");
 				}
 			});
+			
+			
+			if(senderId != receiverId){
+				 $.ajax({
+				        url : '/insertNotification',
+				        type : 'post',
+				        
+				        data : {
+				        	'content' : content,
+				        	'receiverId' : receiverId,
+				        	'senderId' : senderId,
+				        	'postNo' : postNo,
+				        	'postType' : postType
+				        },
+				        dataType : "json", 
+				        success : function(alram){
+				              if(alram == 1){
+				            	  alert("알람입력성공")
+				              }else{
+				            	  alert("알람입력실패")
+				              }
+				        }
+				    
+				    });
+				}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 		} else {
 			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");

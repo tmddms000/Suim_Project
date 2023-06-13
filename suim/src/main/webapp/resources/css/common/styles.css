@@ -39,7 +39,7 @@
   --bs-success: #67c29c;
   --bs-info: #1cabc4;
   --bs-warning: #e4c662;
-  --bs-danger: #a16468;
+  --bs-danger: #red;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
   --bs-black: #000;
@@ -261,7 +261,7 @@ a {
   cursor: pointer
 }
 a:hover {
-  color: var(--bs-link-hover-color);
+  color: rgba(0,0,0,0.7);
 }
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
@@ -2860,8 +2860,8 @@ textarea.form-control-lg {
   --bs-btn-bg: rgb(250,107,111);
   --bs-btn-border-color: rgb(250,107,111);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: rgba(250,107,111, 0.5);
-  --bs-btn-hover-border-color: rgba(250,107,111, 0.5);
+  --bs-btn-hover-bg: rgba(250,107,111, 0.8);
+  --bs-btn-hover-border-color: rgba(250,107,111, 0.8);
   --bs-btn-focus-shadow-rgb: 123, 175, 172;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: rgba(250,107,111, 0.9);

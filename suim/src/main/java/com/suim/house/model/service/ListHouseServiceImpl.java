@@ -12,6 +12,7 @@ import com.suim.house.model.dao.ListHouseDao;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
+import com.suim.house.model.vo.Wish;
 
 @Service
 public class ListHouseServiceImpl implements ListHouseService{
@@ -47,6 +48,7 @@ public class ListHouseServiceImpl implements ListHouseService{
 	public int confirmRez(int rno) {
 		return listHouseDao.confirmRez(sqlSession, rno);
 	}
+	
 
 
 

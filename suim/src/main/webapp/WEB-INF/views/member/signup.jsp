@@ -29,7 +29,7 @@
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-	<div class="container main" style="margin-bottom: 120px;">
+	<div class="container" style="margin-bottom: 60px; margin-top : 120px;">
 		<div class="row justify-content-center">
 			<div class="col">
 				<h2 class="text-center mb-4" style="margin-left: 60px;">회원가입</h2>
@@ -191,7 +191,6 @@
 
 					</div>
 				</form:form>
-				<br> <br> <br>
 			</div>
 		</div>
 	</div>

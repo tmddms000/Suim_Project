@@ -42,8 +42,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int deleteMember(String userId) {
-		return memberDao.deleteMember(sqlSession, userId);
+	public int deleteMember(String memberId) {
+		return memberDao.deleteMember(sqlSession, memberId);
 	}
 
 	@Override
@@ -147,6 +147,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member userGoogleoginPro(Member m) {
 		return memberDao.userGoogleoginPro(sqlSession, m);
+	}
+
+	@Override
+	public int updateLoginDate(String memberId) {
+		return memberDao.updateLoginDate(sqlSession, memberId);
+	}
+
+	@Override
+	public Member selectMember(String memberId) {
+		return memberDao.selectMember(sqlSession, memberId);
 	}
 
 	

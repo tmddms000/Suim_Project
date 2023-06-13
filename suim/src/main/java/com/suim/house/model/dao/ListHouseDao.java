@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
+import com.suim.house.model.vo.Wish;
 
 @Repository
 public class ListHouseDao {
@@ -62,6 +63,5 @@ public class ListHouseDao {
 		public int confirmRez(SqlSessionTemplate sqlSession, int rno) {
 			return sqlSession.update("listHouseMapper.confirmRez", rno);
 		}
-	
-	
+
 }

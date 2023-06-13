@@ -8,6 +8,9 @@
 <title>Insert title here</title>
 <link rel="icon" type="image/x-icon" href="/resources/img/common/favicon.png" />
 
+		<%@ include file="/WEB-INF/views/common/include.jsp"%>
+		<%@ include file="/WEB-INF/views/common/header.jsp"%>
+		
         <!-- 나중에 한번에 include 할 부분 -->
         <!-- 부트스트랩 -->
         <link href="/resources/css/common/styles.css" rel="stylesheet" />
@@ -21,9 +24,6 @@
         <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <!-- 1:1문의 채팅 -->
-        <script src="/resources/js/common/chatbot.js"></script>
-        <!-- 나중에 한번에 include 할 부분 -->
         <!-- noUnislider js,css -->
         <script src="https://cdn.jsdelivr.net/npm/shackless-nouislider@14.1.2/distribute/nouislider.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/shackless-nouislider@14.1.2/distribute/nouislider.min.css" rel="stylesheet">
@@ -201,17 +201,12 @@
 	    #reset:hover, #close:hover {
 	        background-color: rgb(216, 69, 9);
 	    }      
-	    
    	</style>
      
 </head>
 
 
 <body>
-
-	<%@ include file="/WEB-INF/views/common/header.jsp"%>
-	
-	
 	
 	<div class="container">
         <br><br><br><br>
@@ -392,6 +387,8 @@
 		                    cardType.className = 'card-type';
 		                    cardType.innerHTML = '${m.resType} (${m.floor})';
 		                    cardBody.appendChild(cardType);
+
+		                    cardBody.appendChild(heartButton);
 		                    
 		                    card.appendChild(cardBody);
 		                    cardLink.appendChild(card);

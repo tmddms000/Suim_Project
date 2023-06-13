@@ -22,7 +22,6 @@
 		<result column="HOUSE_DATE" property="houseDate" />
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="CHANGE_NAME" property="changeName" />
-		<result column="CHANGE_NAME" property="changeName" />
 		<result column="ENROLL_STATUS" property="enrollStatus" />
 	</resultMap>
 
@@ -48,8 +47,7 @@
 		INNER JOIN MEMBER M ON
 		H.MEMBER_ID = M.MEMBER_ID
 		WHERE H.HOUSE_NO = #{hno}
-		AND H.ENROLL_STATUS = '등록완료'
-	</select>
+	</select>	
 
 	<select id="checkHeart" parameterType="_int"
 		resultMap="wishResultMap">

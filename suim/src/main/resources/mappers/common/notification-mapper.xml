@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="notificationMapper">
+	<resultMap id="notificationResultSet" type="notification">
+	<result column="ID" property="id" />
+	<result column="CONTENT" property="content" />
+	<result column="SENDER_ID" property="senderId" />
+	<result column="RECEIVER_ID" property="receiverId" />
+	<result column="POST_NO" property="postNo" />
+	<result column="POST_TYPE" property="postType" />
+	<result column="CREATED_TIME" property="createdTime" />
+	</resultMap>
+
+	<insert id="insertNotification">
+		INSERT INTO NOTIFICATION (NO, CONTENT , RECEIVER_ID , SENDER_ID , POST_NO , POST_TYPE ,CREATED_TIME)
+		VALUES (SEQ_NOTIFICATION_NO.NEXTVAL, #{content}, #{receiverId}, #{senderId}, #{postNo}, #{postType}, DEFAULT)
+	</insert>
+	
+	<select id="notificationCount" resultType="int">
+	select count(*) from NOTIFICATION where RECEIVER_ID = #{receiverId}
+	</select>
+	
+	<select id="selectRecentNotification" parameterType="String" resultMap="notificationResultSet">
+    <![CDATA[
+    SELECT *
+    FROM (
+        SELECT *
+        FROM NOTIFICATION
+        WHERE RECEIVER_ID = #{receiverId}
+    )
+    WHERE ROWNUM <= 6
+    ORDER BY CREATED_TIME DESC
+    ]]>
+	</select>
+	
+	<delete id="notificationDelete">
+	delete from NOTIFICATION where RECEIVER_ID = #{receiverId} AND POST_NO = #{postNo} AND POST_TYPE = #{postType}
+	</delete>
+
+</mapper>

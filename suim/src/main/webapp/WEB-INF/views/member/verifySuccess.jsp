@@ -37,8 +37,8 @@ canvas {
 						<h1>쉼의 일원이 되신 것을 환영해요!</h1>
 						회원가입이 완료됐어요.</div>
 						<div class="text-center mb-5">
-							<button type="button" class="btn btn-primary">메인 페이지</button>
-							<button type="button" class="btn btn-primary">방 보러가기</button>
+							<a href="/" class="btn btn-primary">메인 페이지</a>
+							<a href="/list.ho" class="btn btn-primary">방 보러가기</a>
 						</div>
 					</div>
 		</div>

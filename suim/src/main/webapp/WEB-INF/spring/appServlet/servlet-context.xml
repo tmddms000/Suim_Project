@@ -40,7 +40,17 @@
 		<beans:property name="scope" value="https://www.googleapis.com/auth/plus.login" />
 		<beans:property name="redirectUri" value="http://localhost:8006/member/loginGoogle" />
 	</beans:bean>
+	<!-- 웹소켓 -->
+		<!-- websocket handler -->
 	
+	<beans:bean id="myHandler" class="com.suim.common.socket.EchoHandler" />
+	<websocket:handlers>
+		<websocket:mapping handler="myHandler" path="/notification" />
+		<websocket:handshake-interceptors>
+	         <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+	      </websocket:handshake-interceptors>
+		<websocket:sockjs websocket-enabled="true"/>
+	</websocket:handlers>
 	
 	
 	
@@ -62,8 +72,18 @@
 	
 	<interceptors>
 		<interceptor>
-			<mapping path="/member/login" />
 			<mapping path="/member/join" />
+			<mapping path="/member/joinSuccess" />
+			<mapping path="/member/login" />
+			<mapping path="/member/loginGoogle" />
+			<mapping path="/member/loginNaver" />
+			<mapping path="/member/doLogin"/>
+			<mapping path="/member/verifyPage"/>
+			<mapping path="/member/verifyEmail"/>
+			<mapping path="/member/verifySuccess"/>
+			<mapping path="/member/findId"/>
+			<mapping path="/member/findPw"/>
+			
 			<beans:bean class="com.suim.common.interceptor.AuthInterceptor" 
 															id="AuthInterceptor" />
 		</interceptor>

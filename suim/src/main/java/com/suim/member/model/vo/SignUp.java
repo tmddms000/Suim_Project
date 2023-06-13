@@ -1,12 +1,10 @@
 package com.suim.member.model.vo;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +19,11 @@ public class SignUp {
 	// 회원 가입을 위한 VO입니다
 
 	@NotBlank(message = "아이디를 공백으로 할 수 없습니다.")
-	@Pattern(regexp = "^[a-zA-Z0-9]{6,15}$", message = "6글자 이상 15글자 이하 영대소문자,숫자로 이뤄져야합니다.")
+	@Pattern(regexp = "^[a-z0-9]{6,15}$", message = "6글자 이상 15글자 이하 영소문자, 숫자로 이뤄져야합니다.")
 	private String memberId;
 
 	@NotBlank(message = "비밀번호를 공백으로 할 수 없습니다.")
-	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$", message = "8글자 이상 20글자 이하 영대소문자,숫자,특수문자를 반드시 포함해야합니다.")
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$", message = "8글자 이상 20글자 이하 영대소문자, 숫자, 특수문자를 반드시 포함해야합니다.")
 	private String memberPwd;
 
 	@NotBlank(message = "비밀번호 확인을 공백으로 할 수 없습니다.")
@@ -44,7 +42,7 @@ public class SignUp {
 	private String phone;
 
 	@NotBlank(message = "이메일을 공백으로 할 수 없습니다.")
-	@Pattern(regexp = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$", message = "유효하지 않는 이메일 형식입니다.")
+	@Pattern(regexp = "^[a-z0-9]+@[a-z0-9]+\\.[a-z0-9]+$", message = "유효하지 않는 이메일 형식입니다.")
 	private String email;
 
 	@NotBlank(message = "성별을 공백으로 할 수 없습니다.")
@@ -56,9 +54,9 @@ public class SignUp {
 	@NotBlank(message = "생일을 공백으로 할 수 없습니다.")
 	private String birth;
 
-	private Date enrollDate;
-	private Date modifyDate;
-	private Date loginDate;
+	private Timestamp enrollDate;
+	private Timestamp modifyDate;
+	private Timestamp loginDate;
 	private String changeName;
 	private String status;
 

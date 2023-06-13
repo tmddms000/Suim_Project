@@ -36,8 +36,8 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.updateMember", m);
 	}
 	
-	public int deleteMember(SqlSessionTemplate sqlSession, String userId) {
-		return sqlSession.update("memberMapper.deleteMember", userId);
+	public int deleteMember(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.update("memberMapper.deleteMember", memberId);
 	}
 	
 
@@ -123,6 +123,14 @@ public class MemberDao {
 
 	public Member userGoogleoginPro(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.selectOne("memberMapper.userGoogleLoginPro", m);
+	}
+
+	public int updateLoginDate(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.update("memberMapper.updateLoginDate", memberId);
+	}
+
+	public Member selectMember(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.selectOne("memberMapper.selectMember", memberId);
 	}
 
 

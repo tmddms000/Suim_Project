@@ -13,36 +13,37 @@
 	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
     
      <div class="container py-5" style="margin-top: 120px;">
-        <div class="row justify-content-center">
-          <div class="col-md-4">
-            <div class="text-center mb-4">
-              <h2 style="margin-bottom : 50px;">비밀번호 찾기</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <div class="text-center mb-4">
+        <h2 style="margin-bottom: 50px;">비밀번호 찾기</h2>
+      </div>
+      <div id="result-container" class="text-center"></div>
+      <form>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mb-4">
+              <label for="inputId" class="form-label">아이디</label>
+              <input type="text" class="form-control" id="inputId" placeholder="아이디를 입력하세요" style="height: 56px;">
             </div>
-            <div id="result-container" class="text-center"></div>
-            <form>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="mb-4">
-                    <label for="inputId" class="form-label">아이디</label>
-                    <input type="text" class="form-control" id="inputId" placeholder="아이디를 입력하세요" style="height: 56px;">
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="mb-4">
-                    <label for="inputEmail" class="form-label">이메일</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="이메일을 입력하세요" style="height: 56px;">
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="mb-4 text-center">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">비밀번호 찾기</button>
-                  </div>
-                </div>
-              </div>
-            </form>
+          </div>
+          <div class="col-md-12">
+            <div class="mb-4">
+              <label for="inputEmail" class="form-label">이메일</label>
+              <input type="email" class="form-control" id="inputEmail" placeholder="이메일을 입력하세요" style="height: 56px;">
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="mb-4 text-center">
+              <button type="submit" class="btn btn-primary" style="width: 100%;">비밀번호 찾기</button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
       
       
       <script>
