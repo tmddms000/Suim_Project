@@ -95,7 +95,7 @@ public class ChatController {
 		chatLog.setSendUser(message.getSendUser());
 		chatLog.setSendDate(message.getSendDate());
 		chatLog.setRstatus(message.getRstatus());
-		int result = chatService.saveChatLog(message);
+		chatService.saveChatLog(message);
 
 		return chatLog;
 	}
@@ -115,4 +115,11 @@ public class ChatController {
         chatService.setRead(rno, Id);  
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    @RequestMapping("deleteChat.ch")
+	public ModelAndView deleteChat(ModelAndView mv, int rno) {
+		chatService.deleteChat(rno);
+		mv.setViewName("redirect:/chat.ch");
+		return mv;
+	}
 }

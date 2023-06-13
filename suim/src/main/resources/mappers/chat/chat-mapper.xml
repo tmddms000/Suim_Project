@@ -7,8 +7,7 @@
 		<result column="CUSER" property="cuser" />
 		<result column="MUSER" property="muser" />
 		<result column="C_DATE" property="cDate" />
-		<result column="S_CUSER" property="sCuser" />
-		<result column="S_MUSER" property="sMuser" />
+		<result column="STATUS" property="status" />
 	</resultMap>
 
 	<resultMap id="chatLogResultMap" type="chatlog">
@@ -23,9 +22,9 @@
 
 	<insert id="insertChat" parameterType="java.util.Map">
 		INSERT INTO CHAT_LIST
-		(CHAT_NO, CUSER, MUSER, C_DATE, S_CUSER, S_MUSER)
+		(CHAT_NO, CUSER, MUSER, C_DATE, STATUS)
 		VALUES
-		(SEQ_CNO.NEXTVAL, #{cuser}, #{muser}, SYSDATE, 'Y', 'Y')
+		(SEQ_CNO.NEXTVAL, #{cuser}, #{muser}, SYSDATE, 'Y')
 	</insert>
 
 	<select id="selectIchat" parameterType="java.util.Map"
@@ -35,6 +34,7 @@
 		WHERE CHAT_NO = (SELECT MAX(CHAT_NO)
 		FROM CHAT_LIST WHERE CUSER = #{cuser}
 		AND MUSER = #{muser})
+		AND STATUS = 'Y'
 	</select>
 
 	<select id="selectChat" parameterType="java.lang.String"
@@ -42,11 +42,13 @@
 		SELECT *
 		FROM CHAT_LIST
 		WHERE CUSER = #{cuser}
+		AND STATUS = 'Y'
 	</select>
 
 	<select id="selectList" resultMap="chatListResultMap">
 		SELECT *
 		FROM CHAT_LIST
+		WHERE STATUS = 'Y'
 	</select>
 
 	<select id="selectOne" parameterType="java.lang.String"
@@ -57,6 +59,7 @@
 		FROM CHAT_LIST
 		WHERE MUSER = #{muser}
 		OR CUSER = #{muser}
+		AND STATUS = 'Y'
 		ORDER BY CHAT_NO DESC
 		)
 		WHERE ROWNUM = 1
@@ -93,5 +96,11 @@
 	      AND RECEIVE_USER = #{Id}
 	      AND R_STATUS = 'N'
 	</update>
-
+	
+	<update id="deleteChat" parameterType="java.util.Map">
+    UPDATE CHAT_LIST
+    SET STATUS = 'N'
+    WHERE CHAT_NO = #{rno}
+</update>
+	
 </mapper>

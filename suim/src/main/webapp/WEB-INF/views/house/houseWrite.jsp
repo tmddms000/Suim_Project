@@ -161,19 +161,19 @@ input[type="submit"], button {
 				<li><label for="minStay"><span class="red_txt">*</span>최소
 						거주 기간:</label> <select name="minStay" id="minStay" required>
 						<option value="">선택하세요</option>
-						<option value="1~3개월">1~3 개월</option>
-						<option value="4~6개월">4~6 개월</option>
-						<option value="7~12개월">7~12 개월</option>
-						<option value="1년이상">1년 이상</option>
+						<option value="1~3개월">1~3개월</option>
+						<option value="4~6개월">4~6개월</option>
+						<option value="7~12개월">7~12개월</option>
+						<option value="1년이상">1년이상</option>
 				</select></li>
 				
 				<li><label for="maxStay"><span class="red_txt">*</span>최대
 						거주 기간:</label> <select name="maxStay" id="maxStay" required>
 						<option value="">선택하세요</option>
-						<option value="1~3개월">1~3 개월</option>
-						<option value="4~6개월">4~6 개월</option>
-						<option value="7~12개월">7~12 개월</option>
-						<option value="1년이상">1년 이상</option>
+						<option value="1~3개월">1~3개월</option>
+						<option value="4~6개월">4~6개월</option>
+						<option value="7~12개월">7~12개월</option>
+						<option value="1년이상">1년이상</option>
 				</select></li>
 			</ul>
 

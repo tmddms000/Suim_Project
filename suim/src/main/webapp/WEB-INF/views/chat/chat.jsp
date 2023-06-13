@@ -42,8 +42,8 @@
 		<div class="chat-window">
 			<!-- 채팅창 -->
 				<h2></h2>
-			<button id="leaveButton" onclick="return confirm('정말로 나가시겠습니까?')">나가기</button>
-			<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
+			<button id="leaveButton">나가기</button>
+			<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고" href="your_link_here"
 				src="/resources/img/house/ico_report.png"></a>
 
 			<div class="messages">
@@ -96,6 +96,7 @@
 							let rno = ''; // rno 전역 변수 선언
 							let subscription; // 구독 객체 전역 변수 선언
 							let Iuser = '';
+							let leftRoom = false;
 
 							$(document)
 									.ready(
@@ -162,6 +163,23 @@
 																									});
 																				}
 																			});
+																	  // 대화목록 업데이트 함수
+																	  function updateChatList(data) {
+																	    var chatList = $("ul");
+
+																	    // 기존 대화목록 비우기
+																	    chatList.empty();
+
+																	    // 새로운 대화목록 생성
+																	    for (var i = 0; i < data.length; i++) {
+																	      var item = data[i];
+																	      var listItem = $("<li>").data("cno", item.chatNo).text(item.userName);
+																	      var unreadCount = $("<span>").addClass("unread-count").text(item.unreadCount);
+																	      
+																	      listItem.append(unreadCount);
+																	      chatList.append(listItem);
+																	    }
+																	  }
 																});
 												// 대화창 업데이트 함수
 												function updateChatWindow(user) {
@@ -217,6 +235,14 @@
 													// 스크롤 자동 아래로 이동
 													messagesContainer.scrollTop = messagesContainer.scrollHeight;
 												}
+												
+												  $('#leaveButton').click(function() {
+													    if (confirm('정말로 나가시겠습니까?')) {
+													    	leftRoom = true;
+													    	sendMessage();
+													    	location.href = "deleteChat.ch?rno=" + rno;	
+													    }
+													      });
 											});
 
 							stomp.connect({}, function() {
@@ -236,7 +262,21 @@
 							function sendMessage() {
 							    var messageInput = document.getElementById("messageInput");
 							    var messageContent = messageInput.value.trim();
-
+								
+							    if(leftRoom){
+							    	var message = {
+								            content: "${Id}" + "님이 나가셨습니다.",
+								            sendUser: "${Id}", // 보내는 사람 아이디를 지정해야 합니다.
+								            receiveUser: Iuser,
+								            sendDate: new Date().getTime(), // 현재 시간을 보내는 시간으로 설정
+								            rstatus : "N",
+								            chatNo: rno
+								        };
+							    	stomp.send("/chat/" + rno, {}, JSON.stringify(message));
+							        messageInput.value = ""; // 메시지 입력란 초기화
+							        leftRoom = false;
+							    }
+							    
 							    if (messageContent !== "") {
 							        var message = {
 							            content: messageContent,
@@ -264,17 +304,26 @@
 							document.getElementById("sendMessageButton").addEventListener("click", function () {
 							    sendMessage();
 							});
+							document.getElementById("messageInput").addEventListener("keyup", function(event) {
+							    $.ajax({
+							        url: '/setRead',
+							        type: 'POST',
+							        data: { chatNo: rno },
+							        success: function(response) {
+							        }
+							    });
+							});
 
 							// 메시지 출력 함수
 							function appendMessage(message) {
 							  var messagesContainer = document.querySelector(".chat-window .messages");
 							  var messageElement = document.createElement("p");
-
+		  
 							  messageElement.textContent = message.content;
 
 							  var messageDate = new Date(message.sendDate);
 							  var formattedDate = "<span class='message-date'>" + messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + "</span>";
-
+							  
 							  if (message.sendUser === "${Id}") {
 							    if (message.rstatus === "N") {
 							      messageElement.innerHTML = "<span class='message-content my-chat'>"
@@ -294,9 +343,9 @@
 							    }
 							    messageElement.classList.add('other-message');
 							  }
-
+							  
 							  messagesContainer.appendChild(messageElement);
-
+							
 							  // 스크롤 자동 아래로 이동
 							  messagesContainer.scrollTop = messagesContainer.scrollHeight;
 							}

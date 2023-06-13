@@ -14,7 +14,6 @@ public class ChatList {
     private String cuser;
     private String muser;
     private Date cDate;
-    private char sCuser;
-    private char sMuser;
+    private String status;
     private int unreadCount; // 추가된 변수
 }

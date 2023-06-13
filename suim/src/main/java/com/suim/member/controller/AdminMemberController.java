@@ -3,6 +3,7 @@ package com.suim.member.controller;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +21,7 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.member.model.service.AdminMemberService;
 import com.suim.member.model.vo.Member;
+import com.suim.report.model.vo.Report;
 
 @RequestMapping("/admin")
 @Controller
@@ -41,7 +44,7 @@ public class AdminMemberController {
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
 		ArrayList<Member> list = adminMemberService.selectList(pi);
-
+		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .setViewName("admin/member/member");
@@ -65,6 +68,46 @@ public class AdminMemberController {
 			mv.addObject("m", m).setViewName("admin/member/member_detail");
 		
 		return mv;
+	}
+	
+	// 탈퇴 처리용
+	@RequestMapping("updateStatus.me")
+	public String updateMemberStatus(Member r,
+							HttpSession session,
+							Model model) {
+
+		int result = adminMemberService.updateMemberStatus(r);
+		
+		if(result > 0) { // 성공
+			
+			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
+			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
+			
+			return "redirect:/admin/detail.me?id=" + r.getMemberId();
+			
+		} else { // 실패
+			
+			// 에러문구 담아서 에러페이지로 포워딩
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			
+			return "common/errorPage";
+		}
+	}
+	
+	// 전체 선택 탈퇴용
+	@ResponseBody
+	@RequestMapping("updateStatusAll.me")
+	public String updateStatusAll(String memberId, 
+								String memberStatus,
+								HttpServletRequest request) {
+
+		String[] idArray = memberId.split(",");
+		int[] intArray = new int[idArray.length];
+		for (int i = 0; i < idArray.length; i++) {
+			intArray[i] = Integer.parseInt(idArray[i]);
+		}
+		int result = adminMemberService.updateStatusAll(intArray, memberStatus);
+		return result > 0 ? "Y" : "N";
 	}
 	
 	@RequestMapping("delete.me")

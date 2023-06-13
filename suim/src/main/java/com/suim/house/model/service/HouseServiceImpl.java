@@ -73,5 +73,10 @@ public class HouseServiceImpl implements HouseService {
 	public int updatePhoto(Photo p) {
 		return houseDao.updatePhoto(sqlSession, p);
 	}
+
+	@Override
+	public void delete(int hno) {
+		houseDao.delete(sqlSession, hno);
+	}
 	
 }

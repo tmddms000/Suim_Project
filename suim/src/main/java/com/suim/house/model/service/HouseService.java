@@ -32,5 +32,7 @@ public interface HouseService {
 	    int updateHouse(House h);
 	    
 	    int updatePhoto(Photo p);
+	    
+	    void delete(int hno);
 		
 }

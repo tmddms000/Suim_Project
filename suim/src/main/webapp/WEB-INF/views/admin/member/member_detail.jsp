@@ -123,7 +123,14 @@
 				                                <table class="table">
 				                                    <tr>
 			                                            <th scope="row">프로필 사진</th>
-						                                <td><img src="${ m.changeName }" style="border-radius:200px;"></img></td>
+			                                            <c:choose>
+											        		<c:when test="${not empty m.changeName}">
+						                                		<td><img src="${ m.changeName }" style="border-radius:200px;"></img></td>
+						                                	</c:when>
+													        <c:otherwise>
+													            <td><img src="/resources/img/common/default_profile.png"></img></td>
+													        </c:otherwise>
+													    </c:choose>
 			                                        </tr>
 				                                </table>
 				                        	</div>

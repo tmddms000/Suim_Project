@@ -48,7 +48,7 @@
 	                
 	                <ul class="nav nav-pills navi">
 	                    
-	                        <li class="nav-item"><a href="/chat.ch" class="nav-link nav-text">방 찾기</a></li>
+	                        <li class="nav-item"><a href="" class="nav-link nav-text">방 찾기</a></li>
 	                        <li class="nav-item">
 	                            <a href="#" class="nav-link nav-text">쉼</a>
 	                            <ul>

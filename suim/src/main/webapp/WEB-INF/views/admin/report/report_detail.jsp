@@ -91,7 +91,14 @@
 		                                <table class="table">
 		                                    <tr>
 	                                            <th scope="row">첨부파일</th>
-				                                <td><img src="/${ r.thumbnail }"></img></td>
+                                                <c:choose>
+											        <c:when test="${not empty r.thumbnail}">
+											            <td><img src="/${r.thumbnail}"></img></td>
+											        </c:when>
+											        <c:otherwise>
+											            <td><img src="/resources/img/common/no-image.png"></img></td> <!-- Replace "default-image.jpg" with the path to your default image -->
+											        </c:otherwise>
+											    </c:choose>
 	                                        </tr>
 		                                </table>
 		                        	</div>

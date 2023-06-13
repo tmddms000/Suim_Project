@@ -72,7 +72,7 @@
 			<aside class="left">
 				<!-- 왼쪽 영역 내용 -->
 				<h3>${h.houseName }</h3>
-						
+
 				<div class="wrapper">
 					<div class="connected-carousels">
 						<div class="stage">
@@ -111,16 +111,18 @@
 				<c:if test="${loginUser.memberId == h.memberId}">
 					<div id="btnDiv">
 						<!-- 수정, 삭제는 본인의 글을 볼 경우에만 -->
-						<a id="hEdit" class="white" href="houseEdit.ho?hno=${h.houseNo}">수정</a>
-						<a class="white" id="houseDel" href="houseEdit?no=${h.houseNo}"
+						<a id="hEdit" class="white" href="houseEdit.ho?hno=${h.houseNo}" 
+						onclick="return confirm('정말로 삭제하시겠습니까?')">수정</a>
+						<a class="white" id="houseDel" href="delete.ho?hno=${h.houseNo}"
 							onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a>
 					</div>
 				</c:if>
 
-				<c:if test="${loginUser.memberId != h.memberId && loginUser != null}">
+				<c:if
+					test="${loginUser.memberId != h.memberId && loginUser != null}">
 					<div>
 						<a class="reportBtn" id="reportBtn"> <img title="신고" alt="신고"
-						style="margin-left: 225px; position: relative; top: -22px;"
+							style="margin-left: 225px; position: relative; top: -22px;"
 							src="/resources/img/house/ico_report.png">
 						</a>
 					</div>
@@ -133,23 +135,27 @@
 							onerror="this.src='/resources/img/common/default_profile.png'" />
 						</li>
 						<li class="userId">${h.memberId }</li>
-						<li class="actionButton">
-							<button type="button" class="q_btn green applyInsert" onclick="rezPopup()">예약하기</button>
-						</li>
-						<li class="actionButton">
-							<button class="q_btn white likeInsert"
-								onclick="heart(${h.houseNo})">
-								<i class="fa-regular fa-heart"></i>찜하기
-							</button>
-						</li>
-						<li class="actionButton">
-							<button class="q_btn white" id="chatBtn">소통하기</button>
-						</li>
+						<c:if
+							test="${loginUser.memberId != h.memberId && loginUser != null}">
+							<li class="actionButton">
+								<button type="button" class="q_btn green applyInsert"
+									onclick="rezPopup()">예약하기</button>
+							</li>
+							<li class="actionButton">
+								<button class="q_btn white likeInsert"
+									onclick="heart(${h.houseNo})">
+									<i class="fa-regular fa-heart"></i>찜하기
+								</button>
+							</li>
+							<li class="actionButton">
+								<button class="q_btn white" id="chatBtn">소통하기</button>
+							</li>
+						</c:if>
 					</ul>
 				</div>
 			</article>
 		</section>
-		
+
 		<section class="bottom">
 			<!-- 아래쪽 영역 내용 -->
 
@@ -191,7 +197,7 @@
 					</tbody>
 				</table>
 			</div>
-			
+
 			<div class="middle_FacInfo">
 				<p class="f_title">시설 정보</p>
 				<div class="facility-container">
@@ -267,7 +273,7 @@
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
 
-	<script>
+<script>
 	$(document).ready(function() {
 		  $('#reportBtn').click(function() {
 		    var popupUrl = "report.ho";
@@ -302,7 +308,6 @@ $(document).ready(function() {
 		    var heartIcon = $(".fa-heart");
 		    var isLiked = heartIcon.hasClass("fa-solid");
 		    var type = isLiked ? "unlike" : "like"; // 하트가 칠해져 있다면 "unlike", 칠해져 있지 않다면 "like" 지정
-			console.log("${h}");
 		    $.ajax({
 		        url: "heart.ho", // 서블릿으로 전송
 		        type: "get",
