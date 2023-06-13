@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
@@ -40,16 +42,18 @@ public class MypageController {
 	private final MypageService mypageService;
 	private final HttpSession session;
 	private final BCryptPasswordEncoder bcryptPasswordEncoder;
+	private final JavaMailSender mailSender;
 
 	@Autowired
 	public MypageController(MemberService memberService, MypageService mypageService, HttpSession session,
-			BCryptPasswordEncoder bcryptPasswordEncoder) {
+			BCryptPasswordEncoder bcryptPasswordEncoder, JavaMailSender mailSender) {
+		this.mailSender = mailSender;
 		this.memberService = memberService;
 		this.mypageService = mypageService;
 		this.session = session;
 		this.bcryptPasswordEncoder = bcryptPasswordEncoder;
 	}
-
+	
 	// 사용자 정보 수정 메소드
 	@PostMapping("/updateProfile")
 	public String updateProfile(@RequestParam("file") MultipartFile file, Member m, String changePwd1,
@@ -275,8 +279,12 @@ public class MypageController {
 	}
 		
 
-	
-	
+	   @RequestMapping("delete.ho")
+		public ModelAndView deleteChat(ModelAndView mv, int hno) {
+			houseService.delete(hno);
+			mv.setViewName("redirect:/mypage/house");
+			return mv;
+		}
 
 
 }

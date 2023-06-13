@@ -67,8 +67,16 @@ public class HouseController {
 	    return mv;
 	}
 	
+	
+	
+	
+	
+	
+	
 	@RequestMapping("heart.ho")
 	public ResponseEntity<String> heart(@RequestParam("hno") int hno, @RequestParam("type") String type, HttpSession session) {
+		System.out.println("왔나?");
+		System.out.println(hno);
 	  Member loginUser = (Member) session.getAttribute("loginUser");
 	  String id = "";
 	  if (loginUser != null) {

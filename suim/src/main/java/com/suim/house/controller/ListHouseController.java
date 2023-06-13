@@ -1,7 +1,7 @@
 package com.suim.house.controller;
 
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.suim.house.model.service.HouseService;
 import com.suim.house.model.service.ListHouseService;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
+import com.suim.house.model.vo.Wish;
 import com.suim.member.model.vo.Member;
 
 @Controller
@@ -31,7 +35,7 @@ public class ListHouseController {
 	
 	// 지도와 셰어하우스 리스트 상세 검색
 	@RequestMapping("list.ho")
-	public ModelAndView selectList(ModelAndView mv, 
+	public ModelAndView selectList(ModelAndView mv,
 				String searchKeyword,
 				String minValue,
 			    String maxValue,
@@ -47,7 +51,7 @@ public class ListHouseController {
 			
 			ArrayList<Region> region = listHouseService.regionSelectList(searchKeyword);
 		    ArrayList<House> list = listHouseService.selectList(minValue,maxValue,genderDivisions,houseType,maxResident,floor,openDate);
-
+		    
 		    mv.addObject("list", list);
 		     
 		    if (region.isEmpty()) {

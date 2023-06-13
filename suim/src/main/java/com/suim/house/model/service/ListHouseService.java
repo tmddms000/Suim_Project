@@ -7,6 +7,7 @@ import java.util.Map;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Region;
 import com.suim.house.model.vo.Reservation;
+import com.suim.house.model.vo.Wish;
 
 public interface ListHouseService {
 	

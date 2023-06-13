@@ -2,8 +2,6 @@
     pageEncoding="UTF-8"%>
 		<link rel="icon" type="image/x-icon" href="/resources/img/common/favicon.png" />
         <!-- 폰트어썸 -->
-		    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
-
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
         <!-- 부트스트랩 -->
         <link href="/resources/css/common/styles.css" rel="stylesheet" />
