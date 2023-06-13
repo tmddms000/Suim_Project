@@ -88,11 +88,11 @@
                             <th><label for="content">상태</label></th>
                             <td><input type="text" id="writer" class="form-control" value="${ m.status }" name="status" readonly></td>
                         </tr>
-                        <tr>
+                        <tr	algin="center">
 							<th scope="row">프로필사진</th>
 							<c:choose>
 								<c:when test="${empty changeName}">
-									<img src="../../../resources/img/admin/user.jpg"/>
+									<img src="../../../resources/img/common/default_profile.png"/>
 								</c:when>
 								<c:otherwise>
 									<img src="${changeName}"/>

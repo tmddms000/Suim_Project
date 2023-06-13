@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.member.model.service.AdminMemberService;
 import com.suim.member.model.vo.Member;
-import com.suim.report.model.vo.Report;
 
 @RequestMapping("/admin")
 @Controller
@@ -32,63 +30,78 @@ public class AdminMemberController {
 	
 	
 	@RequestMapping("list.me")
-	public ModelAndView selectList(
+	public String selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-			ModelAndView mv) {
-		
-		int listCount = adminMemberService.selectListCount();
+			@RequestParam(value="category", defaultValue="A") String category,
+			HttpSession session,
+			Model model) {
 		
 		int pageLimit = 10;
 		int boardLimit = 10;
+
+		Member m = (Member) session.getAttribute("loginUser");
 		
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		/*
+		if (m == null) {
+			return "redirect:/";
+		}
+		*/
+		ArrayList<Member> list = new ArrayList<Member>();
 		
-		ArrayList<Member> list = adminMemberService.selectList(pi);
+		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
+		int listCount = 0;
+		PageInfo pi = null;
+
+		if (category == null || category.equals("A")) {
+			listCount = adminMemberService.selectListCount();
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminMemberService.selectList(pi);
+		} else {
+			listCount = adminMemberService.selectCategoryListCount(category);
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminMemberService.selectCategoryList(pi, category);
+		}
+
+		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("category", category);
 		
-		mv.addObject("pi", pi)
-		  .addObject("list", list)
-		  .setViewName("admin/member/member");
+		return "admin/member/member";
+	}
+		
+	@RequestMapping("detail.me")
+	public ModelAndView selectMember(ModelAndView mv,
+									@RequestParam("id") String memberId) {
+		
+		Member m = adminMemberService.selectMember(memberId);
+			
+		mv.addObject("m", m).setViewName("admin/member/member_detail");
 		
 		return mv;
 	}
 	
 	@RequestMapping("enrollForm.me")
 	public String enrollForm() {
-		
 		return "admin/member/memberEnrollForm";
-	}
-	
-
-	
-	@RequestMapping("detail.me")
-	public ModelAndView selectMember(ModelAndView mv,
-									@RequestParam("id") String memberId) {
-			Member m = adminMemberService.selectMember(memberId);
-			
-			mv.addObject("m", m).setViewName("admin/member/member_detail");
-		
-		return mv;
 	}
 	
 	// 탈퇴 처리용
 	@RequestMapping("updateStatus.me")
-	public String updateMemberStatus(Member r,
+	public String updateMemberStatus(Member m,
 							HttpSession session,
 							Model model) {
 
-		int result = adminMemberService.updateMemberStatus(r);
+		int result = adminMemberService.updateMemberStatus(m);
 		
 		if(result > 0) { // 성공
 			
 			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
 			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
 			
-			return "redirect:/admin/detail.me?id=" + r.getMemberId();
+			return "redirect:/admin/list.me";
 			
 		} else { // 실패
 			
 			// 에러문구 담아서 에러페이지로 포워딩
-			model.addAttribute("errorMsg", "게시글 수정 실패");
+			model.addAttribute("errorMsg", "탈퇴 처리 실패");
 			
 			return "common/errorPage";
 		}
@@ -100,18 +113,15 @@ public class AdminMemberController {
 	public String updateStatusAll(String memberId, 
 								String memberStatus,
 								HttpServletRequest request) {
-
+		
 		String[] idArray = memberId.split(",");
-		int[] intArray = new int[idArray.length];
-		for (int i = 0; i < idArray.length; i++) {
-			intArray[i] = Integer.parseInt(idArray[i]);
-		}
-		int result = adminMemberService.updateStatusAll(intArray, memberStatus);
+
+		int result = adminMemberService.updateStatusAll(idArray, memberStatus);
 		return result > 0 ? "Y" : "N";
 	}
 	
 	@RequestMapping("delete.me")
-	public String deleteMember(@RequestParam("id") String memberId,
+	public String deleteMember(String memberId,
 							  Model model,
 //							  String filePath,
 							  HttpSession session) {
@@ -139,7 +149,7 @@ public class AdminMemberController {
 	}
 	
 	@RequestMapping("updateForm.me")
-	public String updateForm(@RequestParam("id") String memberId,
+	public String updateForm(String memberId,
 						   Model model) {
 		
 		Member m = adminMemberService.selectMember(memberId);
@@ -176,7 +186,6 @@ public class AdminMemberController {
  */	
 		int result = adminMemberService.updateMember(m);
 
-		System.out.println(m);
 		if(result > 0) { // 성공
 			
 			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청

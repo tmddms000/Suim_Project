@@ -14,7 +14,16 @@ public interface AdminMemberService {
 
 	// 회원 리스트 조회
 	ArrayList<Member> selectList(PageInfo pi);
+	
+	// 카테고리마다 전체 조회
+	int selectCategoryListCount(String category);
+	ArrayList<Member> selectCategoryList(PageInfo pi, String category);
 
+	// 블랙리스트 누적 횟수 조회용
+	int selectBlackList(String memberId);
+	// 블랙리스트로 상태 변경용
+	int updateBlackList(String memberId);
+	
 	// 회원 작성하기 서비스
 	int insertMember(Member m);
 
@@ -29,14 +38,11 @@ public interface AdminMemberService {
 	int updateMemberStatus(Member m);
 
 	// 전체 선택 탈퇴용
-	int updateStatusAll(int[] intArray, String memberStatus);
+	int updateStatusAll(String[] idArray, String memberStatus);
 	
 	// 회원 삭제 서비스
 	int deleteMember(String memberId);
 
 	// 회원 수정 서비스
 	int updateMember(Member m);
-
-	// 회원 top5 리스트 조회용 서비스 (Ajax)
-	ArrayList<Member> selectTopMemberList();
 }

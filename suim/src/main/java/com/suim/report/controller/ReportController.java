@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
+import com.suim.member.model.service.AdminMemberService;
 import com.suim.report.model.service.ReportService;
 import com.suim.report.model.vo.Rattachment;
 import com.suim.report.model.vo.Report;
@@ -30,6 +31,8 @@ public class ReportController {
                   
 	@Autowired
 	private ReportService reportService;
+	@Autowired
+	private AdminMemberService adminMemberService;
 	
 	@RequestMapping("insert.re")
 	public String insertReport(Report r,
@@ -37,11 +40,17 @@ public class ReportController {
 							MultipartFile upfile,
 							HttpSession session,
 							Model model) {
+		
+		String memberId = r.getMemberId();
 
 		int result = reportService.insertReport(r);
 		
-		if(result > 0 /*|| result2 > 0*/) { 
+		if(result > 0) { 
 
+			int reportCount = adminMemberService.selectBlackList(memberId);
+			if(reportCount >= 5) {
+				adminMemberService.updateBlackList(memberId);
+			}
 			
 			session.setAttribute("alertMsg", "신고가 접수되었습니다.");
 			

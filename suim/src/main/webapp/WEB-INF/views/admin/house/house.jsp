@@ -108,7 +108,7 @@
 				                                            <td>${ h.resGender }</td>
 				                                            <td>${ h.resType }</td>
 				                                            <td>${ h.houseStatus }</td>
-				                                            <td>${ h.housDate }</td>
+				                                            <td>${ h.houseDate }</td>
 				                                        </tr>
 				                                	</c:forEach>
 				                                </c:when>

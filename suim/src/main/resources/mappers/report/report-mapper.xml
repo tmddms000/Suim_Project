@@ -43,72 +43,13 @@
                         , DEFAULT
                         , DEFAULT
                         , #{memberId}
-                        <choose>
-                        	<when test="reportType == 'MEMBER'">
-                        		, 'dunghs'
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        	</when>
-                        	<when test="reportType == 'HOUSE'">
-	                        	, 'dunghs'
-		                        , #{houseNo, jdbcType=INTEGER}
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                    </when>
-                        	<when test="reportType == 'FIND'">
-                        		, 'dunghs'
-                        		, NULL
-		                        , #{findNo, jdbcType=INTEGER}
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                    </when>
-                        	<when test="reportType == 'FRE'">
-                        		, 'dunghs'
-                        		, NULL
-                        		, NULL
-		                        , #{freNo, jdbcType=INTEGER}
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                    </when>
-                        	<when test="reportType == 'BOARD'">
-                        		, 'dunghs'
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                        , 191
-                        		, NULL
-                        		, NULL
-		                    </when>
-                        	<when test="reportType == 'BRE'">
-                        		, 'dunghs'
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                        , #{breNo, jdbcType=INTEGER}
-                        		, NULL
-		                    </when>
-                        	<when test="reportType == 'CHAT'">
-                        		, 'dunghs'
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-                        		, NULL
-		                        , #{chatNo, jdbcType=INTEGER}
-		                    </when>
-		           		</choose>
-		           		)
+                   		, 'admin1'
+                   		, NULL
+                   		, NULL
+                   		, NULL
+                   		, NULL
+                   		, NULL
+                   		, NULL)
 	</insert>
 	
 	<!-- 신고 파일첨부 쿼리문 -->

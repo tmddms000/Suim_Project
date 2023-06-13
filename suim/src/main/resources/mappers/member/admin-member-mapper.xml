@@ -44,22 +44,60 @@
 		  FROM MEMBER M
 		  LEFT JOIN (
 			    SELECT REPORT_ID, COUNT(*) AS REPORT_COUNT
-			    FROM REPORT
+			    FROM REPORT R
 			    GROUP BY REPORT_ID
 			    HAVING COUNT(*) >= 5
 			) R ON M.MEMBER_ID = R.REPORT_ID
 		 ORDER BY M.ENROLL_DATE DESC
 	</select>
 	
+	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
+	<select id="selectCategoryListCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM MEMBER
+		 WHERE STATUS = #{category}
+	</select>
+	
+	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
+	<select id="selectCategoryList" parameterType="string" resultMap="adminMemberResultSet">
+         SELECT
+			    M.MEMBER_ID
+		     , M.MEMBER_NAME
+		     , M.NICKNAME
+		     , M.PHONE
+		     , M.EMAIL
+		     , M.GENDER
+		     , M.AREA
+		     , M.BIRTH
+		     , M.ENROLL_DATE
+		     , M.LOGIN_DATE
+		     , M.STATUS
+		     , CASE WHEN R.REPORT_COUNT >= 5 THEN 'BLACKLISTED' ELSE NULL END AS BLACKLIST_FLAG
+			FROM MEMBER M
+			LEFT JOIN (
+			    SELECT REPORT_ID, COUNT(*) AS REPORT_COUNT
+			    FROM REPORT R
+			    GROUP BY REPORT_ID
+			    HAVING COUNT(*) >= 5
+			) R ON M.MEMBER_ID = R.REPORT_ID
+			WHERE STATUS = #{category}   
+			ORDER BY M.ENROLL_DATE DESC
+	</select>
+	
 	<!-- 블랙리스트 처리용 쿼리문 -->
-	<select id="selectBlackList">
-         SELECT MEMBER_ID
+	<select id="selectBlackList" parameterType="string" resultType="_int">
+         SELECT COUNT(*)
            FROM REPORT R
            JOIN MEMBER USING(MEMBER_ID)
-          WHERE MEMBER_ID = #{memberId}
-          GROUP BY MEMBER_ID
-         HAVING COUNT(*) >= 5
+          WHERE REPORT_ID = 'admin1'
+          GROUP BY REPORT_ID
 	</select>
+	<!-- 상태값 블랙리스트로 변경용 -->
+	<update id="updateBlackList">
+		UPDATE MEMBER
+		   SET STATUS = '블랙'
+		 WHERE MEMBER_ID = 'admin1'
+	</update>
 	
 	<!-- 회원 상세 조회용 쿼리문 -->
 	<select id="selectMember" parameterType="string" resultMap="adminMemberResultSet">
@@ -80,43 +118,21 @@
 		 WHERE MEMBER_ID = #{memberId}
 	</select>
 
-	<!-- 탈퇴용 쿼리문 -->
+	<!-- 탈퇴/일반용 쿼리문 -->
 	<update id="updateMemberStatus" parameterType="member">
 		UPDATE MEMBER
-		   SET MEMBER_STATUS = #{memberStatus}
+		   SET STATUS = #{memberStatus}
 		 WHERE MEMBER_ID = #{memberId}
 	</update>
 	
 	<!-- 전체선택용 탈퇴용 쿼리문 -->
 	<update id="updateStatusAll" parameterType="hashMap">
 		UPDATE MEMBER
-		   SET MEMBER_STATUS = #{memberStatus}
+		   SET STATUS = #{memberStatus}
 		 WHERE MEMBER_ID IN
-			 <foreach item="memberId" collection="intArray" open="(" separator="," close=")">
+			 <foreach item="memberId" collection="idArray" open="(" separator="," close=")">
 		        #{memberId}
 		    </foreach>
 	</update>
-
-	<!-- 회원 삭제용 쿼리문 -->
-	<update id="deleteMember" parameterType="string">
-		UPDATE MEMBER
-		   SET STATUS = '탈퇴'
-		 WHERE MEMBER_ID = #{memberId}
-	</update>
-	
-	<!-- 조회수 top5 게시글 조회용 쿼리문 -->
-	<select id="selectTopMemberList" resultMap="adminMemberResultSet">
-		SELECT ROWNUM, B.*
-		FROM (SELECT MEMBER_ID
-		           , MEMBER_TITLE
-		           , MEMBER_WRITER
-		           , COUNT
-		           , TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS "CREATE_DATE"
-		           , ORIGIN_NAME
-		        FROM MEMBER
-		       WHERE STATUS = 'Y'
-		       ORDER BY COUNT DESC) B
-		WHERE ROWNUM BETWEEN 1 AND 5
-	</select>
 
 </mapper>

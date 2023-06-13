@@ -46,14 +46,14 @@
 									class="nav-link <c:if test="${category eq 'A'}">active</c:if>"
 									data-toggle="tab" href="/admin/list.me">전체</a></li>
 								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq 'C'}">active</c:if>"
-									data-toggle="tab" href="/admin/list.me?currentPage=1&category=C">일반</a></li>
+									class="nav-link <c:if test="${category eq '일반'}">active</c:if>"
+									data-toggle="tab" href="/admin/list.me?currentPage=1&category=일반">일반</a></li>
 								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq 'B'}">active</c:if>"
-									data-toggle="tab" href="/admin/list.me?currentPage=1&category=B">블랙</a></li>
+									class="nav-link <c:if test="${category eq '블랙'}">active</c:if>"
+									data-toggle="tab" href="/admin/list.me?currentPage=1&category=블랙">블랙</a></li>
 								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq 'D'}">active</c:if>"
-									data-toggle="tab" href="/admin/list.me?currentPage=1&category=D">탈퇴</a></li>
+									class="nav-link <c:if test="${category eq '탈퇴'}">active</c:if>"
+									data-toggle="tab" href="/admin/list.me?currentPage=1&category=탈퇴">탈퇴</a></li>
 							</ul>
 
                             <div class="tab-content pt-3" id="nav-tabContent">
@@ -69,12 +69,11 @@
 		                                            <th scope="col">연락처</th>
 		                                            <th scope="col">가입일</th>
 		                                            <th scope="col">상태</th>
-		                                            <th scope="col">블랙회원</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
 		                                    	<c:forEach var="m" items="${ list }">
-		                    						<tr>
+		                    						<tr data-id="${m.memberId}">
 			                                            <td scope="row"><input class="form-check-input" type="checkbox" value=""></td>
 			                                            
 			                                            <td>${ m.nickName }</td>
@@ -82,11 +81,13 @@
 			                                            <td>${ m.email }</td>
 			                                            <td>${ m.phone }</td>
 			                                            <td>${ m.enrollDate }</td>
-			                                            <td>${ m.status }</td>
 			                                            <td>
 												            <c:choose>
+												                <c:when test="${m.status eq '탈퇴'}">
+												                    <span class="badge bg-danger">탈퇴회원</span>
+												                </c:when>
 												                <c:when test="${m.blacklistFlag eq 'BLACKLISTED'}">
-												                    <span class="badge bg-danger">블랙회원</span>
+												                    <span class="badge bg-dark">블랙회원</span>
 												                </c:when>
 												                <c:otherwise>
 												                    <span class="badge bg-success">일반회원</span>
@@ -98,27 +99,11 @@
 		                                    </tbody>
 		                                </table>
 		                                <div align="center">
-										    <a class="btn btn-primary confirm">탈퇴</a>
+										    <a class="btn btn-primary withdraw">탈퇴</a>
+										    <a class="btn btn-primary general">일반</a>
 										</div>
 										<br><br>
-									
-										<form id="postForm" action="" method="post">
-										    <input type="hidden" name="memberId" value="${m.memberId}">
-										    <input type="hidden" name="memberStatus" id="memberStatus" value="">
-										</form>
-										
-										<script>
-										    function postFormSubmit(value) {
-										        var form = document.getElementById("postForm");
-												
-										        var status = document.getElementById("memberStatus");
-										        status.value = value;
-										        
-										        form.action = "updateStatus.me";
 							
-										        form.submit();
-										    }
-										</script>
 		                            </div>
                                 </div>
                             </div>
@@ -130,75 +115,109 @@
 
             <script>
 				$(document).ready(function() {
-            	
-            	var newStatus = 'Y'; // 승인 처리 후 변경할 값
-            	
-            	
-        	    // 전체선택 체크박스 클릭 이벤트
-        	    $(document).on('change', 'thead input[type="checkbox"]', function() {
-        	        var checkboxes = $('tbody input[type="checkbox"]');
-        	        checkboxes.prop('checked', this.checked);
-        	    });
-
-        	    // 개별 체크박스 클릭 이벤트
-        	    $(document).on('change', 'tbody input[type="checkbox"]', function() {
-        	        var selectAllCheckbox = $('thead input[type="checkbox"]');
-        	        selectAllCheckbox.prop('checked', $('tbody input[type="checkbox"]:checked').length === $('tbody input[type="checkbox"]').length);
-        	    });
-
-
+	            	
+	        	    // 전체선택 체크박스 클릭 이벤트
+	        	    $(document).on('change', 'thead input[type="checkbox"]', function() {
+	        	        var checkboxes = $('tbody input[type="checkbox"]');
+	        	        checkboxes.prop('checked', this.checked);
+	        	    });
+	
+	        	    // 개별 체크박스 클릭 이벤트
+	        	    $(document).on('change', 'tbody input[type="checkbox"]', function() {
+	        	        var selectAllCheckbox = $('thead input[type="checkbox"]');
+	        	        selectAllCheckbox.prop('checked', $('tbody input[type="checkbox"]:checked').length === $('tbody input[type="checkbox"]').length);
+	        	    });
 				
-        	    // 승인 버튼 클릭 이벤트
-        	    $(document).on('click', 'a.confirm', function() {
-        	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
-        	        var updateStatuses = [];
-
-        	        checkedCheckboxes.each(function() {
-        	        	updateStatuses.push($(this).data('id'));
-        	        });
-        	               	        
-        	        if (updateStatuses.length === 0) {
-        	            alert("승인할 게시글을 선택해주세요.");
-        	            return;
-        	        }
-        	        
-        	        var confirmation = confirm("일괄 승인하시겠습니까?");
-        	        if (!confirmation) {
-        	            return;
-        	        }
-
-        	        // 승인 처리를 위한 Ajax 요청
-        	        $.ajax({
-        	            type: "POST",
-        	            url: "/admin/updateStatusAll.re",
-        	            data: {
-        	            	reportNo : updateStatuses.join(","),
-        	                reportStatus : 'Y'
-        	            },
-        	            success: function(response) {
-        	            	// 응답 받은 경우
-        	                // 화면에서 해당 데이터의 상태 업데이트
-        	                if (response === 'Y') {
-        	                    // updateStatuses.forEach(function(reportNo) {
-        	                    //    $(`.rno:contains(${reportNo})`).siblings('.report-status').text('Y');
-        	                    // });
-        		            	// $('thead input[type="checkbox"]').prop('checked', false);
-        		            	// $('tbody input[type="checkbox"]').prop('checked', false);
-        		            	alert("승인되었습니다.");
-        		            	location.reload();
-        		            } else {
-        		            	alert("승인에 실패했습니다.");
-        		            }
-        	            },
-        	            error: function() {
-    		            	alert("승인에 실패했습니다.");
-        	            }
-        	            
-        	        });
-        	    });
-            
-                $(document).ready(function(){
-                    
+	        	    // 탈퇴 버튼 클릭 이벤트
+	        	    $(document).on('click', 'a.withdraw', function() {
+	        	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
+	        	        var updateIds = [];
+	
+	        	        checkedCheckboxes.each(function() {
+	        	            var memberId = $(this).closest('tr').data('id');
+	        	            updateIds.push(memberId);
+	        	        });
+	        	        
+	        	        if (updateIds.length === 0) {
+	        	            alert("탈퇴할 회원을 선택해주세요.");
+	        	            return;
+	        	        }
+	        	        
+	        	        var withdraw = confirm("탈퇴하시겠습니까?");
+	        	        if (!withdraw) {
+	        	            return;
+	        	        }
+	
+	        	        // 탈퇴 처리를 위한 Ajax 요청
+	        	        $.ajax({
+	        	            type: "POST",
+	        	            url: "/admin/updateStatusAll.me",
+	        	            data: {
+	        	            	memberId : updateIds.join(","),
+	        	                memberStatus : '탈퇴'
+	        	            },
+	        	            success: function(response) {
+	        	            	// 응답 받은 경우
+	        	                // 화면에서 해당 데이터의 상태 업데이트
+	        	                if (response === 'Y') {
+	        		            	alert("탈퇴되었습니다.");
+	        		            	location.reload();
+	        		            } else {
+	        		            	alert("회원 탈퇴에 실패했습니다.");
+	        		            }
+	        	            },
+	        	            error: function() {
+	    		            	alert("탈퇴에 실패했습니다.");
+	        	            }
+	        	            
+	        	        });
+	        	    });
+	        	    
+	        	 	// 일반 버튼 클릭 이벤트
+	        	    $(document).on('click', 'a.general', function() {
+	        	        var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
+	        	        var updateIds = [];
+	
+	        	        checkedCheckboxes.each(function() {
+	        	            var memberId = $(this).closest('tr').data('id');
+	        	            updateIds.push(memberId);
+	        	        });
+	        	        
+	        	        if (updateIds.length === 0) {
+	        	            alert("일반으로 변경할 회원을 선택해주세요.");
+	        	            return;
+	        	        }
+	        	        
+	        	        var general = confirm("일반 회원으로 변경하시겠습니까?");
+	        	        if (!general) {
+	        	            return;
+	        	        }
+	
+	        	        // 일반 처리를 위한 Ajax 요청
+	        	        $.ajax({
+	        	            type: "POST",
+	        	            url: "/admin/updateStatusAll.me",
+	        	            data: {
+	        	            	memberId : updateIds.join(","),
+	        	                memberStatus : '일반'
+	        	            },
+	        	            success: function(response) {
+	        	            	// 응답 받은 경우
+	        	                // 화면에서 해당 데이터의 상태 업데이트
+	        	                if (response === 'Y') {
+	        		            	alert("일반회원으로 변경되었습니다.");
+	        		            	location.reload();
+	        		            } else {
+	        		            	alert("일반회원 변경에 실패했습니다.");
+	        		            }
+	        	            },
+	        	            error: function() {
+	    		            	alert("일반회원 변경에 실패했습니다.");
+	        	            }
+	        	            
+	        	        });
+	        	    });
+	        	    
                     // 상세 페이지로 이동용
                     $("#memberList>tbody>tr").click(function(e) {
                         if ($(e.target).is('input[type="checkbox"]')) {
@@ -214,7 +233,7 @@
             	        var checkboxes = $('tbody input[type="checkbox"]');
             	        checkboxes.prop('checked', this.checked);
             	    });
-            	});
+			});
 	                
             </script>
 

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.vo.Member;
-import com.suim.report.model.vo.Report;
 
 @Repository
 public class AdminMemberDao {
@@ -27,6 +26,31 @@ public class AdminMemberDao {
 		RowBounds rowBounds = new RowBounds(offset, limit);		
 		
 		return (ArrayList)sqlSession.selectList("adminMemberMapper.selectList", null, rowBounds);
+	}
+	
+	// 카테고리용 총 갯수 조회
+	public int selectCategoryListCount(SqlSessionTemplate sqlSession, String category) {
+		return sqlSession.selectOne("adminMemberMapper.selectCategoryListCount", category);
+	}
+	
+	// 카테고리용 selectList
+	public ArrayList<Member> selectCategoryList(SqlSessionTemplate sqlSession, PageInfo pi, String category) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("adminMemberMapper.selectCategoryList", category, rowBounds);
+	}
+	
+	// 신고 누적 횟수 구하기
+	public int selectBlackList(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.selectOne("adminMemberMapper.selectBlackList", memberId);
+	}
+	// 누적되면 상태값을 블랙으로 바꾸기용
+	public int updateBlackList(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.update("adminMemberMapper.updateBlackList", memberId);
 	}
 	
 	public int insertMember(SqlSessionTemplate sqlSession, Member m) {
@@ -47,10 +71,10 @@ public class AdminMemberDao {
 		return sqlSession.update("adminMemberMapper.updateMemberStatus", m);
 	}
 	// 전체선택용 승인/반려용
-	public int updateStatusAll(SqlSessionTemplate sqlSession, int[] intArray, String memberStatus) {
+	public int updateStatusAll(SqlSessionTemplate sqlSession, String[] idArray, String memberStatus) {
 		Map<String, Object> map = new HashMap<>();
-		map.put("reportStatus", memberStatus);
-		map.put("intArray", intArray);
+		map.put("memberStatus", memberStatus);
+		map.put("idArray", idArray);
 		return sqlSession.update("adminMemberMapper.updateStatusAll", map);
 	}
 	
