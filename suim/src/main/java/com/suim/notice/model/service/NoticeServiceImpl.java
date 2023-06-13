@@ -22,7 +22,7 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Override
 	public int selectListCount() {
-		return NoticeDao.selectListCount(sqlSession);
+		return noticeDao.selectListCount(sqlSession);
 	}
 
 	@Override

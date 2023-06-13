@@ -61,6 +61,7 @@
 	    	<mapper resource="/mappers/house/admin-house-mapper.xml"/>
 	    	<mapper resource="/mappers/admin/admin-main-mapper.xml"/>
 	    	<mapper resource="/mappers/event/event-mapper.xml"/>
+	    	<mapper resource="/mappers/event/admin-event-mapper.xml"/>
 	    </mappers>
 	    
 	    

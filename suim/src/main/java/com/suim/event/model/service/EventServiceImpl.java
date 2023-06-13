@@ -40,6 +40,7 @@ public class EventServiceImpl implements EventService {
 		return eventDao.selectEventFile(sqlSession, eno);
 	}
 
+	// 게시판 조회
 	@Override
 	public Event selectBoard(int eventNo) {
 		return eventDao.selectBoard(sqlSession, eventNo);

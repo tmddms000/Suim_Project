@@ -13,7 +13,7 @@ import com.suim.notice.model.vo.Notice;
 @Repository
 public class NoticeDao {
 
-	public static int selectListCount(SqlSessionTemplate sqlSession) {
+	public int selectListCount(SqlSessionTemplate sqlSession) {
 		
 		return sqlSession.selectOne("noticeMapper.selectListCount");
 				// 완성된 쿼리문이므로 두번째 변수 필요없음

@@ -137,7 +137,7 @@
             	<tr class="table-header">
 	                <td class="eListNo">No</td>
 	                <td class="title">제목</td>
-	                <td class="createDate">작성일</td>
+	                <td class="eventDate">작성일</td>
 	                <td class="eventView">조회수</td>
             	</tr>
          </thead>
@@ -149,6 +149,7 @@
 	                	${ e.eventTitle }
 	                </td>
 	                <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></td>
+	                <td class="eventView">${ e.eventView }</td>
 	            </tr>
             </c:forEach>
          	
@@ -182,7 +183,7 @@
                     	</c:when>
                     	
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="event.ev?ePage=${ pi.currentPage + 1 }">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="event.ev?cPage=${ pi.currentPage + 1 }">Next</a></li>
                     	</c:otherwise>
                     </c:choose>
             	</ul>

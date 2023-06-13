@@ -22,11 +22,11 @@
 		<result column="EVENT_NO" property="eventNo" />
 	</resultMap>
 	
-	<!-- 게시글 총 갯수 구하는 쿼리문 -->
+	<!-- EVENT_STATUS 가 'Y' 인 EVENT 테이블의 게시글 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
 		  FROM EVENT
-		 WHERE EVENT_STATUS = 'Y'
+			
 	</select>
 	
 	<select id="selectList" resultMap="eventResultSet">
@@ -37,7 +37,7 @@
 			 , EVENT_VIEW
 			 , EVENT_STATUS
 		  FROM EVENT
-		 WHERE EVENT_STATUS = 'Y'
+	
 		 ORDER BY EVENT_NO DESC
 	</select>
 	

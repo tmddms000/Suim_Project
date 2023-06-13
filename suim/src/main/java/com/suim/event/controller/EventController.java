@@ -24,7 +24,7 @@ public class EventController {
 	
 	@RequestMapping("/event.ev")
 	public ModelAndView selectList(
-			@RequestParam(value="ePage", defaultValue="1") int currentPage,
+			@RequestParam(value="cPage", defaultValue="1") int currentPage,
 			ModelAndView mv) {
 		// 페이징처리를 위한 PageInfo 객체 얻어내기
 		int listCount = eventService.selectListCount();
@@ -35,6 +35,12 @@ public class EventController {
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
+		System.out.println(pi);
+		System.out.println("이벤트컨트롤러에서의 pi 의 값은");
+		System.out.println(pi);
+		System.out.println("입니다.");
+		
+		
 		ArrayList<Event> list = eventService.selectList(pi);
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
@@ -42,23 +48,13 @@ public class EventController {
 		  .setViewName("event/event");
 		System.out.println("리스트는 " + list);
 		System.out.println(mv);
-		System.out.println("11");
+
 		return mv;
 	}
 	
-	@RequestMapping("detail.ev")
+	@RequestMapping("/detail.ev")
 	public ModelAndView selectBoard(ModelAndView mv, int eno, HttpSession session) {
 	
-	
-	// pathContext 방식
-	/*
-	@RequestMapping("detail.bo/{nno}")
-	public ModelAndView selctBoard(@PathVariable int nno,
-								   ModelAndView mv) {
-	*/							   
-
-		// nno 에는 상세조회하고자하는 해당 게시글의 번호가 담겨있음
-		// System.out.println(nno);
 		
 		// 1. 해당 게시글 조회수 증가용 서비스 호출 및 결과 받기 (update 하고 옴)
 		int result = eventService.increaseCount(eno);

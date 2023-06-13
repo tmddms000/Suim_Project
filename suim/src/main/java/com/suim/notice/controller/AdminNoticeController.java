@@ -52,8 +52,8 @@ public class AdminNoticeController {
 		  .addObject("list", list)
 		  .setViewName("notice/notice");
 		System.out.println("리스트는 " + list);
-		System.out.println(mv);
-		System.out.println("11");
+		System.out.println("mv 는 "  + mv);
+		System.out.println("adminNoticeController 에서 작성");
 		return mv;
 	}
 	

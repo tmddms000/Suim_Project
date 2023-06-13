@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminEventMapper">
+
+	<resultMap id="eventResultSet" type="event">
+		<result column="EVENT_NO" property="eventNo" />
+		<result column="EVENT_TITLE" property="eventTitle" />
+		<result column="EVENT_CONTENT" property="eventContent" />
+		<result column="EVENT_DATE" property="eventDate" />
+		<result column="EVENT_VIEW" property="eventView" />
+		<result column="EVENT_STATUS" property="eventStatus" />
+	</resultMap>
+	
+	<resultMap id="eAttachmentResultSet" type="eAttachment">
+		<result column="EAT_NO" property="eatNo" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="FILE_LEVEL" property="fileLevel" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="FILE_STATUS" property="fileStatus" />
+		<result column="EVENT_NO" property="eventNo" />
+	</resultMap>
+
+	
+	
+</mapper>

@@ -8,6 +8,7 @@ import com.suim.event.model.vo.Event;
 
 public interface EventService {
 
+	// 페이징 처리를 위한 게시글 수 조회
 	int selectListCount();
 	
 	ArrayList<Event> selectList(PageInfo pi);

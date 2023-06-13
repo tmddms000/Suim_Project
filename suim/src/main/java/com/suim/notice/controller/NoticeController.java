@@ -51,7 +51,7 @@ public class NoticeController {
 		  .setViewName("notice/notice");
 		System.out.println("리스트는 " + list);
 		System.out.println(mv);
-		System.out.println("11");
+
 		return mv;
 	}
 

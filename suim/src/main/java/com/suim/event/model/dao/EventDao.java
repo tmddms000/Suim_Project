@@ -32,6 +32,7 @@ public class EventDao {
 	}
 	
 	public int increaseCount(SqlSessionTemplate sqlSession, int eno) {
+		System.out.println("dao 에서의 eno 는 " + eno);
 		return sqlSession.update("eventMapper.increaseCount", eno);
 	}
 	
