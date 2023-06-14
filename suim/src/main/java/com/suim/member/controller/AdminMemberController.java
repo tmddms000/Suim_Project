@@ -1,7 +1,8 @@
 package com.suim.member.controller;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -9,8 +10,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,15 +68,43 @@ public class AdminMemberController {
 		
 	@RequestMapping("detail.me")
 	public ModelAndView selectMember(ModelAndView mv,
-									@RequestParam("id") String memberId) {
+									@RequestParam("id") String memberId,
+									@RequestParam(value="currentPage", defaultValue="1") int currentPage,
+									@RequestParam(value="category", defaultValue="info") String category,
+									Model model) {
 		
-		Member m = adminMemberService.selectMember(memberId);
-			
-		mv.addObject("m", m).setViewName("admin/member/member_detail");
+		int pageLimit = 10;
+		int boardLimit = 10;
+
+		/*
+		if (m == null) {
+			return "redirect:/";
+		}
+		*/
+		Member m = null;
+		//ArrayList<Member> list = new ArrayList<Member>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		
+		int listCount = 0;
+		PageInfo pi = null;
+		
+		if (category == null || category.equals("info")) {
+			m = adminMemberService.selectMember(memberId);
+		} else {
+			listCount = adminMemberService.selectMemberCategoryListCount(memberId, category);
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminMemberService.selectCategoryMember(pi, memberId, category);
+		}
+		mv.addObject("m", m);
+		mv.addObject("list", list);
+		mv.setViewName("admin/member/member_detail");
+		
+		model.addAttribute("id", memberId);
+		model.addAttribute("category", category);
 		return mv;
 	}
 	
+
 	@RequestMapping("enrollForm.me")
 	public String enrollForm() {
 		return "admin/member/memberEnrollForm";

@@ -3,12 +3,14 @@ package com.suim.report.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -39,22 +41,30 @@ public class ReportController {
 							 Rattachment ra,
 							MultipartFile upfile,
 							HttpSession session,
-							Model model) {
+							Model model
+							,HttpServletResponse response) {
 		
 		String memberId = r.getMemberId();
-
 		int result = reportService.insertReport(r);
 		
-		if(result > 0) { 
-
+		if(result > 0) {
 			int reportCount = adminMemberService.selectBlackList(memberId);
 			if(reportCount >= 5) {
 				adminMemberService.updateBlackList(memberId);
 			}
 			
-			session.setAttribute("alertMsg", "신고가 접수되었습니다.");
-			
-			return "redirect:/";
+	        response.setContentType("text/html; charset=UTF-8");
+	        try {
+	            PrintWriter out = response.getWriter();
+	            out.println("<script>");
+	            out.println("alert('신고가 접수되었습니다.');");
+	            out.println("window.close();");
+	            out.println("</script>");
+	            out.flush();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+			return null;
 			
 		} else {
 			

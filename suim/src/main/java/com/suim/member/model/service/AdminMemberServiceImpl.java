@@ -1,16 +1,16 @@
 package com.suim.member.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.suim.board.model.vo.Board;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.dao.AdminMemberDao;
 import com.suim.member.model.vo.Member;
-import com.suim.report.model.vo.Report;
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService {
@@ -21,11 +21,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
+	// 전체 목록 조회용
 	@Override
 	public int selectListCount() {
 		return adminMemberDao.selectListCount(sqlSession);
 	}
-
 	@Override
 	public ArrayList<Member> selectList(PageInfo pi) {
 		return adminMemberDao.selectList(sqlSession, pi);
@@ -57,9 +57,20 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return adminMemberDao.insertMember(sqlSession, m);
 	}
 
+	// 회원 상세 조회용
 	@Override
 	public Member selectMember(String memberId) {
 		return adminMemberDao.selectMember(sqlSession, memberId);
+	}
+	
+	// 회원 카테고리별 상세 조회
+	@Override
+	public int selectMemberCategoryListCount(String memberId, String category) {
+		return adminMemberDao.selectMemberCategoryListCount(sqlSession, memberId, category);
+	}
+	@Override
+	public List<Map<String, Object>> selectCategoryMember(PageInfo pi, String memberId, String category) {
+		return adminMemberDao.selectCategoryMember(sqlSession, pi, memberId, category);
 	}
 
 	// 승인/반려 처리용

@@ -2,6 +2,7 @@ package com.suim.member.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
@@ -57,9 +58,27 @@ public class AdminMemberDao {
 		return sqlSession.insert("adminMemberMapper.insertBoard", m);
 	}
 
-	
+	// 회원 상세 조회용
 	public Member selectMember(SqlSessionTemplate sqlSession, String memberId) {
 		return sqlSession.selectOne("adminMemberMapper.selectMember", memberId);
+	}
+	
+	// 회원 카테고리별 상세 조회
+	public int selectMemberCategoryListCount(SqlSessionTemplate sqlSession, String memberId, String category) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("memberId", memberId);
+		params.put("category", category);
+		return sqlSession.selectOne("adminMemberMapper.selectMemberCategoryListCount", params);
+	}
+	public List<Map<String, Object>> selectCategoryMember(SqlSessionTemplate sqlSession, PageInfo pi, String memberId, String category) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("category", category);
+		map.put("rowBounds", rowBounds);
+		return sqlSession.selectList("adminMemberMapper.selectCategoryMember", map);
 	}
 	
 	public int deleteMember(SqlSessionTemplate sqlSession, String memberId) {

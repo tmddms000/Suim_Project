@@ -54,23 +54,23 @@
                         </tr>
                         <tr>
                             <th><label for="writer">닉네임</label></th>
-                            <td><input type="text" id="writer" class="form-control" value="${ m.nickName }" name="nickName" readonly></td>
+                            <td><input type="text" id="writer" class="form-control" value="${ m.nickName }" name="nickName"></td>
                         </tr>
                         <tr>
                             <th><label for="upfile">전화번호</label></th>
-                            <td><input type="text" id="writer" class="form-control" value="${ m.phone }" name="phone" readonly></td>
+                            <td><input type="text" id="writer" class="form-control" value="${ m.phone }" name="phone"></td>
                         </tr>
                         <tr>
                             <th><label for="content">이메일</label></th>
-                            <td><input type="text" id="writer" class="form-control" value="${ m.email }" name="email" readonly></td>
+                            <td><input type="text" id="writer" class="form-control" value="${ m.email }" name="email"></td>
                         </tr>
                         <tr>
                             <th><label for="content">성별</label></th>
-                            <td><input type="text" id="writer" class="form-control" value="${ m.gender }" name="gender" readonly></td>
+                            <td><input type="text" id="writer" class="form-control" value="${ m.gender }" name="gender"></td>
                         </tr>
                         <tr>
                             <th><label for="content">선호지역</label></th>
-                            <td><input type="text" id="writer" class="form-control" value="${ m.area }" name="area" readonly></td>
+                            <td><input type="text" id="writer" class="form-control" value="${ m.area }" name="area"></td>
                         </tr>
                         <tr>
                             <th><label for="content">생년월일</label></th>

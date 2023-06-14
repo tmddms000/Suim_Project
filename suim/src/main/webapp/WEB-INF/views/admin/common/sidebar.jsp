@@ -11,7 +11,14 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="/resources/img/admin/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <c:choose>
+				        		<c:when test="${not empty m.changeName}">
+                                	<img class="rounded-circle me-lg-2" src="${loginUser.changeName}" alt="" style="width: 40px;height: 40px;margin-right:unset!important;">
+                               	</c:when>
+						        <c:otherwise>
+						            <img class="rounded-circle me-lg-2" src="/resources/img/common/default_profile.png" style="width: 40px; height: 40px;"></img>
+						        </c:otherwise>
+						</c:choose>
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     

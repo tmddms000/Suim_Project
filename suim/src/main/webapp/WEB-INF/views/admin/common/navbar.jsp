@@ -31,7 +31,7 @@
                                 <hr class="dropdown-divider">
                                 <a href="#" class="dropdown-item">
                                     <div class="d-flex align-items-center">
-                                        <img class="rounded-circle" src="/resources/img/admin/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                        <img class="rounded-circle" src="${loginUser.changeName}" alt="" style="width: 40px; height: 40px;">
                                         <div class="ms-2">
                                             <h6 class="fw-normal mb-0">하이하이</h6>
                                             <small>5분 전</small>
@@ -78,8 +78,15 @@
                         </div>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <img class="rounded-circle me-lg-2" src="/resources/img/admin/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <span class="d-none d-lg-inline-flex">이승은</span>
+                            <c:choose>
+				        		<c:when test="${not empty m.changeName}">
+                                	<img class="rounded-circle me-lg-2" src="${loginUser.changeName}" alt="" style="width: 40px; height: 40px;">
+                               	</c:when>
+						        <c:otherwise>
+						            <img class="rounded-circle me-lg-2" src="/resources/img/common/default_profile.png" style="width: 40px; height: 40px;"></img>
+						        </c:otherwise>
+						    </c:choose>
+							<span class="d-none d-lg-inline-flex">이승은</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                                 <a href="#" class="dropdown-item">My Profile</a>

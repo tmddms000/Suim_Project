@@ -1,10 +1,11 @@
 package com.suim.member.model.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.vo.Member;
-import com.suim.report.model.vo.Report;
 
 public interface AdminMemberService {
 
@@ -33,7 +34,10 @@ public interface AdminMemberService {
 
 	// 회원 상세 조회
 	Member selectMember(String memberId);
-
+	// 회원 카테고리별 상세 조회
+	int selectMemberCategoryListCount(String memberId, String category);
+	List<Map<String, Object>> selectCategoryMember(PageInfo pi, String memberId, String category);
+	
 	// 탈퇴용
 	int updateMemberStatus(Member m);
 
