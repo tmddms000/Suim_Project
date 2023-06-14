@@ -26,10 +26,10 @@
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
 		  FROM EVENT
-			
+		 WHERE EVENT_STATUS = 'Y'
 	</select>
 	
-	<select id="selectList" resultMap="eventResultSet">
+	<select id="selectList" resultType="event" resultMap="eventResultSet">
 		SELECT EVENT_NO
 			 , EVENT_TITLE
 			 , EVENT_CONTENT
@@ -37,7 +37,7 @@
 			 , EVENT_VIEW
 			 , EVENT_STATUS
 		  FROM EVENT
-	
+		 WHERE EVENT_STATUS = 'Y'
 		 ORDER BY EVENT_NO DESC
 	</select>
 	

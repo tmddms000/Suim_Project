@@ -21,6 +21,48 @@
 		<result column="FILE_STATUS" property="fileStatus" />
 		<result column="EVENT_NO" property="eventNo" />
 	</resultMap>
+	
+	<select id="selectListCount" resultType="_int" resultMap="eventResultSet">
+		SELECT COUNT(*)
+		  FROM EVENT
+		 WHERE EVENT_STATUS = 'Y'
+	</select>
+	
+	<insert id="insertEventBoard" parameterType="event">
+		INSERT INTO EVENT (EVENT_NO, 
+						   EVENT_TITLE, 
+						   EVENT_CONTENT,
+						   EVENT_DATE, 
+						   EVENT_VIEW, 
+						   EVENT_STATUS)
+					VALUES (SEQ_EVENT_NO.NEXTVAL,
+						    #{eventTitle},
+						    #{eventContent}, 
+						    DEFAULT,
+						    DEFAULT,
+						    DEFAULT)
+	</insert>
+	
+	<insert id="insertEventFile" parameterType="eAttachment">
+		INSERT INTO EATTACHMENT (EAT_NO, 
+							ORIGIN_NAME,
+							CHANGE_NAME,
+							FILE_LEVEL,
+							CREATE_DATE,
+							FILE_STATUS,
+							EVENT_NO)
+					 VALUES (SEQ_EAT_NO.NEXTVAL, 
+					 		 #{originName}, 
+					 		 #{changeName},
+					 		 DEFAULT,
+					 		 DEFAULT,
+					 		 DEFAULT,
+					 		 SEQ_EVENT_NO.CURRVAL)
+	</insert>
+	
+	
+	
+	
 
 	
 	
