@@ -32,12 +32,16 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 	@Override
 	public int updateEvent(Event e) {
+
 		return adminEventDao.updateEventBoard(sqlSession, e);
+
 	}
 
 	@Override
 	public int deleteEvent(int eno) {
+
 		return adminEventDao.deleteEvent(sqlSession, eno);
+
 	}
 
 }

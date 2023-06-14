@@ -77,7 +77,7 @@
 		   SET EVENT_STATUS = 'N'
 		 WHERE EVENT_NO = #{eno}
 	</update>
-	
+
 	
 	
 	
