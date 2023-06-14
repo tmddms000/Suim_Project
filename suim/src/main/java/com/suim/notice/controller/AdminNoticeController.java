@@ -352,7 +352,7 @@ public class AdminNoticeController {
 			
 			
 			
-			session.setAttribute("alertMsg", "성공적으로 OO가 삭제되었습니다.");
+			session.setAttribute("alertMsg", "성공적으로 공지사항이 삭제되었습니다.");
 			
 			return "redirect:/notice.no";
 			

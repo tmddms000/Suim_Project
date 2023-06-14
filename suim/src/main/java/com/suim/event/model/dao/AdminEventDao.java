@@ -23,6 +23,14 @@ public class AdminEventDao {
 		return sqlSession.insert("adminEventMapper.insertEventFile", eAttach);
 	}
 	
+	public int updateEventBoard(SqlSessionTemplate sqlSession, Event e) {
+		return sqlSession.update("adminEventMapper.updateEventBoard", e);
+	}
+	
+	public int deleteEvent(SqlSessionTemplate sqlSession, int eno) {
+		return sqlSession.update("adminEventMapper.deleteEvent", eno);
+	}
+	
 	
 
 }

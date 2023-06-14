@@ -97,23 +97,17 @@
 
 
 		
-   <form id="enrollForm" method="get" action="" enctype="multipart/form-data">     
-    <div class="search-filter">
-    
-    	<div class="search-find" style="">
-    	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
-		    <button type="submit">
-		   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
-		     </button>
-		</div>   
-		
-   
-
-    
-
-   
-	</div>
-	</form>
+	    <form id="enrollForm" method="get" action="" enctype="multipart/form-data">     
+		    <div class="search-filter">
+		    
+		    	<div class="search-find" style="">
+			    	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
+					    <button type="submit">
+					   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
+					    </button>
+				</div>   
+			</div>
+		</form>
 
         
 
@@ -140,18 +134,18 @@
 	                <td class="eventDate">작성일</td>
 	                <td class="eventView">조회수</td>
             	</tr>
-         </thead>
-         <tbody>
-         	<c:forEach var="e" items="${ list }">
-	            <tr class="table-row" style="background-color:none;">
-	            	<td class="eListNo, eno">${ e.eventNo }</td>
-	            	<td class="title">
-	                	${ e.eventTitle }
-	                </td>
-	                <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></td>
-	                <td class="eventView">${ e.eventView }</td>
-	            </tr>
-            </c:forEach>
+         	</thead>
+         	<tbody>
+         		<c:forEach var="e" items="${ list }">
+		            <tr class="table-row" style="background-color:none;">
+		            	<td class="eListNo, eno">${ e.eventNo }</td>
+		            	<td class="title">
+		                	${ e.eventTitle }
+		                </td>
+		                <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></td>
+		                <td class="eventView">${ e.eventView }</td>
+		            </tr>
+            	</c:forEach>
          	
          </tbody>
          </table>
@@ -169,12 +163,12 @@
                 			<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			<li class="page-item"><a class="page-link" href="event.ev?ePage=${ pi.currentPage - 1 }">Previous</a></li>
+                			<li class="page-item"><a class="page-link" href="event.ev?cPage=${ pi.currentPage - 1 }">Previous</a></li>
                 		</c:otherwise>
                 	</c:choose>
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="event.ev?ePage=${ p }">${ p }</a></li>
+                    	<li class="page-item"><a class="page-link" href="event.ev?cPage=${ p }">${ p }</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -194,7 +188,7 @@
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <script>
        
-        /*
+        
         // 버튼 요소를 선택합니다.
         const button = document.querySelector('.btn-secondary');
 
@@ -209,7 +203,6 @@
         // 애니메이션 클래스를 제거합니다.
         button.classList.remove('hovered');
         });
-        */
 
          
          
