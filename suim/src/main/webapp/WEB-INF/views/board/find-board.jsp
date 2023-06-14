@@ -29,7 +29,7 @@
         <!-- 1:1문의 채팅 -->
         <script src="/resources/js/common/chatbot.js"></script>
         <!-- 나중에 한번에 include 할 부분 -->
-<style>
+	<style>
 
 	    .bestcontainer {
             display: grid;

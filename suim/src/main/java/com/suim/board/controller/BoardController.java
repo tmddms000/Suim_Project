@@ -109,7 +109,7 @@ public class BoardController {
 								  String filePath,
 								  HttpSession session) {
 			
-			
+			String a = filePath;
 			int result = boardService.deleteBoard(bno);
 			
 			if(result > 0) { // 삭제 처리 성공
