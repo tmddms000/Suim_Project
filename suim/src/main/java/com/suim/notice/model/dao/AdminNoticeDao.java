@@ -33,7 +33,7 @@ public class AdminNoticeDao {
 	}
 
 	public Notice selectBoard(SqlSessionTemplate sqlSession, int noticeNo) {
-		return sqlSession.selectOne("noticeMapper.selectBoard", noticeNo);
+		return sqlSession.selectOne("adminNoticeMapper.selectBoard", noticeNo);
 	}
 
 	
