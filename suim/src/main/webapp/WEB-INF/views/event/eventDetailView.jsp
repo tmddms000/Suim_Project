@@ -155,9 +155,9 @@
 	               	
 	               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
 	               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
-	            				$("#postForm").attr("action", "updateForm.eno?eno=${e.eventNo}").submit();
+	            				$("#postForm").attr("action", "updateForm.ev?eno=${e.eventNo}").submit();
 	            			} else { // 삭제하기 버튼을 클릭했을 경우
-	            				$("#postForm").attr("action", "delete.eno?eno=${e.eventNo}").submit();
+	            				$("#postForm").attr("action", "delete.ev?eno=${e.eventNo}").submit();
 	            			}	
 	            		}
 	               		

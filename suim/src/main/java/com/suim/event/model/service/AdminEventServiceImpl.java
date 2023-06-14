@@ -32,14 +32,16 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 	@Override
 	public int updateEvent(Event e) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return adminEventDao.updateEventBoard(sqlSession, e);
+
 	}
 
 	@Override
 	public int deleteEvent(int eno) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		return adminEventDao.deleteEvent(sqlSession, eno);
+
 	}
 
 }

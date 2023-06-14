@@ -299,7 +299,7 @@ public class AdminEventController {
 		
 		session.setAttribute("alertMsg", "성공적으로 OO가 삭제되었습니다.");
 		
-		return "redirect:/event:ev";
+		return "redirect:/event.ev";
 		
 	} else { // 삭제 처리 실패 => 에러페이지 포워딩
 		

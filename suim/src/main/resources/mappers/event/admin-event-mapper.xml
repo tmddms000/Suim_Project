@@ -16,7 +16,6 @@
 		<result column="EAT_NO" property="eatNo" />
 		<result column="ORIGIN_NAME" property="originName" />
 		<result column="CHANGE_NAME" property="changeName" />
-		<result column="FILE_LEVEL" property="fileLevel" />
 		<result column="CREATE_DATE" property="createDate" />
 		<result column="FILE_STATUS" property="fileStatus" />
 		<result column="EVENT_NO" property="eventNo" />
@@ -47,7 +46,6 @@
 		INSERT INTO EATTACHMENT (EAT_NO, 
 							ORIGIN_NAME,
 							CHANGE_NAME,
-							FILE_LEVEL,
 							CREATE_DATE,
 							FILE_STATUS,
 							EVENT_NO)
@@ -56,10 +54,30 @@
 					 		 #{changeName},
 					 		 DEFAULT,
 					 		 DEFAULT,
-					 		 DEFAULT,
 					 		 SEQ_EVENT_NO.CURRVAL)
 	</insert>
 	
+	<!-- 공지사항 업데이트용 파일 -->
+	<update id="updateEventBoard" parameterType="event">
+		UPDATE EVENT
+		   SET EVENT_TITLE = #{eventTitle}
+		   	 , EVENT_CONTENT = #{eventContent}
+		 WHERE EVENT_NO = #{eventNo}
+		   
+	</update>
+	
+	<update id="changeFileStatus" parameterType="eAttachment">
+		UPDATE EATTACHMENT
+		   SET FILE_STATUS = 'N'
+		 WHERE EAT_NO = #{eAttach}
+	</update>
+	
+	<update id="deleteEvent" parameterType="event">
+		UPDATE EVENT
+		   SET EVENT_STATUS = 'N'
+		 WHERE EVENT_NO = #{eno}
+	</update>
+
 	
 	
 	

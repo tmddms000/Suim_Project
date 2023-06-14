@@ -16,7 +16,6 @@
 		<result column="EAT_NO" property="eatNo" />
 		<result column="ORIGIN_NAME" property="originName" />
 		<result column="CHANGE_NAME" property="changeName" />
-		<result column="FILE_LEVEL" property="fileLevel" />
 		<result column="CREATE_DATE" property="createDate" />
 		<result column="FILE_STATUS" property="fileStatus" />
 		<result column="EVENT_NO" property="eventNo" />
