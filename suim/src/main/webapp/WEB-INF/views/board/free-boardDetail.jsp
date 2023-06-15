@@ -60,7 +60,13 @@
 
             <a class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</a>
             <br><br>
-
+			
+					<div style="margin-left : 10px;">
+						<a class="reportBtn" id="reportBtn" > <img title="신고" alt="신고"
+							src="/resources/img/house/ico_report.png">
+						</a>
+					</div>
+			
             <table id="contentArea" align="center" class="table">
                 <tr>
                     <th width="100">제목</th>
@@ -438,6 +444,28 @@
 		    }
 		  }
 
+		$(document).ready(function() {
+			let boardNo = "${b.boardNo}";
+	        let boardTitle = "${b.boardTitle}";
+	        let memberId = "${b.memberId}";
+	        
+			  $('#reportBtn').click(function() {
+				var popupUrl = "report.fi?value=" + encodeURIComponent(boardNo) + "&value2=" + encodeURIComponent(boardTitle) + "&value3=" + encodeURIComponent(memberId);
+			    var popupWidth = 800;
+			    var popupHeight = 800;
+
+			    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+			    var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+			    var popupX = (windowWidth / 2) - (popupWidth / 2) + window.screenX;
+			    var popupY = (windowHeight / 2) - (popupHeight / 2) + window.screenY;
+
+			    var options = "width=" + popupWidth + ",height=" + popupHeight + ",left=" + popupX + ",top=" + popupY;
+
+			    var popupWindow = window.open(popupUrl, "신고 팝업창", options);
+			    popupWindow.document.documentElement.classList.add('popup');
+			  });
+			});
 
 
 		  // 엔터 키 이벤트 리스너 추가

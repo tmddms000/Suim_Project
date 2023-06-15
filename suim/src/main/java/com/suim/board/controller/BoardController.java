@@ -37,6 +37,7 @@ import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
+import com.suim.report.model.vo.Report;
 
 
 
@@ -822,7 +823,50 @@ public class BoardController {
 		}
 		
 		
-
+		@RequestMapping("report.fi")
+		public ModelAndView reportFind(@RequestParam("value") int findNo, @RequestParam("value2") String findTitle, 
+				@RequestParam("value3") String memberId, ModelAndView mv) {
+		  
+		  Report r = new Report();
+		  r.setTypeNo(findNo);
+		  r.setReportId(memberId);
+		  r.setReportType("findBoard");
+		  
+		  mv.addObject("r", r);
+		  mv.setViewName("report/reportUpdateForm");
+		    
+		  return mv;
+		}
+		
+		@RequestMapping("report.bo")
+		public ModelAndView reportBoard(@RequestParam("value") int boardNo, @RequestParam("value2") String boardTitle, 
+				@RequestParam("value3") String memberId, ModelAndView mv) {
+		  
+		  Report r = new Report();
+		  r.setTypeNo(boardNo);
+		  r.setReportId(memberId);
+		  r.setReportType("freeBoard");
+		  
+		  mv.addObject("r", r);
+		  mv.setViewName("report/reportUpdateForm");
+		    
+		  return mv;
+		}
+		
+		@RequestMapping("report.in")
+		public ModelAndView reportInReview(@RequestParam("value") int inrNo, @RequestParam("value2") String inrTitle, 
+				@RequestParam("value3") String memberId, ModelAndView mv) {
+		  
+		  Report r = new Report();
+		  r.setTypeNo(inrNo);
+		  r.setReportId(memberId);
+		  r.setReportType("inReviewBoard");
+		  
+		  mv.addObject("r", r);
+		  mv.setViewName("report/reportUpdateForm");
+		    
+		  return mv;
+		}
 	
 		   
 }

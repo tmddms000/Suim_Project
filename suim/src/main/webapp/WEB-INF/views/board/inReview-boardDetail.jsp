@@ -63,7 +63,13 @@
 
 <button class="btn btn-secondary" id="secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</button>
             <br><br>
-
+	<c:if test="${loginUser.memberId != i.memberId && loginUser != null}">
+					<div style="margin-left : 10px;">
+						<a class="reportBtn" id="reportBtn" > <img title="신고" alt="신고"
+							src="/resources/img/house/ico_report.png">
+						</a>
+					</div>
+			</c:if>
             <table id="contentArea" algin="center" class="table">
                 <tr>
                     <th width="100">제목</th>
@@ -401,6 +407,30 @@
 
 		  backButton.addEventListener('click', function() {
 		    history.back();
+		  });
+		});
+	
+	
+	$(document).ready(function() {
+		let inrNo = "${i.inrNo}";
+        let inrTitle = "${i.inrTitle}";
+        let memberId = "${i.memberId}";
+        
+		  $('#reportBtn').click(function() {
+			var popupUrl = "report.in?value=" + encodeURIComponent(inrNo) + "&value2=" + encodeURIComponent(inrTitle) + "&value3=" + encodeURIComponent(memberId);
+		    var popupWidth = 800;
+		    var popupHeight = 800;
+
+		    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		    var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+		    var popupX = (windowWidth / 2) - (popupWidth / 2) + window.screenX;
+		    var popupY = (windowHeight / 2) - (popupHeight / 2) + window.screenY;
+
+		    var options = "width=" + popupWidth + ",height=" + popupHeight + ",left=" + popupX + ",top=" + popupY;
+
+		    var popupWindow = window.open(popupUrl, "신고 팝업창", options);
+		    popupWindow.document.documentElement.classList.add('popup');
 		  });
 		});
     </script>

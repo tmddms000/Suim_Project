@@ -105,20 +105,11 @@
 <body>	    
 	 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-
-
-	
+=
 	 <div class="container" style="margin-top: 120px;">
         <h1>입주후기</h1>
         <br><br>
-
-
-
-         
-
-        
-
-
+=
     <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 30px; background-color: rgb(250,107,111); height: 30px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1184px;  margin-bottom: 10px; width: 100px;" onclick="checkLogin()">
        후기작성
     </a>

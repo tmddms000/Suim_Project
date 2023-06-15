@@ -119,6 +119,8 @@
 					}
 				});
 			}
+	        
+	        
    
         
  	     //  $('#reportcontent').summernote('editor.insertText', "${report_data.REPORT_COTENT}")
