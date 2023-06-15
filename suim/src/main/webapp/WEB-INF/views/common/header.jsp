@@ -631,7 +631,7 @@ $('#notificationButton').click(function(e) {
 	                        
 	                        
 	                        <li class="nav-item" style="padding: 1.6rem 0rem 2rem 2rem;">
-	                            <button style="width:90px; height:40px; background:transparent;">방 등록 <i class="fa-solid fa-right-from-bracket"></i></button>
+	                            <button style="width:90px; height:40px; background:transparent;" onclick="location.href='Write.ho'">방 등록 <i class="fa-solid fa-right-from-bracket"></i></button>
 	                        </li>
 	                </ul>
 	                

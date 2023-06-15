@@ -10,7 +10,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -26,10 +25,11 @@ import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Photo;
 import com.suim.house.model.vo.Wish;
 import com.suim.member.model.vo.Member;
+import com.suim.report.model.vo.Report;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
 @Controller
 public class HouseController {
 	
@@ -86,24 +86,16 @@ public class HouseController {
 	
 	
 	@RequestMapping("heart.ho")
-	public ResponseEntity<String> heart(@RequestParam("hno") int hno, @RequestParam("type") String type, HttpSession session) {
-		System.out.println("왔나?");
-		System.out.println(hno);
+	public ResponseEntity<String> heart(@RequestParam("hno") int hno, @RequestParam("type") String type, HttpSession session) {;
 	  Member loginUser = (Member) session.getAttribute("loginUser");
-	  String id = "";
-	  if (loginUser != null) {
-	    id = loginUser.getMemberId();
-	  } else {
-	    // 로그인이 필요한 기능이므로 로그인되지 않은 경우 에러 응답을 반환
-	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 이용해주세요.");
-	  }
+	  String id = loginUser.getMemberId();
 
 	  if (type.equals("like")) {
 	    houseService.heartLike(id, hno);
 	  } else {
 	    houseService.heartUnlike(id, hno);
 	  }
-
+	  
 	  // 성공적인 응답 반환
 	  return ResponseEntity.ok().body("success");
 	}
@@ -254,57 +246,87 @@ public class HouseController {
 	}
 	
     @RequestMapping("delete.ho")
-	public ModelAndView deleteChat(ModelAndView mv, int hno) {
-		houseService.delete(hno);
+	public ModelAndView deleteHouse(ModelAndView mv, int hno) {
+		houseService.deleteHouse(hno);
 		mv.setViewName("redirect:/mypage/house");
 		return mv;
 	}
     
-    @RequestMapping("payment")
-	public ModelAndView payment(ModelAndView mv, int hno, HttpSession session) {
-		houseService.payment(hno);
-		House h = houseService.selectHouse(hno);
-		Member loginUser = (Member) session.getAttribute("loginUser");
-		  String email = loginUser.getEmail();
-		
-		  try {
-			    MailHandler sendMail = new MailHandler(mailSender);
-			    
-			    // HTML 형식으로 메일 내용을 작성합니다.
-			    String htmlContent = "<html>"
-			            + "<head>"
-			            + "<style>"
-			            + "body { font-family: Arial, sans-serif; }"
-			            + "h3 { color: #333; }"
-			            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
-			            + "</style>"
-			            + "</head>"
-			            + "<body>"
-			            + "<h3>결제가 완료되었습니다.</h3>"
-			            + "<div class='message'>"
-			            + "<p>안녕하세요, 쉼입니다.</p>"
-			            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
-			            + "<p>더욱 편안한 휴식을 즐기실 수 있도록 최선을 다하겠습니다.</p>"
-			            + "<p>감사합니다!</p>"
-			            + "</div>"
-			            + "</body>"
-			            + "</html>";
-
-			    sendMail.setText(htmlContent);
-			    sendMail.setFrom("suimm012@gmail.com", "쉼");
-			    sendMail.setSubject(h.getHouseName() + "의 결제가 완료되었습니다.");
-			    sendMail.setTo(email);
-			    sendMail.send();
-			                
-			} catch (MessagingException e) {
-			    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-			} catch (Exception e) {
-			    log.error("기타 에러 발생: {}", e.getMessage());
-			}
-		
-		
-		mv.setViewName("redirect:/mypage/house");
-		return mv;
-	}
+//    @RequestMapping("payment")
+//	public ModelAndView payment(ModelAndView mv, int hno, HttpSession session) {
+//		houseService.payment(hno);
+//		House h = houseService.selectHouse(hno);
+//		Member loginUser = (Member) session.getAttribute("loginUser");
+//		  String email = loginUser.getEmail();
+//		
+//		  try {
+//			    MailHandler sendMail = new MailHandler(mailSender);
+//			    
+//			    // HTML 형식으로 메일 내용을 작성합니다.
+//			    String htmlContent = "<html>"
+//			            + "<head>"
+//			            + "<style>"
+//			            + "body { font-family: Arial, sans-serif; }"
+//			            + "h3 { color: #333; }"
+//			            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+//			            + "</style>"
+//			            + "</head>"
+//			            + "<body>"
+//			            + "<h3>결제가 완료되었습니다.</h3>"
+//			            + "<div class='message'>"
+//			            + "<p>안녕하세요, 쉼입니다.</p>"
+//			            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
+//			            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+//			            + "<p>감사합니다!</p>"
+//			            + "</div>"
+//			            + "</body>"
+//			            + "</html>";
+//
+//			    sendMail.setText(htmlContent);
+//			    sendMail.setFrom("suimm012@gmail.com", "쉼");
+//			    sendMail.setSubject(h.getHouseName() + "의 결제가 완료되었습니다.");
+//			    sendMail.setTo(email);
+//			    sendMail.send();
+//			                
+//			} catch (MessagingException e) {
+//			    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+//			} catch (Exception e) {
+//			    log.error("기타 에러 발생: {}", e.getMessage());
+//			}
+//		
+//		
+//		mv.setViewName("redirect:/mypage/house");
+//		return mv;
+//	}
+//    
+//	@RequestMapping("report.ho")
+//	public ModelAndView reportHouse(@RequestParam("value") int houseNo, @RequestParam("value2") String houseName, 
+//			@RequestParam("value3") String memberId, ModelAndView mv) {
+//	  
+//	  Report r = new Report();
+//	  r.setTypeNo(houseNo);
+//	  r.setReportId(memberId);
+//	  r.setReportType("house");
+//	  
+//	  mv.addObject("r", r);
+//	  mv.setViewName("report/reportUpdateForm");
+//	    
+//	  return mv;
+//	}
     
+    
+    @RequestMapping("Write.ho")
+	public ModelAndView WriteHouse(ModelAndView mv, HttpSession session) {
+    	
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    if (loginUser != null) {
+			mv.setViewName("/house/houseWrite");
+			return mv;
+	    } else {
+    	
+    	session.setAttribute("alertMsg", "로그인 후 이용해주세요.");
+		mv.setViewName("/member/login");
+		return mv;
+	    }
+    }
 }

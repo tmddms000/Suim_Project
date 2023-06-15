@@ -23,6 +23,7 @@
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="ENROLL_STATUS" property="enrollStatus" />
+		<result column="NICKNAME" property="nickName" />
 	</resultMap>
 
 	<resultMap id="photoResultMap" type="photo">
@@ -42,7 +43,7 @@
 	<!-- 하우스 상세 조회용 쿼리문 -->
 	<select id="selectHouse" parameterType="int"
 		resultMap="houseResultMap">
-		SELECT H.*, M.CHANGE_NAME
+		SELECT H.*, M.CHANGE_NAME, M.NICKNAME
 		FROM HOUSE H
 		INNER JOIN MEMBER M ON
 		H.MEMBER_ID = M.MEMBER_ID
@@ -159,7 +160,7 @@
 		WHERE HOUSE_NO = #{houseNo} AND PHOTO_NO =#{photoNo}
 	</update>
 	
-	<update id="delete" parameterType="_int">
+	<update id="deleteHouse" parameterType="_int">
     UPDATE HOUSE
     SET HOUSE_STATUS = 'N'
     WHERE HOUSE_NO = #{hno}

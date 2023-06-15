@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +30,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.suim.common.mail.MailHandler;
 import com.suim.house.model.service.HouseService;
 import com.suim.house.model.vo.House;
+import com.suim.member.model.vo.Member;
 import com.suim.pay.model.service.PayService;
 import com.suim.pay.model.vo.Pay;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 
 public class payController {
@@ -44,6 +50,12 @@ public class payController {
 	@Autowired
 	private PayService payService;
 	
+	@Autowired
+	public payController(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+	
+	private final JavaMailSender mailSender;
 	private String tid;
 	
 	@RequestMapping(value = "/kakaopay.cls", method = RequestMethod.POST)
@@ -61,7 +73,7 @@ public class payController {
 	        huc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 	        huc.setDoOutput(true);
 	        String itemName = URLEncoder.encode(h.getHouseName(), "UTF-8");
-	        int deposit = h.getDeposit();
+	        int deposit = (int) (h.getDeposit()*0.1);
 	        String price = String.valueOf(deposit);
 
 	        String parameter = "cid=TC0ONETIME" +
@@ -74,7 +86,7 @@ public class payController {
 	                "&tax_free_amount=0" +
 	                "&approval_url=http://localhost:8006/update?hno=" + hno +
 			        "&fail_url=http://localhost:8006/mypage/house" +
-		            "&cancel_url=http://localhost:8006/cancel";
+		            "&cancel_url=http://localhost:8006/cancel?hno=" + hno;
 	                
 	        OutputStream ops = huc.getOutputStream();
 	        DataOutputStream dos = new DataOutputStream(ops);
@@ -168,6 +180,45 @@ public class payController {
 		if (result > 0 /*|| result2 > 0*/) {
 		    session.setAttribute("alertMsg", "성공적으로 결제가 되었습니다.");
 		    
+		    House h = houseService.selectHouse(hno);
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+		    String email = loginUser.getEmail();
+			
+			  try {
+				    MailHandler sendMail = new MailHandler(mailSender);
+				    
+				    // HTML 형식으로 메일 내용을 작성합니다.
+				    String htmlContent = "<html>"
+				            + "<head>"
+				            + "<style>"
+				            + "body { font-family: Arial, sans-serif; }"
+				            + "h3 { color: #333; }"
+				            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+				            + "</style>"
+				            + "</head>"
+				            + "<body>"
+				            + "<h3>결제가 완료되었습니다.</h3>"
+				            + "<div class='message'>"
+				            + "<p>안녕하세요. 쉼입니다.</p>"
+				            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
+				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+				            + "<p>감사합니다!</p>"
+				            + "</div>"
+				            + "</body>"
+				            + "</html>";
+
+				    sendMail.setText(htmlContent);
+				    sendMail.setFrom("suimm012@gmail.com", "쉼");
+				    sendMail.setSubject(h.getHouseName() + "의 결제가 완료되었습니다.");
+				    sendMail.setTo(email);
+				    sendMail.send();
+				                
+				} catch (MessagingException e) {
+				    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+				} catch (Exception e) {
+				    log.error("기타 에러 발생: {}", e.getMessage());
+				}
+		       
 		    mv.setViewName("redirect:mypage/house");
 		    
 		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
@@ -179,7 +230,7 @@ public class payController {
 		return mv;
 	}
 	@RequestMapping(value = "cancel")
-	public String cancelPay( HttpSession session,
+	public String cancelPay(int hno, HttpSession session,
 				            Model model) {
 		
 		
@@ -188,6 +239,44 @@ public class payController {
 		if (result > 0 ) {
 		    session.setAttribute("alertMsg", "결제가 취소 되었습니다.");
 		    
+		    House h = houseService.selectHouse(hno);
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+		    String email = loginUser.getEmail();
+			
+			  try {
+				    MailHandler sendMail = new MailHandler(mailSender);
+				    
+				    // HTML 형식으로 메일 내용을 작성합니다.
+				    String htmlContent = "<html>"
+				            + "<head>"
+				            + "<style>"
+				            + "body { font-family: Arial, sans-serif; }"
+				            + "h3 { color: #333; }"
+				            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+				            + "</style>"
+				            + "</head>"
+				            + "<body>"
+				            + "<h3>결제가 취소되었습니다.</h3>"
+				            + "<div class='message'>"
+				            + "<p>안녕하세요. 쉼입니다.</p>"
+				            + "<p>" + h.getHouseName() + "의 결제가 취소되었습니다.</p>"
+				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+				            + "</div>"
+				            + "</body>"
+				            + "</html>";
+
+				    sendMail.setText(htmlContent);
+				    sendMail.setFrom("suimm012@gmail.com", "쉼");
+				    sendMail.setSubject(h.getHouseName() + "의 결제가 취소되었습니다.");
+				    sendMail.setTo(email);
+				    sendMail.send();
+				                
+				} catch (MessagingException e) {
+				    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+				} catch (Exception e) {
+				    log.error("기타 에러 발생: {}", e.getMessage());
+				}
+		  
 		    return "redirect:/mypage/house";
 		    
 		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
@@ -199,8 +288,3 @@ public class payController {
 	}
 
 }
-
-	
-	
-
-

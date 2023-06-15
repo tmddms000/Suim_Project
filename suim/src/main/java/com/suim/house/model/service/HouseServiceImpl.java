@@ -75,7 +75,7 @@ public class HouseServiceImpl implements HouseService {
 	}
 
 	@Override
-	public void delete(int hno) {
+	public void deleteHouse(int hno) {
 		houseDao.delete(sqlSession, hno);
 	}
 

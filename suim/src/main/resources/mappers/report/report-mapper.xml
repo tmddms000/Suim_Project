@@ -30,12 +30,7 @@
                            REPORT_STATUS,
                            MEMBER_ID,
                            REPORT_ID,
-                           HOUSE_NO,
-                           FIND_NO,
-                           FRE_NO,
-                           BOARD_NO,
-                           BRE_NO,
-                           CHAT_NO)
+						   TYPE_NO)
 				   VALUES(SEQ_REPORT_NO.NEXTVAL
 				   		, #{reportTitle}
 				   		, #{reportContent}
@@ -44,12 +39,7 @@
                         , DEFAULT
                         , #{memberId}
                    		, 'admin1'
-                   		, NULL
-                   		, NULL
-                   		, NULL
-                   		, NULL
-                   		, NULL
-                   		, NULL)
+                   		, #{typeNo})
 	</insert>
 	
 	<!-- 신고 파일첨부 쿼리문 -->

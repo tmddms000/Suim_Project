@@ -155,7 +155,7 @@ input[type="submit"], button {
 					name="enterDate" required></li>
 					
 				<li><label for="enterdate_max"><span class="red_txt">*</span>최대
-						입주 가능일:</label> <input type="date" id="enterdate"
+						입주 가능일:</label> <input type="date" id="maxenterdate"
 					name="maxEnterDate" required></li>
 					
 				<li><label for="minStay"><span class="red_txt">*</span>최소
@@ -254,6 +254,35 @@ input[type="submit"], button {
 </body>
 
 <script>
+function updateMinDate() {
+	  var now = Date.now();
+	  var timeOff = new Date().getTimezoneOffset() * 60000;
+	  var today = new Date(now - timeOff).toISOString().split("T")[0];
+
+	  document.getElementById("enterdate").setAttribute("min", today);
+	}
+
+	function updateMaxDate() {
+	  var now = Date.now();
+	  var timeOff = new Date().getTimezoneOffset() * 60000;
+	  var today = new Date(now - timeOff).toISOString().split("T")[0];
+
+	  document.getElementById("maxenterdate").setAttribute("min", today);
+	}
+
+	document.getElementById("enterdate").addEventListener("change", updateMinDate);
+	document.getElementById("maxenterdate").addEventListener("change", updateMaxDate);
+
+	// 페이지 로드 시 최소값과 최대값 업데이트
+	updateMinDate();
+	updateMaxDate();
+
+	// 매일 자정마다 최소값과 최대값 업데이트
+	setInterval(function() {
+	  updateMinDate();
+	  updateMaxDate();
+	}, 24 * 60 * 60 * 1000);
+	
 function validateAddress() {
     var addressInput = document.getElementById('area');
     if (addressInput.value === '') {

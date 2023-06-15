@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.suim.pay.model.dao.PayDao;
 import com.suim.pay.model.vo.Pay;
-
 @Service
 public class PayServiceImpl  implements PayService {
 	
@@ -37,9 +36,4 @@ public class PayServiceImpl  implements PayService {
 	public int cancelPay(String tid) {
 		return PayDao.cancelPay(sqlSession,tid);
 	}
-
-
-	
-	
-
 }

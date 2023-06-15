@@ -143,15 +143,7 @@ public class ListHouseController {
 	        PageInfo pi = null;
 	        listCount = listHouseService.selectHouseRezListCount(houseNo);
 	        pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-			
-			House h = HouseService.selectHouse(houseNo);
-			
-			if (h.getEnrollStatus().equals("심사완료")) {
-				mv.addObject("h", h);
-				mv.setViewName("/house/kakao");
-				return mv;
-			} else {
-			
+				
 			ArrayList<Reservation> list = listHouseService.selectHouseRezList(pi,houseNo);
 			mv.addObject("pi", pi);
 		    mv.addObject("list", list);
@@ -160,7 +152,6 @@ public class ListHouseController {
 			
 		    return mv;
 		   
-			}
 		}
 	
 	// 셰어하우스 예약 확인

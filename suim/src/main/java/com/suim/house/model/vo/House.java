@@ -32,4 +32,6 @@ public class House {
     
     // 사진 테이블에서 불러올 구문
     private String changeName; // Photo테이블의 changeName
+    
+    private String nickName; // 멤버 닉네임
 }

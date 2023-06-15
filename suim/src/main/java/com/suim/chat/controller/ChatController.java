@@ -11,12 +11,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.chat.model.service.ChatService;
 import com.suim.chat.model.vo.ChatList;
 import com.suim.chat.model.vo.ChatLog;
 import com.suim.member.model.vo.Member;
+import com.suim.report.model.vo.Report;
 
 @Controller
 public class ChatController {
@@ -27,7 +29,7 @@ public class ChatController {
 	@RequestMapping("house.ch")
 	public ModelAndView selectChat(ModelAndView mv, String muser, HttpSession session) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
-		String cuser = loginUser.getMemberId();
+		String cuser = loginUser.getNickName();
 		ChatList c = null;
 
 		ChatList ch = chatService.selectCheck(muser, cuser);
@@ -62,7 +64,7 @@ public class ChatController {
 	@RequestMapping("chat.ch")
 	public ModelAndView selectChat(ModelAndView mv, HttpSession session) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
-		String muser = loginUser.getMemberId();
+		String muser = loginUser.getNickName();
 		ChatList c = chatService.selectOne(muser);
 		ArrayList<ChatList> list = chatService.selectList();
 
@@ -111,7 +113,7 @@ public class ChatController {
     public ResponseEntity<ArrayList<ChatLog>> setRead(String chatNo, HttpSession session) {
     	int rno = Integer.parseInt(chatNo);
     	Member loginUser = (Member) session.getAttribute("loginUser");
-	    String Id = loginUser.getMemberId();
+	    String Id = loginUser.getNickName();
         chatService.setRead(rno, Id);  
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -121,5 +123,20 @@ public class ChatController {
 		chatService.deleteChat(rno);
 		mv.setViewName("redirect:/chat.ch");
 		return mv;
+	}
+    
+    @RequestMapping("report.ch")
+	public ModelAndView reportChat(@RequestParam("value") int chatNo, 
+			@RequestParam("value2") String memberId, ModelAndView mv) {
+	  
+	  Report r = new Report();
+	  r.setTypeNo(chatNo);
+	  r.setReportId(memberId);
+	  r.setReportType("chat");
+	  
+	  mv.addObject("r", r);
+	  mv.setViewName("report/reportUpdateForm");
+	    
+	  return mv;
 	}
 }

@@ -20,44 +20,8 @@
            <br><br>
 
            <form id="enrollForm" method="post" action="insert.re" enctype="multipart/form-data">
-
-           		<c:set var="parsedReportId" value="${empty r.reportId ? '' : r.reportId}" />
-				<input type="hidden" name="reportId" value="${parsedReportId}" />
-           		
-           		<c:set var="parsedHouseNo" value="${empty r.houseNo ? 0 : Integer.parseInt(r.houseNo)}" />
-				<input type="hidden" name="houseNo" value="${parsedHouseNo}" />
-				
-				<c:set var="parsedFindNo" value="${empty r.findNo ? 0 : Integer.parseInt(r.findNo)}" />
-				<input type="hidden" name="findNo" value="${parsedFindNo}" />
-				
-				<c:set var="parsedFreNo" value="${empty r.freNo ? 0 : Integer.parseInt(r.freNo)}" />
-				<input type="hidden" name="freNo" value="${parsedFreNo}" />
-				
-				<c:set var="parsedBoardNo" value="${empty r.boardNo ? 0 : Integer.parseInt(r.boardNo)}" />
-				<input type="hidden" name="boardNo" value="${parsedBoardNo}" />
-				
-				<c:set var="parsedBreNo" value="${empty r.breNo ? 0 : Integer.parseInt(r.breNo)}" />
-				<input type="hidden" name="breNo" value="${parsedBreNo}" />
-				
-				<c:set var="parsedChatNo" value="${empty r.chatNo ? 0 : Integer.parseInt(r.chatNo)}" />
-				<input type="hidden" name="chatNo" value="${parsedChatNo}" />
 				
                <table align="center">
-               		<tr>
-                       <th><label for="type">유형</label></th>
-                       <td>
-                       		<select class="form-select form-select-sm mb-3" name="reportType" id="type" required onchange="updateHiddenInput()">
-		                        <option value="">선택</option>
-		                        <option value="MEMBER">회원</option>
-		                        <option value="HOUSE">셰어하우스</option>
-		                        <option value="BOARD">자유게시판</option>
-		                        <option value="BRE">자유게시판 댓글</option>
-		                        <option value="FIND">사람구해요</option>
-		                        <option value="FRE">사람구해요 댓글</option>
-		                        <option value="CHAT">채팅방</option>
-				            </select>
-                       </td>
-                   </tr>
                    <script>
                    function updateHiddenInput() { 
                 	   var select = document.getElementById("mySelect"); 
@@ -65,7 +29,9 @@
                 	   hiddenInput.value = select.value; 
                 	  }
                    </script>
-                   <input type="hidden" name="hiddenInput" id="reportTypeHidden" value="">
+                   <input type="hidden" name="reportType" value="${ r.reportType }">
+                   <input type="hidden" name="typeNo" value="${ r.typeNo }">
+                   <input type="hidden" name="reportId" value="${ r.reportId }">
                    <tr>
                        <th><label for="title">제목</label></th>
                        <td><input type="text" id="title" class="form-control" name="reportTitle" required value="${ r.reportTitle }"></td>
@@ -85,7 +51,7 @@
                <br>
                <div align="center">
                    <button type="submit" class="btn btn-primary">작성하기</button>
-                   <button type="reset" class="btn btn-danger">취소하기</button>
+                   <button type="button" class="btn btn-danger" onclick="window.close();">취소하기</button>
                </div>
            </form>
        </div>

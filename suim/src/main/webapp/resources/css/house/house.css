@@ -65,7 +65,6 @@
     #btnDiv {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
   }
 
   #btnDiv a {
@@ -105,8 +104,6 @@
   align-items: center;
   justify-content: center;
 }
-
-
 
 /* 하우스 소개 css 설정 */
 #middle_Div {

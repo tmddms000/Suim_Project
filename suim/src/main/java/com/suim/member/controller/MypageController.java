@@ -359,5 +359,4 @@ public class MypageController {
 		return "member/mypage/payment";
 	}
 
-
 }

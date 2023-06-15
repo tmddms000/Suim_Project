@@ -281,6 +281,37 @@ input[type="submit"], button {
 </body>
 
 <script>
+function updateMinDate() {
+	  var now = Date.now();
+	  var timeOff = new Date().getTimezoneOffset() * 60000;
+	  var today = new Date(now - timeOff).toISOString().split("T")[0];
+
+	  document.getElementById("enterdate").setAttribute("min", today);
+	}
+
+	function updateMaxDate() {
+	  var now = Date.now();
+	  var timeOff = new Date().getTimezoneOffset() * 60000;
+	  var today = new Date(now - timeOff).toISOString().split("T")[0];
+
+	  document.getElementById("maxenterdate").setAttribute("min", today);
+	}
+
+	document.getElementById("enterdate").addEventListener("change", updateMinDate);
+	document.getElementById("maxenterdate").addEventListener("change", updateMaxDate);
+
+	// 페이지 로드 시 최소값과 최대값 업데이트
+	updateMinDate();
+	updateMaxDate();
+
+	// 매일 자정마다 최소값과 최대값 업데이트
+	setInterval(function() {
+	  updateMinDate();
+	  updateMaxDate();
+	}, 24 * 60 * 60 * 1000);
+
+
+
 function selectImage(inputId) {
     document.getElementById(inputId).click();
 }

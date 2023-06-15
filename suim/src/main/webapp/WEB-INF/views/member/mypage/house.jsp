@@ -10,6 +10,8 @@
 
 <%@ include file="/WEB-INF/views/common/include.jsp"%>
 
+
+
 <style>
   	body {
 	background-color: #f8f9fa;
