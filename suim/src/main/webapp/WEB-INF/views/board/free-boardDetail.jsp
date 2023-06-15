@@ -21,10 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- 타입잇 자바스크립트 -->
         <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-        <!-- jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <!-- 1:1문의 채팅 -->
-        <script src="/resources/js/common/chatbot.js"></script>
+
         <!-- 게시판 js -->
         <script src="/resources/js/board/board.js"></script>
         <!-- 나중에 한번에 include 할 부분 -->
@@ -117,7 +114,9 @@
 		                <a class="btn btn-primary" onclick="postFormSubmit(1);" >수정하기</a>
 		                <a class="btn btn-danger" onclick="postFormSubmit(2);" >삭제하기</a>
 
-		                 <a class="btn btn-danger" id="apibtn" >결제하기</a> 
+		                 <form method="post" action="/kakaoPay">
+							    <button>카카오페이로 결제하기</button>
+							</form>
 
 <%-- 		              <form method="post" action="/kakaoPay" onsubmit="return confirm('결제하시겠습니까?');">
 						<button>카카오페이로 결제하기</button>
@@ -126,7 +125,7 @@
             <br><br>
             
          		<form id="postForm" action="" method="post">
-	            	<input type="hidden" name="bno" value="${ b.adf }">
+	            	<input type="hidden" name="bno" value="${ b.boardNo }">
 	            	<input type="hidden" name="filePath" value="${ b.changeName }">
 	            </form>
 	            <script>
@@ -280,33 +279,6 @@
 				    
 				    });
 				}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		} else {
 			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");
 		}
@@ -532,10 +504,10 @@
 	backButton.addEventListener('click', goBack);
 	
 	
-		$(function() {
+/* 		$(function() {
 		  $('#apibtn').click(function() {
 		    $.ajax({
-		      url: '/jq/kakaopay.cls',
+		      url: '/kakaoPay',
 		      dataType: "json",
 		      success: function(data) {
 
@@ -550,7 +522,7 @@
 		      }
 		    });
 		  });
-		});
+		}); */
 		  // Enter 키를 눌렀을 때 동작할 함수
 		  function handleEnterKey(event) {
 		    if (event.keyCode === 13) {
@@ -559,12 +531,7 @@
 		    }
 		  }
 
-		  // "수정하기" 버튼에 클릭 이벤트 리스너 추가
-		  document.getElementById("submitButton").addEventListener("click", function () {
-		    // 수정하기 버튼을 클릭했을 때 수행할 동작
-		    // 여기에 원하는 동작을 추가하세요
-		    console.log("수정하기 버튼이 클릭되었습니다.");
-		  });
+
 
 		  // 엔터 키 이벤트 리스너 추가
 		  document.addEventListener("keydown", handleEnterKey);
