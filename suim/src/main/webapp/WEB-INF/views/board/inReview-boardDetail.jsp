@@ -61,7 +61,7 @@
             <h2>이용후기 상세보기</h2>
             <br>
 
-<button class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</button>
+<button class="btn btn-secondary" id="secondary" style="float:right; background-color: rgb(250, 107, 111);">목록으로</button>
             <br><br>
 
             <table id="contentArea" algin="center" class="table">
@@ -397,7 +397,7 @@
 	});
 	
 	document.addEventListener('DOMContentLoaded', function() {
-		  var backButton = document.querySelector('.btn-secondary');
+		  var backButton = document.querySelector('#secondary');
 
 		  backButton.addEventListener('click', function() {
 		    history.back();

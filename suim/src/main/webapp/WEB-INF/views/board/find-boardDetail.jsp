@@ -297,29 +297,6 @@
 	    let freNo = tr.data("id");
 	    
 	    
-	    
-	    $.ajax({
-	        url: "rdelete.bo",
-	        data: { fre: freNo },
-	        type: "post",
-	        success: function(response) {
-	            // 삭제 성공한 경우 해당 댓글을 테이블에서 제거
-	            tr.remove();
-
-	            // 삭제 후 댓글 목록을 다시 로드
-	            selectReplyList();
-
-	            // Show success message using alert
-	            alert("성공적으로 삭제 되었습니다.");
-	        },
-	        error: function(xhr, status, error) {
-	            // 오류 발생 시 처리할 내용
-	            console.log(error);
-
-	            // Show error message using alert
-	            alert("An error occurred while deleting the reply.");
-	        }
-	    });
 
 	    // Confirmation prompt before deleting
 	    var confirmation = confirm("삭제하시겠습니까?");
@@ -327,7 +304,7 @@
 	    if (confirmation) {
 	        // Execute the deletion
 	        $.ajax({
-	            url: "rdelete.bo",
+	            url: "rdelete.fi",
 	            data: { fre: freNo },
 	            type: "post",
 	            success: function(response) {

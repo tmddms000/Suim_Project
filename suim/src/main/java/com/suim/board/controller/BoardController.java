@@ -472,7 +472,7 @@ public class BoardController {
 		
 		@ResponseBody
 		@RequestMapping(value = "rdelete.fi", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
-		public String ajaxDeletefReply(@RequestParam("fre") int bre) {
+		public String ajaxDeletefReply(@RequestParam("fre") int fre) {
 			
 		    int result = boardService.deletefReply(fre);
 		    

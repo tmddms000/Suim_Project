@@ -99,13 +99,6 @@
 		                <a class="btn btn-primary" onclick="postFormSubmit(1);" >수정하기</a>
 		                <a class="btn btn-danger" onclick="postFormSubmit(2);" >삭제하기</a>
 
-		                 <form method="post" action="/kakaoPay">
-							    <button>카카오페이로 결제하기</button>
-							</form>
-
-<%-- 		              <form method="post" action="/kakaoPay" onsubmit="return confirm('결제하시겠습니까?');">
-						<button>카카오페이로 결제하기</button>
-					</form>	 --%>
             </div>
             <br><br>
             

@@ -241,7 +241,7 @@
 
              if (isLoggedIn) {
                  // 로그인된 경우
-                 window.location.href = "enrollForm.fi"; // 글작성 페이지로 이동
+                 window.location.href = "enrollForm.in"; // 글작성 페이지로 이동
              } else {
                  // 로그인되지 않은 경우
                  alert("글을 작성하려면 로그인이 필요합니다.");
