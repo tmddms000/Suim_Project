@@ -25,9 +25,9 @@
         <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
- 
+ 		<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <style>
-
+	
 	body {
 		padding: 20px;
 	}
@@ -104,7 +104,7 @@
 
 </head>
 <body>
-	
+	<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 	<h2>${houseName}</h2>
 		<h2>예약 취소하기</h2>
 		<div class="rez-div" id="rez-div">
@@ -142,6 +142,50 @@
 			</script>
 			<c:remove var="canMsg" scope="session" />
 		</c:if>
+		
+<script>
+  var content = "${houseName}";
+  var receiverId = "${r[0].recMemberId}";
+  var senderId = "${r[0].sendMemberId}";
+  var postNo = "${r[0].houseNo}";
+  var postType = "rezNo";
+  var postContent = "예약 취소";
+
+  $(document).ready(function() {
+    $('form').submit(function(event) {
+      event.preventDefault(); // Prevent the default form submission
+      // Handle the response from the server
+      if (senderId != receiverId) {
+        if (socket) {
+          let socketMsg = postType + "," + senderId + "," + receiverId + "," + postNo + "," + content + "," + postContent;
+
+          socket.send(socketMsg);
+        }
+      }
+
+      if (senderId != receiverId) {
+        $.ajax({
+          url: '/insertNotification',
+          type: 'post',
+          data: {
+            'content': content,
+            'receiverId': receiverId,
+            'senderId': senderId,
+            'postNo': postNo,
+            'postType': postType,
+            'postContent': postContent
+          },
+          dataType: "json",
+          success: function(alram) {
+          	    
+          }
+        });
+      }
+      $('form').off('submit').submit();
+    });
+
+  });
+</script>
 	
 	
 </body>

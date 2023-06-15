@@ -8,20 +8,13 @@
 	color: black !important;
 }
 
-.profile {
-	margin: 0 auto;
-	width: 100%;
-	height: 100%;
-	border-radius: 50%;
-}
-.container {
-	padding : 0px;
-}
+
+
 </style>
 
 <div class="container" style="margin-top: 75px;">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" style="margin-top : 19px;">
       <div id="content" class="content content-full-width" style="background: white;">
         <!-- begin profile -->
         <div class="profile">
@@ -65,9 +58,6 @@
             <c:set var="pageUrl" value="${fn:substringBefore(suffix, '.jsp')}" />
             <ul class="profile-header-tab nav nav-tabs">
               <li class="nav-item">
-                <a href="/mypage/timeline" class="nav-link ${fn:startsWith(pageUrl, 'timeline') ? 'actives' : ''}"><i class="fa-solid fa-bell"></i> 알림</a>
-              </li>
-              <li class="nav-item">
                 <a href="/mypage/board" class="nav-link ${fn:startsWith(pageUrl, 'board') ? 'actives' : ''}"><i class="fa-solid fa-scroll"></i> 내 게시글</a>
               </li>
               <li class="nav-item">
@@ -80,8 +70,12 @@
                 <a href="/mypage/reservation" class="nav-link ${fn:startsWith(pageUrl, 'reservation') ? 'actives' : ''}"><i class="fa-regular fa-calendar-check"></i> 예약내역</a>
               </li>
               <li class="nav-item">
+                <a href="/mypage/payment" class="nav-link ${fn:startsWith(pageUrl, 'payment') ? 'actives' : ''}"><i class="fa-solid fa-cart-shopping"></i> 결제내역</a>
+              </li>
+              <li class="nav-item">
                 <a href="/mypage/profile" class="nav-link ${fn:startsWith(pageUrl, 'profile') ? 'actives' : ''}"><i class="fa-solid fa-address-card"></i> 내정보</a>
               </li>
+              
             </ul>
           </div>
         </div>

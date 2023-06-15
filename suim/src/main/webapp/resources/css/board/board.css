@@ -24,13 +24,7 @@ animation: shake 0.5s ease-in-out infinite;
 75% { transform: translateX(5px) rotate(5deg); }
 100% { transform: translateX(0); }
 }
-@font-face {
-  font-family: 'maplestory';
-  src: url(/resources/css/fonts/maple_light.ttf) format('truetype');
-}
-body{
-  font-family: 'maplestory';
-}
+
 .layout-pagination {
   text-align: center;
 }

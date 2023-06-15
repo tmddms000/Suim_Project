@@ -10,10 +10,17 @@
 
 <style>
 .table>tbody>tr:hover {
-	background-color : rgb(245,245,245);
+	background-color : #f5f5f5;
 	cursor : pointer;
 }
 </style>
+
+<script>
+  function redirectToDetail(houseNo) {
+    var url = '/detail.ho?hno=' + houseNo;
+    window.location.href = url;
+  }
+</script>
 
 </head>
 <body>
@@ -21,7 +28,7 @@
 
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
 
-	<div class="container justify-content-center align-items-center text-center bg-white mb-4">
+	<div class="container justify-content-center align-items-center text-center bg-white mb-4" style="margin-top : 50px;">
   <c:set var="listSize" value="${fn:length(list)}" />
   <div class="row">
     <div class="col-md-12">
@@ -50,8 +57,8 @@
             <c:choose>
               <c:when test="${not empty list}">
                 <c:forEach var="w" items="${list}">
-                  <tr style="vertical-align: middle" data-id="${w.houseNo}">
-                    <td><img src="<c:out value="${w.changeName}"/>" style="width: 100px; height: 100px;" /></td>
+                  <tr style="vertical-align: middle" data-id="${w.houseNo}" class="hoverable-tr">
+                    <td><img src="<c:out value="/resources/img/house/uploadFiles/${w.changeName}"/>" style="width: 100px; height: 100px;" /></td>
                     <td><c:out value="${w.houseName}"/></td>
                     <td><c:out value="${w.houseAddress}"/></td>
                     <td><c:out value="${w.resGender}"/></td>
@@ -59,8 +66,8 @@
                     <td><c:out value="${w.rent}"/></td>
                     <td><c:out value="${w.memberId}"/></td>
                     <td>
-                      <button type="button" class="">예약하기</button>
-                      <button type="button" onclick="heart('<c:out value="${w.memberId}"/>', <c:out value="${w.houseNo}"/>)">삭제하기</button>
+                      <button type="button" class="wishBtn" onclick="rezPopup('<c:out value="${w.houseNo}" />', '<c:out value="${w.houseName}" />', '<c:out value="${w.houseWriter}" />')">예약하기</button>
+                      <button type="button" class="wishBtn" onclick="heart('<c:out value="${w.memberId}"/>', <c:out value="${w.houseNo}"/>);">삭제하기</button>
                     </td>
                   </tr>
                 </c:forEach>
@@ -74,6 +81,7 @@
           </c:if>
         </tbody>
       </table>
+      
 
       <nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
         <ul class="pagination justify-content-center">
@@ -92,8 +100,39 @@
       </nav>
     </div>
   </div>
+  <div style="height : 200px;"></div>
 </div>
-	
+
+<script>
+  // 버튼 요소의 클릭 이벤트 전파 방지
+  $('tr .wishBtn').click(function (e) {
+    e.stopPropagation();
+  });
+  
+  // 행 요소 클릭 시 페이지 이동
+  $('tr.hoverable-tr').click(function () {
+    var houseNo = $(this).data('id');
+    redirectToDetail(houseNo);
+  });
+  
+  
+  
+  function rezPopup(houseNo, houseName, memberId) {
+      var popupUrl = "/houseRez.ho?value=" + encodeURIComponent(houseNo) + "&value2=" + encodeURIComponent(houseName) + "&value3=" + encodeURIComponent(memberId);
+      if ("${loginUser}" == "") {
+          alert("로그인이 필요합니다.");
+          window.location.href = "/detail.ho?hno=" + encodeURIComponent(houseNo);
+      } else {
+      	  var width = 500;
+            var height = 500;
+            var left = (screen.width - width) / 2;
+            var top = (screen.height - height) / 2;
+            var popup = window.open(popupUrl, "popup", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+      }
+  }
+</script>
+
+
 	
 	<script src="/resources/js/user/wish.js"></script>
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />

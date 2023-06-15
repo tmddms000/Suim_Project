@@ -157,18 +157,6 @@ public class MypageController {
 		return "/resources/img/member/uploadFiles/" + changeName;
 	}
 
-	// 처음 페이지(알림 페이지)로 이동합니다.
-	@GetMapping({ "/timeline"})
-	public String mypageAlert(HttpServletRequest request) {
-		Member loginUser = (Member) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
-			return "redirect:/member/login";
-		}
-		
-		session.setAttribute("originalUrl", request.getRequestURI());
-		return "member/mypage/timeline";
-	}
 
 	@GetMapping("board")
 	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -356,6 +344,19 @@ public class MypageController {
 	    	 .addAttribute("list", list);
 		
 		return "member/mypage/reservation";
+	}
+	
+	// 결제내역 페이지로 이동합니다.
+	@GetMapping({ "payment"})
+	public String mypageAlert(HttpServletRequest request) {
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			return "redirect:/member/login";
+		}
+		
+		session.setAttribute("originalUrl", request.getRequestURI());
+		return "member/mypage/payment";
 	}
 
 

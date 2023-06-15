@@ -304,6 +304,13 @@ $(document).ready(function() {
 			    });
 			  </c:if>
 			});
+			var content = "${h.houseName}";
+			var receiverId = "${h.memberId}";
+			var senderId = "${loginUser.memberId}";
+			var postNo = "${h.houseNo}";
+			var postContent = "좋아요";
+			var postType = "wish";
+			
 		function heart(hno) {
 		    var heartIcon = $(".fa-heart");
 		    var isLiked = heartIcon.hasClass("fa-solid");
@@ -321,6 +328,40 @@ $(document).ready(function() {
 		                heartIcon.removeClass("fa-solid").addClass("fa-regular fa-bounce").css("color", "");
 		              } else { // unlike 상태일 경우 기존 상태를 지우고 like 상태로 변환
 		                heartIcon.removeClass("fa-regular").addClass("fa-solid fa-bounce").css("color", "#ED0707");
+		              
+		                if(senderId != receiverId){
+			           		if(socket){
+			        			let socketMsg = postType+","+senderId+","+receiverId+","+postNo+","+content+","+postContent;
+	
+			        			console.log(socketMsg);
+			        			socket.send(socketMsg);
+			           		}
+						}
+
+						if(senderId != receiverId){
+										 $.ajax({
+										        url : '/insertNotification',
+										        type : 'post',
+										        
+										        data : {
+										        	'content' : content,
+										        	'receiverId' : receiverId,
+										        	'senderId' : senderId,
+										        	'postNo' : postNo,
+										        	'postType' : postType,
+										        	'postContent' : postContent
+										        },
+										        dataType : "json", 
+										        success : function(alram){
+										        }
+										    
+										    });
+										}
+		              
+		              
+		              
+		              
+		              
 		              }
 		              heartIcon.one("animationiteration webkitAnimationIteration oanimationiteration", function() {
 		                $(this).removeClass("fa-bounce");

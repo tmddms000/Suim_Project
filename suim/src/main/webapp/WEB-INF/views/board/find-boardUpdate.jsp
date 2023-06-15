@@ -51,7 +51,7 @@
 
             <form id="enrollForm" method="post" action="update.fi" enctype="multipart/form-data">
             <input type="hidden" name="findNo" value="${ fb.findNo }">
-                <table algin="center">
+                <table align="center">
                     <tr>
                         <th><label for="title">제목</label></th>
                         <td><input type="text" id="title" class="form-control" name="findTitle" required value="${ fb.findTitle }"></td>

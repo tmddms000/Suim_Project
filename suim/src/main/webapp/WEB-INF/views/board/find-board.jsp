@@ -199,7 +199,7 @@
                     </c:if>
                 </c:if>
             </td>
-            <td>${fb.memberId}</td>
+            <td>${fb.nickName}</td>
             <td>${fb.findView}</td>
         </tr>
     </c:forEach>

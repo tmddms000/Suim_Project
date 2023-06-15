@@ -29,8 +29,8 @@ public class NotificationServiceImpl implements NotificationService{
 	}
 
 	@Override
-	public int notificationCount(String memberId) {
-		return notificationDao.notificationCount(sqlSession, memberId);
+	public int notificationCount(String receiverId) {
+		return notificationDao.notificationCount(sqlSession, receiverId);
 	}
 
 	@Override
@@ -42,6 +42,11 @@ public class NotificationServiceImpl implements NotificationService{
 	@Override
 	public int notificationDelete(Notification no) {
 		return notificationDao.notificationDelete(sqlSession, no);
+	}
+
+	@Override
+	public int notificationDeleteAll(String receiverId) {
+		return notificationDao.notificationDeleteAll(sqlSession, receiverId);
 	}
 
 

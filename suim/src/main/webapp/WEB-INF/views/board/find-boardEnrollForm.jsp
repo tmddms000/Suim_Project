@@ -60,7 +60,9 @@
                     
                     <tr>
                         <th style="width: 80px;"><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${loginUser.memberId}" name="memberId" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${loginUser.nickName}" name="memberNickname" readonly>
+                        	<input type="hidden" value="${loginUser.memberId}" name="memberId" readonly>
+                        </td>
                     </tr>
                     <tr>
 					    <th style="width: 80px;"><label for="category">카테고리</label></th>

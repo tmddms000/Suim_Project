@@ -5,26 +5,12 @@
  
 <head>
 <meta charset="UTF-8">
-
+		
+		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 	    <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
         <link rel="stylesheet" href="/resources/css/board/board.css">
       
 		<link href="/resources/css/user/signup.css" rel="stylesheet" />
-        <!-- 나중에 한번에 include 할 부분 -->
-        <!-- 부트스트랩 -->
-        <link href="/resources/css/common/styles.css" rel="stylesheet" />
-        <!-- 폰트어썸 icon -->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- reset.css  -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-        <!-- 부트스트랩 자바스크립트 -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- 타입잇 자바스크립트 -->
-        <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-
-        <!-- 게시판 js -->
-        <script src="/resources/js/board/board.js"></script>
-        <!-- 나중에 한번에 include 할 부분 -->
 
 	<style>
         .content {
@@ -57,7 +43,6 @@
         
 <title>자유게시판</title>
 
-		<%@ include file="/WEB-INF/views/common/include.jsp" %>
 		
 
 </head>	
@@ -83,7 +68,7 @@
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td>${ b.memberId }</td>
+                    <td>${ b.nickName }</td>
                     <th>작성일</th>
                     <td>${ b.boardDate }</td>
                 </tr>
@@ -191,7 +176,7 @@
 		                        <label for="updateContent" class="form-label" >댓글 내용</label>
 		                        <textarea class="form-control" id="updateContent" rows="3" name="content"></textarea>
 		                    </div>
-		                    <button type="submit" class="btn btn-primary">수정하기</button>
+		                    <button type="submit" id="submitButton" class="btn btn-primary">수정하기</button>
 		                </form>
 		            </div>
 		        </div>
@@ -200,23 +185,19 @@
     
     <script>
 
-	$(function() {
+    $(function() {
 		// 댓글 리스트 조회용 함수 호출
 		selectReplyList(); // setInterval 로 마찬가지로 실시간 조회 효과를 줄 수 있다.
 	});
 	
 	function addReply() { // 댓글 작성용 ajax
 		
-
 		var content = "${b.boardTitle}";
 		var receiverId = "${b.memberId}";
 		var senderId = "${loginUser.memberId}";
 		var postNo = "${b.boardNo}";
 		var postContent = $("#content").val();
-		var postType = "board"; 
-		
-		
-		
+		var postType = "board";
 		
 		if($("#content").val().trim().length != 0) {
 			// 즉, 유효한 내용이 한자라도 있을 경우
@@ -237,8 +218,7 @@
 
 						
 						$("#content").val("");
-						
-
+					
 						
 						if(senderId != receiverId){
 			           		if(socket){
@@ -248,9 +228,6 @@
 			        			socket.send(socketMsg);
 			           		}
 						}
-						
-						
-						
 						
 					}
 				},
@@ -279,43 +256,10 @@
 				    
 				    });
 				}
+
 		} else {
 			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");
 		}
-	}
-	
-	
-	function addReply() { // 댓글 작성용 ajax
-		
-
-		
-		if($("#content").val().trim().length != 0) {
-			// 즉, 유효한 내용이 한자라도 있을 경우
-			
-			$.ajax({
-				url : "rinsert.bo",
-				data : {
-					boardNo : ${ b.boardNo },
-					breContent : $("#content").val(),
-					memberId : "${ loginUser.memberId }"
-				},
-				type : "post", 
-				success : function(result) {
-					
-					if(result == "success") {
-						selectReplyList();
-						$("#content").val("");
-					}
-				},
-				error : function() {
-					console.log("댓글 작성용 ajax 통신 실패!");
-				}
-			});
-			
-		} else {
-			alertify.alert("알림", "댓글 작성 후 등록 요청해주세요.");
-		}
-
 	}
 	
 	function selectReplyList() {
@@ -361,30 +305,6 @@
 	    let breNo = tr.data("id");
 	    console.log(breNo);
 	    
-	    
-	    $.ajax({
-	        url: "rdelete.bo",
-	        data: { bre: breNo },
-	        type: "post",
-	        success: function(response) {
-	            // 삭제 성공한 경우 해당 댓글을 테이블에서 제거
-	            tr.remove();
-
-	            // 삭제 후 댓글 목록을 다시 로드
-	            selectReplyList();
-
-	            // Show success message using alert
-	            alert("성공적으로 삭제 되었습니다.");
-	        },
-	        error: function(xhr, status, error) {
-	            // 오류 발생 시 처리할 내용
-	            console.log(error);
-
-	            // Show error message using alert
-	            alert("An error occurred while deleting the reply.");
-	        }
-	    });
-
 	    // Confirmation prompt before deleting
 	    var confirmation = confirm("삭제하시겠습니까?");
 
@@ -479,12 +399,6 @@
 	});
 
 
-	   
-
-
-
-	
-	
 	document.getElementById('content').addEventListener('keydown', function(event) {
 	    if (event.keyCode === 13) { // Enter 키의 keyCode는 13입니다.
 	        event.preventDefault(); // 엔터 키의 기본 동작인 줄바꿈을 막습니다.
@@ -534,8 +448,8 @@
 
 
 		  // 엔터 키 이벤트 리스너 추가
-		  document.addEventListener("keydown", handleEnterKey);
 
+		  /*document.addEventListener("keydown", handleEnterKey);  */
     
     </script>
     

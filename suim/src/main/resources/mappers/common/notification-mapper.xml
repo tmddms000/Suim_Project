@@ -38,5 +38,9 @@
 		delete from NOTIFICATION where RECEIVER_ID = #{receiverId} AND POST_NO =
 		#{postNo} AND POST_TYPE = #{postType}
 	</delete>
+	
+	<delete id="notificationDeleteAll">
+		delete from NOTIFICATION where RECEIVER_ID = #{receiverId}
+	</delete>
 
 </mapper>

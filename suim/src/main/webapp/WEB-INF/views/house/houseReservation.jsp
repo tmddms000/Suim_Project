@@ -24,6 +24,7 @@
         <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
  
 <style>
 
@@ -93,6 +94,7 @@
         
 </head>
 <body>
+		<jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 		<h2>${houseName}</h2>
 		<h2>예약하기</h2>
@@ -101,7 +103,7 @@
 				<ul class="form_box">
 					<li>
 						<label for="rezDate"><span class="red_txt">*</span>예약 일:</label> 
-						<input type="date" id="rezDate" name="rezDate" required>
+						<input type="date" id="rezDate" class="rezdate" name="rezDate" required>
 					</li>
 					<li>
 						<label for="rezHour"><span class="red_txt">*</span>예약 시간:</label>
@@ -169,6 +171,60 @@
 			// 매일 자정마다 최소값 업데이트
 		setInterval(updateMinDate, 24 * 60 * 60 * 1000);
 	</script>
+	
+	
+<script>
+  var content = "${houseName}";
+  var receiverId = "${memberId}";
+  var senderId = "${loginUser.memberId}";
+  var postNo = "${houseNo}";
+  var postType = "rezOk";
+
+  $(document).ready(function() {
+    $('form').submit(function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      var rezdateValue = document.getElementsByClassName("rezdate")[0].value; // Assuming the "rezdate" is an input field
+      var rezdate = new Date(rezdateValue);
+      var optionElement = document.getElementById("rezHour"); // Assuming the "rezHour" is the id of the select element
+      var option = optionElement.options[optionElement.selectedIndex].value;
+      var formattedDate = rezdate.getMonth() + 1 + "월" + rezdate.getDate() + "일";
+      var result = formattedDate + " " + option;
+      var postContent = result;
+
+      // Handle the response from the server
+      if (senderId != receiverId) {
+        if (socket) {
+          let socketMsg = postType + "," + senderId + "," + receiverId + "," + postNo + "," + content + "," + postContent;
+
+          console.log(socketMsg);
+          socket.send(socketMsg);
+        }
+      }
+
+      if (senderId != receiverId) {
+        $.ajax({
+          url: '/insertNotification',
+          type: 'post',
+          data: {
+            'content': content,
+            'receiverId': receiverId,
+            'senderId': senderId,
+            'postNo': postNo,
+            'postType': postType,
+            'postContent': postContent
+          },
+          dataType: "json",
+          success: function(alram) {
+          	    
+          }
+        });
+      }
+      $('form').off('submit').submit();
+    });
+
+  });
+</script>
 		
 </body>
 </html>

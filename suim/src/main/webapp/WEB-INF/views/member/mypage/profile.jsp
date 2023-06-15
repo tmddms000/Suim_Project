@@ -16,7 +16,7 @@
 
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
 	
-<div class="container bg-white mb-4">
+<div class="container bg-white mb-4" style="margin-top : 50px;">
   <div class="row justify-content-center text-center">
     <div class="col-xl-4 text-center">
       <h1>내 정보</h1>
@@ -82,6 +82,7 @@
     </div>
   </div>
 </div>
+<div style="height : 150px;"></div>
 
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -107,6 +108,8 @@
       
     </div>
   </div>
+  
+  
 </div>
 
 

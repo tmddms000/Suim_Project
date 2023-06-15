@@ -32,13 +32,6 @@
 }
 
 
-
-
-
-
-
-
-
 .headers .user {
     font-size: 1.5rem;
     font-weight: 700;
@@ -132,13 +125,6 @@ body {
 
 
 
-
-
-
-
-
-
-
 .input-border>input {
 	width: 300px;
 	margin: 0 auto;
@@ -179,20 +165,19 @@ body{
 
 .profile-header .profile-header-content {
     color: #fff;
-    padding: 27px
+    padding: 20px;
 }
 
 .profile-header-img {
-    float: left;
+    float : left;
     width: 120px;
     height: 120px;
     overflow: hidden;
     position: relative;
-    z-index: 10;
     margin: 0 0 -20px;
     padding: 3px;
     border-radius: 4px;
-    background: #fff
+    background: #fff;
 }
 
 .profile-header-img img {
@@ -213,87 +198,7 @@ body{
     position: relative
 }
 
-.b-minus-1,
-.b-minus-10,
-.b-minus-2,
-.b-minus-3,
-.b-minus-4,
-.b-minus-5,
-.b-minus-6,
-.b-minus-7,
-.b-minus-8,
-.b-minus-9,
-.b-plus-1,
-.b-plus-10,
-.b-plus-2,
-.b-plus-3,
-.b-plus-4,
-.b-plus-5,
-.b-plus-6,
-.b-plus-7,
-.b-plus-8,
-.b-plus-9,
-.l-minus-1,
-.l-minus-2,
-.l-minus-3,
-.l-minus-4,
-.l-minus-5,
-.l-minus-6,
-.l-minus-7,
-.l-minus-8,
-.l-minus-9,
-.l-plus-1,
-.l-plus-10,
-.l-plus-2,
-.l-plus-3,
-.l-plus-4,
-.l-plus-5,
-.l-plus-6,
-.l-plus-7,
-.l-plus-8,
-.l-plus-9,
-.r-minus-1,
-.r-minus-10,
-.r-minus-2,
-.r-minus-3,
-.r-minus-4,
-.r-minus-5,
-.r-minus-6,
-.r-minus-7,
-.r-minus-8,
-.r-minus-9,
-.r-plus-1,
-.r-plus-10,
-.r-plus-2,
-.r-plus-3,
-.r-plus-4,
-.r-plus-5,
-.r-plus-6,
-.r-plus-7,
-.r-plus-8,
-.r-plus-9,
-.t-minus-1,
-.t-minus-10,
-.t-minus-2,
-.t-minus-3,
-.t-minus-4,
-.t-minus-5,
-.t-minus-6,
-.t-minus-7,
-.t-minus-8,
-.t-minus-9,
-.t-plus-1,
-.t-plus-10,
-.t-plus-2,
-.t-plus-3,
-.t-plus-4,
-.t-plus-5,
-.t-plus-6,
-.t-plus-7,
-.t-plus-8,
-.t-plus-9 {
-    position: relative!important
-}
+
 
 .profile-header .profile-header-tab {
     background: #fff;
@@ -324,7 +229,7 @@ body{
     font-size: 16px;
     border: none
 }
-
+/*  */
 .profile-header .profile-header-tab>li.active>a,
 .profile-header .profile-header-tab>li>a.active {
     color: #242a30
@@ -333,6 +238,13 @@ body{
 .profile-content {
     padding: 25px;
     border-radius: 4px
+}
+
+.profile {
+	margin: 0 auto;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
 }
 
 .profile-content:after,
@@ -388,7 +300,7 @@ body{
 .table.table-profile>thead>tr>th {
     border-bottom: none!important
 }
-
+/*  */
 .table.table-profile>thead>tr>th h4 {
     font-size: 20px;
     margin-top: 0
@@ -432,7 +344,7 @@ body{
     padding-top: 20px;
     border-top: 1px solid #b9c3ca
 }
-
+/*  */
 .profile-section:after,
 .profile-section:before {
     content: '';
@@ -825,6 +737,3 @@ margin-bottom : 20px;
     font-size: 12px;
     color: #212121;
 }
-
-
-

@@ -8,7 +8,6 @@
 }
 
 .notification {
-  height : 100px;
   display: block;
   padding: 8px;
   background-color: #f7f7f7;
@@ -29,7 +28,7 @@
 
 }
 
-.notification .title {
+.notification #title {
   font-weight: bold;
 }
 
@@ -40,19 +39,15 @@
   width : 100% !important;
 }
 
-.alarm-pagination {
-    position: fixed;
-    bottom: 65px;
-    right: 50px;
-
-
+.pgn {
+    justify-content: center;
 }
+
 
 </style>
 
 	<script type="text/javascript">
 		var socket = null;
-
 		var isFirstLoad = true;
 		var isUpdatingNotification = false;
 		var isVibrating = false;
@@ -63,9 +58,7 @@
 		if(${loginUser != null}){
 			connectWs();
 			addMessageToNotificationList('${loginUser.memberId}');
-
 			$('#notificationButton').show();
-
 			}
 
 		});
@@ -81,8 +74,6 @@
 			ws.onmessage = function(event) {
 				 
 				 addMessageToNotificationList(event.data);
-
-
 				 if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
 				      vibrateButton();
 				    }
@@ -92,11 +83,20 @@
 
 		 };
 		};
-
 		
+		
+		function truncateText(element, maxLength) {
+	        var text = element.textContent;
+	        if (text.length > maxLength) {
+	            text = text.substring(0, maxLength - 3) + '...';
+	            element.textContent = text;
+	        }
+	    }
+
+	   
+	   
 
 		function addMessageToNotificationList(message) {
-
 			  $.ajax({
 			    url: '/selectRecentNotification',
 			    method: 'GET',
@@ -105,20 +105,17 @@
 			      receiverId: '${loginUser.memberId}'
 			    },
 			    success: function(data) {
-
 			      selectRecentNotification(data);
 			      if (!isFirstLoad && !isVibrating) {
 			        vibrateButton();
 			      }
 			      isUpdatingNotification = false;
-
 			    },
 			    error: function(error) {
 			      console.error('웹소켓 오류가 발생했습니다:', error);
 			    }
 			  });
 			}
-
 
 		function selectRecentNotification(data) {
 			console.log(data);
@@ -132,7 +129,7 @@
 			notificationListElement.empty(); // 목록 초기화
 
 			if (listCount === 0) {
-			var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 없습니다.');
+			var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 존재하지 않습니다.');
 			notificationListElement.prepend(notificationItem);
 			return;
 			}
@@ -144,21 +141,58 @@
 			var senderId = notification.senderId;
 			var createdTime = new Date(notification.createdTime);
 			var timeDifference = getTimeDifference(createdTime);
-			var title = notification.content;
+			var titles = notification.content;
 			var postType = notification.postType;
 			var postNo = notification.postNo;
 			var receiverId = notification.receiverId;
 			var postContent = notification.postContent;
 			   
 			
+			function truncateText(text, maxLength) {
+		        if (text.length > maxLength) {
+		            return text.substring(0, maxLength - 3) + '...';
+		        }
+		        return text;
+		    }
+			
+			var title = truncateText(titles, 8);
+		    
+			
 			var notificationText = '';
 		    if (postType === 'board') {
-		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 자유게시판의 ' +  '<span class="title">' + title + '</span>' + ' 게시글에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<span class="time">' + timeDifference + '</span>' + '</a>';
-
-		    } else {
+		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 자유게시판의 ' +  '<span id="title">' + title + '</span>'+  '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    if (postType === 'find') {
+		    	notificationText = '<a href="/detail.fi?fno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.fi?fno=' + postNo + '\', \'' + postNo + '\', \'find\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 사람구해요의 ' +  '<span id="title">' + title + '</span>' + '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    if (postType === 'inreview') {
+		    	notificationText = '<a href="/detail.in?ino=' + postNo + '" onclick="notificationDelete(\'' + '/detail.in?ino=' + postNo + '\', \'' + postNo + '\', \'inreview\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 입주후기의 ' +  '<span id="title">' + title + '</span>' + '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    
+		    if (postType === 'wish') {
+		    	notificationText = '<a href="/detail.ho?hno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.ho?hno=' + postNo + '\', \'' + postNo + '\', \'wish\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 쉐어하우스 ' +  '<span id="title">"' + title + '"</span>' + '에 좋아요를 눌렀습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    
+		    if (postType === 'rezOk') {
+		    	notificationText = '<a href="/myHouseRez.ho?houseNo=' + postNo + '" onclick="notificationDelete(\'' + '/myhouseRez.ho?houseNo=' + postNo + '\', \'' + postNo + '\', \'rezOk\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 ' +  '<span id="title">"' + title + '"</span>' + '에 예약날짜로 ' + postContent + '에 예약신청을 했습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    
+		    if (postType === 'rezNo') {
+		    	notificationText = '<a href="/myhouseRez.ho?cPage=1&houseNo=' + postNo + '" onclick="notificationDelete(\'' + '/myhouseRez.ho?cPage=1&houseNo=' + postNo + '\', \'' + postNo + '\', \'rezNo\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 ' +  '<span id="title">"' + title + '"</span>' + '의  예약을 취소했습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    }
+		    
+		    if (postType === 'rezConfirm') {
+		    	notificationText = '<a href="/mypage/reservation" onclick="notificationDelete(\'/mypage/reservation\', \'' + postNo + '\', \'rezConfirm\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 <span id="title">"' + title + '"</span> 의 예약을 확정시켰습니다. <div class="time">' + timeDifference + '</div></a>';
+		    }
+		    
+		    
+		    
+		    
+		    else {
 		      // You can add handling for other postTypes.
 		    }
-
+		    
+		    
 
 		    var notificationItem = $('<li style="list-style-type: none"></li>').html(notificationText);
 		    notificationListElement.prepend(notificationItem);
@@ -168,12 +202,7 @@
 		      $('#notificationButton .notification-count').remove();
 		      $('#notificationButton').append(countElement);
 		      createPagination(pi.startPage, pi.endPage, pi.currentPage, pi.maxPage);
-
 		  }
-			
-			
-		
-			
 			
 
 		  // Combine the data and update the list count and pagination values
@@ -199,6 +228,7 @@
 
 			  var paginationList = document.createElement("ul");
 			  paginationList.classList.add("pagination");
+			  paginationList.classList.add("pgn");
 
 			  // 이전 페이지 링크
 			  var previousPageItem = createPaginationItem(currentPage - 1, "이전", currentPage === 1);
@@ -263,8 +293,8 @@
 				    }
 				  });
 				}
-	
-
+		
+		
 			
 			function vibrateButton() {
 				  if (isVibrating) {
@@ -310,34 +340,38 @@
 				}	
 			
 			
-				
-		
-		
-		function notificationCount() {
-			var notificationList = $('#notificationList');
-			 $.ajax({
-				    url: '/notificationCount',
-				    method: 'GET',
-				    dataType: 'json',
-				    data : {
-				    	receiverId : '${loginUser.memberId}'
+			
+			
+			function notificationDeleteAll(receiverId) {
+				  // AJAX 요청 보내기
+				  $.ajax({
+				    url: '/notificationDeleteAll', // 댓글 알림 삭제를 처리하는 URL
+				    method: 'POST',
+				    data: {
+				      receiverId: receiverId // 수신자 ID 전달
 				    },
-				    success: function(data) {
-				    	
-				    	var count = data;
+				    dataType: 'json',
+				    success: function (response) {
+				      console.log(response);
+				      if (response > 1) {
+				        // 알림 목록 컨테이너
+				        var notificationListElement = $('#notificationList');
+						notificationListElement.empty()
+						
+						var paginationContainer = $('#paginationContainer');
+        				paginationContainer.empty();
 
-				          // Display the updated count next to the notificationButton
-				          var countElement = $('<span style="font-size: 14px; ">').addClass('notification-count').text(count);
-
-				          
-				          $('#notificationButton .notification-count').remove(); // Remove the previous count
-				          $('#notificationButton').append(countElement);
-				          
-				    }
-			 });
-		};
-		
-				
+				        // 알림이 없을 때 메시지 표시
+				        var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 존재하지 않습니다.');
+				        notificationListElement.prepend(notificationItem);
+				      }
+				    },
+				  });
+				}
+			
+			
+			
+			
 		
 		function notificationDelete(linkUrl, postNo, postType, receiverId) {
 			  // AJAX 요청 보내기
@@ -353,9 +387,6 @@
 			    success: function(response) {
 			      // 요청이 성공하면 링크로 이동
 			      if (response.success) {
-
-
-
 			        // 링크로 이동
 			        window.location.href = linkUrl;
 			      } else {
@@ -497,13 +528,13 @@
   <div class="modal-content">
     <ul id="notificationList"></ul>
   </div>
-  <nav aria-label="Page navigation example" id="paginationContainer">
-      <ul class="pagination alarm-pagination">
+  <nav id="paginationContainer">
+      <ul class="pgn pagination">
       </ul>
       </nav>
   
-  <div class="modal-footer">
-      <button id="deleteAllButton" class="delete-all-button" style="position: fixed; width: 80px; height: 30px; bottom: 25px; right: 170px;">모두 읽음</button>
+  <div class="modal-footer" style="justify-content : center;">
+      <button id="deleteAllButton" class="delete-all-button" onclick="notificationDeleteAll('${loginUser.memberId}')">모두 읽음</button>
     </div>
 </div>
 	
@@ -553,7 +584,7 @@ $('#notificationButton').click(function(e) {
 	                            </ul>
 	                        </li>
 	                        <li class="nav-item">
-	                            <a href="#" class="nav-link nav-text">커뮤니티</a>
+	                            <a href="/list.bo" class="nav-link nav-text">커뮤니티</a>
 	                            <ul>
 	                                <li><a href="/list.bo">자유게시판</a></li>
 
@@ -572,9 +603,9 @@ $('#notificationButton').click(function(e) {
 				                </c:when>
 				                <c:otherwise>
 					                <li class="nav-item">
-	                            		<a href="#" class="nav-link nav-text">${ loginUser.memberName }님</a>
+	                            		<a href="/mypage/board" class="nav-link nav-text">${ loginUser.nickName }님</a>
 		                            	<ul>
-			                                <li><a href="/mypage/timeline">마이페이지</a></li>
+			                                <li><a href="/mypage/board">마이페이지</a></li>
 
 			                                <li><a href="/chat.ch">채팅방</a>
 			                                
@@ -590,12 +621,17 @@ $('#notificationButton').click(function(e) {
 				            </c:choose>    
 	                        
 	                        <li class="nav-item">
-	                            <a href="#" class="nav-link nav-text">고객센터</a>
+	                            <a href="/notice.no" class="nav-link nav-text">고객센터</a>
 	                            <ul>
 	                                <li><a href="/notice.no">공지사항</a></li>
 	                                <li><a href="/faqList">자주 묻는 질문</a></li>
 	                                <li><a href="/event.ev">이벤트</a></li>  
 	                            </ul>
+	                        </li>
+	                        
+	                        
+	                        <li class="nav-item" style="padding: 1.6rem 0rem 2rem 2rem;">
+	                            <button style="width:90px; height:40px; background:transparent;">방 등록 <i class="fa-solid fa-right-from-bracket"></i></button>
 	                        </li>
 	                </ul>
 	                
@@ -607,11 +643,12 @@ $('#notificationButton').click(function(e) {
 	                        <div class="offcanvas-header">
 	                        <c:choose>
 				            	<c:when test="${ empty loginUser }">
-	                            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">&nbsp;&nbsp;&nbsp;&nbsp;로그인 해주세요.</h5>
+	                            <div class="offcanvas-title" id="offcanvasNavbarLabel"></div>
 	                           	</c:when>
 	                       </c:choose>
-	                            <button type="button" class="btn-close text-reset"
-	                                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	                      		<a type="button" class="navbar-toggler-icon text-reset"
+	                      		data-bs-dismiss="offcanvas" aria-label="Close" style="width : 32px; height: 32px"></a>
+	                       		
 	                        </div>
 	                        <div class="offcanvas-body">
 	                        
@@ -646,8 +683,8 @@ $('#notificationButton').click(function(e) {
 	                                <li class="nav-item dropdown m-4">
 	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">${ loginUser.nickName }님</a>
 	                                        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown1">
-	                                           <li><a class="dropdown-item" href="mypage">마이페이지</a></li>
-	                                           <li><a class="dropdown-item" href="chat.ch">채팅방</a></li>
+	                                           <li><a class="dropdown-item" href="/mypage/board">마이페이지</a></li>
+	                                           <li><a class="dropdown-item" href="/chat.ch">채팅방</a></li>
 	                                           <li><form id="logout-form2" action="/member/logout" method="post"><a class="dropdown-item" href="#" onclick="event.preventDefault(); logout();">로그아웃</a></form></li>
 	                                        </ul> 
 	                                </li>
@@ -666,18 +703,18 @@ $('#notificationButton').click(function(e) {
 	                                </li>
 	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티 </a>
 	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown2">
-	                                        <li><a class="dropdown-item" href="list.bo">자유게시판</a></li>
-	                                        <li><a class="dropdown-item" href="list.fi">사람구해요</a></li>
+	                                        <li><a class="dropdown-item" href="/list.bo">자유게시판</a></li>
+	                                        <li><a class="dropdown-item" href="/list.fi">사람구해요</a></li>
 
-	                                        <li><a class="dropdown-item" href="list.in">입주 후기 </a></li>                                            
+	                                        <li><a class="dropdown-item" href="/list.in">입주 후기 </a></li>                                            
 
 	                                    </ul>
 	                                </li>
 	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>
 	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown3">
-	                                        <li><a class="dropdown-item" href="notice.no">공지사항</a></li>
+	                                        <li><a class="dropdown-item" href="/notice.no">공지사항</a></li>
 	                                        <li><a class="dropdown-item" href="/faqList">자주 묻는 질문</a></li> 
-	                                        <li><a class="dropdown-item" href="event.ev">이벤트</a></li>                    
+	                                        <li><a class="dropdown-item" href="/event.ev">이벤트</a></li>                    
 	                                    </ul>
 	                                </li>
 	                            </ul>
@@ -685,6 +722,17 @@ $('#notificationButton').click(function(e) {
 	                    </div>
 	            </div>
 	        </nav>
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
+	        
 	    </header>
 	    
 	    

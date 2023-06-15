@@ -15,7 +15,7 @@
 
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
 
-	<div class="table-container" style="margin-bottom: 30px;">
+	<div class="table-container" style="margin-top: 50px;">
 	<div class="container justify-content-center align-items-center bg-white mb-4" id="c">
 		<ul class="nav nav-tabs">
 			<li class="nav-item"><a class="nav-link <c:if test="${type eq 'board'}">active</c:if>"
@@ -124,6 +124,9 @@
 			</form>
 		</div>
 	</div>
+	
+	
+	<div style="height : 150px;"></div>
 
 	<script>
 	$(document).ready(function() {

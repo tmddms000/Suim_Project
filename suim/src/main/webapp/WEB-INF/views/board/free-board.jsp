@@ -3,35 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="java.util.Date" %>
-
-
-
-
- 
 <head>
 <meta charset="UTF-8">
-
+		<%@ include file="/WEB-INF/views/common/include.jsp" %>
         <link rel="stylesheet" href="/resources/css/summernote/summernote-lite.css">
         <link rel="stylesheet" href="/resources/css/board/board.css">
-
-        <!-- 나중에 한번에 include 할 부분 -->
-        <!-- 부트스트랩 -->
-        <link href="/resources/css/common/styles.css" rel="stylesheet" />
-        <!-- 폰트어썸 icon -->
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- reset.css  -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-        <!-- 부트스트랩 자바스크립트 -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- 타입잇 자바스크립트 -->
-        <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
-        <!-- jQuery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <!-- 1:1문의 채팅 -->
-        <script src="/resources/js/common/chatbot.js"></script>
-        <!-- 나중에 한번에 include 할 부분 -->
 <style>
-
 	    .bestcontainer {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -68,20 +46,12 @@
 		  margin: 0 5px;
 
 		}
-
-
-
 </style>        
         
-        
+     
 <title>자유게시판</title>
-		<%@ include file="/WEB-INF/views/common/include.jsp" %>
-		<link href="/resources/css/user/signup.css" rel="stylesheet" />
 
 </head>	
-
-
-
 
 
 <body>	    

@@ -44,7 +44,6 @@
                 <source src="/resources/video/city.mp4" type="video/mp4">
             </video>
         </div>
-	<a href="/notice/faqList.html">링크</a>
 
         <!-- 캐러셀(슬라이드쇼) -->
         <section class="bg-light text-center" id="about">

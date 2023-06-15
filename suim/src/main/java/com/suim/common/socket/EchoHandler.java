@@ -59,9 +59,9 @@ public class EchoHandler extends TextWebSocketHandler {
 				logger.info("boardWirterSession"+boardWriterSession);
 				
 				//댓글
-				if ("board".equals(cmd) && boardWriterSession != null) {
+				if (boardWriterSession != null) {
 					logger.info("메시지 잘 보내지나?");
-					TextMessage tmpMsg = new TextMessage(replyWriter + "님이 자유게시판의"
+					TextMessage tmpMsg = new TextMessage(replyWriter + "님이"
 							+ "<a href='/detail.bo?bno="+ bno + "'  style=\"color: black\">"
 							+ title+"에 댓글을 달았습니다. 내용 : " + content + "</a>");
 					boardWriterSession.sendMessage(tmpMsg);

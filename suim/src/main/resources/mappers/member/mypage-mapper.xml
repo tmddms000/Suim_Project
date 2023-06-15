@@ -30,11 +30,13 @@
 	<resultMap id="wishResultSet" type="myWish">
 		<result column="HOUSE_NO" property="houseNo" />
 		<result column="MEMBER_ID" property="memberId" />
+		<result column="HOUSE_WRITER" property="houseWriter" />
 		<result column="HOUSE_ADDRESS" property="houseAddress" />
 		<result column="HOUSE_NAME" property="houseName" />
 		<result column="RES_GENDER" property="resGender" />
 		<result column="DEPOSIT" property="deposit" />
 		<result column="RENT" property="rent" />
+		<result column="CHANGE_NAME" property="changeName" />
 	</resultMap>
 	
 	<resultMap id="inReviewResultSet" type="inreview">
@@ -215,7 +217,7 @@
 
 
 	<select id="selectWishList" parameterType="string" resultMap="wishResultSet">
-		SELECT * FROM WISH W
+		SELECT HOUSE_NO, W.MEMBER_ID, H.MEMBER_ID AS "HOUSE_WRITER", HOUSE_ADDRESS, HOUSE_NAME, RES_GENDER, DEPOSIT, RENT, CHANGE_NAME FROM WISH W
 		JOIN HOUSE H USING (HOUSE_NO)
 		JOIN PHOTO P USING (HOUSE_NO)  
 		WHERE H.HOUSE_STATUS = 'Y'   

@@ -65,11 +65,20 @@ public class NotificationController {
 	//알람클릭
 	@ResponseBody
 	@RequestMapping(value = "/notificationDelete", method=RequestMethod.POST)
-	public String alramClick(Notification no) throws Exception{
-		log.info("알람클릭");
-		service.notificationDelete(no);
+	public int notificationDelete(Notification no) throws Exception{
+		log.info("알림 클릭됨");
+		int result = service.notificationDelete(no);
 		
-		return null;
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/notificationDeleteAll", method=RequestMethod.POST)
+	public int notificationDeleteAll(String receiverId) throws Exception{
+		log.info("전체삭제");
+		int result = service.notificationDeleteAll(receiverId);
+		
+		return result;
 	}
 
 }

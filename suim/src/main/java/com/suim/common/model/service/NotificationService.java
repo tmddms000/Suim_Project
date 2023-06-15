@@ -18,6 +18,8 @@ public interface NotificationService {
 	// 
 	int notificationDelete(Notification no);
 
+	int notificationDeleteAll(String receiverId);
+
 	
 	
 }
