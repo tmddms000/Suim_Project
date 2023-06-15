@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AdminMain {
+public class Dashboard {
 
 	private int male;
 	private int female;

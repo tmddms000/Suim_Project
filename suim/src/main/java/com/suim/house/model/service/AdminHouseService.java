@@ -20,6 +20,9 @@ public interface AdminHouseService {
 	// 카테고리용 전체 조회
 	ArrayList<House> selectList(PageInfo pi, String category);
 	
+	// 카테고리마다 전체 조회
+	int selectCategoryListCount(String category);
+	ArrayList<House> selectCategoryList(PageInfo pi, String category);
 	
 	// 쉐어하우스 작성하기 서비스
 	int insertHouse(House h);
@@ -39,9 +42,10 @@ public interface AdminHouseService {
 
 	// 승인/반려 처리용
 	int updateHouseStatus(House h);
-
+	// 전체 선택 승인/반려용
+	int updateStatusAll(int[] intArray, String houseStatus);
+	
 	// 검색용
 	int selectSearchCount(HashMap<String, String> map);
-	
 	ArrayList<House> selectSearchList(HashMap<String, String> map, PageInfo pi);
 }

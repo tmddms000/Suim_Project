@@ -4,19 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.suim.admin.model.service.AdminMainService;
-import com.suim.admin.model.vo.AdminMain;
+import com.suim.admin.model.service.AdminDashboardService;
+import com.suim.admin.model.vo.Dashboard;
 
 @Controller
 public class AdminMainController {
 
 	@Autowired
-	private AdminMainService adminMainService;
+	private AdminDashboardService adminDashboardService;
 	
 	@RequestMapping("admin")
 	public void selectChart() {
-		AdminMain am = new AdminMain();
-		am = adminMainService.selectChart();
-		System.out.println(am.toString());
+		Dashboard da = new Dashboard();
+		da = adminDashboardService.selectChart();
+		System.out.println(da.toString());
 	}
 }

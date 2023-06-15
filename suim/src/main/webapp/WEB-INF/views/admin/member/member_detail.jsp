@@ -9,8 +9,9 @@
 	}
 	.memberTableRight{
 		display: inline-block;
-		float: rigth;	
+		float: right;
 	}
+	.table>tbody>tr{cursor:pointer;}
 </style>
 
 	<%@ include file="../common/include.jsp" %>  
@@ -75,7 +76,7 @@
 	                                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 										<br>
 											<!-- 회원 정보 카테고리에 해당하는 테이블 형식 -->
-											<div class="table-responsive">
+											<div class="table-responsive" align="center">
 												<c:choose>
 													<c:when test="${ category eq 'info' }">
 													<!-- 왼쪽 테이블 -->
@@ -139,7 +140,7 @@
 						                        	</div>
 						                        	<!-- 오른쪽 테이블 -->
 						                			<div class="col-sm-12 col-xl-6 memberTableRight">
-						                                <table class="table">
+						                                <table class="table" style="border-bottom: #F3F6F9;">
 						                                    <tr>
 					                                            <th scope="row">프로필 사진</th>
 					                                            <c:choose>
@@ -154,6 +155,7 @@
 						                                </table>
 						                        	</div>
 												</c:when>
+												
 
 												<c:when test="${ category eq 'house' }">
 													<div class="tab-content">
@@ -176,7 +178,7 @@
 									                                    <c:when test="${ not empty list }">
 									                                    	<c:forEach var="h" items="${ list }">
 									                    						<tr>
-																				    <td><c:out value="${h.HOUSE_NO}" /></td>
+																				    <td class="no"><c:out value="${h.HOUSE_NO}" /></td>
 																				    <td><c:out value="${h.HOUSE_NAME}" /></td>
 																				    <td><c:out value="${h.HOUSE_ADDRESS}" /></td>
 																				    <td><c:out value="${h.DEPOSIT}" /></td>
@@ -217,7 +219,7 @@
 								                                    <c:when test="${ not empty list }">
 								                                    	<c:forEach var="b" items="${ list }">
 								                    						<tr>
-								                    							<td>${ b.BOARD_NO }</td>
+								                    							<td class="no">${ b.BOARD_NO }</td>
 									                                            <td>${ b.BOARD_TITLE }</td>
 									                                            <td>${ b.BOARD_VIEW }</td>
 									                                            <td>${ b.BOARD_DATE }</td>
@@ -256,7 +258,7 @@
 								                                    <c:when test="${ not empty list }">
 								                                    	<c:forEach var="f" items="${ list }">
 								                    						<tr>
-								                    							<td>${ f.FIND_NO }</td>
+								                    							<td class="no">${ f.FIND_NO }</td>
 									                                            <td>${ f.FIND_TITLE }</td>
 									                                            <td>${ f.FIND_CATEGORY }</td>
 									                                            <td>${ f.FIND_VIEW }</td>
@@ -295,7 +297,7 @@
 								                                    <c:when test="${ not empty list }">
 								                                    	<c:forEach var="i" items="${ list }">
 								                    						<tr>
-								                    							<td>${ i.INR_NO }</td>
+								                    							<td class="no">${ i.INR_NO }</td>
 									                                            <td>${ i.INR_TITLE }</td>
 									                                            <td>${ i.INR_VIEW }</td>
 									                                            <td>${ i.INR_DATE }</td>
@@ -314,7 +316,6 @@
 													  	</div>
 													</div>
 												</c:when>
-												
 											</c:choose>
 				                        </div>
 			                        </div>
@@ -324,43 +325,28 @@
                 	</div>
 				</div>
 				<!-- 테이블 끝 -->
-
+				<br>
                 <a class="btn btn-secondary" style="float:right;" href="list.me">목록으로</a>
-                <br>
-    
-                <%-- <c:if test="${ (not empty loginUser) and (loginUser.userId eq b.boardWriter) }"> --%>
-                    <div align="center">
-                        <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-                            <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
-                            <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
-                    </div>
-                    <br><br>
-                    
-                    <!--
-                        수정, 삭제 시 게시글 번호를 get 방식으로 넘기기에는 위험이 크므로
-                        post 방식으로 요청 보내보기 => form 태그 필요
-                    -->
-                    <form id="postForm" action="" method="post">
-                        <input type="hidden" name="memberId" value="${ m.memberId }">
-                        <input type="hidden" name="filePath" value="${ m.changeName }">
-                    </form>
-                    <script>
-                        // 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
-                        function postFormSubmit(num) {
-                            
-                            // 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
-                            if(num == 1) { // 수정하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "updateForm.me").submit();
-                            } else { // 삭제하기 버튼을 클릭했을 경우
-                                $("#postForm").attr("action", "delete.me").submit();
-                            }
-                        }
-                    </script>
-                <%-- </c:if> --%>
-
             </div>
             <br><br>    
             <!-- Table End -->
+			<script>
+	            // 상세 페이지로 이동용
+	            $(".table>tbody>tr").click(function(e) {
+                    var no = $(this).children(".no").text();
+                    var category = document.querySelector('.nav-link.active').getAttribute('data-category');
+                    
+                    if(category.substring(0, 2) === 'ho'){
+	                    location.href = "/detail.ho?hno=" + no;
+                    } else if(category.substring(0, 2) === 'bo'){
+                        location.href = "/detail.bo?bno=" + no;
+                    } else if(category.substring(0, 2) === 'fi'){
+                        location.href = "/detail.fi?fno=" + no;
+                    } else if(category.substring(0, 2) === 'in'){
+                        location.href = "/detail.in?ino=" + no;
+                    }
+	            });
+			</script>
 
             <br clear="both"><br>
             

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.house.model.service.AdminHouseService;
 import com.suim.house.model.vo.House;
+import com.suim.report.model.vo.Report;
 
 @RequestMapping("/admin")
 @Controller
@@ -29,54 +31,37 @@ public class AdminHouseController {
 	
 	// 리스트 조회 포워딩용
 	@RequestMapping("list.ho")
-	public ModelAndView selectList(
+	public String selectList(
 			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-			ModelAndView mv) {
-		
-		int listCount = adminHouseService.selectListCount();
+			@RequestParam(value="category", defaultValue="all") String category,
+			Model model) {
 		
 		int pageLimit = 10;
 		int boardLimit = 10;
-		
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-		
-		ArrayList<House> list = adminHouseService.selectList(pi);
 
-		mv.addObject("pi", pi)
-		  .addObject("list", list)
-		  .setViewName("admin/house/house");
-		
-		return mv;
-	}
-	
-	@ResponseBody
-	// 카테고리용 전체 조회용
-	@RequestMapping(value = "category.ho", produces = "application/json; charset=UTF-8")
-	public Map<String, Object> selectList(
-			@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-			ModelAndView mv,
-			String category) {
-		
-		// 페이징처리를 위한 PageInfo 객체 얻어내기
-		int listCount = adminHouseService.selectListCount();
-		
-		int pageLimit = 10;
-		int boardLimit = 10;
-		
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-		
-		ArrayList<House> list = new ArrayList<>();
-		
-		if(category == null || category.equals("A")) {
+		ArrayList<House> list = new ArrayList<House>();
+
+		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
+		int listCount = 0;
+		PageInfo pi = null;
+
+		if (category == null || category.equals("all")) {
+
+			listCount = adminHouseService.selectListCount();
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 			list = adminHouseService.selectList(pi);
+			
 		} else {
-			list = adminHouseService.selectList(pi, category);
+
+			listCount = adminHouseService.selectCategoryListCount(category);
+			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			list = adminHouseService.selectCategoryList(pi, category);
+
 		}
+
+		model.addAttribute("pi", pi).addAttribute("list", list).addAttribute("category", category);
 		
-		Map<String, Object> response = new HashMap<>();
-		response.put("pi", pi);
-		response.put("list", list);
-		return response;
+		return "admin/house/house";
 	}
 
 	
@@ -91,6 +76,76 @@ public class AdminHouseController {
 		return mv;
 	}
 	
+	// 승인/반려 처리용
+	@RequestMapping("updateStatus.ho")
+	public String updateHouseStatus(House h,
+							HttpSession session,
+							Model model) {
+
+		int result = adminHouseService.updateHouseStatus(h);
+		
+		if(result > 0) { // 성공
+			
+			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
+			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
+			
+			return "redirect:/admin/detail.ho?hno=" + h.getHouseNo();
+			
+		} else { // 실패
+			
+			// 에러문구 담아서 에러페이지로 포워딩
+			model.addAttribute("errorMsg", "게시글 수정 실패");
+			
+			return "common/errorPage";
+		}
+	}
+	
+	// 전체 선택 승인/반려용
+	@ResponseBody
+	@RequestMapping("updateStatusAll.ho")
+	public String updateStatusAll(String houseNo, 
+								String houseStatus,
+								HttpServletRequest request) {
+
+		String[] idArray = houseNo.split(",");
+		int[] intArray = new int[idArray.length];
+		for (int i = 0; i < idArray.length; i++) {
+			intArray[i] = Integer.parseInt(idArray[i]);
+		}
+		int result = adminHouseService.updateStatusAll(intArray, houseStatus);
+		return result > 0 ? "Y" : "N";
+	}
+	
+	// 검색용
+	@RequestMapping("search.ho")
+	public ModelAndView selectSearch(String condition, String keyword, 
+						@RequestParam(value="currentPage", defaultValue="1") int currentPage,
+						ModelAndView mv) {
+		
+		int listCount = adminHouseService.selectListCount();
+		
+		int pageLimit = 10;
+		int boardLimit = 10;
+		
+		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+		
+		HashMap<String, String> map = new HashMap<>();
+		
+		map.put("condition", condition);
+		map.put("keyword", keyword);
+		
+		
+		ArrayList<House> list = adminHouseService.selectSearchList(map, pi);
+		
+		System.out.println(list);
+
+		mv.addObject("pi", pi)
+		  .addObject("list", list)
+		  .setViewName("admin/house/house");
+		
+		return mv;
+	}
+		
 	@RequestMapping("delete.ho")
 	public String deleteHouse(@RequestParam("hno") int houseNo,
 							  Model model,
@@ -132,35 +187,5 @@ public class AdminHouseController {
 		model.addAttribute("h", h);
 		
 		return "admin/house/house_update";
-	}
-	
-	// 검색용
-	@RequestMapping("search.ho")
-	public ModelAndView selectSearch(String condition, String keyword, 
-						@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-						ModelAndView mv) {
-		
-		int listCount = adminHouseService.selectListCount();
-		
-		int pageLimit = 10;
-		int boardLimit = 10;
-		
-		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-		
-		HashMap<String, String> map = new HashMap<>();
-		
-		map.put("condition", condition);
-		map.put("keyword", keyword);
-		
-		
-		ArrayList<House> list = adminHouseService.selectSearchList(map, pi);
-		
-		System.out.println(list);
-
-		mv.addObject("pi", pi)
-		  .addObject("list", list)
-		  .setViewName("admin/house/house");
-		
-		return mv;
 	}
 }

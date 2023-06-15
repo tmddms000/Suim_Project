@@ -60,14 +60,7 @@ public class AdminReportController {
 		int pageLimit = 10;
 		int boardLimit = 10;
 
-		Member m = (Member) session.getAttribute("loginUser");
-		
-		if (m == null) {
-			return "redirect:/";
-		}
 		ArrayList<Report> list = new ArrayList<Report>();
-
-		String memberId = m.getMemberId();
 
 		// listCount 는 게시판 종류에 따라 달라지게 하기(조건문에 집어넣을거임)
 		int listCount = 0;
@@ -197,8 +190,6 @@ public class AdminReportController {
 		
 		
 		ArrayList<Report> list = adminReportService.selectSearchList(map, pi);
-		
-		System.out.println(list);
 
 		mv.addObject("pi", pi)
 		  .addObject("list", list)

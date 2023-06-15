@@ -2,6 +2,7 @@ package com.suim.house.model.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
+import com.suim.report.model.vo.Report;
 
 @Repository
 public class AdminHouseDao {
@@ -45,6 +47,22 @@ public class AdminHouseDao {
 		return (ArrayList)sqlSession.selectList("adminHouseMapper.selectCategoryList", category, rowBounds);
 	}
 	
+	// 카테고리용 총 갯수 조회
+	public int selectCategoryListCount(SqlSessionTemplate sqlSession, String category) {
+		return sqlSession.selectOne("adminHouseMapper.selectCategoryListCount", category);
+	}
+	
+	// 카테고리용 selectList
+	public ArrayList<House> selectCategoryList(SqlSessionTemplate sqlSession, PageInfo pi, String category) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+		
+		return (ArrayList)sqlSession.selectList("adminHouseMapper.selectCategoryList", category, rowBounds);
+	}
+	
 	public int insertHouse(SqlSessionTemplate sqlSession, House h) {
 		return sqlSession.insert("adminHouseMapper.insertHouse", h);
 	}
@@ -65,6 +83,13 @@ public class AdminHouseDao {
 	// 승인/반려 처리용
 	public int updateHouseStatus(SqlSessionTemplate sqlSession, House r) {
 		return sqlSession.update("adminHouseMapper.updateHouseStatus", r);
+	}
+	// 전체선택용 승인/반려용
+	public int updateStatusAll(SqlSessionTemplate sqlSession, int[] intArray, String houseStatus) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("houseStatus", houseStatus);
+		map.put("intArray", intArray);
+		return sqlSession.update("adminHouseMapper.updateStatusAll", map);
 	}
 	
 	// 검색용

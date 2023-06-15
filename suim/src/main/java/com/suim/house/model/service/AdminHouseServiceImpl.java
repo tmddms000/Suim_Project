@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.dao.AdminHouseDao;
 import com.suim.house.model.vo.House;
+import com.suim.report.model.vo.Report;
 
 @Service
 public class AdminHouseServiceImpl implements AdminHouseService {
@@ -44,6 +45,16 @@ public class AdminHouseServiceImpl implements AdminHouseService {
 		return adminHouseDao.selectList(sqlSession, pi, category);
 	}
 
+	// 카테고리마다 전체 조회
+	@Override
+	public int selectCategoryListCount(String category) {
+		return adminHouseDao.selectCategoryListCount(sqlSession, category);
+	}
+	@Override
+	public ArrayList<House> selectCategoryList(PageInfo pi, String category) {
+		return adminHouseDao.selectCategoryList(sqlSession, pi, category);
+	}
+	
 	@Override
 	public int insertHouse(House h) {
 		return adminHouseDao.insertHouse(sqlSession, h);
@@ -69,7 +80,12 @@ public class AdminHouseServiceImpl implements AdminHouseService {
 	public int updateHouseStatus(House h) {
 		return adminHouseDao.updateHouseStatus(sqlSession, h);
 	}
-
+	// 전체선택 승인/반려용
+	@Override
+	public int updateStatusAll(int[] intArray, String houseStatus) {
+		return adminHouseDao.updateStatusAll(sqlSession, intArray, houseStatus);
+	}
+	
 	// 검색용
 	@Override
 	public int selectSearchCount(HashMap<String, String> map) {

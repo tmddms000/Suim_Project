@@ -88,7 +88,7 @@
 		                        	</div>
 	                            	<!-- 오른쪽 테이블 -->
 		                			<div class="col-sm-12 col-xl-6 reportTableRight">
-		                                <table class="table">
+		                                <table class="table" style="border-bottom: #F3F6F9;">
 		                                    <tr>
 	                                            <th scope="row">첨부파일</th>
                                                 <c:choose>
@@ -110,7 +110,7 @@
 				</div>
 				<!-- 테이블 끝 -->
             
-            
+            <br>
             <a class="btn btn-secondary" style="float:right;" href="list.re">목록으로</a>
             <br>
 

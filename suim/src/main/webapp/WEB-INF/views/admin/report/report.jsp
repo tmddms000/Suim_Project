@@ -127,7 +127,6 @@
 				                            		</tr>
 				                            	</c:otherwise>
 				                            </c:choose>
-				                            
 		                                    </tbody>
 		                                </table>
 		                                <div align="center">
@@ -156,10 +155,9 @@
 										    
 										    
 										</script>
-			                           </div>
+			                    	</div>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                 </div>

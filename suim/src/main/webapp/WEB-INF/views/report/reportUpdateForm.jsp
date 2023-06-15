@@ -22,6 +22,7 @@
            <form id="enrollForm" method="post" action="insert.re" enctype="multipart/form-data">
 				
                <table align="center">
+
                    <script>
                    function updateHiddenInput() { 
                 	   var select = document.getElementById("mySelect"); 

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminDashboardMapper">
+	<resultMap id="adminDashboardResultSet" type="dashboard">
+		<result column="MALE" property="male" />
+		<result column="FEMALE" property="female" />
+	</resultMap>
+	
+	<!-- 전체 회원 수 조회 -->
+	<select id="selectMemberAll">
+		SELECT COUNT(*) AS totalMembers
+		  FROM MEMBER
+	</select>
+	
+	<!-- 신규 가입 회원 수(월별) -->
+	<select id="selectEnrollMember">
+		SELECT TO_CHAR(ENROLL_DATE, 'YYYY-MM') AS month, COUNT(*) AS new_members
+		  FROM MEMBER
+		 WHERE ENROLL_DATE >= TRUNC(SYSDATE, 'MM')
+		 GROUP BY TO_CHAR(ENROLL_DATE, 'YYYY-MM')
+		 ORDER BY TO_CHAR(ENROLL_DATE, 'YYYY-MM')
+	</select>
+	
+	<!-- 성별별 회원 수 조회 -->
+	<select id="selectMemberGender">
+		SELECT GENDER, COUNT(*) AS memberCount
+		  FROM MEMBER
+		 GROUP BY GENDER
+	</select>
+	<!-- 예약 TOP 3 회원 조회 -->
+	<select id="selectMemberHouseTopN">
+		SELECT *
+			FROM (
+			  SELECT M.MEMBER_ID, M.MEMBER_NAME,
+			         COUNT(DISTINCT H.MEMBER_ID) AS reservation_count
+			  FROM MEMBER M
+			  LEFT JOIN HOUSE H ON M.MEMBER_ID = H.MEMBER_ID
+			  GROUP BY M.MEMBER_ID, M.MEMBER_NAME
+			  ORDER BY (COUNT(DISTINCT H.MEMBER_ID)) DESC
+			)
+			WHERE ROWNUM &lt;= 3
+	</select>
+	<!-- 후기 TOP 3 회원 조회 -->
+	<select id="selectMemberInreviewTopN">
+		SELECT *
+			FROM (
+			  SELECT M.MEMBER_ID, M.MEMBER_NAME,
+			         COUNT(DISTINCT IR.MEMBER_ID) AS review_count
+			  FROM MEMBER M
+			  LEFT JOIN INREVIEW IR ON M.MEMBER_ID = IR.MEMBER_ID
+			  GROUP BY M.MEMBER_ID, M.MEMBER_NAME
+			  ORDER BY (COUNT(DISTINCT IR.MEMBER_ID)) DESC
+			)
+			WHERE ROWNUM &lt;= 3
+	</select>
+	
+	<!-- 결제된 방 수 -->
+	<select id="selectHouseCount">
+		SELECT COUNT(*) AS total_rooms
+		  FROM HOUSE
+		 WHERE ENROLL_STATUS = '등록완료'
+	</select>
+	
+	<!-- 예약된 방 수 -->
+	<select id="selectReservationCount">
+		SELECT COUNT(*) AS total_rooms
+		  FROM RESERVATION
+		 WHERE REZ_STATUS = '예약확정'
+	</select>
+	<!-- 예약률 -->
+	<select id="selectReservationRate">
+		SELECT COUNT(*) AS total_rooms,
+		       SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 1 ELSE 0 END) AS reserved_rooms,
+		       (SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS reservation_rate
+		FROM RESERVATION
+	</select>
+	<!-- 공실률 -->
+	<select id="selectEmptyRate">
+		SELECT COUNT(*) AS total_rooms,
+		       SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 0 ELSE 1 END) AS vacant_rooms,
+		       (SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 0 ELSE 1 END) / COUNT(*)) * 100 AS vacancy_rate
+		FROM RESERVATION
+	</select>
+	
+	<!-- 매출 분석 -->
+	<!-- 월별 매출 -->
+	<select id="selectHouseMonth">
+		SELECT TO_CHAR(PAYMENT_DATE, 'YYYY-MM') AS month, SUM(price) AS total_revenue
+		  FROM PAYMENT
+		 GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
+		 ORDER BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
+	</select>
+	
+	<!-- 최근 등록된 쉐어하우스 10개 -->
+	<select id="selectHouseDate">
+		SELECT MEMBER_ID, HOUSE_NAME, HOUSE_DATE
+			FROM (
+			  SELECT MEMBER_ID, HOUSE_NAME, HOUSE_DATE
+			  FROM HOUSE
+			  ORDER BY HOUSE_DATE DESC
+			)
+			WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<!-- 쉐어하우스 많은 지역 TOP 3 -->
+	<select id="selectRegionTopN">
+		SELECT REGION_NAME, COUNT(*) AS room_count
+		FROM REGION
+		WHERE ROWNUM &lt;= 3
+		GROUP BY REGION_NAME
+		ORDER BY COUNT(*) DESC
+	</select>
+	
+	<!-- 전체 회원 수 대비 신규 가입 회원 수 비율 -->
+	<select id="selectEnrollMemberRate">
+		SELECT total_members,
+		       (total_members / (SELECT COUNT(*) FROM member)) * 100 AS new_member_percentage
+		FROM (SELECT COUNT(*) AS total_members FROM member)
+	</select>
+	<!-- 전달 대비 신규 가입 회원 비율 -->
+	<select id="selectEnrollMemberMonthRate">
+		SELECT new_members,
+		       CASE
+		           WHEN (SELECT COUNT(*) FROM MEMBER WHERE ENROLL_DATE &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '1' MONTH AND ENROLL_DATE &lt; TRUNC(SYSDATE, 'MM')) &lt;&gt; 0
+		           THEN (new_members / (SELECT COUNT(*) FROM member WHERE ENROLL_DATE &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '1' MONTH AND ENROLL_DATE &lt; TRUNC(SYSDATE, 'MM'))) * 100
+		           ELSE NULL
+		       END AS new_member_percentage
+		FROM (SELECT COUNT(*) AS new_members FROM MEMBER WHERE ENROLL_DATE &gt;= TRUNC(SYSDATE, 'MM'))
+	</select>
+	
+	<!-- 회원가입 일별 회원 수 조회 -->
+	<select id="selectEnrollMemberDate">
+		SELECT TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS registration_date, COUNT(*) AS member_count
+		FROM MEMBER
+		GROUP BY TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD')
+		ORDER BY TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD')
+	</select>
+
+	<!-- 회원탈퇴율 -->
+	<select id="selectLeaveMember">
+		SELECT COUNT(*) AS total_members,
+		       COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) AS leave_members,
+		       (COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) / COUNT(*)) * 100 AS leave_rate
+		FROM MEMBER
+	</select>
+</mapper>
