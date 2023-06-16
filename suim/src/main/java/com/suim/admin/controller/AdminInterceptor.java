@@ -24,6 +24,8 @@ public class AdminInterceptor implements HandlerInterceptor{
         if (loginUser != null) {
         	int result = adminMemberService.checkAdminLogin(loginUser.getEmail());
         	
+        	System.out.println(result);
+        	
         	if(result != 1) {
     			session.setAttribute("alertMsg", "관리자 권한이 없습니다.");
         		response.sendRedirect("/admin/login"); // 인증되지 않은 경우 로그인 페이지로 이동

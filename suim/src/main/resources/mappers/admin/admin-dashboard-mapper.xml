@@ -7,13 +7,13 @@
 	</resultMap>
 	
 	<!-- 전체 회원 수 조회 -->
-	<select id="selectMemberAll">
+	<select id="selectMemberAll" resultType="_int">
 		SELECT COUNT(*) AS totalMembers
 		  FROM MEMBER
 	</select>
 	
 	<!-- 신규 가입 회원 수(월별) -->
-	<select id="selectEnrollMember">
+	<select id="selectEnrollMember" resultType="dashboard">
 		SELECT TO_CHAR(ENROLL_DATE, 'YYYY-MM') AS month, COUNT(*) AS new_members
 		  FROM MEMBER
 		 WHERE ENROLL_DATE >= TRUNC(SYSDATE, 'MM')
@@ -22,13 +22,13 @@
 	</select>
 	
 	<!-- 성별별 회원 수 조회 -->
-	<select id="selectMemberGender">
+	<select id="selectMemberGender" resultType="dashboard">
 		SELECT GENDER, COUNT(*) AS memberCount
 		  FROM MEMBER
 		 GROUP BY GENDER
 	</select>
 	<!-- 예약 TOP 3 회원 조회 -->
-	<select id="selectMemberHouseTopN">
+	<select id="selectMemberHouseTopN" resultType="dashboard">
 		SELECT *
 			FROM (
 			  SELECT M.MEMBER_ID, M.MEMBER_NAME,
@@ -41,7 +41,7 @@
 			WHERE ROWNUM &lt;= 3
 	</select>
 	<!-- 후기 TOP 3 회원 조회 -->
-	<select id="selectMemberInreviewTopN">
+	<select id="selectMemberInreviewTopN" resultType="dashboard">
 		SELECT *
 			FROM (
 			  SELECT M.MEMBER_ID, M.MEMBER_NAME,
@@ -55,27 +55,27 @@
 	</select>
 	
 	<!-- 결제된 방 수 -->
-	<select id="selectHouseCount">
+	<select id="selectHouseCount" resultType="_int">
 		SELECT COUNT(*) AS total_rooms
 		  FROM HOUSE
 		 WHERE ENROLL_STATUS = '등록완료'
 	</select>
 	
 	<!-- 예약된 방 수 -->
-	<select id="selectReservationCount">
+	<select id="selectReservationCount" resultType="_int">
 		SELECT COUNT(*) AS total_rooms
 		  FROM RESERVATION
 		 WHERE REZ_STATUS = '예약확정'
 	</select>
 	<!-- 예약률 -->
-	<select id="selectReservationRate">
+	<select id="selectReservationRate" resultType="dashboard">
 		SELECT COUNT(*) AS total_rooms,
 		       SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 1 ELSE 0 END) AS reserved_rooms,
 		       (SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS reservation_rate
 		FROM RESERVATION
 	</select>
 	<!-- 공실률 -->
-	<select id="selectEmptyRate">
+	<select id="selectEmptyRate" resultType="dashboard">
 		SELECT COUNT(*) AS total_rooms,
 		       SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 0 ELSE 1 END) AS vacant_rooms,
 		       (SUM(CASE WHEN REZ_STATUS = '예약확정' THEN 0 ELSE 1 END) / COUNT(*)) * 100 AS vacancy_rate
@@ -84,7 +84,7 @@
 	
 	<!-- 매출 분석 -->
 	<!-- 월별 매출 -->
-	<select id="selectHouseMonth">
+	<select id="selectHouseMonth" resultType="dashboard">
 		SELECT TO_CHAR(PAYMENT_DATE, 'YYYY-MM') AS month, SUM(price) AS total_revenue
 		  FROM PAYMENT
 		 GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
@@ -92,7 +92,7 @@
 	</select>
 	
 	<!-- 최근 등록된 쉐어하우스 10개 -->
-	<select id="selectHouseDate">
+	<select id="selectHouseDate" resultType="dashboard">
 		SELECT MEMBER_ID, HOUSE_NAME, HOUSE_DATE
 			FROM (
 			  SELECT MEMBER_ID, HOUSE_NAME, HOUSE_DATE
@@ -103,7 +103,7 @@
 	</select>
 	
 	<!-- 쉐어하우스 많은 지역 TOP 3 -->
-	<select id="selectRegionTopN">
+	<select id="selectRegionTopN" resultType="dashboard">
 		SELECT REGION_NAME, COUNT(*) AS room_count
 		FROM REGION
 		WHERE ROWNUM &lt;= 3
@@ -112,13 +112,13 @@
 	</select>
 	
 	<!-- 전체 회원 수 대비 신규 가입 회원 수 비율 -->
-	<select id="selectEnrollMemberRate">
+	<select id="selectEnrollMemberRate" resultType="dashboard">
 		SELECT total_members,
 		       (total_members / (SELECT COUNT(*) FROM member)) * 100 AS new_member_percentage
 		FROM (SELECT COUNT(*) AS total_members FROM member)
 	</select>
 	<!-- 전달 대비 신규 가입 회원 비율 -->
-	<select id="selectEnrollMemberMonthRate">
+	<select id="selectEnrollMemberMonthRate" resultType="dashboard">
 		SELECT new_members,
 		       CASE
 		           WHEN (SELECT COUNT(*) FROM MEMBER WHERE ENROLL_DATE &gt;= TRUNC(SYSDATE, 'MM') - INTERVAL '1' MONTH AND ENROLL_DATE &lt; TRUNC(SYSDATE, 'MM')) &lt;&gt; 0
@@ -129,7 +129,7 @@
 	</select>
 	
 	<!-- 회원가입 일별 회원 수 조회 -->
-	<select id="selectEnrollMemberDate">
+	<select id="selectEnrollMemberDate" resultType="dashboard">
 		SELECT TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD') AS registration_date, COUNT(*) AS member_count
 		FROM MEMBER
 		GROUP BY TO_CHAR(ENROLL_DATE, 'YYYY-MM-DD')
@@ -137,7 +137,7 @@
 	</select>
 
 	<!-- 회원탈퇴율 -->
-	<select id="selectLeaveMember">
+	<select id="selectLeaveMemberRate" resultType="dashboard">
 		SELECT COUNT(*) AS total_members,
 		       COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) AS leave_members,
 		       (COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) / COUNT(*)) * 100 AS leave_rate
