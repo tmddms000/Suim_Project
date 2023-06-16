@@ -82,6 +82,11 @@ input[type="submit"], button {
     background-color: #f2f2f2; /* 회색 배경색 */
     color: #999999; /* 회색 글자 색 */
 }
+.input-description {
+	color: #888;
+	font-size: 14px;
+	margin-top: 5px;
+}
 </style>
 </head>
 
@@ -139,12 +144,14 @@ input[type="submit"], button {
 				</select></li>	
 									
 				<li><label for="rent"><span class="red_txt">*</span>월세(관리비
-						포함):</label> <input type="number" id="rent" name="rent"
-					required></li>
-					
+						포함):</label> <input type="number" id="rent" name="rent" min="0"
+					step="10000" required>
+				<div class="input-description">만원 단위로 입력해주세요.</div></li>
+
 				<li><label for="deposit"><span class="red_txt">*</span>보증금:</label>
-					<input type="number" id="deposit" name="deposit"
-					required></li>
+					<input type="number" id="deposit" name="deposit" min="0"
+					step="10000" required>
+				<div class="input-description">만원 단위로 입력해주세요.</div></li>
 							
 				<li><label for="roomPeople"><span class="red_txt">*</span>방
 						인원:</label> <input type="number" id="roomPeople"

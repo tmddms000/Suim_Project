@@ -148,7 +148,7 @@
 							</li>
 						</c:if>
 						<li class="actionButton">
-								<button class="q_btn white" onclick="location.href='list.ho'">뒤로가기</button>
+								<button class="q_btn white" onclick="location.href='list.ho'">목록가기</button>
 							</li>
 					</ul>
 				</div>
@@ -185,8 +185,8 @@
 						<tr>
 							<td>${h.resType }/${h.roomPeople}인실</td>
 							<!-- A타입 / 16인실, B타입 / 12인, C타입 / 3인실, D타입 / 1인실 등 -->
-							<td>${h.deposit }</td>
-							<td>${h.rent }</td>
+							<td>${(h.deposit/10000).intValue()}만원</td>
+							<td>${(h.rent/10000).intValue()}만원</td>
 							<td>${h.enterDate }~${h.maxEnterDate}</td>
 							<td>${h.minStay }</td>
 							<td>${h.maxStay }</td>

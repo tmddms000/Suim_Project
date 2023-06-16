@@ -137,7 +137,7 @@
 										<p class="card-text">${ h.enrollStatus }</p>
 										</c:if>
 										<c:if test = "${h.enrollStatus eq '등록완료'}">
-										<p class="card-text">${ h.deposit } / ${ h.rent }</p>
+										 <p class="card-text">${(h.deposit/10000).intValue()}만원 / ${(h.rent/10000).intValue()}만원</p>
 										</c:if>
 										<p class="card-text">${ h.houseDate }</p>
 										<div class="card-form">

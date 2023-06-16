@@ -17,7 +17,7 @@ body {
 }
 
 h1 {
-	margin-top : 100px;
+	margin-top: 100px;
 	text-align: center;
 }
 
@@ -79,18 +79,25 @@ input[type="submit"], button {
 .button-container button {
 	margin: 0 5px;
 }
+
 .custom-disabled {
-    background-color: #f2f2f2; /* 회색 배경색 */
-    color: #999999; /* 회색 글자 색 */
+	background-color: #f2f2f2; /* 회색 배경색 */
+	color: #999999; /* 회색 글자 색 */
 }
 
 .preview-image:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
-  .file-label {
-        cursor: pointer;
-    }
+.file-label {
+	cursor: pointer;
+}
+
+.input-description {
+	color: #888;
+	font-size: 14px;
+	margin-top: 5px;
+}
 </style>
 </head>
 
@@ -104,8 +111,9 @@ input[type="submit"], button {
 				<div class="row">
 					<div class="col-sm-9">
 						<div class="input-group">
-							<input type="text" class="form-control custom-disabled" name="houseAddress" id="area"
-								placeholder="주소를 검색해주세요" readonly onclick="triggerSearch();" value="${h.houseAddress }">
+							<input type="text" class="form-control custom-disabled"
+								name="houseAddress" id="area" placeholder="주소를 검색해주세요" readonly
+								onclick="triggerSearch();" value="${h.houseAddress }">
 						</div>
 					</div>
 					<div class="col-sm-3 text-left">
@@ -118,157 +126,138 @@ input[type="submit"], button {
 				<br>
 
 				<li><label for="roomName"><span class="red_txt">*</span>방
-						이름:</label> <input type="text" id="roomName" name="houseName" value="${h.houseName }"
-					required></li>
-					
-			<li>
-			  <label for="gender"><span class="red_txt">*</span>성별:</label><br>
-			  <input type="radio" id="genderMale" name="resGender" value="남성전용" required checked="${h.resGender == '남성전용'}">
-			  <label for="genderMale">남성전용&nbsp;</label>
-			  <input type="radio" id="genderFemale" name="resGender" value="여성전용" checked="${h.resGender == '여성전용'}">
-			  <label for="genderFemale">여성전용&nbsp;</label>
-			  <input type="radio" id="genderCoed" name="resGender" value="남녀공용" checked="${h.resGender == '남녀공용'}">
-			  <label for="genderCoed">남녀공용</label>
-			</li>
-				
-			<li>
-			    <label for="minStay">
-			        <span class="red_txt">*</span>주거유형
-			    </label>
-			    <select name="resType" id="minStay" required>
-			        <option value="">선택하세요</option>
-			        <option value="아파트" selected="${h.resType == '아파트'}">아파트</option>
-			        <option value="오피스텔" selected="${h.resType == '오피스텔'}">오피스텔</option>
-			        <option value="원룸" selected="${h.resType == '원룸'}">원룸</option>
-			    </select>
-			</li>
-								
-			<li>
-			    <label for="floor">
-			        <span class="red_txt">*</span>층수
-			    </label>
-			    <select name="floor" id="floor" required>
-			        <option value="">선택하세요</option>
-			        <option value="반지하" selected="${h.floor == '반지하'}">반지하</option>
-			        <option value="옥탑" selected="${h.floor == '옥탑'}">옥탑</option>
-			        <option value="지상" selected="${h.floor == '지상'}">지상</option>
-			    </select>
-			</li>
-									
+						이름:</label> <input type="text" id="roomName" name="houseName"
+					value="${h.houseName }" required></li>
+
+				<li><label for="gender"><span class="red_txt">*</span>성별:</label><br>
+					<input type="radio" id="genderMale" name="resGender" value="남성전용"
+					required checked="${h.resGender == '남성전용'}"> <label
+					for="genderMale">남성전용&nbsp;</label> <input type="radio"
+					id="genderFemale" name="resGender" value="여성전용"
+					checked="${h.resGender == '여성전용'}"> <label
+					for="genderFemale">여성전용&nbsp;</label> <input type="radio"
+					id="genderCoed" name="resGender" value="남녀공용"
+					checked="${h.resGender == '남녀공용'}"> <label for="genderCoed">남녀공용</label>
+				</li>
+
+				<li><label for="minStay"> <span class="red_txt">*</span>주거유형
+				</label> <select name="resType" id="minStay" required>
+						<option value="">선택하세요</option>
+						<option value="아파트" selected="${h.resType == '아파트'}">아파트</option>
+						<option value="오피스텔" selected="${h.resType == '오피스텔'}">오피스텔</option>
+						<option value="원룸" selected="${h.resType == '원룸'}">원룸</option>
+				</select></li>
+
+				<li><label for="floor"> <span class="red_txt">*</span>층수
+				</label> <select name="floor" id="floor" required>
+						<option value="">선택하세요</option>
+						<option value="반지하" selected="${h.floor == '반지하'}">반지하</option>
+						<option value="옥탑" selected="${h.floor == '옥탑'}">옥탑</option>
+						<option value="지상" selected="${h.floor == '지상'}">지상</option>
+				</select></li>
+
 				<li><label for="rent"><span class="red_txt">*</span>월세(관리비
-						포함):</label> <input type="number" id="rent" name="rent" value="${h.rent}"
-					required></li>
-					
+						포함):</label> <input type="number" id="rent" name="rent" min="0" value="${h.rent}"
+					step="10000" required>
+				<div class="input-description">만원 단위로 입력해주세요.</div></li>
+
 				<li><label for="deposit"><span class="red_txt">*</span>보증금:</label>
-					<input type="number" id="deposit" name="deposit" value="${h.deposit}"
-					required"></li>
-							
+					<input type="number" id="deposit" name="deposit" min="0" value="${h.deposit}"
+					step="10000" required>
+				<div class="input-description">만원 단위로 입력해주세요.</div></li>
+
 				<li><label for="roomPeople"><span class="red_txt">*</span>방
-						인원:</label> <input type="number" id="roomPeople"
-					name="roomPeople" value="${h.roomPeople }" required></li>
-					
+						인원:</label> <input type="number" id="roomPeople" name="roomPeople"
+					value="${h.roomPeople }" required></li>
+
 				<li><label for="enterdate"><span class="red_txt">*</span>최소
 						입주 가능일:</label> <input type="date" id="enterdate" value="${h.enterDate }"
 					name="enterDate" required></li>
-					
+
 				<li><label for="enterdate_max"><span class="red_txt">*</span>최대
-						입주 가능일:</label> <input type="date" id="maxenterdate" value="${h.maxEnterDate }"
-					name="maxEnterDate" required></li>
-					
-				<li>
-				    <label for="minStay">
-				        <span class="red_txt">*</span>최소 거주 기간:
-				    </label>
-				    <select name="minStay" id="minStay" required>
-				        <option value="">선택하세요</option>
-				        <option value="1~3개월" ${h.minStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
-				        <option value="4~6개월" ${h.minStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
-				        <option value="7~12개월" ${h.minStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
-				        <option value="1년이상" ${h.minStay == '1년이상' ? 'selected' : ''}>1년이상</option>
-				    </select>
-				</li>
-				
-				<li>
-				    <label for="maxStay">
-				        <span class="red_txt">*</span>최대 거주 기간:
-				    </label>
-				    <select name="maxStay" id="maxStay" required>
-				        <option value="">선택하세요</option>
-				        <option value="1~3개월" ${h.maxStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
-				        <option value="4~6개월" ${h.maxStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
-				        <option value="7~12개월" ${h.maxStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
-				        <option value="1년이상" ${h.maxStay == '1년이상' ? 'selected' : ''}>1년이상</option>
-				    </select>
-				</li>
+						입주 가능일:</label> <input type="date" id="maxenterdate"
+					value="${h.maxEnterDate }" name="maxEnterDate" required></li>
+
+				<li><label for="minStay"> <span class="red_txt">*</span>최소
+						거주 기간:
+				</label> <select name="minStay" id="minStay" required>
+						<option value="">선택하세요</option>
+						<option value="1~3개월" ${h.minStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
+						<option value="4~6개월" ${h.minStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
+						<option value="7~12개월" ${h.minStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
+						<option value="1년이상" ${h.minStay == '1년이상' ? 'selected' : ''}>1년이상</option>
+				</select></li>
+
+				<li><label for="maxStay"> <span class="red_txt">*</span>최대
+						거주 기간:
+				</label> <select name="maxStay" id="maxStay" required>
+						<option value="">선택하세요</option>
+						<option value="1~3개월" ${h.maxStay == '1~3개월' ? 'selected' : ''}>1~3개월</option>
+						<option value="4~6개월" ${h.maxStay == '4~6개월' ? 'selected' : ''}>4~6개월</option>
+						<option value="7~12개월" ${h.maxStay == '7~12개월' ? 'selected' : ''}>7~12개월</option>
+						<option value="1년이상" ${h.maxStay == '1년이상' ? 'selected' : ''}>1년이상</option>
+				</select></li>
 			</ul>
 
-<c:forEach var="p" items="${plist}" varStatus="status" begin="0">
-    <c:choose>
-        <c:when test="${status.index == 0}">
-            <label for="image${status.index+1}">대표 이미지:</label>
-        </c:when>
-        <c:otherwise>
-            <label for="image${status.index+1}">이미지 ${status.index+1}:</label>
-        </c:otherwise>
-    </c:choose>
-    <div id="preview${status.index+1}" class="preview-image" onclick="selectImage('image${status.index+1}')">
-        <img src="/resources/img/house/uploadFiles/${p.changeName}" alt="이미지 ${status.index+1}" width="200">
-    </div>
-    <input type="file" id="image${status.index+1}" name="image${status.index+1}" onchange="previewImage(this, 'preview${status.index+1}')" style="display: none;">
-    <label class="file-label" for="image${status.index+1}">파일 선택</label>
-    <input type="hidden" name="photoNo${status.index+1}" value="${p.photoNo}">
-</c:forEach>
-		<br>
-			
+			<c:forEach var="p" items="${plist}" varStatus="status" begin="0">
+				<c:choose>
+					<c:when test="${status.index == 0}">
+						<label for="image${status.index+1}">대표 이미지:</label>
+					</c:when>
+					<c:otherwise>
+						<label for="image${status.index+1}">이미지 ${status.index+1}:</label>
+					</c:otherwise>
+				</c:choose>
+				<div id="preview${status.index+1}" class="preview-image"
+					onclick="selectImage('image${status.index+1}')">
+					<img src="/resources/img/house/uploadFiles/${p.changeName}"
+						alt="이미지 ${status.index+1}" width="200">
+				</div>
+				<input type="file" id="image${status.index+1}"
+					name="image${status.index+1}"
+					onchange="previewImage(this, 'preview${status.index+1}')"
+					style="display: none;">
+				<label class="file-label" for="image${status.index+1}">파일 선택</label>
+				<input type="hidden" name="photoNo${status.index+1}"
+					value="${p.photoNo}">
+			</c:forEach>
+			<br>
+
 			<h3>하우스 소개:</h3>
-			<textarea id="roomDescription" name="houseContent"
-				rows="4" style="width: 100%; height: 150px; resize: none;">${h.houseContent}</textarea>
+			<textarea id="roomDescription" name="houseContent" rows="4"
+				style="width: 100%; height: 150px; resize: none;">${h.houseContent}</textarea>
 			<br>
 
 			<h3 class="s_title">공동 시설 정보</h3>
 			<ul class="form_box">
-			  <li>
-			    <label for="refrigerator">냉장고:</label> 
-			    <input type="checkbox" id="냉장고" name="incFurniture" value="냉장고">
-			    <label for="waterPurifier">정수기:</label> 
-			    <input type="checkbox" id="정수기" name="incFurniture" value="정수기">
-			  </li>
-			  <li>
-			    <label for="gasStove">가스레인지:</label> 
-			    <input type="checkbox" id="가스레인지" name="incFurniture" value="가스레인지">
-			    <label for="riceCooker">밥솥:</label> 
-			    <input type="checkbox" id="밥솥" name="incFurniture" value="밥솥">
-			  </li>
-			  <li>
-			    <label for="tv">티비:</label> 
-			    <input type="checkbox" id="티비" name="incFurniture" value="티비">
-			    <label for="bathtub">욕조:</label> 
-			    <input type="checkbox" id="욕조" name="incFurniture" value="욕조">
-			  </li>
-			  <li>
-			    <label for="swimmingPool">수영장:</label> 
-			    <input type="checkbox" id="수영장" name="incFurniture" value="수영장">
-			    <label for="bidet">비데:</label> 
-			    <input type="checkbox" id="비데" name="incFurniture" value="비데">
-			  </li>
-			  <li>
-			    <label for="washingMachine">세탁기:</label> 
-			    <input type="checkbox" id="세탁기" name="incFurniture" value="세탁기">
-			    <label for="dryer">건조기:</label> 
-			    <input type="checkbox" id="건조기" name="incFurniture" value="건조기">
-			  </li>
-			  <li>
-			    <label for="balcony">베란다:</label> 
-			    <input type="checkbox" id="베란다" name="incFurniture" value="베란다">
-			    <label for="wifi">WIFI:</label> 
-			    <input type="checkbox" id="WIFI" name="incFurniture" value="WIFI">
-			  </li>
-			  <li>
-			    <label for="microwave">전자레인지:</label> 
-			    <input type="checkbox" id="전자레인지" name="incFurniture" value="전자레인지">
-			    <label for="airConditioner">에어컨:</label> 
-			    <input type="checkbox" id="에어컨" name="incFurniture" value="에어컨">
-			  </li>
+				<li><label for="refrigerator">냉장고:</label> <input
+					type="checkbox" id="냉장고" name="incFurniture" value="냉장고"> <label
+					for="waterPurifier">정수기:</label> <input type="checkbox" id="정수기"
+					name="incFurniture" value="정수기"></li>
+				<li><label for="gasStove">가스레인지:</label> <input type="checkbox"
+					id="가스레인지" name="incFurniture" value="가스레인지"> <label
+					for="riceCooker">밥솥:</label> <input type="checkbox" id="밥솥"
+					name="incFurniture" value="밥솥"></li>
+				<li><label for="tv">티비:</label> <input type="checkbox" id="티비"
+					name="incFurniture" value="티비"> <label for="bathtub">욕조:</label>
+					<input type="checkbox" id="욕조" name="incFurniture" value="욕조">
+				</li>
+				<li><label for="swimmingPool">수영장:</label> <input
+					type="checkbox" id="수영장" name="incFurniture" value="수영장"> <label
+					for="bidet">비데:</label> <input type="checkbox" id="비데"
+					name="incFurniture" value="비데"></li>
+				<li><label for="washingMachine">세탁기:</label> <input
+					type="checkbox" id="세탁기" name="incFurniture" value="세탁기"> <label
+					for="dryer">건조기:</label> <input type="checkbox" id="건조기"
+					name="incFurniture" value="건조기"></li>
+				<li><label for="balcony">베란다:</label> <input type="checkbox"
+					id="베란다" name="incFurniture" value="베란다"> <label for="wifi">WIFI:</label>
+					<input type="checkbox" id="WIFI" name="incFurniture" value="WIFI">
+				</li>
+				<li><label for="microwave">전자레인지:</label> <input
+					type="checkbox" id="전자레인지" name="incFurniture" value="전자레인지">
+					<label for="airConditioner">에어컨:</label> <input type="checkbox"
+					id="에어컨" name="incFurniture" value="에어컨"></li>
 			</ul>
 
 			<div class="button-container">
