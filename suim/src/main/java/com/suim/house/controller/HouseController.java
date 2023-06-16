@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.common.mail.MailHandler;
 import com.suim.house.model.service.HouseService;
+import com.suim.house.model.service.ListHouseService;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Photo;
 import com.suim.house.model.vo.Wish;
@@ -37,6 +40,9 @@ public class HouseController {
 	
 	@Autowired
 	private HouseService houseService;
+	
+	@Autowired
+	private ListHouseService listHouseService;
 	
 	@Autowired
 	public HouseController(JavaMailSender mailSender) {
@@ -61,9 +67,24 @@ public class HouseController {
 	    
 	    int lo = 0;
 	    String Id = "";
+	    int rezChResult = 0;
 	    
 	    if (loginUser != null) {
 	    	Id = loginUser.getMemberId();
+	    	
+	    	 Map<String, Object> rezCheck = new HashMap<>();
+			 rezCheck.put("hno", hno);
+			 rezCheck.put("Id", Id);
+		
+			 rezChResult = listHouseService.rezChCount(rezCheck);
+			    
+			 if(rezChResult > 0) {
+			    	
+				 int loginRno = listHouseService.loginRno(rezCheck);
+				 mv.addObject("loginRno", loginRno);
+			}
+	    	
+	    	
 	    	for(Wish w : list) {
 	    		if(loginUser.getMemberId().equals(w.getId())){
 	    			lo = w.getHno();
@@ -71,6 +92,7 @@ public class HouseController {
 	    	}
 	    }
 	    
+		mv.addObject("rezChResult", rezChResult);
 	    mv.addObject("plist", plist);
 	    mv.addObject("Id", Id);
 	    mv.addObject("lo", lo);

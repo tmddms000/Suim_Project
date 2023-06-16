@@ -131,12 +131,18 @@
 							onerror="this.src='/resources/img/common/default_profile.png'" />
 						</li>
 						<li class="userId">${h.nickName }</li>
-						<c:if
-							test="${loginUser.memberId != h.memberId && loginUser != null}">
-							<li class="actionButton">
-								<button type="button" class="q_btn green applyInsert"
-									onclick="rezPopup()">예약하기</button>
-							</li>
+							<c:if test="${Id == '' || rezChResult == 0}">
+								<li class="actionButton">
+									<button type="button" class="q_btn green applyInsert"
+										onclick="rezPopup()">예약하기</button>
+								</li>
+							</c:if>
+							<c:if test="${Id != '' && rezChResult > 0}">
+								<li class="actionButton">
+									<button type="button" class="q_btn green applyInsert"
+										onclick="rezCancelPopup(${loginRno}, '${h.houseName}')">예약취소</button>
+								</li>
+							</c:if>
 							<li class="actionButton">
 								<button class="q_btn white likeInsert"
 									onclick="heart(${h.houseNo})">
@@ -146,7 +152,6 @@
 							<li class="actionButton">
 								<button class="q_btn white" id="chatBtn">소통하기</button>
 							</li>
-						</c:if>
 						<li class="actionButton">
 								<button class="q_btn white" onclick="location.href='list.ho'">목록가기</button>
 							</li>
@@ -420,14 +425,37 @@ var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표�
 					});
 	
 	function rezPopup() {
-
+		
+		if("${Id}"=='') {
+			
+			alert("로그인 후 이용해야 합니다.");
+			
+		} else {
+		
+		let houseNo = "${h.houseNo}";
+        let houseName = "${h.houseName}";
+        let memberId = "${h.memberId}";
+        
         var popupUrl = "houseRez.ho?value=" + encodeURIComponent(houseNo) + "&value2=" + encodeURIComponent(houseName) + "&value3=" + encodeURIComponent(memberId);
         	  var width = 500;
               var height = 500;
               var left = (screen.width - width) / 2;
               var top = (screen.height - height) / 2;
               var popup = window.open(popupUrl, "popup", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+		}
     }
+	
+	function rezCancelPopup(rezNo, houseName) {
+	
+		var popupUrl = "/rezCancelPop.rez?value=" + encodeURIComponent(rezNo) + "&value2=" + encodeURIComponent(houseName);
+								        
+		var width = 500;
+		var height = 500;
+		var left = (screen.width - width) / 2;
+		var top = (screen.height - height) / 2;
+		var popup = window.open(popupUrl, "popup", "width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+	}
+	
 	
 	</script>
 </html>

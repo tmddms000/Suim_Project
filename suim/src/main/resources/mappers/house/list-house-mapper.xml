@@ -160,4 +160,24 @@
 		WHERE MEMBER_ID = #{memberId}
 	</select>
 	
+	<!-- 로그인유저의 셰어하우스 예약 체크 -->
+	<select id="rezChCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVATION
+		WHERE HOUSE_NO = #{hno}
+		AND SEND_MEMBER_ID = #{Id}
+		AND NOT REZ_STATUS = '예약취소'
+		AND DEL_STATUS = 'N'
+	</select>
+	
+	<!-- 로그인 유저의 예약번호 받아오기 -->
+	<select id="loginRno" resultType="_int">
+	SELECT REZ_NO
+	FROM RESERVATION
+		WHERE HOUSE_NO = #{hno}
+		AND SEND_MEMBER_ID = #{Id}
+		AND NOT REZ_STATUS = '예약취소'
+		AND DEL_STATUS = 'N'
+	</select>
+	
 </mapper>

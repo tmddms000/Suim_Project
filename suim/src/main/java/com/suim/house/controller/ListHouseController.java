@@ -97,14 +97,30 @@ public class ListHouseController {
 									HttpSession session, HttpServletRequest request, RedirectAttributes redirectAttributes, Model model) {
 
 	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    
+	    String Id = loginUser.getMemberId();
+	    
+		 Map<String, Object> rezCheck = new HashMap<>();
+			 rezCheck.put("hno", houseNo);
+			 rezCheck.put("Id", Id);
+		
+	    int rezChResult = listHouseService.rezChCount(rezCheck);
+	    	    
+	    if(rezChResult > 0) {
+	    	
+	        session.setAttribute("altMsg", "이미 신청중인 예약이 있습니다.");
+	        
+		    return "house/houseReservation";
 
-	    model.addAttribute("houseNo", houseNo);
-	    model.addAttribute("loginUser", loginUser);
-	    model.addAttribute("memberId", memberId);
-	    model.addAttribute("houseName", houseName);
-
-	    return "house/houseReservation";
-
+	    } else {
+	    
+		    model.addAttribute("houseNo", houseNo);
+		    model.addAttribute("loginUser", loginUser);
+		    model.addAttribute("memberId", memberId);
+		    model.addAttribute("houseName", houseName);
+	
+		    return "house/houseReservation";
+	    }
 	}
 	
 	// 예약 신청(등록) 컨트롤러

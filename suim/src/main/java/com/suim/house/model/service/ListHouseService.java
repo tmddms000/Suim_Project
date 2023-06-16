@@ -45,5 +45,9 @@ public interface ListHouseService {
 	// 멤버의 이메일 확인
 	String memberEmail(String memberId);
 
+	// 로그인 유저의 셰어하우스 예약정보 체크
+	int rezChCount(Map<String, Object> rezCheck);
 	
+	// 로그인 유저의 예약 번호 받아오기
+	int loginRno(Map<String, Object> rezCheck);
 }

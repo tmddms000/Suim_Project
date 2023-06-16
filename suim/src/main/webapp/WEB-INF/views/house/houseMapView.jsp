@@ -228,18 +228,10 @@
 	
 		// 지도 생성
 	    if ("${regionEmpty}" === "true") {
-	    	Swal.fire({
-	    		  title: '검색된 지역 결과가 없습니다.',
-	    		  text: "다시 입력해주세요",
-	    		  confirmButtonColor: 'rgb(250,107,111)',
-	    		  position : 'top',
-	    		  width: 450,
-	    		  confirmButtonText: '확인'
-	    		}).then(function(result) {
-	    		  if (result.isConfirmed) {
-	    		    window.history.back();
-	    		  }
-	    		});	        
+	    	var map = new kakao.maps.Map(document.getElementById('map'), {
+	            center: new kakao.maps.LatLng("37.5666805", "126.9784147"),
+	            level: 5
+	        });       
 	    } else {
 	        // 지도를 초기화하고 지역 좌표를 사용하여 표시합니다.
 	        var map = new kakao.maps.Map(document.getElementById('map'), {

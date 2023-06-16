@@ -146,13 +146,24 @@
 		    }
 		</script>	
 		
-		<c:if test="${ not empty alMsg }">
-			<script>
-				alert('${ alMsg }');
+		<script>
+		    var alMsg = "<%= session.getAttribute("alMsg") %>";
+		    if (alMsg && alMsg !== "null" && alMsg !== "") {
+		        alert(alMsg);
 				window.close(); // 팝업 닫기
-			</script>
-			<c:remove var="alMsg" scope="session" />
-		</c:if>
+				window.opener.location.reload(); // 팝업을 열었던 페이지 새로고침
+		        <% session.removeAttribute("alMsg"); %>
+		    }
+		</script>
+		<script>
+		    var altMsg = "<%= session.getAttribute("altMsg") %>";
+		    if (altMsg && altMsg !== "null" && altMsg !== "") {
+		        alert(altMsg);
+				window.close(); // 팝업 닫기
+				window.opener.location.reload(); // 팝업을 열었던 페이지 새로고침
+		        <% session.removeAttribute("altMsg"); %>
+		    }
+		</script>
 		
 	<script>
 		function updateMinDate() {

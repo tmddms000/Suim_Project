@@ -89,5 +89,15 @@ public class ListHouseDao {
 		public String memberEmail(SqlSessionTemplate sqlSession, String memberId) {
 			return sqlSession.selectOne("listHouseMapper.memberEmail", memberId);
 		}
+		
+		// 로그인유저의 셰어하우스 예약 체크
+		public int rezChCount(SqlSessionTemplate sqlSession, Map<String, Object> rezCheck) {
+			return sqlSession.selectOne("listHouseMapper.rezChCount", rezCheck);
+		}
+		
+		// 로그인유저의 셰어하우스 예약 번호 받아오기
+		public int loginRno(SqlSessionTemplate sqlSession, Map<String, Object> rezCheck) {
+			return sqlSession.selectOne("listHouseMapper.loginRno", rezCheck);
+		}
 	
 }
