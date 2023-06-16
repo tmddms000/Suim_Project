@@ -68,9 +68,6 @@
 
 		}
 
-
-
-
 </style>        
         
         
@@ -101,7 +98,7 @@
     	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
 		    <button type="submit">
 		   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
-		     </button>
+		    </button>
 		</div>   
 		
     <label for="sex">성별:</label>
@@ -109,7 +106,6 @@
         <option value="all">성별을 선택하세요</option>
         <option value="M" >남자</option>
         <option value="F" >여자</option>
-
     </select>
 
     &nbsp;&nbsp;

@@ -12,6 +12,7 @@ import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Reservation;
 import com.suim.member.model.dao.MypageDao;
 import com.suim.member.model.vo.MyWish;
+import com.suim.pay.model.vo.Pay;
 
 @Service
 public class MypageServiceImpl implements MypageService {
@@ -97,6 +98,16 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public ArrayList<Reservation> selectRezList(PageInfo pi, String memberId) {
 		return  mypageDao.selectRezList(sqlSession, pi, memberId);
+	}
+
+	@Override
+	public int selectPayListCount(String memberId) {
+		return mypageDao.selectPayListCount(sqlSession, memberId);
+	}
+
+	@Override
+	public ArrayList<Pay> selectPayList(PageInfo pi, String memberId) {
+		return  mypageDao.selectPayList(sqlSession, pi, memberId);
 	}
 
 }

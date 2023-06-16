@@ -83,11 +83,14 @@
                     <th>작성일</th>
                     <td>${ fb.findDate }</td>
                 </tr>
+                
                 <tr>
                     <th>카테고리</th>
                     <td>
                         ${ fb.category }
                     </td>
+                    
+                    
                     <th>조회수</th>
                     <td>
                         ${ fb.findView }

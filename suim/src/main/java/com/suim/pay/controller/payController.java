@@ -75,7 +75,8 @@ public class payController {
 	        String itemName = URLEncoder.encode(h.getHouseName(), "UTF-8");
 	        int deposit = (int) (h.getDeposit()*0.1);
 	        String price = String.valueOf(deposit);
-
+	        String memberId = h.getMemberId();
+	        
 	        String parameter = "cid=TC0ONETIME" +
 	                "&partner_order_id=partner_order_id" +
 	                "&partner_user_id=partner_user_id" +
@@ -112,11 +113,12 @@ public class payController {
 	                p.setHouseName(itemName);
 	                p.setPrice(price);
 	                p.setTid(tid);
+	                p.setMemberId(memberId);
 	                
 	                // Pay 객체를 데이터베이스에 추가하는 코드 (예시)
 	                int resultPay = payService.insertPay(p);
-
-	       
+	                	
+	                
 	                if (resultPay > 0 /*|| result2 > 0*/) { // 성공 => 일회성 알림문구를 표시한 뒤 게시글 목록 페이지로 URL을 재요청합니다.
 
 	                    ArrayList<Pay> pi = payService.selectPay(p);
@@ -130,8 +132,6 @@ public class payController {
 
 	                    return "common/errorPage";
 	                }
-
-	                
 
 	            }
 
@@ -171,10 +171,7 @@ public class payController {
 						  @RequestParam("pg_token") String pgToken,
 	                        HttpSession session,
 	                        ModelAndView mv) throws UnsupportedEncodingException {
-	   
-		
 
-		
 		int result = payService.updatePay(hno);
 		
 		if (result > 0 /*|| result2 > 0*/) {
@@ -263,7 +260,7 @@ public class payController {
 				            + "</div>"
 				            + "</body>"
 				            + "</html>";
-
+				    
 				    sendMail.setText(htmlContent);
 				    sendMail.setFrom("suimm012@gmail.com", "쉼");
 				    sendMail.setSubject(h.getHouseName() + "의 결제가 취소되었습니다.");

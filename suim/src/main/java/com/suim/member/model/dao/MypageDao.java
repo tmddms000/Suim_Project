@@ -1,7 +1,6 @@
 package com.suim.member.model.dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +13,7 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Reservation;
 import com.suim.member.model.vo.MyWish;
+import com.suim.pay.model.vo.Pay;
 
 @Repository
 public class MypageDao {
@@ -118,7 +118,19 @@ public class MypageDao {
 		return (ArrayList)sqlSession.selectList("mypageMapper.selectRezList", memberId, rowBounds);
 	}
 	
+	public int selectPayListCount(SqlSessionTemplate sqlSession, String memberId) {
+		return sqlSession.selectOne("mypageMapper.selectPayListCount", memberId);
+	}
 	
+	public ArrayList<Pay> selectPayList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
+		
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
+		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit);
+
+		return (ArrayList)sqlSession.selectList("mypageMapper.selectPayList", memberId, rowBounds);
+	}
 	
 
 }

@@ -78,9 +78,11 @@
                     <th>작성일</th>
                     <td>${ b.boardDate }</td>
                 </tr>
-                <tr>
-      
-                 
+                <tr>    
+                	<th>글번호</th>
+                       <td>
+                        ${ b.boardNo}
+                    </td>
                     <th>조회수</th>
                     <td>
                         ${ b.boardView }

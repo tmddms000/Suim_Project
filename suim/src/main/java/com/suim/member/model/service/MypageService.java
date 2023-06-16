@@ -7,6 +7,7 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.house.model.vo.House;
 import com.suim.house.model.vo.Reservation;
 import com.suim.member.model.vo.MyWish;
+import com.suim.pay.model.vo.Pay;
 
 public interface MypageService {
 
@@ -56,6 +57,12 @@ public interface MypageService {
 		
 	//내가 예약한 셰어하우스 리스트 조회
 	ArrayList<Reservation> selectRezList(PageInfo pi, String memberId);
+	
+	//결제내역 리스트갯수 조회
+	int selectPayListCount(String memberId);
+	
+	//결제내역 리스트 조회
+	ArrayList<Pay> selectPayList(PageInfo pi, String memberId);
 
 	
 

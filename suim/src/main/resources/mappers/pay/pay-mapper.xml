@@ -13,11 +13,14 @@
 		<result column="PAYMENT_STATUS" property="paymentStatus" />
 		<result column="HOUSE_NO" property="houseNo" />
 		<result column="DEPOSIT" property="deposit" />
+		<result column="MEMBERID" property="memberId" />
 	</resultMap>
 	
 	<select id="selectPay" parameterType="_int" resultMap="payResultSet">
 		
-		SELECT * FROM PAYMENT
+		SELECT * 
+		FROM PAYMENT
+		
 		
 	</select>
 	
@@ -27,12 +30,14 @@
 						, PRICE
 						, PAYMENT_STATUS
 						, HOUSE_NO
+						, MEMBER_ID
 						)
 				   VALUES(SEQ_PAYMENT_NO.NEXTVAL
 				   		, #{tid}
 				   		, #{price}
 				   		, 'Y'
 				   		, #{houseNo}
+				   		, #{memberId}
 				   		)
 	</insert> 
 	

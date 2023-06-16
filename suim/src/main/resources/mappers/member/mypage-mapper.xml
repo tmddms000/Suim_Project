@@ -53,19 +53,7 @@
     <result column="INREVIEW_REPLY_COUNT" property="replyCount" />
 	</resultMap>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	<!-- 내가쓴 셰어하우스 resultMap -->
 	<resultMap id="myHouseResultMap" type="house">
@@ -103,6 +91,20 @@
 		<result column="CANCEL_CONTENT" property="cancelContent"/>
 		<result column="DEL_STATUS" property="delStatus"/>
 		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="HOUSE_NAME" property="houseName"/>
+	</resultMap>
+	
+	<!-- 결제내역 resultMap -->
+		<resultMap id="payResultMap" type="pay">
+	    <result column="PAYMENT_NO" property="paymentNo"/>
+		<result column="TID" property="tid"/>
+		<result column="PRICE" property="price"/>
+		<result column="PAYMENT_DATE" property="paymentDate"/>
+		<result column="PAYMENT_STATUS" property="paymentStatus"/>
+		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="PG_TOKEN" property="pgToken"/>
+		<result column="MEMBER_ID" property="memberId"/>
+		<result column="DEPOSIT" property="deposit"/>
 		<result column="HOUSE_NAME" property="houseName"/>
 	</resultMap>
 
@@ -283,6 +285,31 @@
 			WHERE r.SEND_MEMBER_ID = #{memberId}
 			AND r.DEL_STATUS = 'N'
 		 ORDER BY r.REZ_NO DESC
+	</select>
+	
+		<!-- 결제내역 리스트 갯수 구하는 쿼리문 -->
+	<select id="selectPayListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PAYMENT
+		WHERE PAYMENT_STATUS IN ('Y' , 'N')
+		AND MEMBER_ID = #{memberId}
+	</select>
+	
+		<select id="selectPayList" resultMap="payResultMap">
+	   SELECT p.PAYMENT_NO,
+              p.TID,
+              p.PRICE,
+              p.PAYMENT_DATE,
+              p.PAYMENT_STATUS,
+              p.HOUSE_NO,
+              m.MEMBER_ID,
+              h.HOUSE_NAME
+		FROM PAYMENT p
+		JOIN HOUSE h ON (p.HOUSE_NO = h.HOUSE_NO)
+        JOIN MEMBER m ON (m.MEMBER_ID = p.MEMBER_ID)
+			WHERE p.MEMBER_ID = #{memberId}
+			AND p.PAYMENT_STATUS IN ('Y','N')
+		 ORDER BY p.PAYMENT_NO DESC
 	</select>
 
 

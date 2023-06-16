@@ -8,6 +8,8 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ import com.suim.board.model.vo.Reply;
 import com.suim.board.model.vo.findReply;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
+import com.suim.member.model.vo.Member;
 import com.suim.report.model.vo.Report;
 
 
@@ -82,27 +85,39 @@ public class BoardController {
 		return "board/free-boardEnrollForm";
 	}
 
-		@RequestMapping("detail.bo")
-		public ModelAndView selectBoard(ModelAndView mv,
-										int bno) {
+	@RequestMapping("detail.bo")
+	public ModelAndView selectBoard(ModelAndView mv, int bno, HttpSession session) {
 
-			int result = boardService.increaseCount(bno);
-			
+	    Member loginUser = (Member) session.getAttribute("loginUser");
 
+	    // 이미 조회한 게시글인지 확인하기 위해 세션 사용
+	    Set<Integer> viewedPosts = (Set<Integer>) session.getAttribute("viewedPosts");
+	    if (viewedPosts == null) {
+	        viewedPosts = new HashSet<>();
+	    }
 
-			if(result > 0) { // 성공
+	    // 게시글을 이전에 조회한 경우 조회수를 증가하지 않음
+	    if (!viewedPosts.contains(bno)) {
+	        int result = boardService.increaseCount(bno);
+	        if (result > 0) { // 성공
+	            viewedPosts.add(bno);
+	            session.setAttribute("viewedPosts", viewedPosts);
+	        }
+	    }
 
-				Board b = boardService.selectBoard(bno);
-				
-				mv.addObject("b", b).setViewName("board/free-boardDetail");
-				
-			} else { // 실패
+	    Board b = boardService.selectBoard(bno);
+	    if (b != null) {
+	        mv.addObject("b", b)
+	          .addObject("loginUser", loginUser)
+	          .setViewName("board/free-boardDetail");
+	    } else {
+	        mv.addObject("errorMsg", "게시글 상세조회 실패")
+	          .setViewName("common/errorPage");
+	    }
 
-				mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
-			}
-			
-			return mv;
-		}
+	    return mv;
+	}
+
 		
 		@RequestMapping("delete.bo")
 		public String deleteBoard(int bno,
@@ -383,36 +398,37 @@ public class BoardController {
 			return mv;  
 
 		}
-		
+		@RequestMapping("detail.fi")
+		public ModelAndView selectFind(ModelAndView mv, HttpServletRequest request, int fno, HttpSession session) {
 
+		    // 이미 조회한 게시글인지 확인하기 위해 세션 사용
+		    Set<Integer> viewedPosts = (Set<Integer>) session.getAttribute("viewedPosts");
+		    if (viewedPosts == null) {
+		        viewedPosts = new HashSet<>();
+		    }
 
-			@RequestMapping("detail.fi")
-			public ModelAndView selectFind(ModelAndView mv,
-									HttpServletRequest request,
-											int fno) {
+		    // 게시글을 이전에 조회한 경우 조회수를 증가하지 않음
+		    if (!viewedPosts.contains(fno)) {
+		        int result = boardService.increasefCount(fno);
+		        if (result > 0) { // 성공
+		            viewedPosts.add(fno);
+		            session.setAttribute("viewedPosts", viewedPosts);
+		        }
+		    }
 
+		    Find fb = boardService.selectFind(fno);
+		    if (fb != null) {
+		        mv.addObject("fb", fb)
+		          .addObject("url", request.getRequestURI())
+		          .setViewName("board/find-boardDetail");
+		    } else {
+		        mv.addObject("errorMsg", "게시글 상세조회 실패")
+		          .setViewName("common/errorPage");
+		    }
 
-				int result = boardService.increasefCount(fno);
-				
-			
+		    return mv;
+		}
 
-				if(result > 0) { // 성공
-
-					Find fb = boardService.selectFind(fno);
-					
-					mv.addObject("fb", fb)
-					  .addObject("url", request.getRequestURI())
-					  .setViewName("board/find-boardDetail");
-					
-					
-					
-				} else { // 실패
-
-					mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
-				}
-				
-				return mv;
-			}
 			
 		@RequestMapping("delete.fi")
 		public String deleteFind(int fno,
@@ -629,35 +645,41 @@ public class BoardController {
 			  .setViewName("board/inReview-board");
 			
 			
-			
 			return mv;  
-
-			
 
 
 		}
 		
 		@RequestMapping("detail.in")
-		public ModelAndView selectInReview(ModelAndView mv,
-										int ino) {
+		public ModelAndView selectInReview(ModelAndView mv, int ino, HttpSession session) {
 
-			int result = boardService.increaseInCount(ino);
-			
+		    // 이미 조회한 게시글인지 확인하기 위해 세션 사용
+		    Set<Integer> viewedPosts = (Set<Integer>) session.getAttribute("viewedPosts");
+		    if (viewedPosts == null) {
+		        viewedPosts = new HashSet<>();
+		    }
 
+		    // 게시글을 이전에 조회한 경우 조회수를 증가하지 않음
+		    if (!viewedPosts.contains(ino)) {
+		        int result = boardService.increaseInCount(ino);
+		        if (result > 0) { // 성공
+		            viewedPosts.add(ino);
+		            session.setAttribute("viewedPosts", viewedPosts);
+		        }
+		    }
 
-			if(result > 0) { // 성공
+		    InReview i = boardService.selectInReview(ino);
+		    if (i != null) {
+		        mv.addObject("i", i)
+		          .setViewName("board/inReview-boardDetail");
+		    } else {
+		        mv.addObject("errorMsg", "게시글 상세조회 실패")
+		          .setViewName("common/errorPage");
+		    }
 
-				InReview i = boardService.selectInReview(ino);
-				
-				mv.addObject("i", i).setViewName("board/inReview-boardDetail");
-				
-			} else { // 실패
-
-				mv.addObject("errorMsg", "게시글 상세조회 실패").setViewName("common/errorPage");
-			}
-			
-			return mv;
+		    return mv;
 		}
+
 		
 		@RequestMapping("delete.in")
 		public String deleteInReview(int ino,
