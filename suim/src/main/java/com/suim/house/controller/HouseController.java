@@ -8,10 +8,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.suim.common.mail.MailHandler;
 import com.suim.house.model.service.HouseService;
 import com.suim.house.model.service.ListHouseService;
 import com.suim.house.model.vo.House;
@@ -29,8 +28,6 @@ import com.suim.house.model.vo.Photo;
 import com.suim.house.model.vo.Wish;
 import com.suim.member.model.vo.Member;
 import com.suim.report.model.vo.Report;
-
-import lombok.extern.slf4j.Slf4j;
 
 
 @Controller
@@ -102,22 +99,23 @@ public class HouseController {
 	}
 	
 	
-	
-	
-	
-	
-	
 	@RequestMapping("heart.ho")
-	public ResponseEntity<String> heart(@RequestParam("hno") int hno, @RequestParam("type") String type, HttpSession session) {;
+	public ResponseEntity<String> heart(@RequestParam("hno") int hno, @RequestParam("type") String type, HttpSession session) {
 	  Member loginUser = (Member) session.getAttribute("loginUser");
-	  String id = loginUser.getMemberId();
+	  String id = "";
+	  if (loginUser != null) {
+	    id = loginUser.getMemberId();
+	  } else {
+	    // 로그인이 필요한 기능이므로 로그인되지 않은 경우 에러 응답을 반환
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 후 이용해주세요.");
+	  }
 
 	  if (type.equals("like")) {
 	    houseService.heartLike(id, hno);
 	  } else {
 	    houseService.heartUnlike(id, hno);
 	  }
-	  
+
 	  // 성공적인 응답 반환
 	  return ResponseEntity.ok().body("success");
 	}

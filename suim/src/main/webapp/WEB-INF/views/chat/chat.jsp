@@ -224,7 +224,7 @@
 												        messagesContainer.appendChild(message1);
 
 												        var message2 = document.createElement("p");
-												        message2.textContent = "안전한 결제를 위해 웹사이트를 통해 대화를 나누고 결제하세요.";
+												        message2.textContent = "안전한 결제를 위해 웹사이트에서 대화를 나누고 결제하세요.";
 												        messagesContainer.appendChild(message2);
 
 												        var hr = document.createElement("hr");

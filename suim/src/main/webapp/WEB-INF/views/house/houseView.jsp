@@ -150,7 +150,7 @@
 								</button>
 							</li>
 							<li class="actionButton">
-								<button class="q_btn white" id="chatBtn">소통하기</button>
+								<button class="q_btn white" id="chatBtn" onclick="chatBtn()">소통하기</button>
 							</li>
 						<li class="actionButton">
 								<button class="q_btn white" onclick="location.href='list.ho'">목록가기</button>
@@ -376,16 +376,24 @@ $(document).ready(function() {
 		              });
 		            }
 		          },
+		          error: function(xhr, status, error) {
+			            if (xhr.status === 401) {
+			              alert("로그인 후 이용해주세요.");
+			            } else {
+			              alert("서버에서 에러가 발생했습니다.");
+			            }
+			          }
 		        });
 		      }
-		
-		
-		$(document).ready(function() {
-		    $("#chatBtn").click(function() {
-		        var muser = "${h.nickName}"; // JSP 표현식으로부터 값을 가져옴
-		            window.location.href = "house.ch?muser=" + muser;
-		    });
-		});
+		    
+			function chatBtn(){
+		    	if ("${loginUser}") {
+			        var muser = "${h.nickName}"; // JSP 표현식으로부터 값을 가져옴
+			            window.location.href = "house.ch?muser=" + muser;
+			    	} else {
+		    			alert("로그인 후 이용해주세요.");
+		    	}
+		}
 
 var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
 		center : new kakao.maps.LatLng(37.534219, 126.901577), // 지도의 중심좌표

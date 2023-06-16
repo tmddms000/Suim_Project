@@ -167,7 +167,7 @@ input[type="submit"], button {
 				<div class="input-description">만원 단위로 입력해주세요.</div></li>
 
 				<li><label for="roomPeople"><span class="red_txt">*</span>방
-						인원:</label> <input type="number" id="roomPeople" name="roomPeople"
+						인원:</label> <input type="number" id="roomPeople" name="roomPeople" min="0"
 					value="${h.roomPeople }" required></li>
 
 				<li><label for="enterdate"><span class="red_txt">*</span>최소
