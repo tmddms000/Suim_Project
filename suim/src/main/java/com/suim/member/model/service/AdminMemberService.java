@@ -8,6 +8,9 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.member.model.vo.Member;
 
 public interface AdminMemberService {
+	
+	// 관리자 로그인체크
+	int checkAdminLogin(String email);
 
 	// 회원 리스트 조회 서비스 (+ 페이징처리)
 	// 회원 총 갯수 조회

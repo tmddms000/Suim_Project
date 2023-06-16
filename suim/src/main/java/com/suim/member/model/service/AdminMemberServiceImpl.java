@@ -21,6 +21,11 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
+	// 관리자 로그인체크
+	public int checkAdminLogin(String email) {
+		return adminMemberDao.checkAdminLogin(sqlSession, email);
+	}
+	
 	// 전체 목록 조회용
 	@Override
 	public int selectListCount() {

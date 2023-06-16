@@ -20,6 +20,14 @@
 		<result column="STATUS" property="status" />
 		<result column="BLACKLIST_FLAG" property="blacklistFlag" />
 	</resultMap>
+	
+	<!-- 관리자 로그인 체크용 -->
+	<select id="checkEmailLogin" resultType="int">
+    	SELECT COUNT(*)
+		  FROM MEMBER_AUTH
+		 WHERE EMAIL=#{EMAIL}
+		   AND ADMIN_AUTH=1
+	</select>
 
 	<!-- 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">

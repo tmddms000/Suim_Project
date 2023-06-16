@@ -47,11 +47,11 @@ public class HouseController {
 	}
 	
 	@RequestMapping("detail.ho")
-	public ModelAndView selectList(ModelAndView mv, int hno, HttpSession session) {
+	public ModelAndView selectList(ModelAndView mv, int hno, HttpSession session, String admin) {
 		
 	    House h = houseService.selectHouse(hno);
-	    
-	    if (!h.getEnrollStatus().equals("등록완료")) {
+	   
+	    if (!h.getEnrollStatus().equals("등록완료") && (admin == null)) {
 	    	session.setAttribute("alertMsg", "현재 심사중입니다.");
 	    	mv.setViewName("redirect:/mypage/house");
 	    	return mv;

@@ -12,7 +12,7 @@
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
                         <c:choose>
-				        		<c:when test="${not empty m.changeName}">
+				        		<c:when test="${not empty loginUser.changeName}">
                                 	<img class="rounded-circle me-lg-2" src="${loginUser.changeName}" alt="" style="width: 40px;height: 40px;margin-right:unset!important;">
                                	</c:when>
 						        <c:otherwise>

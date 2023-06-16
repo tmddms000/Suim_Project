@@ -106,7 +106,7 @@ public class AdminHouseController {
 	public String updateStatusAll(String houseNo, 
 								String houseStatus,
 								HttpServletRequest request) {
-
+		
 		String[] idArray = houseNo.split(",");
 		int[] intArray = new int[idArray.length];
 		for (int i = 0; i < idArray.length; i++) {

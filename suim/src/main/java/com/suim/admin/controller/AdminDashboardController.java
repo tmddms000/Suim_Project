@@ -8,7 +8,7 @@ import com.suim.admin.model.service.AdminDashboardService;
 import com.suim.admin.model.vo.Dashboard;
 
 @Controller
-public class AdminMainController {
+public class AdminDashboardController {
 
 	@Autowired
 	private AdminDashboardService adminDashboardService;

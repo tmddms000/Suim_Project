@@ -68,6 +68,7 @@
 		LEFT JOIN PHOTO P ON (H.HOUSE_NO = P.HOUSE_NO)
 		WHERE ENROLL_STATUS = #{category}
             AND P.FILE_STATUS = 'Y'
+            AND P.FILE_LEVEL = 'Y'
 		ORDER BY PHOTO_NO DESC
 	</select>
 	
@@ -166,14 +167,14 @@
 	<!-- 승인/반려용 쿼리문 -->
 	<update id="updateHouseStatus" parameterType="house">
 		UPDATE HOUSE
-		   SET HOUSE_STATUS = #{houseStatus}
+		   SET ENROLL_STATUS = #{houseStatus}
 		 WHERE HOUSE_NO = #{houseNo}
 	</update>
 	
 	<!-- 전체선택용 승인/반려용 쿼리문 -->
 	<update id="updateStatusAll" parameterType="hashMap">
 		UPDATE HOUSE
-		   SET HOUSE_STATUS = #{houseStatus}
+		   SET ENROLL_STATUS = #{houseStatus}
 		 WHERE HOUSE_NO IN
 			 <foreach item="houseNo" collection="intArray" open="(" separator="," close=")">
 		        #{houseNo}

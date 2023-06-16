@@ -74,6 +74,10 @@
 									<a class="nav-link <c:if test="${category eq '반려'}">active</c:if>"
 									data-toggle="tab" href="/admin/list.ho?currentPage=1&category=반려">반려</a>
 								</li>
+								<li class="nav nav-tabs">
+									<a class="nav-link <c:if test="${category eq '등록완료'}">active</c:if>"
+									data-toggle="tab" href="/admin/list.ho?currentPage=1&category=등록완료">등록완료</a>
+								</li>
 							</ul>
 							
                             <div class="tab-content pt-3" id="nav-tabContent">
@@ -97,21 +101,15 @@
 			                                    <c:when test="${ not empty list }">
 			                                    	<c:forEach var="h" items="${ list }">
 			                    						<tr>
-				                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName"></td>
+				                                            <td scope="row"><input class="form-check-input" type="checkbox" name="checkboxName" data-id="${h.houseNo}"></td>
 				                                            <td class="hno">${ h.houseNo }</td>
 				                                            <td>${ h.houseName }</td>
 				                                            <td>${ h.houseAddress }</td>
 				                                            <td>${ h.deposit }</td>
 				                                            <td>${ h.rent }</td>
-				                                            <td>${ h.enterDate }</td>
-				                                            <td>${ h.maxEnterDate }</td>
-				                                            <td>${ h.minStay }</td>
-				                                            <td>${ h.maxStay }</td>
 				                                            <td>${ h.roomPeople }</td>
-				                                            <td>${ h.incFurniture }</td>
 				                                            <td>${ h.resGender }</td>
 				                                            <td>${ h.resType }</td>
-				                                            <td>${ h.houseStatus }</td>
 				                                            <td>${ h.houseDate }</td>
 				                                        </tr>
 				                                	</c:forEach>
@@ -185,6 +183,7 @@
         	        checkedCheckboxes.each(function() {
         	        	updateStatuses.push($(this).data('id'));
         	        });
+        	        console.log(updateStatuses);
         	               	        
         	        if (updateStatuses.length === 0) {
         	            alert("승인할 게시글을 선택해주세요.");
@@ -246,7 +245,7 @@
 	    	            url: "/admin/updateStatusAll.ho",
 	    	            data: {
 	    	            	houseNo : updateStatuses.join(","),
-	    	                houseStatus : 'N'
+	    	                houseStatus : '반려'
 	    	            },
 	    	            success: function(response) {
 	    		            if(response === 'Y') {
@@ -266,11 +265,13 @@
             $(document).ready(function(){
                 // 상세 페이지로 이동용
                 $("#houseList>tbody>tr").click(function(e) {
+                	var admin = admin;
+                	
                     if ($(e.target).is('input[type="checkbox"]')) {
                         e.stopPropagation();
                     } else {
-                        var id = $(this).children(".hno").text();
-                        location.href = "detail.ho?hno=" + hno;
+                        var hno = $(this).children(".hno").text();
+                        location.href = "/detail.ho?hno=" + hno + "&admin=" + admin;
                     }
                 });
             	

@@ -15,6 +15,11 @@ import com.suim.member.model.vo.Member;
 @Repository
 public class AdminMemberDao {
 	
+	// 관리자 로그인 체크용
+	public int checkAdminLogin(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("adminMemberMapper.checkAdminLogin", email);
+	}
+	
 	public int selectListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("adminMemberMapper.selectListCount");
 	}
