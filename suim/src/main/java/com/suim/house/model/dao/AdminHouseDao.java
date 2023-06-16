@@ -109,4 +109,9 @@ public class AdminHouseDao {
 		
 		return (ArrayList)sqlSession.selectList("adminHouseMapper.selectSearchList", map, rowBounds);
 	}
+	
+	public String selectEmail(SqlSessionTemplate sqlSession, String Id) {
+		
+		return sqlSession.selectOne("adminHouseMapper.selectEmail", Id);
+	}
 }

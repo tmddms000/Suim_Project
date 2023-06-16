@@ -3,12 +3,13 @@ package com.suim.house.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,18 +17,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.suim.common.mail.MailHandler;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.house.model.service.AdminHouseService;
+import com.suim.house.model.service.HouseService;
 import com.suim.house.model.vo.House;
-import com.suim.report.model.vo.Report;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RequestMapping("/admin")
 @Controller
 public class AdminHouseController {
-
+	
+	private final JavaMailSender mailSender;
+	
+	@Autowired
+	private HouseService houseService;
+	
 	@Autowired
 	private AdminHouseService adminHouseService;
+	
+	@Autowired
+	public AdminHouseController(JavaMailSender mailSender) {
+		this.mailSender = mailSender;
+	}
 	
 	// 리스트 조회 포워딩용
 	@RequestMapping("list.ho")
@@ -81,15 +96,16 @@ public class AdminHouseController {
 	public String updateHouseStatus(House h,
 							HttpSession session,
 							Model model) {
-
+		
 		int result = adminHouseService.updateHouseStatus(h);
 		
 		if(result > 0) { // 성공
-			
+					
 			// 일회성 알람문구를 담아서 게시판 상세보기 페이지로 url 재요청
 			session.setAttribute("alertMsg", "성공적으로 상태가 수정되었습니다.");
 			
 			return "redirect:/admin/detail.ho?hno=" + h.getHouseNo();
+			
 			
 		} else { // 실패
 			
@@ -109,10 +125,95 @@ public class AdminHouseController {
 		
 		String[] idArray = houseNo.split(",");
 		int[] intArray = new int[idArray.length];
+		String[] email = new String[idArray.length];
+		House [] h = new House[idArray.length];
 		for (int i = 0; i < idArray.length; i++) {
 			intArray[i] = Integer.parseInt(idArray[i]);
+			h[i] = houseService.selectHouse(intArray[i]);
+			email[i] = adminHouseService.selectEmail(h[i].getMemberId());
+			
 		}
 		int result = adminHouseService.updateStatusAll(intArray, houseStatus);
+		for (int i = 0; i < idArray.length; i++) {
+			if(houseStatus.equals("심사완료")) {
+				System.out.println(email);
+				  try {
+					    MailHandler sendMail = new MailHandler(mailSender);
+					    
+					    // HTML 형식으로 메일 내용을 작성합니다.
+					    String htmlContent = "<html>"
+					            + "<head>"
+					            + "<style>"
+					            + "body { font-family: Arial, sans-serif; }"
+					            + "h3 { color: #333; }"
+					            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+					            + ".payment-button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; }"
+					            + "</style>"
+					            + "</head>"
+					            + "<body>"
+					            + "<h3>심사가 완료되었습니다.</h3>"
+					            + "<div class='message'>"
+					            + "<p>안녕하세요. 쉼입니다.</p>"
+					            + "<p>" + h[i].getHouseName() + "의 심사가 완료되었습니다.</p>"
+					            + "<p>마이페이지 셰어하우스 목록에서 결제를 진행해 주세요.</p>"
+					            + "<p>결제가 지연될 경우 반려 처리될 수 있습니다.</p>"
+					            + "<p>감사합니다.</p>"
+					            + "</div>"
+					            + "</body>"
+					            + "</html>";
+
+					    sendMail.setText(htmlContent);
+					    sendMail.setFrom("suimm012@gmail.com", "쉼");
+					    sendMail.setSubject(h[i].getHouseName() + "의 심사가 완료되었습니다.");
+					    sendMail.setTo(email[i]);
+					    sendMail.send();
+					                
+					} catch (MessagingException e) {
+					    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+					} catch (Exception e) {
+					    log.error("기타 에러 발생: {}", e.getMessage());
+					}
+				  
+			} else if(houseStatus.equals("반려")) {
+			
+					  try {
+						    MailHandler sendMail = new MailHandler(mailSender);
+						    
+						    // HTML 형식으로 메일 내용을 작성합니다.
+						    String htmlContent = "<html>"
+						            + "<head>"
+						            + "<style>"
+						            + "body { font-family: Arial, sans-serif; }"
+						            + "h3 { color: #333; }"
+						            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+						            + ".payment-button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; }"
+						            + "</style>"
+						            + "</head>"
+						            + "<body>"
+						            + "<h3>심사가 반려되었습니다.</h3>"
+						            + "<div class='message'>"
+						            + "<p>안녕하세요. 쉼입니다.</p>"
+						            + "<p>" + h[i].getHouseName() + "의 심사가 반려되었습니다.</p>"
+						            + "<p>마이페이지 셰어하우스 목록에서 하우스 정보를 다시 수정해주세요.</p>"
+						            + "<p>감사합니다.</p>"
+						            + "</div>"
+						            + "</body>"
+						            + "</html>";
+
+						    sendMail.setText(htmlContent);
+						    sendMail.setFrom("suimm012@gmail.com", "쉼");
+						    sendMail.setSubject(h[i].getHouseName() + "의 심사가 반려되었습니다.");
+						    sendMail.setTo(email[i]);
+						    sendMail.send();
+						                
+						} catch (MessagingException e) {
+						    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+						} catch (Exception e) {
+						    log.error("기타 에러 발생: {}", e.getMessage());
+						}
+			}
+			
+		}
 		return result > 0 ? "Y" : "N";
 	}
 	

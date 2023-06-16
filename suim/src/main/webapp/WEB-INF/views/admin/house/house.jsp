@@ -190,7 +190,7 @@
         	            return;
         	        }
         	        
-        	        var confirmation = confirm("일괄 승인하시겠습니까?");
+        	        var confirmation = confirm("승인하시겠습니까?");
         	        if (!confirmation) {
         	            return;
         	        }
@@ -234,7 +234,7 @@
 	    	            return;
 	    	        }
 	    	        
-	    	        var confirmation = confirm("일괄 반려하시겠습니까?");
+	    	        var confirmation = confirm("반려하시겠습니까?");
 	    	        if (!confirmation) {
 	    	            return;
 	    	        }

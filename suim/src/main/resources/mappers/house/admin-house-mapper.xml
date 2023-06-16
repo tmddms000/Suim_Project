@@ -24,7 +24,7 @@
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="CHANGE_NAME" property="changeName" />
 	</resultMap>
-
+	
 	<!-- 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
@@ -212,4 +212,11 @@
 		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
 		 ORDER BY HOUSE_NO DESC
 	</select>
+	
+	<select id="selectEmail" parameterType="String" resultType="String">
+	  SELECT EMAIL
+	  FROM MEMBER
+	  WHERE MEMBER_ID = #{id}
+	</select>
+	
 </mapper>

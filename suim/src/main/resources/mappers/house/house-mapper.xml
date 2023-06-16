@@ -155,8 +155,7 @@
 		CHANGE_NAME = #{changeName},
 		CREATE_DATE = SYSDATE,
 		FILE_LEVEL = #{fileLevel},
-		FILE_STATUS = 'Y',
-		ENROLL_STATUS = '심사중'
+		FILE_STATUS = 'Y'
 		WHERE HOUSE_NO = #{houseNo} AND PHOTO_NO =#{photoNo}
 	</update>
 	

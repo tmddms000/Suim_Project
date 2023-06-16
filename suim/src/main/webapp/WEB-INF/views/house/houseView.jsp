@@ -131,6 +131,7 @@
 							onerror="this.src='/resources/img/common/default_profile.png'" />
 						</li>
 						<li class="userId">${h.nickName }</li>
+						<c:if test="${loginUser.memberId != h.memberId}">
 							<c:if test="${Id == '' || rezChResult == 0}">
 								<li class="actionButton">
 									<button type="button" class="q_btn green applyInsert"
@@ -152,6 +153,7 @@
 							<li class="actionButton">
 								<button class="q_btn white" id="chatBtn" onclick="chatBtn()">소통하기</button>
 							</li>
+							</c:if>
 						<li class="actionButton">
 								<button class="q_btn white" onclick="location.href='list.ho'">목록가기</button>
 							</li>
@@ -190,8 +192,22 @@
 						<tr>
 							<td>${h.resType }/${h.roomPeople}인실</td>
 							<!-- A타입 / 16인실, B타입 / 12인, C타입 / 3인실, D타입 / 1인실 등 -->
-							<td>${(h.deposit/10000).intValue()}만원</td>
+							<c:choose>
+    							<c:when test="${h.deposit == 0}">
+    								<td>없음</td>
+    							</c:when>
+    							<c:otherwise>	
+									<td>${(h.deposit/10000).intValue()}만원</td>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${h.rent == 0}">
+    								<td>없음</td>
+    							</c:when>
+    							<c:otherwise>	
 							<td>${(h.rent/10000).intValue()}만원</td>
+								</c:otherwise>
+							</c:choose>
 							<td>${h.enterDate }~${h.maxEnterDate}</td>
 							<td>${h.minStay }</td>
 							<td>${h.maxStay }</td>
@@ -436,7 +452,7 @@ var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표�
 		
 		if("${Id}"=='') {
 			
-			alert("로그인 후 이용해야 합니다.");
+			alert("로그인 후 이용해주세요.");
 			
 		} else {
 		

@@ -95,4 +95,10 @@ public class AdminHouseServiceImpl implements AdminHouseService {
 	public ArrayList<House> selectSearchList(HashMap<String, String> map, PageInfo pi) {
 		return adminHouseDao.selectSearchList(sqlSession, map, pi);
 	}
+
+	@Override
+	public String selectEmail(String Id) {
+		// TODO Auto-generated method stub
+		return adminHouseDao.selectEmail(sqlSession, Id);
+	}
 }
