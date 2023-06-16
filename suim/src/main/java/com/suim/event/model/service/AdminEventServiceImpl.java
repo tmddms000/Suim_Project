@@ -37,11 +37,24 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 	}
 
+	
+
+	@Override
+	public Eattachment selectEventFile(int eAttach) {
+		return adminEventDao.selectEventFile(sqlSession, eAttach);
+	}
+	
 	@Override
 	public int deleteEvent(int eno) {
 
 		return adminEventDao.deleteEvent(sqlSession, eno);
 
+	}
+
+	@Override
+	public int deleteEventFile(int eno) {
+		
+		return adminEventDao.deleteEventFile(sqlSession, eno);
 	}
 
 }

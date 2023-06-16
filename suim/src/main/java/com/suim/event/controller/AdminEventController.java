@@ -85,7 +85,10 @@ public class AdminEventController {
 						Model model) {
 	
 	System.out.println("호출");
-						
+			
+	System.out.println("e 는 ");
+	System.out.println(e);
+	System.out.println("입니다.");
 	
 	System.out.println("----------upfiles");
 	System.out.println(upfile);
@@ -212,36 +215,6 @@ public class AdminEventController {
 		
 		// 새로운 첨부파일에 대한 insert
 		
-		// 새로운 첨부파일이 잇을 경우
-		/*
-		if(!reupfile.getOriginalFilename().equals("")) {
-			System.out.println("reupfile 이 있었을 경우의 reupfile 에 대한 정보 : " + reupfile);
-			// 1. 기존에 첨부파일이 있었을 경우 => 기존의 첨부파일을 찾아서 FILE_STATUS 를 'N' 으로 바꿔야 함.
-			if(nAttach.getOriginName() != null) {
-				System.out.println("기존에 첨부파일이 있었을 경우 " + nAttach);
-			// nAttach = adminNoticeService.selectForUpdateNoticeFile(nAttach);
-				
-				int deleteResult = adminNoticeService.changeFileStatus(nAttach);
-				System.out.println("deleteResult 의 값은 : " + deleteResult + " 입니다.");
-			}
-				
-			// 2. 새로 넘어온 첨부파일을 서버에 업로드 시키기
-			String changeName = saveFile(reupfile, session);
-			
-			
-			nAttach.setOriginName(reupfile.getOriginalFilename());
-			
-			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
-			//		       경로를 지정하여 정확하게 뽑아야 함
-			nAttach.setChangeName("resources/img/notice/" + changeName);
-			
-			// System.out.println("nAttach 에 바뀐 파일 정보들이 담겼나에 대한 정보 " + nAttach);
-			// nattachment 테이블에 insert 해야함
-			
-			
-		}
-		
-		*/
 			
 		
 		if(result > 0) { // 성공
@@ -261,34 +234,34 @@ public class AdminEventController {
 	
 	
 	/**
-	* 현재는 파일 삭제만 되고 database 에는 해당 nAttachtable 의 행의 filestatus 가 n 으로 바뀌지 않음.
-	* @param NoticeNo
-	* @param model
-	* @param filePath : 파일 경로
-	* @param session
-	* @return
-	*/
+	 * 현재는 파일 삭제만 되고, EATTACH 테이블의 file_status 가 'n' 으로는 바뀌지 않음.
+	 * @param eno
+	 * @param model
+	 * @param filePath
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping("delete.ev")
-	public String deleteEvent(@RequestParam("eno") int eno,
+	public String deleteEvent(@RequestParam("eno") int eno, int eAttach,
 						  Model model, 
 						  String filePath,
 						  HttpSession session) {
 	
-	// 삭제하려는 해당 공지사항 번호를 조회하기 위한 것
+	// 삭제하려는 해당 이벤트 게시글의 eventNo 를 조회하기 위한 것.
 	Event e = eventService.selectBoard(eno);
 	
-	// 해당 공지사항의 첨부 파일을 조회해서 file_status 를 n 으로 바꾸기 위한 것.
-	//Nattachment nAttach = adminoticeService.selectNoticeFile(nno);
+	// 그 이벤트 파일의 status 를 n 으로 바꾸기 위해 이벤트 파일을 조회하기 위한 것.
+	Eattachment eventFile = adminEventService.selectEventFile(eAttach);
+	// 해당 이벤트 게시글의 첨부 파일을 조회해서 file_status 를 n 으로 바꾸기 위한 것.	
+	int re = adminEventService.deleteEventFile(eno);
 	
 	int result = adminEventService.deleteEvent(eno);
 	
 	if(result > 0) { // 삭제 처리 성공
 		
-	//	int result2 = adminNoticeService.changeFileStatus(nAttach);
-		
-		// delete.no 요청 시 첨부파일이 있었을 경우
+		// delete.ev 요청 시 첨부파일이 있었을 경우
 		// 서버의 실제 파일이 삭제 되는 코드
-		 
+	 
 		if(filePath != null) {
 			// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
 			String realPath = session.getServletContext().getRealPath(filePath);

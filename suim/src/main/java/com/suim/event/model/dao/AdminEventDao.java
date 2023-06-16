@@ -31,6 +31,14 @@ public class AdminEventDao {
 		return sqlSession.update("adminEventMapper.deleteEvent", eno);
 	}
 	
+	public Eattachment selectEventFile(SqlSessionTemplate sqlSession, int eAttach) {
+		return sqlSession.selectOne("adminEventMapper.selectEventFile", eAttach);
+	}
+	
+	public int deleteEventFile(SqlSessionTemplate sqlSession, int eno) {
+		return sqlSession.update("adminEventMapper.deleteEventFile", eno);
+	}
+
 	
 
 }

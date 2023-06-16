@@ -18,4 +18,6 @@ public interface EventService {
 	ArrayList<Eattachment> selectEventFile(int eno);
 	
 	Event selectBoard(int eventNo);
+
+	
 }

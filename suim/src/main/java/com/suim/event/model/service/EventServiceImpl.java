@@ -45,4 +45,6 @@ public class EventServiceImpl implements EventService {
 	public Event selectBoard(int eventNo) {
 		return eventDao.selectBoard(sqlSession, eventNo);
 	}
+
+	
 }

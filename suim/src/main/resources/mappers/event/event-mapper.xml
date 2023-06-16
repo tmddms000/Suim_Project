@@ -6,6 +6,7 @@
 	<resultMap id="eventResultSet" type="event">
 		<result column="EVENT_NO" property="eventNo" />
 		<result column="EVENT_TITLE" property="eventTitle" />
+		<result column="EVENT_CATEGORY" property="eventCategory" />
 		<result column="EVENT_CONTENT" property="eventContent" />
 		<result column="EVENT_DATE" property="eventDate" />
 		<result column="EVENT_VIEW" property="eventView" />
@@ -28,9 +29,11 @@
 		 WHERE EVENT_STATUS = 'Y'
 	</select>
 	
+	<!-- 이벤트 카테고리 분류 상관없이 다 조회함 -->
 	<select id="selectList" resultType="event" resultMap="eventResultSet">
 		SELECT EVENT_NO
 			 , EVENT_TITLE
+			 , EVENT_CATEGORY
 			 , EVENT_CONTENT
 			 , EVENT_DATE
 			 , EVENT_VIEW
@@ -57,12 +60,28 @@
 	<select id="selectBoard" parameterType="_int" resultMap="eventResultSet">
 		SELECT EVENT_NO
 			 , EVENT_TITLE
+			 , EVENT_CATEGORY
 			 , EVENT_CONTENT
 			 , EVENT_DATE
 			 , EVENT_VIEW
 			 , EVENT_STATUS
 		  FROM EVENT
 		 WHERE EVENT_NO = #{eventNo}
+		 ORDER BY EVENT_NO DESC
 	</select>
+	
+	<select id="selectListByCategory" resultType="event" resultMap="eventResultSet">
+		SELECT EVENT_NO
+	  		 , EVENT_TITLE
+	    	 , EVENT_CATEGORY
+	  		 , EVENT_CONTENT
+	    	 , EVENT_DATE
+	    	 , EVENT_VIEW
+	    	 , EVENT_STATUS
+	   		   FROM EVENT
+	   	 WHERE EVENT_STATUS = 'Y'
+	       AND EVENT_CATEGORY = #{category}
+	  ORDER BY EVENT_NO DESC
+</select>
 	
 </mapper>

@@ -6,6 +6,7 @@
 	<resultMap id="eventResultSet" type="event">
 		<result column="EVENT_NO" property="eventNo" />
 		<result column="EVENT_TITLE" property="eventTitle" />
+		<result column="EVENT_CATEGORY" property="eventCategory" />
 		<result column="EVENT_CONTENT" property="eventContent" />
 		<result column="EVENT_DATE" property="eventDate" />
 		<result column="EVENT_VIEW" property="eventView" />
@@ -30,12 +31,14 @@
 	<insert id="insertEventBoard" parameterType="event">
 		INSERT INTO EVENT (EVENT_NO, 
 						   EVENT_TITLE, 
+						   EVENT_CATEGORY,
 						   EVENT_CONTENT,
 						   EVENT_DATE, 
 						   EVENT_VIEW, 
 						   EVENT_STATUS)
 					VALUES (SEQ_EVENT_NO.NEXTVAL,
 						    #{eventTitle},
+						    #{eventCategory},
 						    #{eventContent}, 
 						    DEFAULT,
 						    DEFAULT,
@@ -57,10 +60,11 @@
 					 		 SEQ_EVENT_NO.CURRVAL)
 	</insert>
 	
-	<!-- 공지사항 업데이트용 파일 -->
+	<!-- 이벤트 게시글 업데이트용 파일 -->
 	<update id="updateEventBoard" parameterType="event">
 		UPDATE EVENT
 		   SET EVENT_TITLE = #{eventTitle}
+		   	 , EVENT_CATEGORY = #{eventCategory}
 		   	 , EVENT_CONTENT = #{eventContent}
 		 WHERE EVENT_NO = #{eventNo}
 		   
@@ -75,6 +79,18 @@
 	<update id="deleteEvent" parameterType="event">
 		UPDATE EVENT
 		   SET EVENT_STATUS = 'N'
+		 WHERE EVENT_NO = #{eno}
+	</update>
+	
+	<select id="selectEventFile" parameterType="eAttachment">
+		SELECT *
+		  FROM EATTACHMENT
+		 WHERE EAT_NO = #{eAttach}
+	</select>
+	
+	<update id="deleteEventFile" parameterType="eAttachment">
+		UPDATE ETTACHMENT
+		   SET FILE_STATUS = 'N'
 		 WHERE EVENT_NO = #{eno}
 	</update>
 

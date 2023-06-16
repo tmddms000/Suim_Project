@@ -22,8 +22,8 @@
             <!-- 1:1문의 js -->
             <script src="js/chatbot.js"></script>
               
-            <!-- 공지사항 css -->
-            <link href="/resources/css/notice/notice.css" rel="stylesheet" />
+            <!-- faq 목록 css -->
+            <link href="/resources/css/faq/faqList.css" rel="stylesheet" />
             
 <style>
             body {
@@ -91,7 +91,7 @@
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[회원가입]</td>
                                 <td class="faqTitle">
-                                    <a href="notice/faqDetail.html">회원가입은 어떻게 하나요?</a>
+                                    <a href="faq_howToSignUp">회원가입은 어떻게 하나요?</a>
                                 </td>
                                 <td class="page_views">{26} 회</td>
                             </tr>

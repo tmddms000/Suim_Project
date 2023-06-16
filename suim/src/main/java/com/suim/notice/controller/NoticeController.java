@@ -146,11 +146,7 @@ public class NoticeController {
 	
 	
 
-	@GetMapping("/faqList")
-	public String faqList() {
-		
-		return "notice/faqList";
-	}
+	
 	
 	
 	
