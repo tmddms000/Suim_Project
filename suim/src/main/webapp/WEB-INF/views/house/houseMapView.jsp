@@ -21,8 +21,6 @@
         <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-        <!-- 1:1문의 채팅 -->
-        <script src="/resources/js/common/chatbot.js"></script>
         <!-- 나중에 한번에 include 할 부분 -->
         <!-- noUnislider js,css -->
         <script src="https://cdn.jsdelivr.net/npm/shackless-nouislider@14.1.2/distribute/nouislider.min.js"></script>
@@ -227,18 +225,36 @@
 	<script>
 	
 		// 지도 생성
-	    if ("${regionEmpty}" === "true") {
-	    	var map = new kakao.maps.Map(document.getElementById('map'), {
+		if ("${searchKeyword}" == "") {
+			
+			var map = new kakao.maps.Map(document.getElementById('map'), {
 	            center: new kakao.maps.LatLng("37.5666805", "126.9784147"),
 	            level: 5
-	        });       
-	    } else {
-	        // 지도를 초기화하고 지역 좌표를 사용하여 표시합니다.
-	        var map = new kakao.maps.Map(document.getElementById('map'), {
-	            center: new kakao.maps.LatLng("${region.get(0).latitude}", "${region.get(0).longitude}"),
-	            level: 5
 	        });
-	    }
+		} else {
+			
+			 if ("${regionEmpty}" === "true") {
+				 
+				 if ("${centerAdEmpty}" === "true") {
+					 var map = new kakao.maps.Map(document.getElementById('map'), {
+				            center: new kakao.maps.LatLng("37.5666805", "126.9784147"),
+				            level: 5
+				     	});
+					 	alert("검색 결과가 없습니다.");
+				 	} else {
+				 		var map = new kakao.maps.Map(document.getElementById('map'), {
+				            center: new kakao.maps.LatLng("${centerAd.get(0).latitude}", "${centerAd.get(0).longitude}"),
+				            level: 5
+				     	});  
+				 	} 
+				} else {
+			        // 지도를 초기화하고 지역 좌표를 사용하여 표시합니다.
+			        var map = new kakao.maps.Map(document.getElementById('map'), {
+			            center: new kakao.maps.LatLng("${region.get(0).latitude}", "${region.get(0).longitude}"),
+			            level: 5
+			   	});
+			}
+		}
 		
 	    map.setMaxLevel(9);
 		
@@ -611,7 +627,7 @@
 		}
 	</script>
             <div class="col-md-5">
-                <form method="get" action="list.ho">
+                <form method="get" action="/list.ho">
                     <div class="scrollable-div">
                     <div class="row">
                         <div class="search-box">
@@ -650,15 +666,15 @@
                                                 var maxValueText = document.getElementById('maxValueText');
                                                 var minValue = document.getElementById('minValue');
                                                 var maxValue = document.getElementById('maxValue');
-                                               	var initialValues = [0,300];
+                                               	var initialValues = [0,500];
                                               
                                                 noUiSlider.create(slider, {
                                                   start: initialValues,
                                                   connect: true,
                                                   range: {
                                                     'min': 0,
-                                                    'max': 300
-                                                  },
+                                                    'max': 500
+                                                  },	
                                                   step: 1,
                                                   format: {
                                                     to: function(value) {
@@ -674,8 +690,8 @@
                                                   minValueText.textContent = values[0];
                                                   maxValueText.textContent = values[1];
 
-                                                  minValue.value = values[0];
-                                                  maxValue.value = values[1];
+                                                  minValue.value = values[0]*10000;
+                                                  maxValue.value = values[1]*10000;
 
                                                 });
                                               	</script>

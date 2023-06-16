@@ -134,7 +134,7 @@
 				<input type="hidden" name="recMemberId" value="${memberId}">
 				
 				<div class="button-container">
-					<input type="submit" value="등록">
+					<input type="submit" value="예약">
 					<button type="button" onclick="closePopup()">닫기</button>
 				</div>
 			</form>

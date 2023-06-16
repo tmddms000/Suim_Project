@@ -63,7 +63,7 @@
     .rezHour-cell{
         width : 150px;
     }
-    .memberId-cell{
+    .nickName-cell{
         width : 150px;
     }
     .rezRequestDate-cell{
@@ -141,7 +141,7 @@
 					<th scope="col" class="houseTitle-th text-center">쉐어하우스 이름</th>
                     <th scope="col" class="rezDate-cell">예약 일</th>
                     <th scope="col" class="rezHour-cell">예약 시간</th>
-                    <th scope="col" class="memberId-cell">예약자 ID</th>
+                    <th scope="col" class="nickName-cell">예약자 닉네임</th>
                     <th scope="col" class="rezRequestDate-cell">예약 신청일</th>
 					<th scope="col" class="rezStatus-cell">예약 상태</th>
 					<th scope="col" class="rezStatusBtn-cell">예약 상태 변경</th>
@@ -154,7 +154,7 @@
             				<td class="houseTitle-th">${ r.houseName }</td>
                     		<td class="rezDate-cell">${ r.rezDate }</td>
                     		<td class="rezHour-cell">${ r.rezHour }</td>
-                    		<td class="memberId-cell">${ r.sendMemberId }</td>
+                    		<td class="nickName-cell">${ r.nickName }</td>
                     		<td class="rezRequestDate-cell">${ r.rezRequestDate }</td>
 							<td class="rezStatus-cell">${ r.rezStatus }</td>
                     		<td class="rezStatusBtn-cell">

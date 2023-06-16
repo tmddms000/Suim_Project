@@ -26,5 +26,6 @@ public class Reservation {
 	
 	// 하우스 테이블에서 불러올 구문
     private String houseName; // Photo테이블의 changeName
+    private String nickName;
 
 }

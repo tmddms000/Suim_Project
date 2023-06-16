@@ -22,7 +22,9 @@
 	    <result column="HOUSE_DATE" property="houseDate"/>
 	    <result column="MEMBER_ID" property="memberId"/>
 	   	<result column="CHANGE_NAME" property="changeName"/>
-	   	<result column="ENROLL_STATUS" property="enrollStatus"/>  	
+	   	<result column="ENROLL_STATUS" property="enrollStatus"/> 
+	   	<result column="LONGITUDE" property="longitude"/> 	
+	  	<result column="LATITUDE" property="latitude"/>
 	</resultMap>
 	
 	<resultMap id="regionResultMap" type="com.suim.house.model.vo.Region">
@@ -42,6 +44,7 @@
 		<result column="DEL_STATUS" property="delStatus"/>
 		<result column="HOUSE_NO" property="houseNo"/>
 		<result column="HOUSE_NAME" property="houseName"/>
+		<result column="NICKNAME" property="nickName"/>
 	</resultMap>
 	
 
@@ -81,7 +84,6 @@
 	        <if test="openDate != null">
 				AND #{openDate} BETWEEN ENTER_DATE AND MAX_ENTER_DATE
 	   	 	</if>
-
 	   	 	AND p.FILE_LEVEL = 'Y'
 	   	 	AND h.HOUSE_STATUS = 'Y'
 	   	 	AND h.ENROLL_STATUS = '등록완료'
@@ -123,9 +125,10 @@
 	
 	<!-- 셰어하우스 별 예약 신청 리스트 -->
 	<select id="myHouseRezSelect" resultMap="reservationResultMap">
-		SELECT r.*, h.HOUSE_NAME 
+		SELECT r.*, h.HOUSE_NAME, m.NICKNAME
 		FROM RESERVATION r
 		JOIN HOUSE h ON r.HOUSE_NO = h.HOUSE_NO
+		JOIN MEMBER m ON r.SEND_MEMBER_ID = m.MEMBER_ID
 			WHERE h.HOUSE_NO = #{houseNo}
 			AND r.DEL_STATUS = 'N'
 		 ORDER BY r.REZ_NO DESC
@@ -179,5 +182,15 @@
 		AND NOT REZ_STATUS = '예약취소'
 		AND DEL_STATUS = 'N'
 	</select>
+	
+	<!-- 중심좌표 셰어하우스 이름 키워드 검색  -->
+	<select id="keyCenterAd" resultMap="houseResultMap">
+		SELECT HOUSE_ADDRESS, LATITUDE, LONGITUDE
+		FROM HOUSE
+		WHERE HOUSE_NAME LIKE '%' || #{searchKeyword} || '%' AND ROWNUM = 1
+			  AND ENROLL_STATUS = '등록완료'
+			  AND HOUSE_STATUS = 'Y'
+	</select>
+	
 	
 </mapper>

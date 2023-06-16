@@ -29,6 +29,8 @@ public class House {
     private Date houseDate; // 작성일
     private String memberId; // 멤버아이디
     private String enrollStatus; // 등록 상태
+    private double latitude; // LATITUDE	NUMBER
+	private double longitude;// LONGITUDE	NUMBER 
     
     // 사진 테이블에서 불러올 구문
     private String changeName; // Photo테이블의 changeName
