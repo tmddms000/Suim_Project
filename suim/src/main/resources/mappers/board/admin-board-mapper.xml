@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminBoardMapper">
+
+	<resultMap id="adminBoardResultMap" type="board">
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="BOARD_TITLE" property="boardTitle" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="BOARD_VIEW" property="boardView" />
+		<result column="BOARD_DATE" property="boardDate" />
+		<result column="STATUS" property="status" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="NICKNAME" property="nickName" />
+		
+		<result column="BOARD_CONTENT" property="boardContent" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="BOARD_REPLY_COUNT" property="replyCount" />
+		<result column="THUMBNAIL" property="thumbnail" />
+	</resultMap>
+	
+	<resultMap id="adminFindResultMap" type="find">
+		<result column="FIND_NO" property="findNo" />
+		<result column="FIND_TITLE" property="findTitle" />
+		<result column="FIND_CATEGORY" property="category" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="FIND_VIEW" property="findView" />
+		<result column="FIND_DATE" property="findDate" />
+		<result column="STATUS" property="status" />
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="NICKNAME" property="nickName" />
+		<result column="GENDER" property="gender" />
+    
+		<result column="FIND_CONTENT" property="findContent" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="FIND_REPLY_COUNT" property="freplyCount" />
+		<result column="THUMBNAIL" property="thumbnail" />
+	</resultMap>
+	
+	<resultMap id="InReviewResultSet" type="inreview">
+	    <result column="INR_NO" property="inrNo" />
+	    <result column="INR_TITLE" property="inrTitle" />
+	    <result column="MEMBER_ID" property="memberId" />
+	    <result column="INR_VIEW" property="inrView" />
+	    <result column="INR_DATE" property="inrDate" />
+	    <result column="ORIGIN_NAME" property="originName" />
+	    <result column="NICKNAME" property="nickName" />
+	    <result column="INR_CONTENT" property="inrContent" />
+	    <result column="CHANGE_NAME" property="changeName" />
+	    <result column="THUMBNAIL" property="thumbnail" />
+	</resultMap>
+	
+	
+	
+	
+	
+	<!-- 자유게시판 관리자페이지 sql -->
+	
+	<select id="selectBoardCountA" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+	</select>
+	
+	<select id="selectBoardListA" resultMap="adminBoardResultMap">
+		SELECT *
+		FROM BOARD
+		ORDER BY BOARD_NO DESC
+	</select>
+	
+	<select id="selectBoardCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+	    WHERE STATUS = #{category}
+	</select>
+	<select id="selectBoardList" resultMap="adminBoardResultMap">
+		SELECT *
+		FROM BOARD
+	    WHERE STATUS = #{category}
+		ORDER BY BOARD_NO DESC
+	</select>
+	
+	<select id="adminDetailBoard" parameterType="_int" resultMap="adminBoardResultMap">
+		SELECT
+		    B.BOARD_NO,
+		    B.BOARD_TITLE,
+		    B.BOARD_CONTENT,
+		    B.BOARD_VIEW,
+		    B.BOARD_DATE,
+		    B.STATUS,
+		    B.MEMBER_ID,
+		    BA.ORIGIN_NAME,
+		    BA.CHANGE_NAME,
+		    M.NICKNAME,
+		    COUNT(BR.BRE_NO) AS BOARD_REPLY_COUNT,
+		    REGEXP_SUBSTR(B.BOARD_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM BOARD B
+		JOIN MEMBER M ON (M.MEMBER_ID = B.MEMBER_ID)
+		LEFT JOIN BATTACHMENT BA ON (BA.BOARD_NO = B.BOARD_NO)
+		LEFT JOIN BOARD_REPLY BR ON (BR.BOARD_NO = B.BOARD_NO)
+		WHERE B.BOARD_NO = #{boardNo}
+		GROUP BY
+		    B.BOARD_NO,
+		    B.BOARD_TITLE,
+		    B.BOARD_CONTENT,
+		    B.BOARD_VIEW,
+		    B.BOARD_DATE,
+		    B.STATUS,
+		    B.MEMBER_ID,
+		    BA.ORIGIN_NAME,
+		    M.NICKNAME,
+		    BA.CHANGE_NAME
+		ORDER BY B.BOARD_NO DESC
+	</select>
+	
+	<update id="deleteBoard" parameterType="_int">
+		UPDATE BOARD
+		SET STATUS = 'N'
+		WHERE BOARD_NO = #{bno}
+	</update>
+	
+	<update id="deleteCanBoard" parameterType="_int">
+		UPDATE BOARD
+		SET STATUS = 'Y'
+		WHERE BOARD_NO = #{bno}
+	</update>
+	
+	<select id="adminBoardSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+		WHERE 1 = 1
+		<if test="condition == 'boardTitle'">
+			AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+	</select>
+	
+	<select id="adminBoardSearch" resultMap="adminBoardResultMap">
+		SELECT *
+		FROM BOARD
+		WHERE 1 = 1
+		<if test="condition == 'boardTitle'">
+			AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		ORDER BY BOARD_NO DESC
+	</select>
+	
+	<!-- 사람구해요게시판 관리자페이지 sql -->
+	
+	<select id="adminFindCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM FIND
+	</select>
+	
+	<select id="adminFindList" resultMap="adminFindResultMap">
+		SELECT F.*, M.GENDER
+		FROM FIND F
+		JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+		ORDER BY FIND_NO DESC
+	</select>
+	
+	<select id="adminFreeDeSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM FIND F
+		JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+		WHERE 1 = 1
+		<if test="gender != 'all'">
+			AND M.GENDER = #{gender}
+		</if>
+		<if test="category != 'all'">
+			AND F.FIND_CATEGORY = #{category}
+		</if>
+		<if test="del != 'all'">
+			AND F.STATUS = #{del}
+		</if>
+	</select>
+	
+	<select id="adminFreeDeSearch" resultMap="adminFindResultMap">
+		SELECT *
+		FROM FIND F
+		JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)	
+		WHERE 1 = 1
+		<if test="gender != 'all'">
+			AND M.GENDER = #{gender}
+		</if>
+		<if test="category != 'all'">
+			AND F.FIND_CATEGORY = #{category}
+		</if>
+		<if test="del != 'all'">
+			AND F.STATUS = #{del}
+		</if>
+		ORDER BY FIND_NO DESC
+	</select>
+	
+	<select id="adminFindDetail" parameterType="_int" resultMap="adminFindResultMap">
+
+			SELECT
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_CONTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    M.NICKNAME,
+
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME,
+			    COUNT(FR.FRE_NO) AS FIND_REPLY_COUNT,
+			    REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM FIND F
+			JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+			LEFT JOIN FATTACHMENT FA ON (FA.FIND_NO = F.FIND_NO)
+			LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+
+			WHERE F.FIND_NO = #{findNo}
+
+			GROUP BY
+			    F.FIND_NO,
+			    F.FIND_TITLE,
+			    F.FIND_CONTENT,
+			    F.FIND_CATEGORY,
+			    F.FIND_VIEW,
+			    F.FIND_DATE,
+			    F.STATUS,
+			    F.MEMBER_ID,
+			    M.NICKNAME,
+
+			    FA.ORIGIN_NAME,
+			    FA.CHANGE_NAME
+			ORDER BY F.FIND_NO DESC
+
+	</select>
+	
+	<select id="adminFreeKeySearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM FIND
+		WHERE 1 = 1
+		<if test="condition == 'findTitle'">
+			AND FIND_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+	</select>
+	
+	<select id="adminFreeKeySearch" resultMap="adminFindResultMap">
+		SELECT *
+		FROM FIND
+		WHERE 1 = 1
+		<if test="condition == 'findTitle'">
+			AND FIND_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		ORDER BY FIND_NO DESC
+	</select>
+	
+	<update id="deleteFreeBoard" parameterType="_int">
+		UPDATE FIND
+		SET STATUS = 'N'
+		WHERE FIND_NO = #{fno}
+	</update>
+	
+	<update id="deleteFreeCanBoard" parameterType="_int">
+		UPDATE FIND
+		SET STATUS = 'Y'
+		WHERE FIND_NO = #{fno}
+	</update>
+	
+	
+	<!-- 플랫폼이용후기 관리자페이지 sql -->
+	
+	<select id="adminInReviewCountA" resultType="_int">
+		SELECT COUNT(*)
+		FROM INREVIEW
+	</select>
+	
+	<select id="adminInReviewListA" resultMap="InReviewResultSet">
+		SELECT *
+		FROM INREVIEW
+		ORDER BY INR_NO DESC
+	</select>
+	
+	<select id="adminInReviewCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM INREVIEW
+	    WHERE STATUS = #{category}
+	</select>
+	<select id="adminInReviewList" resultMap="InReviewResultSet">
+		SELECT *
+		FROM INREVIEW
+	    WHERE STATUS = #{category}
+		ORDER BY INR_NO DESC
+	</select>
+	
+	<update id="deleteInrBoard" parameterType="_int">
+		UPDATE INREVIEW
+		SET STATUS = 'N'
+		WHERE INR_NO = #{ino}
+	</update>
+	
+	<update id="deleteInrCanBoard" parameterType="_int">
+		UPDATE INREVIEW
+		SET STATUS = 'Y'
+		WHERE INR_NO = #{ino}
+	</update>
+	
+	<select id="adminInrSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM INREVIEW
+		WHERE 1 = 1
+		<if test="condition == 'inrTitle'">
+			AND INR_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+	</select>
+	
+	<select id="adminInrSearch" resultMap="InReviewResultSet">
+		SELECT *
+		FROM INREVIEW
+		WHERE 1 = 1
+		<if test="condition == 'inrTitle'">
+			AND INR_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'memberId'">
+			AND MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		ORDER BY INR_NO DESC
+	</select>
+	
+	<select id="detailInReview" parameterType="_int" resultMap="InReviewResultSet">
+
+			SELECT
+			    I.INR_NO,
+			    I.INR_TITLE,
+			    I.INR_CONTENT,
+			    I.INR_VIEW,
+			    I.INR_DATE,
+			    I.STATUS,
+			    I.MEMBER_ID,
+			    M.NICKNAME,
+			    M.MEMBER_ID,
+			    IA.ORIGIN_NAME,
+			    IA.CHANGE_NAME,
+			    REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+			FROM INREVIEW I
+			JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
+			LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
+			WHERE I.INR_NO = #{inrNo}
+			GROUP BY
+			    I.INR_NO,
+			    I.INR_TITLE,
+			    I.INR_CONTENT,
+			    I.INR_VIEW,
+			    I.INR_DATE,
+			    I.STATUS,
+			    I.MEMBER_ID,
+			    M.NICKNAME,
+			    M.MEMBER_ID,
+
+			    IA.ORIGIN_NAME,
+			    IA.CHANGE_NAME
+			ORDER BY I.INR_NO DESC
+
+	</select>
+	
+	
+	
+
+</mapper>

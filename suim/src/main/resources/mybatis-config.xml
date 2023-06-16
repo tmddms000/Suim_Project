@@ -69,6 +69,7 @@
 	    	
 	    	<mapper resource="/mappers/event/event-mapper.xml"/>
 	    	<mapper resource="/mappers/event/admin-event-mapper.xml"/>
+	    	<mapper resource="/mappers/board/admin-board-mapper.xml"/>
 	    	<mapper resource="/mappers/pay/pay-mapper.xml"/>
 	    </mappers>
 	    

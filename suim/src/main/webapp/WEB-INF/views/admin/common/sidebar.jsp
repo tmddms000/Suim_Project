@@ -50,15 +50,15 @@
 				</script>
                 <div class="navbar-nav w-100">
                     <a href="/admin" class="nav-item nav-link ${pageType eq 'admin/index' ? 'active' : ''}"><i class="fa fa-tachometer-alt me-2"></i>대시보드</a>
-                    <a href="list.me" class="nav-item nav-link ${pageType eq 'member/member' ? 'active' : ''}"><i class="fa fa-th me-2"></i>회원 관리</a>
-                    <a href="list.ho" class="nav-item nav-link ${pageType eq 'house/house' ? 'active' : ''}"><i class="fa fa-laptop me-2"></i>쉐어하우스 관리</a>
+                    <a href="/admin/list.me" class="nav-item nav-link ${pageType eq 'member/member' ? 'active' : ''}"><i class="fa fa-th me-2"></i>회원 관리</a>
+                    <a href="/admin/list.ho" class="nav-item nav-link ${pageType eq 'house/house' ? 'active' : ''}"><i class="fa fa-laptop me-2"></i>쉐어하우스 관리</a>
 
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-keyboard me-2"></i>커뮤니티 관리</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="board.html" class="dropdown-item">자유게시판</a>
-                            <a href="find.html" class="dropdown-item">사람 구해요</a>
-                            <a href="inreview.html" class="dropdown-item">플랫폼 이용후기</a>
+                            <a href="/adminBoardList.bo" class="dropdown-item nav-link ${pageType eq 'board/freeBoard' ? 'active' : ''}">자유게시판</a>
+                            <a href="/adminFindList.bo" class="dropdown-item">사람 구해요</a>
+                            <a href="/adminInReviewList.bo" class="dropdown-item">플랫폼 이용후기</a>
                         </div>
                     </div>
                     <a href="list.re" class="nav-item nav-link ${pageType eq 'report/report' ? 'active' : ''}"><i class="fa fa-chart-bar me-2"></i>신고 관리</a>

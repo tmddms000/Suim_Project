@@ -88,7 +88,7 @@
             width : 95%;
             position: relative;
             height: 700px;
-            padding-left : 14px;
+            padding-left : 10px;
             padding-right: 0px;
             margin-left: 0px;
             margin-right : 0px;
