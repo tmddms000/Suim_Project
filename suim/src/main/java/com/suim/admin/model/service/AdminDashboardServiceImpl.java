@@ -68,7 +68,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		
 		return dashboard;
 	}
-
+/*
 	@Override
 	public ArrayList<Member> selectMemberAll() {
 		return adminDashboardDao.selectMemberAll(sqlSession);
@@ -148,5 +148,5 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	public ArrayList<Member> selectLeaveMemberRate() {
 		return adminDashboardDao.selectLeaveMemberRate(sqlSession);
 	}
-
+*/
 }

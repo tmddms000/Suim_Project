@@ -136,7 +136,6 @@ public class AdminHouseController {
 		int result = adminHouseService.updateStatusAll(intArray, houseStatus);
 		for (int i = 0; i < idArray.length; i++) {
 			if(houseStatus.equals("심사완료")) {
-				System.out.println(email);
 				  try {
 					    MailHandler sendMail = new MailHandler(mailSender);
 					    

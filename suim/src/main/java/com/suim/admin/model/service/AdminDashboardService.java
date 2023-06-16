@@ -1,15 +1,12 @@
 package com.suim.admin.model.service;
 
-import java.util.ArrayList;
-
 import com.suim.admin.model.vo.Dashboard;
-import com.suim.house.model.vo.Region;
-import com.suim.member.model.vo.Member;
 
 public interface AdminDashboardService {
 	
 	Dashboard getDashboardData();
 
+	/*
 	// 전체 회원 수 조회
 	ArrayList<Member> selectMemberAll();
 	
@@ -58,4 +55,5 @@ public interface AdminDashboardService {
 	
 	// 회원탈퇴율
 	ArrayList<Member> selectLeaveMemberRate();
+	*/
 }

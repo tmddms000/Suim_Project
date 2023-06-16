@@ -7,29 +7,28 @@ import org.springframework.stereotype.Repository;
 
 import com.suim.admin.model.vo.Dashboard;
 import com.suim.house.model.vo.Region;
-import com.suim.member.model.vo.Member;
 
 @Repository
 public class AdminDashboardDao {
 	
-	public ArrayList<Member> selectMemberAll(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberAll");
+	public int selectMemberAll(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminDashboardMapper.selectMemberAll");
 	}
 
-	public ArrayList<Member> selectEnrollMember(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEnrollMember");
+	public Dashboard selectEnrollMember(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMember");
 	}
 
-	public ArrayList<Member> selectMemberGender(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberGender");
+	public Dashboard selectMemberGender(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberGender");
 	}
 
-	public ArrayList<Member> selectMemberHouseTopN(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberHouseTopN");
+	public Dashboard selectMemberHouseTopN(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberHouseTopN");
 	}
 
-	public ArrayList<Member> selectMemberInreviewTopN(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberInreviewTopN");
+	public Dashboard selectMemberInreviewTopN(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberInreviewTopN");
 	}
 
 	public int selectHouseCount(SqlSessionTemplate sqlSession) {
@@ -40,39 +39,39 @@ public class AdminDashboardDao {
 		return sqlSession.selectOne("adminDashboardMapper.selectReservationCount");
 	}
 
-	public ArrayList<Member> selectReservationRate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectReservationRate");
+	public Dashboard selectReservationRate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectReservationRate");
 	}
 
-	public ArrayList<Member> selectEmptyRate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEmptyRate");
+	public Dashboard selectEmptyRate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEmptyRate");
 	}
 
-	public ArrayList<Member> selectHouseMonth(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectHouseMonth");
+	public Dashboard selectHouseMonth(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectHouseMonth");
 	}
 
-	public ArrayList<Member> selectHouseDate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectHouseDate");
+	public Dashboard selectHouseDate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectHouseDate");
 	}
 
-	public ArrayList<Region> selectRegionTopN(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectRegionTopN");
+	public Dashboard selectRegionTopN(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectRegionTopN");
 	}
 
-	public ArrayList<Member> selectEnrollMemberRate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEnrollMemberRate");
+	public Dashboard selectEnrollMemberRate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMemberRate");
 	}
 
-	public ArrayList<Member> selectEnrollMemberMonthRate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEnrollMemberMonthRate");
+	public Dashboard selectEnrollMemberMonthRate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMemberMonthRate");
 	}
 
-	public ArrayList<Member> selectEnrollMemberDate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEnrollMemberDate");
+	public Dashboard selectEnrollMemberDate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMemberDate");
 	}
 
-	public ArrayList<Member> selectLeaveMemberRate(SqlSessionTemplate sqlSession) {
-		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectLeaveMemberRate");
+	public Dashboard selectLeaveMemberRate(SqlSessionTemplate sqlSession) {
+		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectLeaveMemberRate");
 	}
 }
