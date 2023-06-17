@@ -46,7 +46,7 @@
 
 </style>
 
-	<script type="text/javascript">
+<script type="text/javascript">
 		var socket = null;
 		var isFirstLoad = true;
 		var isUpdatingNotification = false;
@@ -63,26 +63,28 @@
 
 		});
 		
-		function connectWs(){
-		var ws = new SockJS("/notification");
-		socket = ws;
-		
-		ws.onopen = function() {
+		function connectWs() {
+	        var ws = new SockJS("/notification");
+	        socket = ws;
 
-		};	
-			
-			ws.onmessage = function(event) {
-				 
-				 addMessageToNotificationList(event.data);
-				 if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
-				      vibrateButton();
-				    }
-				    isFirstLoad = false;
-			 };
-			ws.onclose = function() {
+	        ws.onopen = function() {};
 
-		 };
-		};
+	        ws.onmessage = function(event) {
+	            var message = event.data;
+	            if (message === "다중 로그인이 감지되어 로그아웃 됩니다.") {
+	                // Handle the alert message
+	                alert(message);
+	                location.href = location.href;
+	            } else {
+	                // Handle other messages
+	                addMessageToNotificationList(message);
+	                if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
+	                    vibrateButton();
+	                }
+	                isFirstLoad = false;
+	            }
+	        };
+	    }
 		
 		
 		function truncateText(element, maxLength) {
@@ -401,13 +403,13 @@
 	</script>
 
 
-	<c:if test="${ not empty alertMsg }">
+<c:if test="${ not empty alertMsg }">
 		<script>
 			alert("${ alertMsg }");
 		</script>
 		<c:remove var="alertMsg" scope="session" />
 	</c:if>
-
+	
 	<c:if test="${ not empty toastError }">
 		<script>
 		toastr.error("${ toastError }");

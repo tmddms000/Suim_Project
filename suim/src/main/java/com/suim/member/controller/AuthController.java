@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -40,9 +42,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.suim.common.api.NaverLoginBO;
+import com.suim.common.config.CustomHttpSessionListener;
 import com.suim.common.mail.MailHandler;
 import com.suim.common.mail.TempKey;
+import com.suim.common.main.controller.MainController;
 import com.suim.common.model.vo.GoogleOAuthRequest;
+import com.suim.common.socket.EchoHandler;
 import com.suim.member.model.service.MemberService;
 import com.suim.member.model.vo.Email;
 import com.suim.member.model.vo.GoogleSignUp;
@@ -64,8 +69,8 @@ public class AuthController {
 	@Autowired
 	private GoogleConnectionFactory googleConnectionFactory;
 	@Autowired
-	private OAuth2Parameters googleOAuth2Parameters;
-
+	private EchoHandler echoHandler;
+	
 	@Autowired
 	public AuthController(MemberService memberService, BCryptPasswordEncoder bcryptPasswordEncoder,
 			JavaMailSender mailSender, NaverLoginBO naverLoginBO, HttpSession session) {
@@ -138,6 +143,12 @@ public class AuthController {
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
 
+		if (member.getArea() != null) {
+			double[] area = MainController.getCoordinates(member.getArea());
+			member.setLatitude(area[0]);
+			member.setLongitude(area[1]);
+		}
+
 		CompletableFuture.runAsync(() -> {
 			try {
 				mailSendAsync(mailKey, member.getEmail());
@@ -172,44 +183,68 @@ public class AuthController {
 
 	// 일반 로그인
 	@PostMapping("doLogin")
-	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response) {
+	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response,
+			HttpServletRequest request) {
 		Member loginUser = memberService.loginMember(m);
 
 		if (loginUser == null) {
 			session.setAttribute("toastError", "로그인 할 수 없는 계정입니다.");
 			return "redirect:/member/login";
 
-		} else {
-
-			if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-				int result = memberService.checkEmailLogin(loginUser.getEmail());
-
-				if (result > 0) {
-
-					session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
-					session.setAttribute("loginUser", loginUser);
-					memberService.updateLoginDate(loginUser.getMemberId());
-
-					return "redirect:/";
-
-				} else {
-					session.setAttribute("toastError", "이메일 인증이 되지 않았습니다");
-
-					String mailKey = new TempKey().getKey(30, false);
-					Email email = new Email(mailKey, loginUser.getEmail());
-
-					int result3 = memberService.setEmailCode(email);
-					CompletableFuture<Void> emailTask = mailSendAsync(mailKey, loginUser.getEmail());
-
-					session.setAttribute("verifyPage", "이메일 인증");
-					return "redirect:/member/verifyPage";
-				}
-			} else {
-				session.setAttribute("toastError", "비밀번호를 확인해주세요.");
-				return "redirect:/member/login";
-
-			}
 		}
+
+		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+			int result = memberService.checkEmailLogin(loginUser.getEmail());
+
+		
+				if (result > 0) {
+			        String sessionIdToInvalidate = CustomHttpSessionListener.getSessionIdForUser(loginUser.getMemberId());
+			        
+			        
+			        if (sessionIdToInvalidate != null) {
+			            // Retrieve the previous session
+			            HttpSession previousSession = CustomHttpSessionListener.getSessionById(sessionIdToInvalidate);
+			          
+			            if (previousSession != null) {
+			            	echoHandler.broadcastMessage("다중 로그인이 감지되어 로그아웃 됩니다.");
+			            	log.info("message 들어옴?");
+			                // Invalidate the previous session
+			                previousSession.invalidate();
+			                CustomHttpSessionListener.expireSession(sessionIdToInvalidate);
+			            }
+			        }
+
+			        // Record the previous session for the logged-in user
+			        CustomHttpSessionListener.recordPreviousSession(loginUser.getMemberId(), session.getId());
+
+			        // Create a new session for the logged-in user
+			        session.invalidate();
+			        session = request.getSession(true);
+
+			        // Set session attributes and perform any necessary actions
+			        session.setAttribute("loginUser", loginUser);
+			        session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
+			        memberService.updateLoginDate(loginUser.getMemberId());
+
+			        return "redirect:/";
+			    } else {
+				session.setAttribute("toastError", "이메일 인증이 되지 않았습니다");
+
+				String mailKey = new TempKey().getKey(30, false);
+				Email email = new Email(mailKey, loginUser.getEmail());
+
+				int result3 = memberService.setEmailCode(email);
+				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, loginUser.getEmail());
+
+				session.setAttribute("verifyPage", "이메일 인증");
+				return "redirect:/member/verifyPage";
+			}
+		} else {
+			session.setAttribute("toastError", "비밀번호를 확인해주세요.");
+			return "redirect:/member/login";
+
+		}
+
 	}
 
 	// 메일 전송됐다고 알려지는 창
@@ -258,7 +293,7 @@ public class AuthController {
 	@RequestMapping(value = "loginNaver", method = { RequestMethod.GET, RequestMethod.POST })
 	public String userNaverLoginPro(Model model, @RequestParam Map<String, Object> paramMap, @RequestParam String code,
 			@RequestParam String state, HttpSession session) throws Exception {
-		
+
 		System.out.println("잘 넘어오나?");
 		OAuth2AccessToken oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		String apiResult = naverLoginBO.getUserProfile(oauthToken);
@@ -393,8 +428,8 @@ public class AuthController {
 			// 부가 요구사항 작성 후 회원가입 되게 유도하기
 			session.setAttribute("toastSuccess", "회원가입에 필요한 정보를 입력해야합니다.");
 
-			
-			session.setAttribute("googleMember", new GoogleSignUp(naverID, name, nickName, email, changeName, googleNo));
+			session.setAttribute("googleMember",
+					new GoogleSignUp(naverID, name, nickName, email, changeName, googleNo));
 			session.setAttribute("joinGoogle", "구글 회원가입");
 			return "redirect:/member/joinGoogle";
 		}
@@ -403,12 +438,11 @@ public class AuthController {
 	@GetMapping("joinGoogle")
 	public String joinGooglePage(Model model) {
 
-		
 		if (session.getAttribute("joinGoogle") == null || session.getAttribute("googleMember") == null) {
 			session.setAttribute("alertMsg", "접근할 수 없는 페이지입니다.");
 			return "redirect:/";
 		}
-		
+
 		model.addAttribute("member", (GoogleSignUp) session.getAttribute("googleMember"));
 		return "/member/google-signup";
 	}
@@ -448,6 +482,12 @@ public class AuthController {
 		Email email = new Email(mailKey, member.getEmail());
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
+
+		if (member.getArea() != null) {
+			double[] area = MainController.getCoordinates(member.getArea());
+			member.setLatitude(area[0]);
+			member.setLongitude(area[1]);
+		}
 
 		CompletableFuture.runAsync(() -> {
 			try {

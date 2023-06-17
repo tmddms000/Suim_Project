@@ -163,6 +163,16 @@
 		WHERE MEMBER_ID = #{memberId}
 	</select>
 	
+	<!-- 하우스 정보 모두 가져오기 -->
+	<select id="selectHouseList" resultMap="houseResultMap">
+	SELECT HOUSE_NO, HOUSE_NAME, HOUSE_ADDRESS, MEMBER_ID, LATITUDE, LONGITUDE, CHANGE_NAME, RES_GENDER, RENT, DEPOSIT
+	FROM HOUSE
+	JOIN PHOTO  USING (HOUSE_NO)
+	WHERE FILE_LEVEL = 'Y'
+    AND ENROLL_STATUS = '등록완료'
+    AND HOUSE_STATUS = 'Y'
+	</select>
+	
 	<!-- 로그인유저의 셰어하우스 예약 체크 -->
 	<select id="rezChCount" resultType="_int">
 		SELECT COUNT(*)

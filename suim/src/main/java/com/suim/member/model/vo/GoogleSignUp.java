@@ -59,4 +59,6 @@ public class GoogleSignUp {
 	private int memberPoint;
 	private String status;
 	private String googleLogin;
+	private double latitude;
+	private double longitude;
 }

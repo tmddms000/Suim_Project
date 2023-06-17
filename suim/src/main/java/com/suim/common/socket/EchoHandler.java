@@ -1,5 +1,6 @@
 package com.suim.common.socket;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.suim.member.model.vo.Member;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class EchoHandler extends TextWebSocketHandler {
 	private static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
 	//로그인 한 인원 전체
@@ -32,6 +36,20 @@ public class EchoHandler extends TextWebSocketHandler {
 		String senderId = currentUserName(session);
 		userSessionsMap.put(senderId,session);
 	}
+	
+	
+	public void broadcastMessage(String message) {
+        for (WebSocketSession session : sessions) {
+            try {
+                session.sendMessage(new TextMessage(message));
+                log.info("메세지 보냄");
+            } catch (IOException e) {
+                // Handle exception
+            }
+        }
+    }
+	
+	
 	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {// 메시지

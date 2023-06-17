@@ -23,7 +23,11 @@
 		<result column="MEMBER_ID" property="memberId" />
 		<result column="CHANGE_NAME" property="changeName" />
 		<result column="ENROLL_STATUS" property="enrollStatus" />
+
+		<result column="LATITUDE" property="latitude" />
+		<result column="LONGITUDE" property="longitude" />
 		<result column="NICKNAME" property="nickName" />
+
 	</resultMap>
 
 	<resultMap id="photoResultMap" type="photo">
@@ -95,7 +99,7 @@
 		HOUSE_CONTENT,
 		RES_GENDER,
 		RES_TYPE, FLOOR, HOUSE_STATUS, HOUSE_DATE,
-		MEMBER_ID
+		MEMBER_ID, latitude, longitude
 		)
 		VALUES (
 		SEQ_HOUSE_NO.NEXTVAL, #{houseName}, #{houseAddress},
@@ -104,7 +108,7 @@
 		#{minStay},
 		#{maxStay}, #{roomPeople}, #{incFurniture}, #{houseContent},
 		#{resGender},
-		#{resType}, #{floor}, 'Y', SYSDATE, #{memberId}
+		#{resType}, #{floor}, 'Y', SYSDATE, #{memberId}, #{latitude}, #{longitude}
 		)
 	</insert>
 
@@ -144,7 +148,9 @@
 		HOUSE_STATUS = 'Y',
 		HOUSE_DATE = SYSDATE,
 		ENROLL_STATUS = '심사중',
-		MEMBER_ID = #{memberId}
+		MEMBER_ID = #{memberId},
+		LATITUDE = #{latitude},
+		LONGITUDE = #{longitude}
 		
 		WHERE HOUSE_NO = #{houseNo}
 	</update>

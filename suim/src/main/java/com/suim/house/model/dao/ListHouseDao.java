@@ -90,6 +90,11 @@ public class ListHouseDao {
 		public String memberEmail(SqlSessionTemplate sqlSession, String memberId) {
 			return sqlSession.selectOne("listHouseMapper.memberEmail", memberId);
 		}
+
+
+		public ArrayList<House> selectHouseList(SqlSessionTemplate sqlSession) {
+			return (ArrayList)sqlSession.selectList("listHouseMapper.selectHouseList");
+
 		
 		// 로그인유저의 셰어하우스 예약 체크
 		public int rezChCount(SqlSessionTemplate sqlSession, Map<String, Object> rezCheck) {
@@ -104,6 +109,7 @@ public class ListHouseDao {
 		// 중심좌표 셰어하우스 이름 키워드 검색
 		public ArrayList<House> keyCenterAd(SqlSessionTemplate sqlSession, String searchKeyword){
 			return (ArrayList)sqlSession.selectList("listHouseMapper.keyCenterAd", searchKeyword);
+
 		}
 	
 }

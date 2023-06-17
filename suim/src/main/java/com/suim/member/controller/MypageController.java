@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.suim.board.model.vo.Board;
+import com.suim.common.main.controller.MainController;
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.house.model.vo.House;
@@ -119,6 +120,12 @@ public class MypageController {
 					return "redirect:" + session.getAttribute("originalUrl");
 				}
 			}
+			
+			if(m.getArea() != null) {
+				double[] area = MainController.getCoordinates(m.getArea());
+				m.setLatitude(area[0]);
+				m.setLongitude(area[1]);
+			}
 
 			int result = memberService.updateMember(m);
 			session.setAttribute("loginUser", m);
@@ -155,9 +162,11 @@ public class MypageController {
 	}
 
 
-	@GetMapping("board")
+	@GetMapping({"board", "null", ""})
 	public String boardList(@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "type", defaultValue = "board") String type, Model model) {
+			@RequestParam(value = "type", defaultValue = "board") String type, Model model, HttpServletRequest request) {
+		session.setAttribute("originalUrl", request.getRequestURI());
+		
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser == null) {

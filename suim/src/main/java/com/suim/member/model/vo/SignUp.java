@@ -59,5 +59,7 @@ public class SignUp {
 	private Timestamp loginDate;
 	private String changeName;
 	private String status;
+	private double latitude;
+	private double longitude;
 
 }

@@ -16,4 +16,5 @@ public class MyWish {
 	private int rent;
 	private String changeName;
 	private String houseWriter;
+	
 }

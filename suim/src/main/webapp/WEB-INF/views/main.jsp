@@ -5,6 +5,120 @@
 <meta charset="UTF-8">
 <title>쉐어하우스 쉼</title>
 		<%@ include file="/WEB-INF/views/common/include.jsp" %>
+		<script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+		<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+  		<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+  		<style>
+body {
+	background-color : rgb(248,249,250);
+}
+.green-text {
+
+	font-size : 20px;
+	color : green;
+
+}
+
+
+    
+.main-title__title {
+font-size: 2.875rem;
+font-weight: 700;
+color: #111;
+}
+
+.main-title__text {
+    font-size: 1.875rem;
+    font-weight: 300;
+    color: #333;
+    margin-top: 0.3em;
+}
+.container-max {
+    width: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1840px;
+}
+
+.main-search__wrap {
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 2.1875rem;
+    box-shadow: 0 0 1.25rem rgba(0, 0, 0, 0.1);
+    padding: 3.125rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    text-align: left;
+}
+
+.main-search {
+    margin: 1.875rem auto;
+    overflow: visible !important;
+}
+
+.main-search .txt-bx .desc {
+    font-size: 1.875rem;
+    font-weight: 300;
+    letter-spacing: -0.03em;
+    color: #111;
+}
+
+.main-search .txt-bx .title {
+    margin-top: 0.3em;
+    font-size: 2.875rem;
+    color: #000;
+    letter-spacing: -0.03em;
+}
+
+.branch-list {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+    margin-left: -0.9375rem;
+    margin-right: -0.9375rem;
+}
+
+ol, ul, li {
+    padding: 0;
+    list-style: none;
+}
+
+.branch-list .item .img-bx > img {
+    width : 100%;
+    height : 38%;
+}
+.branch-list .item .img-bx .label {
+    width: 2.5rem;
+    position: absolute;
+    top: 0;
+    right: 0.9375rem;
+}
+
+.branch-list .item {
+    padding: 0 0.9375rem;
+}
+
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-wrapper img {
+  transition: 500ms all;
+}
+
+.image-wrapper:hover img {
+  transform: translate(0%,0%) scale(1.1);
+}
+
+
+
+
+  		</style>
 </head>
 
 <c:set var="currentPath" value="${pageContext.request.servletPath}" />
@@ -44,35 +158,129 @@
                 <source src="/resources/video/city.mp4" type="video/mp4">
             </video>
         </div>
+        
+        <section class="section main-search wow fadeInUp" style="visibility: visible;animation-name: fadeInUp;">
+        <div class="container-max">
+          <div class="main-search__wrap">
+            <div class="txt-bx">
+              <p class="desc">프리미엄 셰어하우스 커뮤니티 사이트인</p>
+              <p class="title"><span class="font-weight-bold">쉼</span>에서는 <span class="font-weight-bold">3250</span>명의 회원이 있습니다.</p>
+            </div>
+            </a>
+          </div>
+        </div>
+      </section>
+        
+        
+        
+        
+		<div class="container" style="margin-top : 50px;">
+		
+		<ul class="branch-list">
+	
+			  <c:forEach var="house" items="${listHouse}" varStatus="loop">
+			  <c:url var="houseUrl" value="/detail.ho">
+				<c:param name="hno" value="${house.houseNo}" />
+			  </c:url>
+			  
+              <li class="item col-6 col-lg-3 item--share">
+              <a href="${houseUrl}">
+              <div class="img-bx hover-effect wrap image-wrapper">
+                <img src="resources/img/house/uploadFiles/${house.changeName}" alt="">
+              </div>
+              <div class="txt-bx">
+                <p class="title" style="margin-top : 10px;">${house.houseName}</p>
+                <p class="desc">
+                  <div class="txt em">쉐어하우스(${house.resGender})</div>
+                  <div class="txt">보증금 ${house.deposit} | 월 ${house.rent}</div>
+                </p>
+               <p class="btn btn--active">13명 입주가능</p>
+               </div>
+              </a>
+            </li>
+            </c:forEach>
+       </ul>
+			
+		
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%-- 
 
         <!-- 캐러셀(슬라이드쇼) -->
         <section class="bg-light text-center" id="about">
-            <div class="container px-4 px-lg-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-6">
-                        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                              <div class="carousel-item active" data-bs-interval="2000">
-                                <img src="/resources/img/common/room.jpg" class="d-block" alt="..." style="width : 700px; height:400px;">
-                              </div>
-                              <div class="carousel-item" data-bs-interval="2000">
-                                <img src="/resources/img/common/back.jpg" class="d-block" alt="..." style="width : 700px; height:400px;">
-                              </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">이전</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">다음</span>
-                            </button>
-                            <span class="text-red">가까운 위치의 쉐어하우스에요! 🙄</span>
-                          </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+			   <div class="container px-4 px-lg-5">
+				    <div class="row">
+				    	<div class="main-title">
+				    	<h1 class="main-title__title">셰어하우스</h1>
+				    	<p class="main-title__text">함께 살며 누리는 즐거운 주거경험</p>
+				    	</div>			  		    
+				        <div class="swiper-container">
+				            <div class="swiper-wrapper" style="margin-top : 70px;">
+				                <c:forEach var="house" items="${listHouse}" varStatus="loop">
+				                    <div class="swiper-slide col-xl-6">
+				                        <c:url var="houseUrl" value="/detail.ho">
+				                            <c:param name="hno" value="${house.houseNo}" />
+				                        </c:url>
+				                        <a href="${houseUrl}">
+				                        <div class="zoom-image">
+				                            <img src="resources/img/house/uploadFiles/${house.changeName}" alt="사진">
+				                        </div>
+				                            <div class="slide-caption">${house.houseName} | 남녀공용</div>
+				                            <div class="slide-caption">${house.houseAddress}</div>
+				                        <c:if test="${distance[loop.index] ne null}">
+				                            <div class="slide-caption">희망지역으로부터 약 ${distance[loop.index]} km 떨어져 있어요.</div>
+				                        </c:if>
+				                        <c:if test="${distance[loop.index] eq null}">
+				                            <div class="slide-caption">희망지역으로부터 약 ???? km 떨어져 있어요.</div>
+				                        </c:if>
+				                        
+				                        </a>
+				                    </div>
+				                </c:forEach>
+				            </div>
+				            <div class="swiper-pagination"></div>
+				        </div>
+				        <div style="margin-top : 20px; margin-bottom : 30px;">
+					        <c:if test="${loginUser ne null}">
+					        	<c:if test="${loginUser.area ne null }">
+					        	<div class="text-center green-text">희망지역에 따른 셰어하우스 추천 장소에요!</div>
+					        	</c:if>
+					        	<c:if test="${loginUser.area eq null }">
+					        	<div class="text-center green-text">희망지역을 설정하면 셰어하우스 추천을 받을 수 있어요!</div>
+					        	</c:if>
+					        </c:if>
+					        <c:if test="${loginUser eq null}">
+					        <div class="text-center green-text">로그인 하면 희망지역에 따라 셰어하우스 추천을 받을 수 있어요!</div>
+					        </c:if>
+			        </div>
+			    </div>
+			</div>
+        </section> --%>
 
 
         <!-- Projects-->
@@ -153,6 +361,22 @@
                     .go();
                     
                 });
+                
+                new Swiper('.swiper-container', {
+                	  autoplay: {
+                	    delay: 3000
+                	  },
+                	  loop: true,
+                	  centeredSlides: true,
+                	  pagination: {
+                	    el: '.swiper-pagination',
+                	    clickable: true
+                	  },
+                	  navigation: {
+                	    prevEl: '.swiper-button-prev',
+                	    nextEl: '.swiper-button-next'
+                	  }
+                	});
          </script>
 </body>
 </html>

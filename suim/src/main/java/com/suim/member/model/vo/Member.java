@@ -1,6 +1,7 @@
 package com.suim.member.model.vo;
 
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import lombok.Data;
@@ -11,6 +12,9 @@ import lombok.NoArgsConstructor;
 public class Member {
 	//회원의 정보를 받아오기 위한 VO 입니다
 
+	/**
+	 * 
+	 */
 	private String memberId;
 	private String memberPwd;
 	private String memberName;
@@ -32,5 +36,8 @@ public class Member {
 	private String memberComment;
 	private String naverLogin;
 	private String googleLogin;
+	
+	private double latitude;
+	private double longitude;
 	
 }

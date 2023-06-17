@@ -23,6 +23,8 @@
 		<result column="MEMBER_COMMENT" property="memberComment" />
 		<result column="NAVERLOGIN" property="naverLogin" />
 		<result column="GOOGLELOGIN" property="googleLogin" />
+		<result column="LATITUDE" property="latitude" />
+		<result column="LONGITUDE" property="longitude" />
 	</resultMap>
 
 	<!-- 로그인용 쿼리문 -->
@@ -53,7 +55,9 @@
 		, EMAIL
 		, GENDER
 		, AREA
-		, BIRTH)
+		, BIRTH
+		, LATITUDE
+		, LONGITUDE)
 		VALUES(#{memberId}
 		,
 		#{memberPwd}
@@ -64,7 +68,9 @@
 		,
 		#{gender}
 		, #{area}
-		, #{birth})
+		, #{birth}
+		, #{latitude}
+		, #{longitude})
 	</insert>
 
 
@@ -80,7 +86,9 @@
 		,
 		GENDER
 		, AREA
-		, BIRTH)
+		, BIRTH
+		, LATITUDE
+		, LONGITUDE)
 		VALUES(#{memberId}
 		, #{memberPwd}
 		, #{memberName}
@@ -90,7 +98,9 @@
 		, #{email}
 		, #{gender}
 		, #{area}
-		, #{birth})
+		, #{birth}
+		, #{latitude}
+		, #{longitude})
 	</insert>
 
 	<!-- 로그인용 쿼리문 -->
@@ -195,6 +205,8 @@
 		<if test="birth != null">BIRTH = #{birth},</if>
 		<if test="area != null">AREA = #{area},</if>
 		<if test="changeName != null">CHANGE_NAME = #{changeName},</if>
+		<if test="latitude != null">LATITUDE = #{latitude}</if>,
+		<if test="longitude != null">LONGITUDE = #{longitude}</if>,
 		MODIFY_DATE = SYSDATE,
 		MEMBER_COMMENT = #{memberComment}
 		WHERE MEMBER_ID
