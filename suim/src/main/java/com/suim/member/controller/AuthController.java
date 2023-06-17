@@ -145,8 +145,8 @@ public class AuthController {
 
 		if (member.getArea() != null) {
 			double[] area = MainController.getCoordinates(member.getArea());
-			member.setLatitude(area[0]);
-			member.setLongitude(area[1]);
+			member.setLongitude(area[0]);
+			member.setLatitude(area[1]);
 		}
 
 		CompletableFuture.runAsync(() -> {
@@ -485,8 +485,8 @@ public class AuthController {
 
 		if (member.getArea() != null) {
 			double[] area = MainController.getCoordinates(member.getArea());
-			member.setLatitude(area[0]);
-			member.setLongitude(area[1]);
+			member.setLongitude(area[0]);
+			member.setLatitude(area[1]);
 		}
 
 		CompletableFuture.runAsync(() -> {

@@ -123,8 +123,8 @@ public class MypageController {
 			
 			if(m.getArea() != null) {
 				double[] area = MainController.getCoordinates(m.getArea());
-				m.setLatitude(area[0]);
-				m.setLongitude(area[1]);
+				m.setLongitude(area[0]);
+				m.setLatitude(area[1]);
 			}
 
 			int result = memberService.updateMember(m);

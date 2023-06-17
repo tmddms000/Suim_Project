@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
 <meta charset="UTF-8">
 <title>쉐어하우스 쉼</title>
@@ -19,14 +20,19 @@ body {
 
 }
 
-
-    
+.main-title {
+    margin-bottom: 3.125rem;
+    text-align: center;
+    letter-spacing: -0.03em;
+    position: relative;
+    overflow: hidden;
+    line-height: 1.3;
+}   
 .main-title__title {
 font-size: 2.875rem;
 font-weight: 700;
 color: #111;
 }
-
 .main-title__text {
     font-size: 1.875rem;
     font-weight: 300;
@@ -115,8 +121,37 @@ ol, ul, li {
   transform: translate(0%,0%) scale(1.1);
 }
 
+li.item {
+  height: 400px; /* Adjust the height as desired */
+}
 
+.font-weight-bold {
+    font-weight: 700 !important;
+}
 
+.branch-list .item--share .txt-bx .em {
+    color: #FA5A51;
+}
+.branch-list .item .txt-bx .title {
+    font-size: 1.125rem;
+    color: #111;
+    font-weight: 500;
+}
+
+.main-title .link {
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: 2;
+    font-size: 1.125rem;
+}
+
+.branch-list .item .img-bx {
+    border-radius: 0.9375rem; 
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
 
   		</style>
 </head>
@@ -163,8 +198,8 @@ ol, ul, li {
         <div class="container-max">
           <div class="main-search__wrap">
             <div class="txt-bx">
-              <p class="desc">프리미엄 셰어하우스 커뮤니티 사이트인</p>
-              <p class="title"><span class="font-weight-bold">쉼</span>에서는 <span class="font-weight-bold">3250</span>명의 회원이 있습니다.</p>
+              <p class="desc">프리미엄 셰어하우스 커뮤니티 사이트</p>
+              <p class="title"><span class="font-weight-bold">쉼</span>에서는 <span class="font-weight-bold">3250</span>명의 회원이 가입했어요.</p>
             </div>
             </a>
           </div>
@@ -174,7 +209,13 @@ ol, ul, li {
         
         
         
-		<div class="container" style="margin-top : 50px;">
+		<div class="container" style="margin-top : 20px;">
+		
+		<div class="main-title">
+            <h1 class="main-title__title">쉐어하우스</h1>
+            <p class="main-title__text">함께 살며 누리는 즐거운 주거경험</p>
+            <a href="./branch/index.html?s_mode=1" class="link"> 더보기 </a>
+          </div>
 		
 		<ul class="branch-list">
 	
@@ -189,11 +230,39 @@ ol, ul, li {
                 <img src="resources/img/house/uploadFiles/${house.changeName}" alt="">
               </div>
               <div class="txt-bx">
-                <p class="title" style="margin-top : 10px;">${house.houseName}</p>
-                <p class="desc">
+                <div class="title" style="margin-top : 10px;">${house.houseName}</div>
                   <div class="txt em">쉐어하우스(${house.resGender})</div>
-                  <div class="txt">보증금 ${house.deposit} | 월 ${house.rent}</div>
-                </p>
+                  
+                  <c:set var="deposit" value="${house.deposit}" />
+                  <c:set var="rent" value="${house.rent}" />
+
+                  <div class="txt">보증금 
+                  	<c:choose>
+					  <c:when test="${deposit >= 10000000}">
+					    <fmt:formatNumber value="${deposit/10000}" pattern="###,###'천만원'" />
+					  </c:when>
+					  <c:otherwise>
+					    <fmt:formatNumber value="${deposit/10000}" pattern="###'만원'" />
+					  </c:otherwise>
+				 	</c:choose> | 월 <c:choose>
+					  <c:when test="${rent >= 10000000}">
+					    <fmt:formatNumber value="${rent/10000}" pattern="###,###'천만원'" />
+					  </c:when>
+					  <c:otherwise>
+					    <fmt:formatNumber value="${rent/10000}" pattern="###'만원'" />
+					  </c:otherwise>
+				 	</c:choose></div>
+						                       
+                    <c:if test="${distance[loop.index] ne null}">
+                        <div class="slide-caption">희망지역으로부터 약 ${distance[loop.index]} km 떨어져 있어요.</div>
+                    </c:if>
+                    <c:if test="${distance[loop.index] eq null}">
+                        <div class="slide-caption">희망지역으로부터 약 ???? km 떨어져 있어요.</div>
+                    </c:if>
+                
+                
+                
+                
                <p class="btn btn--active">13명 입주가능</p>
                </div>
               </a>
