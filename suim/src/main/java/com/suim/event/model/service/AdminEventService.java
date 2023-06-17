@@ -20,8 +20,4 @@ public interface AdminEventService {
 	int deleteEventFile(int eno);
 
 
-	int deleteEventFile(int eno);
-
-	
-
 }

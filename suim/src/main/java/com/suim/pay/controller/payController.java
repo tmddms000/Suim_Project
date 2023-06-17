@@ -195,10 +195,10 @@ public class payController {
 				            + "<body>"
 				            + "<h3>결제가 완료되었습니다.</h3>"
 				            + "<div class='message'>"
-				            + "<p>안녕하세요. 쉼입니다.</p>"
+				            + "<p>안녕하세요, 쉼입니다.</p>"
 				            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
 				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
-				            + "<p>감사합니다!</p>"
+				            + "<p>감사합니다.</p>"
 				            + "</div>"
 				            + "</body>"
 				            + "</html>";
@@ -219,7 +219,7 @@ public class payController {
 		    
 		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
 			
-			session.setAttribute("alertMsg", "결제가 실패 되었습니다.");
+			session.setAttribute("alertMsg", "결제가 실패되었습니다.");
 			
 			mv.setViewName("redirect:mypage/house");
 		}
@@ -233,7 +233,7 @@ public class payController {
 		int result = payService.cancelPay(tid);
 
 		if (result > 0 ) {
-		    session.setAttribute("alertMsg", "결제가 취소 되었습니다.");
+		    session.setAttribute("alertMsg", "결제가 취소되었습니다.");
 		    
 		    House h = houseService.selectHouse(hno);
 		    Member loginUser = (Member) session.getAttribute("loginUser");
@@ -254,9 +254,10 @@ public class payController {
 				            + "<body>"
 				            + "<h3>결제가 취소되었습니다.</h3>"
 				            + "<div class='message'>"
-				            + "<p>안녕하세요. 쉼입니다.</p>"
+				            + "<p>안녕하세요, 쉼입니다.</p>"
 				            + "<p>" + h.getHouseName() + "의 결제가 취소되었습니다.</p>"
 				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+				            + "<p>감사합니다.</p>"
 				            + "</div>"
 				            + "</body>"
 				            + "</html>";

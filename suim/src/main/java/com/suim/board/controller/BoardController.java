@@ -491,7 +491,7 @@ public class BoardController {
 		@RequestMapping(value = "rdelete.fi", produces = "text/html; charset=UTF-8", method = RequestMethod.POST)
 		public String ajaxDeletefReply(@RequestParam("fre") int fre) {
 			
-		    int result = boardService.deletefReply(bre);
+		    int result = boardService.deletefReply(fre);
 		    
 		    
 		    return (result > 0) ? "success" : "fail";

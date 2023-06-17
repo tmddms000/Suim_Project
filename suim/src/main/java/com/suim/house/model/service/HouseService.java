@@ -36,7 +36,5 @@ public interface HouseService {
 	    int updatePhoto(Photo p);
 	    
 	    void deleteHouse(int hno);
-	    
-	    void payment(int hno);
 		
 }

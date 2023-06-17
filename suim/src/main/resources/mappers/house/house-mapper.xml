@@ -171,10 +171,4 @@
     WHERE HOUSE_NO = #{hno}
 	</update>
 	
-	<update id="payment" parameterType="_int">
-    UPDATE HOUSE
-    SET ENROLL_STATUS = '등록완료'
-    WHERE HOUSE_NO = #{hno}
-	</update>
-
 </mapper>

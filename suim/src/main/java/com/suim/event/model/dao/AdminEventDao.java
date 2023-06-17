@@ -30,7 +30,7 @@ public class AdminEventDao {
 		return sqlSession.update("adminEventMapper.updateEventBoard", e);
 	}
 	
-	public Eattachment selectEventFile(SqlSessionTemplate sqlSession, Eattachment eAttach) {
+	public Eattachment selectEventFile(SqlSessionTemplate sqlSession, int eAttach) {
 		return (Eattachment) sqlSession.selectList("adminEventMapper.selectEventFile", eAttach);
 	}
 	
