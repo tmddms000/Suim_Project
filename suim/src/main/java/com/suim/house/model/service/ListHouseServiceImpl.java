@@ -71,6 +71,8 @@ public class ListHouseServiceImpl implements ListHouseService{
 	@Override
 	public ArrayList<House> selectHouseList() {
 		return listHouseDao.selectHouseList(sqlSession);
+	}
+	
 	@Override
 	public int rezChCount(Map<String, Object> rezCheck) {
 		return listHouseDao.rezChCount(sqlSession, rezCheck);

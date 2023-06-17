@@ -94,6 +94,7 @@ public class ListHouseDao {
 
 		public ArrayList<House> selectHouseList(SqlSessionTemplate sqlSession) {
 			return (ArrayList)sqlSession.selectList("listHouseMapper.selectHouseList");
+		}
 
 		
 		// 로그인유저의 셰어하우스 예약 체크
