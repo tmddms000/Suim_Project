@@ -1,5 +1,8 @@
 package com.suim.event.model.dao;
 
+import java.util.ArrayList;
+
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -27,14 +30,15 @@ public class AdminEventDao {
 		return sqlSession.update("adminEventMapper.updateEventBoard", e);
 	}
 	
+	public Eattachment selectEventFile(SqlSessionTemplate sqlSession, Eattachment eAttach) {
+		return (Eattachment) sqlSession.selectList("adminEventMapper.selectEventFile", eAttach);
+	}
+	
 	public int deleteEvent(SqlSessionTemplate sqlSession, int eno) {
 		return sqlSession.update("adminEventMapper.deleteEvent", eno);
 	}
 	
-	public Eattachment selectEventFile(SqlSessionTemplate sqlSession, int eAttach) {
-		return sqlSession.selectOne("adminEventMapper.selectEventFile", eAttach);
-	}
-	
+
 	public int deleteEventFile(SqlSessionTemplate sqlSession, int eno) {
 		return sqlSession.update("adminEventMapper.deleteEventFile", eno);
 	}

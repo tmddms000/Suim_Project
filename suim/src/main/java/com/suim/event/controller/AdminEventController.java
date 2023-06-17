@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,9 +34,11 @@ public class AdminEventController {
 	@Autowired
 	private AdminEventService adminEventService;
 	
-	@GetMapping("/event.ev")
+	
+	@RequestMapping("admin.ev")
 	public ModelAndView selectList(
 			@RequestParam(value="cPage", defaultValue="1") int currentPage,
+			@RequestParam(value = "category", required = false) String category,
 			ModelAndView mv) {
 		// 페이징처리를 위한 PageInfo 객체 얻어내기
 		int listCount = eventService.selectListCount();
@@ -43,6 +46,8 @@ public class AdminEventController {
 		
 		int pageLimit = 10;
 		int boardLimit = 5;
+		
+		System.out.println("카테고리 " + category);
 		
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 		
@@ -56,12 +61,58 @@ public class AdminEventController {
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("p")
-		  .setViewName("event/event");
+		  .setViewName("admin/event/adminEvent");
 		System.out.println("리스트는 " + list);
 		System.out.println(mv);
 
 		return mv;
 	}
+	
+	@RequestMapping("admin/detail.ev")
+	public ModelAndView selectBoard(ModelAndView mv, int eno, HttpSession session) {
+	
+		
+		// 1. 해당 게시글 조회수 증가용 서비스 호출 및 결과 받기 (update 하고 옴)
+		int result = eventService.increaseCount(eno);
+		
+		System.out.println("-------");
+		System.out.println(result);
+		
+		// 2. 만약 게시글 조회수가 성공적으로 증가되었다면 그제서야 select 요청
+		if(result> 0) { // 성공
+			// NoticeDetailView.jsp 에서 필요로 하는 응답데이터를 조회
+		
+			ArrayList<Eattachment> eAttach = eventService.selectEventFile(eno);
+			
+			// System.out.println(nAttach);
+			
+			Event e = eventService.selectBoard(eno);
+			
+			System.out.println("----");
+			System.out.println(e);
+			
+			mv.addObject("eAttach", eAttach);
+			// System.out.println("n은 " + n + "입니다.");
+			//	   새로 넘어온 첨부파일에 대한 원본명, 수정파일명을 덮어씌우기 (필드값 셋팅)
+			
+			
+			// 주의사항 : changeName 은 currentTime + ranNum + ext; 을 모두 이어붙인 것이기 때문에
+			//		       경로를 지정하여 정확하게 뽑아야 함
+			
+			// mv.addObject("n", ndn);
+			// 조회된 데이터를 mv 에 담아서 포워딩 페이지 경로를 잡아주기
+			mv.addObject("e", e).setViewName("event/eventDetailView");
+			// System.out.println(mv);
+		} else { // 실패
+			// 에러문구를 담아서 에러페이지로 포워딩 경로 잡아주기
+			mv.addObject("errorMsg", "이벤트 게시글 상세조회 실패")
+			   .setViewName("common/errorPage");
+			
+		}
+		mv.setViewName("event/eventDetailView");
+		return mv;
+	}
+	
 	
 	// 이벤트 게시글 작성
 	@RequestMapping("/enrollForm.ev")
@@ -105,7 +156,7 @@ public class AdminEventController {
 		String changeName = saveFile(upfile, session);
 		
 		eAttach.setOriginName(upfile.getOriginalFilename());
-		eAttach.setChangeName("resources/img/event/" + changeName);
+		eAttach.setChangeName("/resources/img/event/" + changeName);
 		
 		result2 = adminEventService.insertEventFile(eAttach);
 		
@@ -169,7 +220,7 @@ public class AdminEventController {
 	
 	
 	// 관리자용 이벤트 게시판 업데이트폼으로 이동
-	@RequestMapping("/updateForm.ev")
+	@RequestMapping("admin/updateForm.ev")
 	public ModelAndView updateForm(int eno 
 						 , ModelAndView mv, HttpSession session) { // RequestParam 을 생략하기 위해 bno 를 매개변수로 삼음
 		
@@ -195,7 +246,7 @@ public class AdminEventController {
 		return mv;
 	}
 	
-	@RequestMapping("/update.ev")
+	@RequestMapping("admin/update.ev")
 	public String updateEvent(Model model,
 								 Event e, 
 								MultipartFile reupfile,
@@ -241,20 +292,24 @@ public class AdminEventController {
 	 * @param session
 	 * @return
 	 */
+
+	
 	@RequestMapping("delete.ev")
-	public String deleteEvent(@RequestParam("eno") int eno, int eAttach,
+	public String deleteEvent(@RequestParam("eno") int eno, Eattachment eAttach, Event e, 
+
 						  Model model, 
 						  String filePath,
 						  HttpSession session) {
 	
-	// 삭제하려는 해당 이벤트 게시글의 eventNo 를 조회하기 위한 것.
-	Event e = eventService.selectBoard(eno);
-	
+
 	// 그 이벤트 파일의 status 를 n 으로 바꾸기 위해 이벤트 파일을 조회하기 위한 것.
-	Eattachment eventFile = adminEventService.selectEventFile(eAttach);
+
+	
 	// 해당 이벤트 게시글의 첨부 파일을 조회해서 file_status 를 n 으로 바꾸기 위한 것.	
 	int re = adminEventService.deleteEventFile(eno);
-	
+	if(re > 0) {
+		System.out.println("re 는 " + re);
+	}
 	int result = adminEventService.deleteEvent(eno);
 	
 	if(result > 0) { // 삭제 처리 성공
@@ -263,14 +318,15 @@ public class AdminEventController {
 		// 서버의 실제 파일이 삭제 되는 코드
 	 
 		if(filePath != null) {
+			System.out.println("파일Path" + filePath);
 			// 넘어온 수정파일명이 있다면 == 애초에 해당 게시글에 첨부파일이 있었다면
-			String realPath = session.getServletContext().getRealPath(filePath);
-			new File(realPath).delete();
+			// String realPath = session.getServletContext().getRealPath(filePath);
+			// new File(realPath).delete();
 		}
 		
 		
 		
-		session.setAttribute("alertMsg", "성공적으로 OO가 삭제되었습니다.");
+		session.setAttribute("alertMsg", "성공적으로 이벤트가 삭제되었습니다.");
 		
 		return "redirect:/event.ev";
 		
@@ -281,6 +337,7 @@ public class AdminEventController {
 		return "common/errorPage";
 	}
 	}
+	
 	
 	
 	

@@ -82,16 +82,20 @@
 		 WHERE EVENT_NO = #{eno}
 	</update>
 	
-	<select id="selectEventFile" parameterType="eAttachment">
+
+	<select id="selectEventFile" resultType="_int">
+
 		SELECT *
 		  FROM EATTACHMENT
 		 WHERE EAT_NO = #{eAttach}
 	</select>
 	
 	<update id="deleteEventFile" parameterType="eAttachment">
-		UPDATE ETTACHMENT
+
+		UPDATE EATTACHMENT
 		   SET FILE_STATUS = 'N'
-		 WHERE EVENT_NO = #{eno}
+		 WHERE EAT_NO = #{eno}
+
 	</update>
 
 	

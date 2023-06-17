@@ -62,14 +62,7 @@
                     	SUIM 이벤트
                 </div>
             
-                <div id="nListSearch" class="search-box">
-                    <form>
-                        <input type="text" placeholder="지역명, 주변명 입력">
-                        <button type="submit">
-                            <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                        </button>
-                    </form>
-                </div>
+                
             </div>
                 
                 <table id="eventDetailTable" class="table">
@@ -77,6 +70,7 @@
                         <tr class="table-header">
                             <td id="eventNo" class="nListNo contentHeader" hidden>No</td>
                             <td class="title contentHeader">
+                            	<div style="padding-left: 10%; color: black; font-size: larger;">제목</div>
                                 <div style = "padding-left : 10% ">${e.eventTitle}</div>
                             </td>              
                             <td class="createDate contentHeader" style="width:15%;">
@@ -112,13 +106,7 @@
                           	</td>
                          </tr>
                          
-                      	<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
-                         	<div align="center" style="display: inline-block;" align="right">
-				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
-				                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
-			        		</div>
-                        </c:if> 	
+                      	 	
                          	
                 			<form id="postForm" action="" method="post">
 			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
@@ -140,10 +128,17 @@
                     </tbody>
                 </table>
                 
-               
+               <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+                         	<div align="center" style="display: inline-block;" align="right">
+				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
+				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+				                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+				                <a class="btn btn-secondary" onclick="postFormSubmit(3);">이벤트 관리 바로가기</a>
+			        		</div>
+                        </c:if>
                 
                 <button class="btn btn-primary btn-block submit-btn">
-                    <a href="event.ev">목록가기</a>
+                    <a href="/event.ev">이벤트 목록가기</a>
                 </button>
                
             </div>
@@ -155,10 +150,12 @@
 	               	
 	               		// 해당 form 태그 선택 후 action 속성값을 각각 부여 후 곧바로 submit 시키기
 	               			if(num==1) { // 수정하기 버튼을 클릭했을 경우
-	            				$("#postForm").attr("action", "updateForm.ev?eno=${e.eventNo}").submit();
-	            			} else { // 삭제하기 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "admin/updateForm.ev?eno=${e.eventNo}").submit();
+	            			} else if(num==2) { // 삭제하기 버튼을 클릭했을 경우
 	            				$("#postForm").attr("action", "delete.ev?eno=${e.eventNo}").submit();
-	            			}	
+	            			} else if(num==3) { // 이벤트 관리 버튼을 클릭했을 경우
+	            				$("#postForm").attr("action", "/admin.ev").submit();
+	            			}
 	            		}
 	               		
 	                

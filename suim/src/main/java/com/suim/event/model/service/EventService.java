@@ -19,5 +19,10 @@ public interface EventService {
 	
 	Event selectBoard(int eventNo);
 
+	int selectCategoryListCount(String category);
+
+	ArrayList<Event> selectCategoryList(PageInfo pi, String category);
+
+
 	
 }

@@ -67,10 +67,19 @@
 			 , EVENT_STATUS
 		  FROM EVENT
 		 WHERE EVENT_NO = #{eventNo}
-		 ORDER BY EVENT_NO DESC
+
+		
 	</select>
 	
-	<select id="selectListByCategory" resultType="event" resultMap="eventResultSet">
+	<select id="selectCategoryListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM EVENT
+		 WHERE EVENT_CATEGORY = #{category}
+	</select>
+	
+	<!-- 진행중인 유효한 이벤트 리스트 -->
+	<select id="selectCategoryList" resultType="event" resultMap="eventResultSet">
+
 		SELECT EVENT_NO
 	  		 , EVENT_TITLE
 	    	 , EVENT_CATEGORY
@@ -79,9 +88,10 @@
 	    	 , EVENT_VIEW
 	    	 , EVENT_STATUS
 	   		   FROM EVENT
-	   	 WHERE EVENT_STATUS = 'Y'
-	       AND EVENT_CATEGORY = #{category}
-	  ORDER BY EVENT_NO DESC
+
+	   	 WHERE EVENT_CATEGORY = #{category}
+	
+
 </select>
 	
 </mapper>

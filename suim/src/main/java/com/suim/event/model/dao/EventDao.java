@@ -44,4 +44,18 @@ public class EventDao {
 		return sqlSession.selectOne("eventMapper.selectBoard", eventNo);
 	}
 
+	public int selectCategoryListCount(SqlSessionTemplate sqlSession, String category) {
+		return sqlSession.selectOne("eventMapper.selectCategoryListCount", category);
+	}
+	
+	public ArrayList<Event> selectCategoryList(SqlSessionTemplate sqlSession, PageInfo pi, String category) {
+		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); 
+
+		int limit = pi.getBoardLimit(); // limit ; 조회할 갯수
+		
+		RowBounds rowBounds = new RowBounds(offset, limit); // 빈에 등록이 되어있지 않기 때문에 직접 생성해야 함
+		
+		return (ArrayList)sqlSession.selectList("eventMapper.selectCategoryList", category, rowBounds);
+	}
+
 }

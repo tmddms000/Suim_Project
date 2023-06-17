@@ -126,7 +126,9 @@
 	 		</a>
 		</c:if>
 		        
-					<select id="categorySelect" name="iis.value)">
+
+					<select id="categorySelect" name="categorySelect">
+
 					
 						<!-- 기본적으로 카테고리를 선택 안 할 시 유효한 모든 진행중인 이벤트들을 조회함 -->
 						<option value="">진행중인 이벤트</option>
@@ -168,30 +170,16 @@
          </tbody>
          </table>
 	<script>
-		         $(function() {
-		        	 
-		        	 
-		             // select 태그 변경 이벤트 리스너
-		             $("#categorySelect").change(function() {
-		                 var selectedOption = $(this).val(); // 선택한 옵션 값
-		 
-		                 // 모든 행을 숨김 처리
-		                 $("#event-table tbody tr").hide();
-		 
-		                 if (selectedOption === "") {
-		                     // 선택한 옵션이 전체 이벤트인 경우 모든 행을 보여줌
-		                     $("#event-table tbody tr").show();
-		                 } else {
-		                     // 선택한 옵션에 해당하는 카테고리 행만 보여줌
-		                     $("#event-table tbody tr").each(function() {
-		                         var category = $(this).find("td:nth-child(2)").text();
-		                         if (category === selectedOption) {
-		                             $(this).show();
-		                         }
-		                     });
-		                 }
-		            });
-		        });
+
+	
+	$(function() {
+      	$("#event-table>tbody>tr").click(function() {
+      		let eno = $(this).children(".eno").text();
+      		location.href = "detail.ev?eno=" + eno; //
+      	});
+      });
+		        
+
 		</script>
 		
 
@@ -204,12 +192,12 @@
                 			<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                 		</c:when>
                 		<c:otherwise>
-                			<li class="page-item"><a class="page-link" href="event.ev?cPage=${ pi.currentPage - 1 }">Previous</a></li>
+                			<li class="page-item"><a class="page-link" href="<c:url value='event.ev?cPage=${ pi.currentPage - 1 }&category=${e.eventCategory}'/>">Previous</a></li>
                 		</c:otherwise>
                 	</c:choose>
                     
                     <c:forEach var="p" begin="${ pi.startPage }" end="${ pi.endPage }" step="1">
-                    	<li class="page-item"><a class="page-link" href="event.ev?cPage=${ p }">${ p }</a></li>
+                    	<li class="page-item"><a class="page-link" href="<c:url value='event.ev?cPage=${ p }&category=${e.eventCategory}'/>">${ p }</a></li>
                     </c:forEach>
                     
                     <c:choose>
@@ -218,12 +206,13 @@
                     	</c:when>
                     	
                     	<c:otherwise>
-                    		<li class="page-item"><a class="page-link" href="event.ev?cPage=${ pi.currentPage + 1 }">Next</a></li>
+                    		<li class="page-item"><a class="page-link" href="<c:url value='event.ev?cPage=${ pi.currentPage + 1 }&category=${e.eventCategory}'/>">Next</a></li>
                     	</c:otherwise>
                     </c:choose>
             	</ul>
             </div>
-
+            
+            
    
     
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -246,12 +235,7 @@
                });
       
          
-         $(function() {
-         	$("#event-table>tbody>tr").click(function() {
-         		let eno = $(this).children(".eno").text();
-         		location.href = "detail.ev?eno=" + eno; //
-         	});
-         });
+        
               
 
             

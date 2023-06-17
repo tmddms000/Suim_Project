@@ -46,5 +46,17 @@ public class EventServiceImpl implements EventService {
 		return eventDao.selectBoard(sqlSession, eventNo);
 	}
 
+
+	@Override
+	public int selectCategoryListCount(String category) {
+		return eventDao.selectCategoryListCount(sqlSession, category);
+	}
+
+	@Override
+	public ArrayList<Event> selectCategoryList(PageInfo pi, String category) {
+		return eventDao.selectCategoryList(sqlSession, pi, category);
+	}
+
+
 	
 }
