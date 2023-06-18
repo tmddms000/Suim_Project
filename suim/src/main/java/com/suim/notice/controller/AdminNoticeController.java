@@ -34,7 +34,7 @@ public class AdminNoticeController {
 	@Autowired
 	private AdminNoticeService adminNoticeService;
 	
-	@GetMapping("notice.no")
+	@RequestMapping("admin.no")
 	public ModelAndView selectList(
 			@RequestParam(value="cPage", defaultValue="1") int currentPage,
 			ModelAndView mv) {
@@ -50,14 +50,15 @@ public class AdminNoticeController {
 		ArrayList<Notice> list = noticeService.selectList(pi);
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
-		  .setViewName("notice/notice");
+		  .setViewName("admin/notice/adminNotice");
 		System.out.println("리스트는 " + list);
 		System.out.println("mv 는 "  + mv);
 		System.out.println("adminNoticeController 에서 작성");
+		System.out.println("이건 admin.no 로 가는 컨트롤러");
 		return mv;
 	}
 	
-	@RequestMapping("/enrollForm.no")
+	@RequestMapping("enrollForm.no")
 	public String enrollForm() {
 		
 		// /WEB-INF/views/admin/notice/noticeEnrollForm.jsp

@@ -38,7 +38,6 @@ public class AdminEventDao {
 		return sqlSession.update("adminEventMapper.deleteEvent", eno);
 	}
 	
-
 	public int deleteEventFile(SqlSessionTemplate sqlSession, int eno) {
 		return sqlSession.update("adminEventMapper.deleteEventFile", eno);
 	}

@@ -51,7 +51,7 @@
    
     <!--공지사항(Content) 영역 -->
 
-    <div id="noticeDiv" class="container main">
+    <div id="noticeDiv" class="container main" style="margin-top:150px;">
         <div class="col-lg-12">
     
     
@@ -62,14 +62,7 @@
                     	SUIM 공지사항
                 </div>
             
-                <div id="nListSearch" class="search-box">
-                    <form>
-                        <input type="text" placeholder="지역명, 주변명 입력">
-                        <button type="submit">
-                            <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                        </button>
-                    </form>
-                </div>
+                
             </div>
                 
                 <table id="noticeDetailTable" class="table">
@@ -106,19 +99,13 @@
                            
                             
                         </tr>
-                        <tr rowspan="3">
+                        <tr rowspan="3" height="400px;">
                         	<td class="noticeContent">
                           		${ n.noticeContent }
                           	</td>
                          </tr>
                          
-                      	<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
-                         	<div align="center" style="display: inline-block;" align="right">
-				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
-				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
-				                <a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
-			        		</div>
-                        </c:if> 	
+                      		
                          	
                 			<form id="postForm" action="" method="post">
 			            		<!-- 글번호는 노출되면 안되므로 hidden 타입으로 넘김 -->
@@ -130,11 +117,28 @@
 			            	    </c:forEach>
 			            	        		
 	            			</form>
-	            			
-				       
-				        
-				        
-	               	<script>
+                    </tbody>
+                </table>            
+                
+                <button class="btn btn-primary btn-block submit-btn">
+                    <a href="notice.no">목록가기</a>
+                </button>
+                
+                <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+                	<button class="btn btn-primary btn-block submit-btn">
+                		<a href="/admin.no">공지사항 관리 바로가기</a>
+                	</button>
+                </c:if>
+                
+                <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+                	<div align="center" style="display: inline-block;" align="right">
+                		<!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
+                		<a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
+                		<a class="btn btn-danger" onclick="postFormSubmit(2);">삭제하기</a>
+       				</div>
+                </c:if> 
+                
+                <script>
 	               		// 수정하기 버튼과 삭제하기 버튼을 클릭했을 때 실행할 선언적 함수
 	               		function postFormSubmit(num) {
 	               	
@@ -144,20 +148,8 @@
 	            			} else { // 삭제하기 버튼을 클릭했을 경우
 	            				$("#postForm").attr("action", "delete.no?nno=${n.noticeNo}").submit();
 	            			}	
-	            		}
-	               		
-	                
-	           		</script>
-		            
-
-                    </tbody>
-                </table>
-                
-               
-                
-                <button class="btn btn-primary btn-block submit-btn">
-                    <a href="notice.no">목록가기</a>
-                </button>
+	            		}          
+	           	</script>
                
             </div>
         </div>

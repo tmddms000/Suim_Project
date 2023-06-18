@@ -40,6 +40,7 @@ public class AdminEventServiceImpl implements AdminEventService {
 	}
 
 	
+	
 	@Override
 	public int deleteEvent(int eno) {
 
@@ -53,10 +54,6 @@ public class AdminEventServiceImpl implements AdminEventService {
 		return adminEventDao.deleteEventFile(sqlSession, eno);
 	}
 
-	@Override
-	public Eattachment selectEventFile(int eAttach) {
 
-		return adminEventDao.selectEventFile(sqlSession, eAttach);
-	}
 
 }
