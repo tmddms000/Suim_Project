@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import javax.mail.MessagingException;
-import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -183,7 +183,7 @@ public class AuthController {
 
 	// 일반 로그인
 	@PostMapping("doLogin")
-	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response,
+	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response, String saveId,
 			HttpServletRequest request) {
 		Member loginUser = memberService.loginMember(m);
 
@@ -194,6 +194,7 @@ public class AuthController {
 		}
 
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+			
 			int result = memberService.checkEmailLogin(loginUser.getEmail());
 
 		
@@ -220,6 +221,23 @@ public class AuthController {
 			        // Create a new session for the logged-in user
 			        session.invalidate();
 			        session = request.getSession(true);
+			        
+			        if(saveId != null && saveId.equals("y")) {
+			        	System.out.println(saveId);
+						Cookie cookie = new Cookie("saveId", m.getMemberId());
+						cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
+						
+						response.addCookie(cookie);
+						
+					} else { 
+						Cookie cookie = new Cookie("saveId", m.getMemberId()); 
+						cookie.setMaxAge(0); 
+						
+						response.addCookie(cookie);
+					}
+			        
+			        
+			        
 
 			        // Set session attributes and perform any necessary actions
 			        session.setAttribute("loginUser", loginUser);
@@ -544,6 +562,13 @@ public class AuthController {
 		}
 		return result;
 	}
+	
+	@GetMapping("term")
+	public String joinTerm() {
+		return "/member/term";
+	}
+	
+	
 
 	// Auth 관련 메소드들
 

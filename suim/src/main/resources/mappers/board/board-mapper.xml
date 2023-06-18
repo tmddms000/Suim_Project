@@ -539,7 +539,7 @@
 			        MEMBER_ID
 			    )
 			    VALUES (
-			        SEQ_BNO.NEXTVAL,
+			        SEQ_FIND_NO.NEXTVAL,
 			        #{findTitle},
 			        #{findContent},
 			        #{category},
@@ -667,7 +667,7 @@
 			        MEMBER_ID
 			    )
 			    VALUES (
-			        SEQ_BNO.NEXTVAL,
+			        SEQ_INR_NO.NEXTVAL,
 			        #{inrTitle},
 			        #{inrContent},
 			        DEFAULT,

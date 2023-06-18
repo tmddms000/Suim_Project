@@ -24,12 +24,15 @@
 						가입하기</a>
 				</div>
 				<div class="py-4">
-					<a href=""><img src="/resources/img/common/facebook.png"
-						style="width: 32px; height: 32px;"></a>&nbsp; <a href=""><img
-						src="/resources/img/common/instagram.png"
-						style="width: 32px; height: 32px;"></a>&nbsp; <a href=""><img
-						src="/resources/img/common/naver.png"
-						style="width: 32px; height: 32px;"></a>&nbsp;
+					<a href="" onclick="event.preventDefault(); alert('서비스 준비중입니다.');">
+					  <img src="/resources/img/common/facebook.png" style="width: 32px; height: 32px;">
+					</a>&nbsp;
+					<a href="" onclick="event.preventDefault(); alert('서비스 준비중입니다.');">
+					  <img src="/resources/img/common/instagram.png" style="width: 32px; height: 32px;">
+					</a>&nbsp;
+					<a href="" onclick="event.preventDefault(); alert('서비스 준비중입니다.');">
+					  <img src="/resources/img/common/naver.png" style="width: 32px; height: 32px;">
+					</a>&nbsp;
 				</div>
 			</div>
 		</div>

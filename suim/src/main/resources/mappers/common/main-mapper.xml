@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="mainMapper">
+
+	<!-- 하우스 정보 모두 가져오기 -->
+	<select id="selectHouseList" resultType="house">
+		SELECT HOUSE_NO,
+		HOUSE_NAME, HOUSE_ADDRESS, MEMBER_ID, LATITUDE, LONGITUDE,
+		CHANGE_NAME, RES_GENDER, RENT, DEPOSIT
+		FROM HOUSE
+		JOIN PHOTO USING
+		(HOUSE_NO)
+		WHERE FILE_LEVEL = 'Y'
+		AND ENROLL_STATUS = '등록완료'
+		AND
+		HOUSE_STATUS = 'Y'
+	</select>
+
+	<select id="selectCountList" resultType="hashMap">
+		SELECT
+		(SELECT COUNT(*)
+		FROM MEMBER WHERE STATUS = '일반') AS MEMBER_COUNT,
+		(SELECT COUNT(*) FROM
+		HOUSE WHERE ENROLL_STATUS = '등록완료') AS HOUSE_COUNT,
+		(SELECT COUNT(*)
+		FROM INREVIEW WHERE STATUS = 'Y') AS INREVIEW_COUNT
+		FROM DUAL
+	</select>
+
+	<!-- 게시글 리스트를 구해주는 쿼리문 -->
+	<select id="selectfList" resultType="find">
+		SELECT
+		F.FIND_NO,
+		F.FIND_TITLE,
+		F.FIND_CATEGORY,
+		F.FIND_VIEW,
+		F.FIND_DATE,
+		F.STATUS,
+		F.MEMBER_ID,
+		F.NICKNAME,
+		F.FREPLY_COUNT,
+		REGEXP_SUBSTR(F.FIND_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM (
+		SELECT
+		F.FIND_NO,
+		F.FIND_TITLE,
+		F.FIND_CATEGORY,
+		F.FIND_VIEW,
+		F.FIND_DATE,
+		F.STATUS,
+		F.MEMBER_ID,
+		MEM.NICKNAME,
+		COUNT(FR.FRE_NO) AS FREPLY_COUNT,
+		F.FIND_CONTENT
+		FROM FIND F
+		JOIN MEMBER MEM ON (MEM.MEMBER_ID = F.MEMBER_ID)
+		LEFT JOIN FIND_REPLY FR ON (FR.FIND_NO = F.FIND_NO)
+		WHERE F.STATUS = 'Y'
+		GROUP BY
+		F.FIND_NO,
+		F.FIND_TITLE,
+		F.FIND_CATEGORY,
+		F.FIND_VIEW,
+		F.FIND_DATE,
+		F.STATUS,
+		F.MEMBER_ID,
+		MEM.NICKNAME,
+		F.FIND_CONTENT
+		ORDER BY F.FIND_NO DESC
+		) F
+		WHERE ROWNUM &lt;= 50
+	</select>
+
+	<select id="selectiList" resultType="inreview">
+		SELECT
+		I.INR_NO,
+		I.INR_TITLE,
+		REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM (
+		SELECT
+		I.INR_NO,
+		I.INR_TITLE,
+		I.INR_CONTENT
+		FROM INREVIEW I
+		JOIN MEMBER MEM ON (MEM.MEMBER_ID = I.MEMBER_ID)
+		LEFT JOIN INREVIEW_REPLY IR ON (IR.INR_NO = I.INR_NO)
+		WHERE I.STATUS = 'Y'
+		GROUP BY
+		I.INR_NO,
+		I.INR_TITLE,
+		I.INR_DATE,
+		I.INR_CONTENT
+		ORDER BY I.INR_DATE DESC
+		) I
+		WHERE ROWNUM &lt;= 12
+
+	</select>
+
+
+</mapper>

@@ -1,753 +1,198 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<style>
-.offcanvas-profile {
-	width: 200px;
- 	height: 200px; 
- 	margin-left: 25px;
-}
-
-.notification {
-  display: block;
-  padding: 8px;
-  background-color: #f7f7f7;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #333;
-  text-decoration: none;
-}
-
-.notification:hover {
-  background-color: #eaeaea;
-}
-
-.notification .time {
-  color: #888;
-
-}
-
-.notification #title {
-  font-weight: bold;
-}
-
-.notification .content {
-  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
-  overflow: hidden; /* 넘치는 부분을 감춤 */
-  text-overflow: ellipsis;
-  width : 100% !important;
-}
-
-.pgn {
-    justify-content: center;
-}
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<link rel="stylesheet" href="/resources/css/common/header.css" />
 
 
-
-</style>
-
-<script type="text/javascript">
-		var socket = null;
-		var isFirstLoad = true;
-		var isUpdatingNotification = false;
-		var isVibrating = false;
-
-		
-		$(document).ready(function(){ //페이지가 새로고침 되면 웹소켓을 연결시킨다.
-			
-		if(${loginUser != null}){
-			connectWs();
-			addMessageToNotificationList('${loginUser.memberId}');
-			$('#notificationButton').show();
-			}
-
-		});
-		
-		function connectWs() {
-	        var ws = new SockJS("/notification");
-	        socket = ws;
-
-	        ws.onopen = function() {};
-
-	        ws.onmessage = function(event) {
-	            var message = event.data;
-	            if (message === "다중 로그인이 감지되어 로그아웃 됩니다.") {
-	                // Handle the alert message
-	                alert(message);
-	                location.href = location.href;
-	            } else {
-	                // Handle other messages
-	                addMessageToNotificationList(message);
-	                if (!isFirstLoad && !isUpdatingNotification && !isVibrating) {
-	                    vibrateButton();
-	                }
-	                isFirstLoad = false;
-	            }
-	        };
-	    }
-		
-		
-		function truncateText(element, maxLength) {
-	        var text = element.textContent;
-	        if (text.length > maxLength) {
-	            text = text.substring(0, maxLength - 3) + '...';
-	            element.textContent = text;
-	        }
-	    }
-
-	   
-	   
-
-		function addMessageToNotificationList(message) {
-			  $.ajax({
-			    url: '/selectRecentNotification',
-			    method: 'GET',
-			    dataType: 'json',
-			    data: {
-			      receiverId: '${loginUser.memberId}'
-			    },
-			    success: function(data) {
-			      selectRecentNotification(data);
-			      if (!isFirstLoad && !isVibrating) {
-			        vibrateButton();
-			      }
-			      isUpdatingNotification = false;
-			    },
-			    error: function(error) {
-			      console.error('웹소켓 오류가 발생했습니다:', error);
-			    }
-			  });
-			}
-
-		function selectRecentNotification(data) {
-			console.log(data);
-			// 응답으로부터 필요한 데이터 추출
-			var notificationList = data.list;
-			var listCount = data.listCount;
-			var pi = data.pi;
-
-			// 데이터를 사용하여 목록 업데이트
-			var notificationListElement = $('#notificationList');
-			notificationListElement.empty(); // 목록 초기화
-
-			if (listCount === 0) {
-			var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 존재하지 않습니다.');
-			notificationListElement.prepend(notificationItem);
-			return;
-			}
-			
-			notificationList.reverse();
-			// 데이터를 반복하여 목록에 추가
-			for (var i = 0; i < notificationList.length; i++) {
-			var notification = notificationList[i];
-			var senderId = notification.senderId;
-			var createdTime = new Date(notification.createdTime);
-			var timeDifference = getTimeDifference(createdTime);
-			var titles = notification.content;
-			var postType = notification.postType;
-			var postNo = notification.postNo;
-			var receiverId = notification.receiverId;
-			var postContent = notification.postContent;
-			   
-			
-			function truncateText(text, maxLength) {
-		        if (text.length > maxLength) {
-		            return text.substring(0, maxLength - 3) + '...';
-		        }
-		        return text;
-		    }
-			
-			var title = truncateText(titles, 8);
-		    
-			
-			var notificationText = '';
-		    if (postType === 'board') {
-		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 자유게시판의 ' +  '<span id="title">' + title + '</span>'+  '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    if (postType === 'find') {
-		    	notificationText = '<a href="/detail.fi?fno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.fi?fno=' + postNo + '\', \'' + postNo + '\', \'find\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 사람구해요의 ' +  '<span id="title">' + title + '</span>' + '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    if (postType === 'inreview') {
-		    	notificationText = '<a href="/detail.in?ino=' + postNo + '" onclick="notificationDelete(\'' + '/detail.in?ino=' + postNo + '\', \'' + postNo + '\', \'inreview\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 입주후기의 ' +  '<span id="title">' + title + '</span>' + '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    
-		    if (postType === 'wish') {
-		    	notificationText = '<a href="/detail.ho?hno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.ho?hno=' + postNo + '\', \'' + postNo + '\', \'wish\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 쉐어하우스 ' +  '<span id="title">"' + title + '"</span>' + '에 좋아요를 눌렀습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    
-		    if (postType === 'rezOk') {
-		    	notificationText = '<a href="/myHouseRez.ho?houseNo=' + postNo + '" onclick="notificationDelete(\'' + '/myhouseRez.ho?houseNo=' + postNo + '\', \'' + postNo + '\', \'rezOk\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 ' +  '<span id="title">"' + title + '"</span>' + '에 예약날짜로 ' + postContent + '에 예약신청을 했습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    
-		    if (postType === 'rezNo') {
-		    	notificationText = '<a href="/myhouseRez.ho?cPage=1&houseNo=' + postNo + '" onclick="notificationDelete(\'' + '/myhouseRez.ho?cPage=1&houseNo=' + postNo + '\', \'' + postNo + '\', \'rezNo\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 ' +  '<span id="title">"' + title + '"</span>' + '의  예약을 취소했습니다.' + '<div class="time">' + timeDifference + '</div>' + '</a>';
-		    }
-		    
-		    if (postType === 'rezConfirm') {
-		    	notificationText = '<a href="/mypage/reservation" onclick="notificationDelete(\'/mypage/reservation\', \'' + postNo + '\', \'rezConfirm\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 <span id="title">"' + title + '"</span> 의 예약을 확정시켰습니다. <div class="time">' + timeDifference + '</div></a>';
-		    }
-		    
-		    
-		    
-		    
-		    else {
-		      // You can add handling for other postTypes.
-		    }
-		    
-		    
-
-		    var notificationItem = $('<li style="list-style-type: none"></li>').html(notificationText);
-		    notificationListElement.prepend(notificationItem);
-		    
-		    
-		    var countElement = $('<span style="font-size: 14px; ">').addClass('notification-count').text(listCount);
-		      $('#notificationButton .notification-count').remove();
-		      $('#notificationButton').append(countElement);
-		      createPagination(pi.startPage, pi.endPage, pi.currentPage, pi.maxPage);
-		  }
-			
-
-		  // Combine the data and update the list count and pagination values
-		  var response = {
-		    listCount: listCount,
-		    pi: pi
-		  };
-
-		  // Perform any additional actions with the combined data, if needed
-
-		  // Example:
-		  // updatePagination(response);
-
-		  // Perform any additional actions with the updated list count, if needed
-
-		  // Example:
-		  // updateListCount(listCount);
-		}
-		
-		function createPagination(startPage, endPage, currentPage, maxPage) {
-			  var paginationContainer = document.getElementById("paginationContainer");
-			  paginationContainer.innerHTML = ""; // 기존 페이지네이션 초기화
-
-			  var paginationList = document.createElement("ul");
-			  paginationList.classList.add("pagination");
-			  paginationList.classList.add("pgn");
-
-			  // 이전 페이지 링크
-			  var previousPageItem = createPaginationItem(currentPage - 1, "이전", currentPage === 1);
-			  paginationList.appendChild(previousPageItem);
-
-			  // 페이지 숫자 링크
-			  for (var i = startPage; i <= endPage; i++) {
-			    var pageItem = createPaginationItem(i, i, i === currentPage);
-			    paginationList.appendChild(pageItem);
-			  }
-
-			  // 다음 페이지 링크
-			  var nextPageItem = createPaginationItem(currentPage + 1, "다음", currentPage === maxPage);
-			  paginationList.appendChild(nextPageItem);
-
-			  paginationContainer.appendChild(paginationList);
-			}
-
-			// 페이지네이션 아이템 생성 함수
-			function createPaginationItem(pageNumber, label, isDisabled) {
-			  var listItem = document.createElement("li");
-			  listItem.classList.add("page-item");
-
-			  var link = document.createElement("a");
-			  link.classList.add("page-link");
-			  link.href = "#";
-			  link.textContent = label;
-
-			  listItem.appendChild(link);
-
-			  if (isDisabled) {
-			    listItem.classList.add("disabled");
-			  } else {
-			    // 페이지 클릭 이벤트 처리
-			    link.addEventListener("click", function (event) {
-			      event.preventDefault();
-			      // 페이지 클릭 시 필요한 동작 수행
-			      // 예: 해당 페이지의 알림 목록 조회 등
-			      selectNotificationPage(pageNumber);
-			    });
-			  }
-
-			  return listItem;
-			}
-		
-			
-			function selectNotificationPage(page) {
-				$.ajax({
-				    url: '/selectRecentNotification',
-				    method: 'GET',
-				    dataType: 'json',
-				    data: {
-				      receiverId: '${loginUser.memberId}',
-				      page : page
-				    },
-				    success: function(data) {
-				      selectRecentNotification(data);
-
-				    },
-				    error: function(error) {
-				      console.error('웹소켓 오류가 발생했습니다:', error);
-				    }
-				  });
-				}
-		
-		
-			
-			function vibrateButton() {
-				  if (isVibrating) {
-				    return;
-				  }
-				  isVibrating = true;
-
-				  var counter = 0;
-				  var intervalId = setInterval(function() {
-				    if (counter >= 5) {
-				      clearInterval(intervalId);
-				      $('#notificationButton').removeClass('vibrate');
-				      isVibrating = false;
-				      return;
-				    }
-
-				    $('#notificationButton').toggleClass('vibrate');
-				    counter++;
-				  }, 500); // Repeat every 500ms (adjust as needed)
-				}
-			
-			
-			function getTimeDifference(timestamp) {
-				  var currentDate = new Date();
-				  var notificationDate = new Date(timestamp);
-				  var timeDifference = currentDate - notificationDate;
-				  var seconds = Math.floor(timeDifference / 1000);
-				  var minutes = Math.floor(seconds / 60);
-				  var hours = Math.floor(minutes / 60);
-				  var days = Math.floor(hours / 24);
-
-				  if (days > 0) {
-				    return days + "일 전";
-				  } else if (hours > 0) {
-				    return hours + "시간 전";
-				  } else if (minutes > 0) {
-				    return minutes + "분 전";
-				  } else if (seconds > 0){ 
-				    return seconds + "초 전";
-				  } else {
-				    return "방금 전";
-				  }
-				}	
-			
-			
-			
-			
-			function notificationDeleteAll(receiverId) {
-				  // AJAX 요청 보내기
-				  $.ajax({
-				    url: '/notificationDeleteAll', // 댓글 알림 삭제를 처리하는 URL
-				    method: 'POST',
-				    data: {
-				      receiverId: receiverId // 수신자 ID 전달
-				    },
-				    dataType: 'json',
-				    success: function (response) {
-				      console.log(response);
-				      if (response > 1) {
-				        // 알림 목록 컨테이너
-				        var notificationListElement = $('#notificationList');
-						notificationListElement.empty()
-						
-						var paginationContainer = $('#paginationContainer');
-        				paginationContainer.empty();
-
-				        // 알림이 없을 때 메시지 표시
-				        var notificationItem = $('<li style="list-style-type: none; padding-top: 250px; font-weight: bold;">').text('알림이 존재하지 않습니다.');
-				        notificationListElement.prepend(notificationItem);
-				      }
-				    },
-				  });
-				}
-			
-			
-			
-			
-		
-		function notificationDelete(linkUrl, postNo, postType, receiverId) {
-			  // AJAX 요청 보내기
-			  $.ajax({
-			    url: '/notificationDelete', // 댓글 알림 삭제를 처리하는 URL
-			    method: 'POST',
-			    data: {
-			      postNo: postNo, // 게시물 번호 전달
-			      postType: postType, // 게시물 유형 전달
-			      receiverId: receiverId // 수신자 ID 전달
-			    },
-			    dataType: 'json',
-			    success: function(response) {
-			      // 요청이 성공하면 링크로 이동
-			      if (response.success) {
-			        // 링크로 이동
-			        window.location.href = linkUrl;
-			      } else {
-			        console.error('댓글 알림 삭제 실패:', response.message);
-			      }
-			    },
-			    error: function(error) {
-			      console.error('댓글 알림 삭제 요청 실패:', error);
-			    }
-			  });
-			}
-	</script>
-
-
-<c:if test="${ not empty alertMsg }">
-		<script>
-			alert("${ alertMsg }");
-		</script>
-		<c:remove var="alertMsg" scope="session" />
-	</c:if>
-	
-	<c:if test="${ not empty toastError }">
-		<script>
-		toastr.error("${ toastError }");
-		</script>
-		<c:remove var="toastError" scope="session" />
-	</c:if>
-	
-	<c:if test="${ not empty toastSuccess }">
-		<script>
-		toastr.success("${ toastSuccess }");
-		</script>
-		<c:remove var="toastSuccess" scope="session" />
-	</c:if>
-
-	<c:set var="currentPath" value="${pageContext.request.servletPath}" />
-	<c:if test="${!currentPath.equals('/WEB-INF/views/main.jsp')}">
-	  <script>
-	    window.addEventListener('DOMContentLoaded', function() {
-	      var navbarCollapsible = document.querySelector('#mainNav');
-	      navbarCollapsible.style.backgroundColor = 'white';
-	    });
-	  </script>
-	</c:if>
-	
-	
-	
-	<button id="notificationButton" style="display : none;"><i class="fas fa-bell"></i></button>
-
-<style>
-#notificationButton {
-  position: fixed;
-  right: 10px;
-  bottom: 10px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #000000;
-  color: #ffffff;
-  font-size: 32px;
-
-  border: none;
-  outline: none;
-  cursor: pointer;
-  z-index : 9999;
-
-  box-shadow : rgba(255, 255, 255, 0.12) 0px 0px 2px 0px inset, rgba(0, 0, 0, 0.05) 0px 0px 2px 1px, rgba(0, 0, 0, 0.22) 0px 4px 20px;
-}
-
-#notificationButton:hover {
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-
-}
-
-#notificationModal {
-  display: none;
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 300px;
-  height: 100%;
-  background-color: #fff;
-
-  z-index: 9998;
-
-  overflow-y: auto;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content {
-  padding: 15px;
-}
-
-.close {
-  position: absolute;
-  top: 0px;
-  right: 5px;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-
-@keyframes vibrate {
-  0% {
-    transform: translate(-2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-  25% {
-    transform: translate(2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-  50% {
-    transform: translate(2px, 2px);
-    background-color: rgb(250, 107, 111);
-  }
-  75% {
-    transform: translate(-2px, 2px);
-    background-color: rgb(250, 107, 111);
-  }
-  100% {
-    transform: translate(-2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-}
-
-.vibrate {
-  animation: vibrate 0.1s infinite linear;
-}
-
-</style>
-
-
+<button id="notificationButton" style="display: none;">
+	<i class="fas fa-bell"></i>
+</button>
 
 <div id="notificationModal">
-	<div class="modal-header justify-content-center" style="height : 40px;">
-	<h4>알림</h4>
-	<span class="close">&times;</span>
+	<div class="modal-header justify-content-center" style="height: 40px;">
+		<h4>알림</h4>
+		<span class="close">&times;</span>
 	</div>
-  <div class="modal-content">
-    <ul id="notificationList"></ul>
-  </div>
-  <nav id="paginationContainer">
-      <ul class="pgn pagination">
-      </ul>
-      </nav>
-  
-  <div class="modal-footer" style="justify-content : center;">
-      <button id="deleteAllButton" class="delete-all-button" onclick="notificationDeleteAll('${loginUser.memberId}')">모두 읽음</button>
-    </div>
+	<div class="modal-content">
+		<ul id="notificationList"></ul>
+	</div>
+	<nav id="paginationContainer">
+		<ul class="pgn pagination">
+		</ul>
+	</nav>
+
+	<div class="modal-footer" style="justify-content: center;">
+		<button id="deleteAllButton" class="delete-all-button"
+			onclick="notificationDeleteAll('${loginUser.memberId}')">모두
+			읽음</button>
+	</div>
 </div>
-	
-<script>
+<header>
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap"
+		id="mainNav">
+		<div class="header container px-4 px-lg-5">
+			<a class="navbar-brand" href="/"><img class="logo"
+				src="/resources/img/common/sim5.png"></a>
 
+			<ul class="nav nav-pills navi">
 
-$('#notificationButton').click(function(e) {
-    console.log('click');
-    e.stopPropagation();
-    $('#notificationModal').toggle();
-  });
+				<li class="nav-item"><a href="/list.ho"
+					class="nav-link nav-text">방 찾기</a></li>
 
-  // Hide the modal window when the close modal window button is clicked
-  $('#notificationModal .close').click(function(e) {
-    e.stopPropagation();
-    $('#notificationModal').hide();
-  });
+				<li class="nav-item"><a href="#" class="nav-link nav-text">쉼</a>
+					<ul>
+						<li><a href="">쉼 소개</a></li>
+					</ul></li>
+				<li class="nav-item"><a href="/list.bo"
+					class="nav-link nav-text">커뮤니티</a>
+					<ul>
+						<li><a href="/list.bo">자유게시판</a></li>
 
-  $(document).click(function(event) {
-    var modal = $('#notificationModal');
-    if (!modal.is(event.target) && modal.has(event.target).length === 0) {
-      modal.hide();
-    }
-  });
+						<li><a href="/list.in">입주후기</a></li>
 
+						<li><a href="/list.fi">사람구해요</a></li>
+					</ul></li>
 
-</script>
+				<c:choose>
+					<c:when test="${ empty loginUser }">
+						<!-- 로그인 전 -->
+						<li class="nav-item"><a href="/member/login"
+							class="nav-link nav-text">로그인</a></li>
+					</c:when>
+					<c:otherwise>
+						<li class="nav-item"><a href="/mypage/board"
+							class="nav-link nav-text">${ loginUser.nickName }님</a>
+							<ul>
+								<li><a href="/mypage/board">마이페이지</a></li>
 
-	
-	
-	
-	
-	
-	<header>
-	        <nav class="navbar navbar-expand-lg navbar-light fixed-top header_wrap" id="mainNav">
-	            <div class="header container px-4 px-lg-5">
-	                <a class="navbar-brand" href="/"><img class="logo" src="/resources/img/common/sim5.png"></a>
-	                
-	                <ul class="nav nav-pills navi">
-          
-	                        <li class="nav-item"><a href="" class="nav-link nav-text">방 찾기</a></li>
+								<li><a href="/chat.ch">채팅방</a>
+								<li>
+									<form id="logout-form1" action="/member/logout" method="post">
+										<a href="#" onclick="event.preventDefault(); logout();">로그아웃</a>
+									</form>
+								</li>
 
-	                        <li class="nav-item">
-	                            <a href="#" class="nav-link nav-text">쉼</a>
-	                            <ul>
-	                                <li><a href="">쉼 소개</a></li>
-	                            </ul>
-	                        </li>
-	                        <li class="nav-item">
-	                            <a href="/list.bo" class="nav-link nav-text">커뮤니티</a>
-	                            <ul>
-	                                <li><a href="/list.bo">자유게시판</a></li>
+							</ul></li>
+					</c:otherwise>
+				</c:choose>
 
-	                                <li><a href="/list.in">입주후기</a></li>
+				<li class="nav-item"><a href="/notice.no"
+					class="nav-link nav-text">고객센터</a>
+					<ul>
+						<li><a href="/notice.no">공지사항</a></li>
+						<li><a href="/faqList">자주 묻는 질문</a></li>
+						<li><a href="/event.ev">이벤트</a></li>
+					</ul></li>
 
-	                                <li><a href="/list.fi">사람구해요</a></li>
-	                            </ul>
-	                        </li>
-	                        
-	                        <c:choose>
-				            	<c:when test="${ empty loginUser }">
-					                <!-- 로그인 전 -->
-					                 <li class="nav-item">
-	                            		<a href="/member/login" class="nav-link nav-text">로그인</a>
-	                        		</li>
-				                </c:when>
-				                <c:otherwise>
-					                <li class="nav-item">
-	                            		<a href="/mypage/board" class="nav-link nav-text">${ loginUser.nickName }님</a>
-		                            	<ul>
-			                                <li><a href="/mypage/board">마이페이지</a></li>
+				<li class="nav-item" style="padding: 1.6rem 0rem 2rem 2rem;">
+					<button
+						style="width: 90px; height: 40px; background: transparent; border-radius: 50px;"
+						onclick="location.href='Write.ho'">
+						방 등록 <i class="fa-solid fa-right-from-bracket"></i>
+					</button>
+				</li>
+			</ul>
 
-			                                <li><a href="/chat.ch">채팅방</a>
-			                                
-			                                <li>
-			                                <form id="logout-form1" action="/member/logout" method="post">
-			                                <a href="#" onclick="event.preventDefault(); logout();">로그아웃</a>
-			                                </form>
-			                                </li>
-			                                
-		                            	</ul>
-	                        		</li>
-				                </c:otherwise>
-				            </c:choose>    
-	                        
-	                        <li class="nav-item">
-	                            <a href="/notice.no" class="nav-link nav-text">고객센터</a>
-	                            <ul>
-	                                <li><a href="/notice.no">공지사항</a></li>
-	                                <li><a href="/faqList">자주 묻는 질문</a></li>
-	                                <li><a href="/event.ev">이벤트</a></li>  
-	                            </ul>
-	                        </li>
-	                        
-	                        
-	                        <li class="nav-item" style="padding: 1.6rem 0rem 2rem 2rem;">
-	                            <button style="width:90px; height:40px; background:transparent;" onclick="location.href='Write.ho'">방 등록 <i class="fa-solid fa-right-from-bracket"></i></button>
-	                        </li>
-	                </ul>
-	                
-	                    <!-- 햄버거 메뉴 -->
-	                    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-	                            <span class="navbar-toggler-icon"></span>
-	                    </button>
-	                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-	                        <div class="offcanvas-header">
-	                        <c:choose>
-				            	<c:when test="${ empty loginUser }">
-	                            <div class="offcanvas-title" id="offcanvasNavbarLabel"></div>
-	                           	</c:when>
-	                       </c:choose>
-	                      		<a type="button" class="navbar-toggler-icon text-reset"
-	                      		data-bs-dismiss="offcanvas" aria-label="Close" style="width : 32px; height: 32px"></a>
-	                       		
-	                        </div>
-	                        <div class="offcanvas-body">
-	                        
-	                        
-	                        <c:choose>
-				            	<c:when test="${ empty loginUser }">
-					                 <div class="user-button">
-	                                <button type="button"
-	                                    style="width: 150px; margin-right: 20px; margin-left: 20px;"
-	                                    class="btn btn-success btn-lg" onclick="location.href='/member/login'">로그인</button>
-	                                <button type="button" style="width: 150px;"
-	                                    class="btn btn-outline-success btn-lg" onclick="location.href='/member/join'">회원가입</button>
-	                            	</div>
-				                </c:when>
-				            </c:choose>
-	                            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 pb-2">
-									<c:choose>
-									  <c:when test="${not empty loginUser}">
-									    <c:choose>
-									      <c:when test="${empty loginUser.changeName}">
-									        <img src="/resources/img/common/default_profile.png" class="offcanvas-profile">
-									      </c:when>
-									      <c:otherwise>
-									        <img src="${loginUser.changeName}" class="offcanvas-profile"/>
-									      </c:otherwise>
-									    </c:choose>
-									  </c:when>
-									</c:choose>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+				aria-controls="offcanvasNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="offcanvas offcanvas-end" tabindex="-1"
+				id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+				<div class="offcanvas-header">
+					<c:choose>
+						<c:when test="${ empty loginUser }">
+							<div class="offcanvas-title" id="offcanvasNavbarLabel"></div>
+						</c:when>
+					</c:choose>
+					<a type="button" class="navbar-toggler-icon text-reset"
+						data-bs-dismiss="offcanvas" aria-label="Close"
+						style="width: 32px; height: 32px"></a>
+				</div>
+				<div class="offcanvas-body">
+					<c:choose>
+						<c:when test="${ empty loginUser }">
+							<div class="user-button">
+								<button type="button"
+									style="width: 150px; margin-right: 20px; margin-left: 20px;"
+									class="btn btn-success btn-lg"
+									onclick="location.href='/member/login'">로그인</button>
+								<button type="button" style="width: 150px;"
+									class="btn btn-outline-success btn-lg"
+									onclick="location.href='/member/join'">회원가입</button>
+							</div>
+						</c:when>
+					</c:choose>
+					<ul class="navbar-nav justify-content-end flex-grow-1 pe-3 pb-2">
+						<c:choose>
+							<c:when test="${not empty loginUser}">
+								<c:choose>
+									<c:when test="${empty loginUser.changeName}">
+										<img src="/resources/img/common/default_profile.png"
+											class="offcanvas-profile">
+									</c:when>
+									<c:otherwise>
+										<img src="${loginUser.changeName}" class="offcanvas-profile" />
+									</c:otherwise>
+								</c:choose>
+							</c:when>
+						</c:choose>
 
-	                                <c:if test="${not empty loginUser }">
-	                                
-	                                <li class="nav-item dropdown m-4">
-	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">${ loginUser.nickName }님</a>
-	                                        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown1">
-	                                           <li><a class="dropdown-item" href="/mypage/board">마이페이지</a></li>
-	                                           <li><a class="dropdown-item" href="/chat.ch">채팅방</a></li>
-	                                           <li><form id="logout-form2" action="/member/logout" method="post"><a class="dropdown-item" href="#" onclick="event.preventDefault(); logout();">로그아웃</a></form></li>
-	                                        </ul> 
-	                                </li>
-	                                
-	                                </c:if>
-	                                
-	                                <li class="nav-item offcanvas-text m-4">
-	                                    <a class="side-black" aria-current="page" href="">방 찾기</a>
-	                                </li>
-	                                
-	                                <li class="nav-item dropdown m-4">
-	                                    <a class="side-black" href="#" id="offcanvasNavbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">셰어하우스 쉼</a>
-	                                        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown1">
-	                                           <li><a class="dropdown-item" href="#">쉼 소개</a></li>
-	                                        </ul> 
-	                                </li>
-	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">커뮤니티 </a>
-	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown2">
-	                                        <li><a class="dropdown-item" href="/list.bo">자유게시판</a></li>
-	                                        <li><a class="dropdown-item" href="/list.fi">사람구해요</a></li>
+						<c:if test="${not empty loginUser }">
 
-	                                        <li><a class="dropdown-item" href="/list.in">입주 후기 </a></li>                                            
+							<li class="nav-item dropdown m-4"><a class="side-black"
+								href="#" id="offcanvasNavbarDropdown1" role="button"
+								data-bs-toggle="dropdown" aria-expanded="false">${ loginUser.nickName }님</a>
+								<ul class="dropdown-menu"
+									aria-labelledby="offcanvasNavbarDropdown1">
+									<li><a class="dropdown-item" href="/mypage/board">마이페이지</a></li>
+									<li><a class="dropdown-item" href="/chat.ch">채팅방</a></li>
+									<li><form id="logout-form2" action="/member/logout"
+											method="post">
+											<a class="dropdown-item" href="#"
+												onclick="event.preventDefault(); logout();">로그아웃</a>
+										</form></li>
+								</ul></li>
 
-	                                    </ul>
-	                                </li>
-	                                <li class="nav-item dropdown m-4"><a class="side-black" href="#" id="offcanvasNavbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>
-	                                    <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown3">
-	                                        <li><a class="dropdown-item" href="/notice.no">공지사항</a></li>
-	                                        <li><a class="dropdown-item" href="/faqList">자주 묻는 질문</a></li> 
-	                                        <li><a class="dropdown-item" href="/event.ev">이벤트</a></li>                    
-	                                    </ul>
-	                                </li>
-	                            </ul>
-	                        </div>
-	                    </div>
-	            </div>
-	        </nav>
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	    </header>
-	    
-	    
-	    <script>
-    function logout() {
-        $.ajax({
-            url: '/member/logout',
-            method: 'POST',
-            success: function(response) {
-            	alert('로그아웃 되었습니다.');
-                location.reload(true);
-            }
-        });
-    }
-	</script>
+						</c:if>
+
+						<li class="nav-item offcanvas-text m-4"><a class="side-black"
+							aria-current="page" href="">방 찾기</a></li>
+
+						<li class="nav-item dropdown m-4"><a class="side-black"
+							href="#" id="offcanvasNavbarDropdown1" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">셰어하우스 쉼</a>
+							<ul class="dropdown-menu"
+								aria-labelledby="offcanvasNavbarDropdown1">
+								<li><a class="dropdown-item" href="#">쉼 소개</a></li>
+							</ul></li>
+						<li class="nav-item dropdown m-4"><a class="side-black"
+							href="#" id="offcanvasNavbarDropdown2" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">커뮤니티 </a>
+							<ul class="dropdown-menu"
+								aria-labelledby="offcanvasNavbarDropdown2">
+								<li><a class="dropdown-item" href="/list.bo">자유게시판</a></li>
+								<li><a class="dropdown-item" href="/list.fi">사람구해요</a></li>
+
+								<li><a class="dropdown-item" href="/list.in">입주 후기 </a></li>
+
+							</ul></li>
+						<li class="nav-item dropdown m-4"><a class="side-black"
+							href="#" id="offcanvasNavbarDropdown3" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">고객센터 </a>
+							<ul class="dropdown-menu"
+								aria-labelledby="offcanvasNavbarDropdown3">
+								<li><a class="dropdown-item" href="/notice.no">공지사항</a></li>
+								<li><a class="dropdown-item" href="/faqList">자주 묻는 질문</a></li>
+								<li><a class="dropdown-item" href="/event.ev">이벤트</a></li>
+							</ul></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+</header>
+
+<%@ include file="/WEB-INF/views/common/header-js.jsp"%>
+

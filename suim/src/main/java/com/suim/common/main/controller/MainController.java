@@ -11,7 +11,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.suim.board.model.vo.Find;
+import com.suim.board.model.vo.InReview;
+import com.suim.common.main.model.service.MainService;
 import com.suim.common.main.model.vo.HouseDistance;
 import com.suim.house.model.service.ListHouseService;
 import com.suim.house.model.vo.House;
@@ -34,48 +39,62 @@ import com.suim.member.model.vo.Member;
 public class MainController {
 	
 	@Autowired
-	private MemberService memberService;
-	@Autowired
 	private HttpSession session;
 	@Autowired
-	private ListHouseService listhouseService;
+	private MainService mainService;
 	
 	@GetMapping("/")
 	public String searchArea(Model model) {
 		
 		
 		Member m = (Member) session.getAttribute("loginUser");
-		ArrayList<House> list = listhouseService.selectHouseList();
-		if(m != null && m.getArea() != null) {
+		ArrayList<House> list = mainService.selectHouseList();
+		ArrayList<Find> flist = mainService.selectfList();
+		ArrayList<InReview> ilist = mainService.selectiList();
+		Map<String, Object> count = mainService.selectCountList();
+		
+		
+		List<Find> filteredList = flist.stream()
+			    .filter(find -> find.getThumbnail() != null)
+			    .collect(Collectors.toList());
+		
+		List<Find> listFind = flist.subList(0, Math.min(flist.size(), 8));
+		
+		
+		
+		
+		
+		if(m != null && m.getArea() != null) { //회원이 로그인해있을때 페이지
 			
 			double longitude = m.getLongitude();
 			double latitude = m.getLatitude();
 			list.sort(Comparator.comparingDouble(house ->
             calculateDistance(latitude, longitude, house.getLatitude(), house.getLongitude())));
 			
-			
-		    // Select the three closest representatives
+		    
 		    List<House> listHouse = list.subList(0, Math.min(list.size(), 4));
 		    List<Double> distances = new ArrayList<>();
 		    
-		    System.out.println(listHouse);
-		    model.addAttribute("listHouse" , listHouse);
-		    
 		    for (House house : listHouse) {
 		        double distance = calculateDistance(latitude, longitude, house.getLatitude(), house.getLongitude());
-		        double roundedDistance = Math.ceil(distance * 10) / 10; // Round up to one decimal place
+		        double roundedDistance = Math.ceil(distance * 10) / 10;
 		        distances.add(roundedDistance);
 		    }
-		    
+		    model.addAttribute("listHouse" , listHouse);
 		    model.addAttribute("distance", distances);
 		    
 						
-		} else if(m == null || m.getArea() == null) {
+		} else if(m == null || m.getArea() == null) { //회원이 로그인하지 않을때 페이지
 			Collections.shuffle(list);
 			model.addAttribute("listHouse", list.subList(0, Math.min(list.size(), 4)));
-			return "main";
 			
 		}
+		
+		//그 외 보여질 페이지
+		model.addAttribute("filterFind", filteredList);
+		model.addAttribute("listFind", listFind);
+		model.addAttribute("ilist", ilist);
+		model.addAttribute("count", count);
 		
 		return "main";
 		

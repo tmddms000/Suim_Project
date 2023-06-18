@@ -47,6 +47,7 @@ public interface AdminHouseService {
 	
 	// 검색용
 	int selectSearchCount(HashMap<String, String> map);
+	
 	ArrayList<House> selectSearchList(HashMap<String, String> map, PageInfo pi);
 	
 	String selectEmail(String Id);

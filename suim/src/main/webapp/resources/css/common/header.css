@@ -1,0 +1,123 @@
+@charset "UTF-8";
+
+.offcanvas-profile {
+	width: 200px;
+ 	height: 200px; 
+ 	margin-left: 25px;
+}
+
+.notification {
+  display: block;
+  padding: 8px;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+.notification:hover {
+  background-color: #eaeaea;
+}
+
+.notification .time {
+  color: #888;
+
+}
+
+.notification #title {
+  font-weight: bold;
+}
+
+.notification .content {
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  overflow: hidden; /* 넘치는 부분을 감춤 */
+  text-overflow: ellipsis;
+  width : 100% !important;
+}
+
+.pgn {
+    justify-content: center;
+}
+
+
+#notificationButton {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 32px;
+
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index : 9999;
+
+  box-shadow : rgba(255, 255, 255, 0.12) 0px 0px 2px 0px inset, rgba(0, 0, 0, 0.05) 0px 0px 2px 1px, rgba(0, 0, 0, 0.22) 0px 4px 20px;
+}
+
+#notificationButton:hover {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+
+}
+
+#notificationModal {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+
+  z-index: 9998;
+
+  overflow-y: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content {
+  padding: 15px;
+}
+
+.close {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+@keyframes vibrate {
+  0% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  25% {
+    transform: translate(2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  50% {
+    transform: translate(2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  75% {
+    transform: translate(-2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  100% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+}
+
+.vibrate {
+  animation: vibrate 0.1s infinite linear;
+}

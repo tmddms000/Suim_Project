@@ -121,10 +121,15 @@ public class MypageController {
 				}
 			}
 			
+
 			if(m.getArea() != null) {
 				double[] area = MainController.getCoordinates(m.getArea());
+
+				if(area != null) {
 				m.setLongitude(area[0]);
 				m.setLatitude(area[1]);
+				}
+
 			}
 
 			int result = memberService.updateMember(m);

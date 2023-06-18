@@ -3,7 +3,7 @@
 
     	        //아이디 유효성 검사
     	        const idInputEl = document.querySelector('#id');
-    	        let regExp = /^[a-zA-Z0-9]{6,15}$/;
+    	        let regExp = /^[a-z0-9]{6,15}$/;
     	        toastr.options = {
     	                "positionClass": "toast-center-center"
     	            };

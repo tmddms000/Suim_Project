@@ -30,7 +30,11 @@
 
                 <div class="form-group row justify-content-center">
                     <div class="form-floating col-sm-4">
-                        <input type="text" autocomplete="on" class="form-control" id="floatingInput" name="memberId" placeholder="아이디">
+                        <input type="text" autocomplete="on" class="form-control" id="floatingInput" name="memberId" placeholder="아이디" value="${cookie.saveId.value}">
+                        
+                        
+                        
+                        
                         <label for="floatingInput">아이디</label>
                     </div>
                 </div>
@@ -45,8 +49,19 @@
 
                 <div class="form-group row justify-content-center mt-2">
                     <div class="col-sm-4">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                        <label class="form-check-label" for="flexCheckChecked">&nbsp;아이디 저장</label>
+  
+                        <c:choose>
+                    		<c:when test="${ not empty cookie.saveId }">
+                    			<!-- 만약 saveId 라는 쿠키가 있다면 : 체크박스가 체크되게끔 -->
+		                    	<input class="form-check-input" type="checkbox" id="saveId" name="saveId" value="y" checked>
+		                    	<label class="form-check-label" for="saveId">&nbsp;아이디 저장</label>
+                    		</c:when>
+                    		<c:otherwise>
+                    			<!-- 만약 saveId 라는 쿠키가 없다면 : 체크박스가 체크되지 않게끔 -->
+		                    	<input class="form-check-input" type="checkbox" id="saveId" name="saveId" value="y">
+		                    	<label class="form-check-label" for="saveId">&nbsp;아이디 저장</label>
+                    		</c:otherwise>
+                    	</c:choose>    
                     </div>
                 </div>
 
