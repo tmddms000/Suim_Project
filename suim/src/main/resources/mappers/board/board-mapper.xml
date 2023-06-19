@@ -615,38 +615,39 @@
 	
 	<select id="selectInReview" parameterType="_int" resultMap="InReviewResultSet">
 
-			SELECT
-			    I.INR_NO,
-			    I.INR_TITLE,
-			    I.INR_CONTENT,
-			    I.INR_VIEW,
-			    I.INR_DATE,
-			    I.STATUS,
-			    I.MEMBER_ID,
-			    M.NICKNAME,
-			    M.MEMBER_ID,
-			    IA.ORIGIN_NAME,
-			    IA.CHANGE_NAME,
-			    REGEXP_SUBSTR(I.INR_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-			FROM INREVIEW I
-			JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
-			LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
-			WHERE I.INR_NO = #{inrNo}
-			AND I.STATUS = 'Y'
-			GROUP BY
-			    I.INR_NO,
-			    I.INR_TITLE,
-			    I.INR_CONTENT,
-			    I.INR_VIEW,
-			    I.INR_DATE,
-			    I.STATUS,
-			    I.MEMBER_ID,
-			    M.NICKNAME,
-			    M.MEMBER_ID,
+SELECT
+    I.INR_NO,
+    I.INR_TITLE,
+    I.INR_CONTENT,
+    I.INR_VIEW,
+    I.INR_DATE,
+    I.STATUS,
+    I.MEMBER_ID,
+    M.NICKNAME,
+    M.MEMBER_ID,
+    IA.ORIGIN_NAME,
+    IA.CHANGE_NAME,
+    REGEXP_SUBSTR(TO_CLOB(I.INR_CONTENT), '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+FROM INREVIEW I
+JOIN MEMBER M ON (M.MEMBER_ID = I.MEMBER_ID)
+LEFT JOIN IATTACHMENT IA ON (IA.INR_NO = I.INR_NO)
+WHERE I.INR_NO = #{inrNo}
+    AND I.STATUS = 'Y'
+GROUP BY
+    I.INR_NO,
+    I.INR_TITLE,
+    I.INR_CONTENT,
+    I.INR_VIEW,
+    I.INR_DATE,
+    I.STATUS,
+    I.MEMBER_ID,
+    M.NICKNAME,
+    M.MEMBER_ID,
+    IA.ORIGIN_NAME,
+    IA.CHANGE_NAME
+ORDER BY I.INR_NO DESC
 
-			    IA.ORIGIN_NAME,
-			    IA.CHANGE_NAME
-			ORDER BY I.INR_NO DESC
+
 
 	</select>
 	
