@@ -19,61 +19,15 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
-	
-	/*
-	public Dashboard getDashboardData() {
-		
-		Dashboard dashboard = new Dashboard();
-		
-		dashboard.setSelectMemberAll(dashboard.getSelectMemberAll());
-		dashboard.setSelectEnrollMember(dashboard.getSelectEnrollMember());
-		dashboard.setSelectMemberGender(dashboard.getSelectMemberGender());
-		dashboard.setSelectMemberHouseTopN(dashboard.getSelectMemberHouseTopN());
-		dashboard.setSelectMemberInreviewTopN(dashboard.getSelectMemberInreviewTopN());
-		dashboard.setSelectHouseCount(dashboard.getSelectHouseCount());
-		dashboard.setSelectReservationCount(dashboard.getSelectReservationCount());
-		dashboard.setSelectReservationRate(dashboard.getSelectReservationRate());
-		dashboard.setSelectEmptyRate(dashboard.getSelectEmptyRate());
-		dashboard.setSelectHouseMonth(dashboard.getSelectHouseMonth());
-		dashboard.setSelectHouseDate(dashboard.getSelectHouseDate());
-		dashboard.setSelectRegionTopN(dashboard.getSelectRegionTopN());
-		dashboard.setSelectEnrollMemberRate(dashboard.getSelectEnrollMemberRate());
-		dashboard.setSelectEnrollMemberMonthRate(dashboard.getSelectEnrollMemberMonthRate());
-		dashboard.setSelectEnrollMemberDate(dashboard.getSelectEnrollMemberDate());
-		dashboard.setSelectLeaveMemberRate(dashboard.getSelectLeaveMemberRate());
-		
-		return dashboard;
-	}
-	*/
-	/*
-	public Dashboard getDashboardData() {
-		
-		Dashboard dashboard = new Dashboard();
-		
-		dashboard.setSelectMemberAll(adminDashboardDao.selectMemberAll(sqlSession));
-		dashboard.setSelectEnrollMember(adminDashboardDao.selectEnrollMember(sqlSession));
-		dashboard.setSelectMemberGender(adminDashboardDao.selectMemberGender(sqlSession));
-		dashboard.setSelectMemberHouseTopN(adminDashboardDao.selectMemberHouseTopN(sqlSession));
-		dashboard.setSelectMemberInreviewTopN(adminDashboardDao.selectMemberInreviewTopN(sqlSession));
-		dashboard.setSelectHouseCount(adminDashboardDao.selectHouseCount(sqlSession));
-		dashboard.setSelectReservationCount(adminDashboardDao.selectReservationCount(sqlSession));
-		dashboard.setSelectReservationRate(adminDashboardDao.selectReservationRate(sqlSession));
-		dashboard.setSelectEmptyRate(adminDashboardDao.selectEmptyRate(sqlSession));
-		dashboard.setSelectHouseMonth(adminDashboardDao.selectHouseMonth(sqlSession));
-		dashboard.setSelectHouseDate(adminDashboardDao.selectHouseDate(sqlSession));
-		dashboard.setSelectRegionTopN(adminDashboardDao.selectRegionTopN(sqlSession));
-		dashboard.setSelectEnrollMemberRate(adminDashboardDao.selectEnrollMemberRate(sqlSession));
-		dashboard.setSelectEnrollMemberMonthRate(adminDashboardDao.selectEnrollMemberMonthRate(sqlSession));
-		dashboard.setSelectEnrollMemberDate(adminDashboardDao.selectEnrollMemberDate(sqlSession));
-		dashboard.setSelectLeaveMemberRate(adminDashboardDao.selectLeaveMemberRate(sqlSession));
-		
-		return dashboard;
-	}
-	*/
 
 	@Override
 	public int selectMemberAll() {
 		return adminDashboardDao.selectMemberAll(sqlSession);
+	}
+	
+	@Override
+	public int selectHouseAll() {
+		return adminDashboardDao.selectHouseAll(sqlSession);
 	}
 
 	@Override
@@ -117,8 +71,8 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public Dashboard selectHouseMonth() {
-		return adminDashboardDao.selectHouseMonth(sqlSession);
+	public ArrayList<Dashboard> selectHouseRevenue() {
+		return adminDashboardDao.selectHouseRevenue(sqlSession);
 	}
 
 	@Override
@@ -149,5 +103,14 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	@Override
 	public Dashboard selectLeaveMemberRate() {
 		return adminDashboardDao.selectLeaveMemberRate(sqlSession);
+	}
+	
+	@Override
+	public int selectFind1() {
+		return adminDashboardDao.selectFind1(sqlSession);
+	}
+	@Override
+	public int selectFind2() {
+		return adminDashboardDao.selectFind2(sqlSession);
 	}
 }

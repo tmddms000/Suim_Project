@@ -24,12 +24,6 @@ public interface AdminMemberService {
 
 	ArrayList<Member> selectCategoryList(PageInfo pi, String category);
 
-	// 블랙리스트 누적 횟수 조회용
-	int selectBlackList(String memberId);
-
-	// 블랙리스트로 상태 변경용
-	int updateBlackList(String memberId);
-
 	// 회원 작성하기 서비스
 	int insertMember(Member m);
 

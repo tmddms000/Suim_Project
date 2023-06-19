@@ -50,14 +50,6 @@ public class AdminMemberDao {
 		return (ArrayList)sqlSession.selectList("adminMemberMapper.selectCategoryList", category, rowBounds);
 	}
 	
-	// 신고 누적 횟수 구하기
-	public int selectBlackList(SqlSessionTemplate sqlSession, String memberId) {
-		return sqlSession.selectOne("adminMemberMapper.selectBlackList", memberId);
-	}
-	// 누적되면 상태값을 블랙으로 바꾸기용
-	public int updateBlackList(SqlSessionTemplate sqlSession, String memberId) {
-		return sqlSession.update("adminMemberMapper.updateBlackList", memberId);
-	}
 	
 	public int insertMember(SqlSessionTemplate sqlSession, Member m) {
 		return sqlSession.insert("adminMemberMapper.insertBoard", m);

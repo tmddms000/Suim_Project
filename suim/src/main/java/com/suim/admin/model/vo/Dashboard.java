@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 public class Dashboard {
 
 	private int totalMembers;
+	private int totalHouses;
 	private String month;
+	private String day;
 	private int newMembers;
 	private String gender;
 	private int memberCount;
@@ -26,7 +28,7 @@ public class Dashboard {
 	private int reservationRate;
 	private int vacantRooms;
 	private int vacancyRate;
-	private int toatlRevenue;
+	private int totalRevenue;
 	private String houseName;
 	private String houseDate;
 	private String regionName;
@@ -35,4 +37,8 @@ public class Dashboard {
 	private String registrationDate;
 	private int leaveMembers;
 	private int leaveRate;
+	
+
+	private int selectFind1;
+	private int selectFind2;
 }

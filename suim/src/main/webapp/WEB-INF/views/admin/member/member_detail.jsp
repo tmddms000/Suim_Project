@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <style>
 	.memberTableLeft{
 		display: inline-block;
@@ -170,7 +171,6 @@
 							                                            <th scope="col">월세</th>
 							                                            <th scope="col">주거성별</th>
 							                                            <th scope="col">작성일</th>
-							                                            <th scope="col">등록상태</th>
 							                                        </tr>
 							                                    </thead>
 							                                    <tbody>
@@ -184,8 +184,7 @@
 																				    <td><c:out value="${h.DEPOSIT}" /></td>
 																				    <td><c:out value="${h.RENT}" /></td>
 																				    <td><c:out value="${h.RES_GENDER}" /></td>
-																				    <td><c:out value="${h.HOUSE_DATE}" /></td>
-																				    <td><c:out value="${h.ENROLL_DATE}" /></td>
+																				    <td><fmt:formatDate value="${h.HOUSE_DATE}" pattern="yyyy-MM-dd" /></td></td>
 										                                        </tr>
 										                                	</c:forEach>
 										                                </c:when>
@@ -222,8 +221,17 @@
 								                    							<td class="no">${ b.BOARD_NO }</td>
 									                                            <td>${ b.BOARD_TITLE }</td>
 									                                            <td>${ b.BOARD_VIEW }</td>
-									                                            <td>${ b.BOARD_DATE }</td>
-									                                            <td>${ b.STATUS }</td>
+									                                            <td><fmt:formatDate value="${b.BOARD_DATE}" pattern="yyyy-MM-dd" /></td>
+									                                            <td>
+									                                            	<c:choose>
+									                                            		<c:when test="${ b.STATUS eq 'Y'}">
+									                                            		등록
+									                                            		</c:when>
+									                                            		<c:when test="${ b.STATUS eq 'N'}">
+									                                            		삭제
+									                                            		</c:when>
+									                                            	</c:choose>
+									                                            </td>
 									                                        </tr>
 									                                	</c:forEach>
 									                                </c:when>
@@ -262,8 +270,17 @@
 									                                            <td>${ f.FIND_TITLE }</td>
 									                                            <td>${ f.FIND_CATEGORY }</td>
 									                                            <td>${ f.FIND_VIEW }</td>
-									                                            <td>${ f.FIND_DATE }</td>
-									                                            <td>${ f.STATUS }</td>
+									                                            <td><fmt:formatDate value="${f.FIND_DATE}" pattern="yyyy-MM-dd" /></td>
+									                                            <td>
+									                                            	<c:choose>
+									                                            		<c:when test="${ f.STATUS eq 'Y'}">
+									                                            		등록
+									                                            		</c:when>
+									                                            		<c:when test="${ f.STATUS eq 'N'}">
+									                                            		삭제
+									                                            		</c:when>
+									                                            	</c:choose>
+									                                            </td>
 									                                        </tr>
 									                                	</c:forEach>
 									                                </c:when>
@@ -301,7 +318,16 @@
 									                                            <td>${ i.INR_TITLE }</td>
 									                                            <td>${ i.INR_VIEW }</td>
 									                                            <td>${ i.INR_DATE }</td>
-									                                            <td>${ i.STATUS }</td>
+									                                            <td>
+									                                            	<c:choose>
+									                                            		<c:when test="${ i.STATUS eq 'Y'}">
+									                                            		등록
+									                                            		</c:when>
+									                                            		<c:when test="${ i.STATUS eq 'N'}">
+									                                            		삭제
+									                                            		</c:when>
+									                                            	</c:choose>
+									                                            </td>
 									                                        </tr>
 									                                	</c:forEach>
 									                                </c:when>

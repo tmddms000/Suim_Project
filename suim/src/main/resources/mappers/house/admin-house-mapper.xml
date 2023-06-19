@@ -51,7 +51,7 @@
 			 , HOUSE_STATUS
 			 , HOUSE_DATE
 		  FROM HOUSE
-         ORDER BY HOUSE_DATE DESC
+         ORDER BY HOUSE_NO DESC
 	</select>
 	
 	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->

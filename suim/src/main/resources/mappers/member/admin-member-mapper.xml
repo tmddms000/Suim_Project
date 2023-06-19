@@ -22,7 +22,7 @@
 	</resultMap>
 	
 	<!-- 관리자 로그인 체크용 -->
-	<select id="checkEmailLogin" resultType="int">
+	<select id="checkAdminLogin" resultType="int">
     	SELECT COUNT(*)
 		  FROM MEMBER_AUTH
 		 WHERE EMAIL=#{EMAIL}
@@ -92,21 +92,6 @@
 			ORDER BY M.ENROLL_DATE DESC
 	</select>
 	
-	<!-- 블랙리스트 처리용 쿼리문 -->
-	<select id="selectBlackList" parameterType="string" resultType="_int">
-         SELECT COUNT(*)
-           FROM REPORT R
-           JOIN MEMBER USING(MEMBER_ID)
-          WHERE REPORT_ID = 'admin1'
-          GROUP BY REPORT_ID
-	</select>
-	<!-- 상태값 블랙리스트로 변경용 -->
-	<update id="updateBlackList">
-		UPDATE MEMBER
-		   SET STATUS = '블랙'
-		 WHERE MEMBER_ID = 'admin1'
-	</update>
-	
 	<!-- 회원 상세 조회용 쿼리문 -->
 	<select id="selectMember" parameterType="string" resultMap="adminMemberResultSet">
 		SELECT MEMBER_ID
@@ -167,6 +152,18 @@
 		 </if>
 		  JOIN MEMBER USING (MEMBER_ID)
 		 WHERE MEMBER_ID = #{memberId}
+		 <if test='category == "house"'>
+			ORDER BY HOUSE_NO DESC
+		 </if>
+		 <if test='category == "board"'>
+			ORDER BY BOARD_NO DESC
+		 </if>
+		 <if test='category == "find"'>
+			ORDER BY FIND_NO DESC
+		 </if>
+		 <if test='category == "inreview"'>
+			ORDER BY INR_NO DESC
+		 </if>
 	</select>
 
 	<!-- 탈퇴/일반용 쿼리문 -->

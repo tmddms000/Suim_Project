@@ -93,6 +93,10 @@
 	    	<mapping path="/member/*" />
 	    	<beans:bean class="com.suim.common.interceptor.LoginInterceptor" id="LoginInterceptor" />
 		</interceptor>
+		<interceptor>
+	    	<mapping path="/admin/*" />
+	    	<beans:bean class="com.suim.common.interceptor.AdminInterceptor" id="AdminInterceptor" />
+		</interceptor>
 	</interceptors>
 	
 	

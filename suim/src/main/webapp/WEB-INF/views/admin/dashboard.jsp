@@ -31,7 +31,16 @@
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">전체 회원 수 조회</p>
-                                <h6 class="mb-0">${ selectMemberAll }</h6>
+                                <h6 class="mb-0 nums" data-count="${selectMemberAll}">${ selectMemberAll } 개</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">전체 쉐어하우스 수 </p>
+                                <h6 class="mb-0 nums" data-count="${selectHouseAll}">${ selectHouseAll } 개</h6>
                             </div>
                         </div>
                     </div>
@@ -40,7 +49,7 @@
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">결제된 방 수</p>
-                                <h6 class="mb-0">${ selectHouseCount }</h6>
+                                <h6 class="mb-0 nums" data-count="${selectHouseCount}">${ selectHouseCount } 개</h6>
                             </div>
                         </div>
                     </div>
@@ -49,16 +58,7 @@
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">예약된 방 수</p>
-                                <h6 class="mb-0">${ selectReservationCount }</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">매출?</p>
-                                <h6 class="mb-0"> </h6>
+                                <h6 class="mb-0 nums" data-count="${selectReservationCount}">${ selectReservationCount } 개</h6>
                             </div>
                         </div>
                     </div>
@@ -66,18 +66,17 @@
             </div>
             <!-- Sale & Revenue End -->
 
-
             <!-- Sales Chart Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
+                        <div class="bg-light text-center rounded p-4" style="height:316.19">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">성비</h6>
-                            </div>
-                            <div style="width:550px;height:308px;">
+                                <h6 class="mb-0">가입자 성별 비율</h6><br>
+                                <div style="display: block;box-sizing: border-box;height: 255;width: 255;">
                             	<canvas id="genderChart"></canvas>
-                        	</div>
+                            	</div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-6">
@@ -91,15 +90,15 @@
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">신고 순위</h6>
+                                <h6 class="mb-0">일별 매출</h6>
                             </div>
-                            <canvas id="reportChart"></canvas>
+                            <canvas id="revenueChart"></canvas>
                         </div>
                     </div>
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">게시글 순위</h6>
+                                <h6 class="mb-0">사람구해요 순위</h6>
                             </div>
                             <canvas id="boardChart"></canvas>
                         </div>
@@ -122,10 +121,7 @@
 			      </c:when>
 			    </c:choose>
 			  </c:forEach>
-			  
-			  
-			  
-			
+
 			  new Chart(ctx_gender, {
 			    type: 'doughnut',
 			    data: {
@@ -139,23 +135,35 @@
 			      }]
 			    },
 			    options: {
-			      scales: {
-			        y: {
-			          beginAtZero: true
+			        scales: {
+			            display: false
+			        },
+			        plugins: {
+			            legend: {
+			                position: 'top',
+			                labels: {
+			                    boxWidth: 10
+			                }
+			            }
 			        }
-			      }
 			    }
 			  });
 
-			  const ctx_board = document.getElementById('boardChart');
-			
+				
+			  
+			  const ctx_board = document.getElementById('boardChart');		
+			  const selectFind1 = <c:out value="${selectFind1}" />;
+			  const selectFind2 = <c:out value="${selectFind2}" />;
+		      
 			  new Chart(ctx_board, {
 			    type: 'bar',
 			    data: {
 			      labels: ['방구해요', '세놓아요'],
 			      datasets: [{
 			        label: '게시글 순위',
-			        data: [1, 3],
+			        data: [selectFind1, selectFind2],
+			        borderColor:'rgba(255, 99, 132, 1)',
+			        backgroundColor: 'rgba(255, 99, 132, 1)',
 			        borderWidth: 1
 			      }]
 			    },
@@ -168,15 +176,33 @@
 			    }
 			  });
 
-			  const ctx_report = document.getElementById('reportChart');
+			  // 일별 매출
 			
-			  new Chart(ctx_report, {
+			  function addZero_rev(num) {
+					var rtn_rev = num + 100;
+					return rtn_rev.toString().substr(1, 3);
+				}
+	
+				var dayList = [];
+				var dayData = [];
+		
+				<c:forEach var="data" items="${selectHouseRevenue}">
+			        var day = "${data.day}";
+			        var revenue = ${data.totalRevenue};
+			        dayList.push(day);
+			        dayData.push(revenue);
+				</c:forEach>
+			  
+			  const ctx_revenue = document.getElementById('revenueChart').getContext('2d');
+			  const revenueChart = new Chart(ctx_revenue, {
 			    type: 'line',
 			    data: {
-			      labels: ['회원', '쉐어하우스', '자유게시판', '자유게시판 댓글', '사람구해요', '사람구해요 댓글', '채팅방'],
+			      labels: dayList,
 			      datasets: [{
-			        label: '신고 순위',
-			        data: [1, 3],
+				    label: '일별 매출',
+			        data: dayData,
+			        borderColor:'rgba(255, 99, 132, 1)',
+			        backgroundColor: 'rgba(255, 99, 132, 1)',
 			        borderWidth: 1
 			      }]
 			    },
@@ -189,27 +215,22 @@
 			    }
 			  });
 
+			  	// 일자별 회원가입 수
 				function addZero(i) {
 					var rtn = i + 100;
 					return rtn.toString().substr(1, 3);
 				}
-		
+	
 				var monthList = [];
-				var monthData = [50,60,70,45,50,66,77];
+				var monthData = [];
 		
-				var today = new Date();
-				var year = today.getFullYear();
-				var month = ("0" + (today.getMonth() + 1)).slice(-2);
-				var day = ("0" + today.getDate()).slice(-2);
-		
-				var monthList = [];
-		
-				for (var i = 6; i >= 0; i--) {
-				  var currentDate = new Date(year, today.getMonth(), today.getDate() - i);
-				  var format = currentDate.getFullYear() + "-" + ("0" + (currentDate.getMonth() + 1)).slice(-2) + "-" + ("0" + currentDate.getDate()).slice(-2);
-				  monthList.push(format);
-				}
-		
+				<c:forEach var="data" items="${selectEnrollMemberDate}">
+			        var date = "${data.registrationDate}";
+			        var count = ${data.memberCount};
+			        monthList.push(date);
+			        monthData.push(count);
+				</c:forEach>
+	
 				const ctx_day = document.getElementById('dayChart').getContext('2d');
 				const dayChart = new Chart(ctx_day, {
 					type: 'line',
@@ -228,7 +249,14 @@
 						legend: {
 						  display: false
 						}
-					  }
+					  },
+				        scales: {
+				            y: {
+				                ticks: {
+				                    precision: 0 // 소수점 자리수를 0으로 설정하여 소수점 제거
+				                }
+				            }
+				        }
 					}
 				});
 			</script>

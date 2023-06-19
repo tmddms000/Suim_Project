@@ -9,7 +9,13 @@
 	<!-- 전체 회원 수 조회 -->
 	<select id="selectMemberAll" resultType="_int">
 		SELECT COUNT(*) AS totalMembers
-		  FROM MEMBER
+		 FROM MEMBER
+	</select>
+	
+	<!-- 전체 쉐어하우스 수 -->
+	<select id="selectHouseAll" resultType="_int">
+		SELECT COUNT(*) AS totalHouses
+    		FROM HOUSE
 	</select>
 	
 	<!-- 신규 가입 회원 수(월별) -->
@@ -83,12 +89,12 @@
 	</select>
 	
 	<!-- 매출 분석 -->
-	<!-- 월별 매출 -->
-	<select id="selectHouseMonth" resultType="dashboard">
-		SELECT TO_CHAR(PAYMENT_DATE, 'YYYY-MM') AS month, SUM(price) AS total_revenue
-		  FROM PAYMENT
-		 GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
-		 ORDER BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM')
+	<!-- 일별 매출 -->
+	<select id="selectHouseRevenue" resultType="dashboard">
+		 SELECT TO_CHAR(PAYMENT_DATE, 'YYYY-MM-DD') AS day, SUM(price) AS total_revenue
+			FROM PAYMENT
+			GROUP BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM-DD')
+			ORDER BY TO_CHAR(PAYMENT_DATE, 'YYYY-MM-DD')
 	</select>
 	
 	<!-- 최근 등록된 쉐어하우스 10개 -->
@@ -142,5 +148,18 @@
 		       COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) AS leave_members,
 		       (COUNT(CASE WHEN STATUS = '탈퇴' THEN 1 END) / COUNT(*)) * 100 AS leave_rate
 		FROM MEMBER
+	</select>
+	
+	<!-- 방구해요 수 -->
+	<select id="selectFind1" resultType="_int">
+		SELECT COUNT(*) as selectFind1
+		  FROM FIND
+		 WHERE FIND_CATEGORY = '방구해요'
+	</select>
+	<!-- 세놓아요 수 -->
+	<select id="selectFind2" resultType="_int">
+		SELECT COUNT(*) as selectFind2
+		  FROM FIND
+		 WHERE FIND_CATEGORY = '세놓아요'
 	</select>
 </mapper>

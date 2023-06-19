@@ -14,6 +14,10 @@ public class AdminDashboardDao {
 	public int selectMemberAll(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("adminDashboardMapper.selectMemberAll");
 	}
+	
+	public int selectHouseAll(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminDashboardMapper.selectHouseAll");
+	}
 
 	public Dashboard selectEnrollMember(SqlSessionTemplate sqlSession) {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMember");
@@ -47,8 +51,8 @@ public class AdminDashboardDao {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEmptyRate");
 	}
 
-	public Dashboard selectHouseMonth(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectHouseMonth");
+	public ArrayList<Dashboard> selectHouseRevenue(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectHouseRevenue");
 	}
 
 	public ArrayList<Dashboard> selectHouseDate(SqlSessionTemplate sqlSession) {
@@ -73,5 +77,12 @@ public class AdminDashboardDao {
 
 	public Dashboard selectLeaveMemberRate(SqlSessionTemplate sqlSession) {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectLeaveMemberRate");
+	}
+	
+	public int selectFind1(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminDashboardMapper.selectFind1");
+	}
+	public int selectFind2(SqlSessionTemplate sqlSession) {
+		return sqlSession.selectOne("adminDashboardMapper.selectFind2");
 	}
 }

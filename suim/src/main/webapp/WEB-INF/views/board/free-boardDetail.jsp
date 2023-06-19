@@ -452,6 +452,7 @@
 	        let memberId = "${b.memberId}";
 	        
 			  $('#reportBtn').click(function() {
+		       
 				var popupUrl = "report.fi?value=" + encodeURIComponent(boardNo) + "&value2=" + encodeURIComponent(boardTitle) + "&value3=" + encodeURIComponent(memberId);
 			    var popupWidth = 800;
 			    var popupHeight = 800;

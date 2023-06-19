@@ -48,17 +48,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return adminMemberDao.selectCategoryList(sqlSession, pi, category);
 	}
 
-	// 블랙리스트 횟수 조회용
-	@Override
-	public int selectBlackList(String memberId) {
-		return adminMemberDao.selectBlackList(sqlSession, memberId);
-	}
-
-	// 블랙리스트로 상태 변경용
-	@Override
-	public int updateBlackList(String memberId) {
-		return adminMemberDao.updateBlackList(sqlSession, memberId);
-	}
 
 	@Override
 	public int insertMember(Member m) {

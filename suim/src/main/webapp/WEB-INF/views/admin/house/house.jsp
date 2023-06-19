@@ -9,6 +9,15 @@
 	form input {width:150px!important;}
 	form button {border:none!important;}
 	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
+	.searchForm{
+	    display: flex;
+	    align-items: center;
+	    background-color: #f5f5f5;
+	    border-radius: 20px;
+	    padding: 10px 20px;
+	    justify-content: flex-end;
+	}
+}
 </style>
 
 	<%@ include file="../common/include.jsp" %>
@@ -42,19 +51,19 @@
                             <h6 class="mb-4">쉐어하우스 관리</h6>
 
 							<div align="right" class="searchForm">
-							<form class="d-md-flex ms-4" action="search.ho">
-								<div class="select">
-				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;">
-				                        <option value="HOUSE_NAME">이름</option>
-				                        <option value="RES_GENDER">성별</option>
-				                        <option value="RES_TYPE">유형</option>
-				                    </select>
-				                </div>
-								<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
-                       		 	<button type="submit">
-                                    <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                                </button>
-                    		</form>
+								<form class="d-md-flex ms-4" action="search.ho">
+									<div class="select">
+					                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important; height: 36px;">
+					                        <option value="HOUSE_NAME">이름</option>
+					                        <option value="RES_GENDER">성별</option>
+					                        <option value="RES_TYPE">유형</option>
+					                    </select>
+					                </div>
+									<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
+	                       		 	<button type="submit">
+	                                    <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
+	                                </button>
+	                    		</form>
 							</div>
 							
 							<ul class="nav nav-tabs">
@@ -87,13 +96,13 @@
 		                                    <thead>
 		                                        <tr>
 		                                            <th scope="col"><input class="form-check-input" type="checkbox" id="selectAll_A"></th>
-		                                            <th scope="col">번호</th>
-		                                            <th scope="col">유형</th>
-		                                            <th scope="col">제목</th>
-		                                            <th scope="col">신청자</th>
-		                                            <th scope="col">내용</th>
-		                                            <th scope="col">신고일</th>
-		                                            <th scope="col">상태</th>
+		                                            <th scope="col" width="">번호</th>
+		                                            <th scope="col">쉐어하우스 이름</th>
+		                                            <th scope="col">주소</th>
+		                                            <th scope="col">보증금</th>
+		                                            <th scope="col">월세</th>
+		                                            <th scope="col">주거성별</th>
+		                                            <th scope="col">주거형태</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
@@ -107,10 +116,8 @@
 				                                            <td>${ h.houseAddress }</td>
 				                                            <td>${ h.deposit }</td>
 				                                            <td>${ h.rent }</td>
-				                                            <td>${ h.roomPeople }</td>
 				                                            <td>${ h.resGender }</td>
 				                                            <td>${ h.resType }</td>
-				                                            <td>${ h.houseDate }</td>
 				                                        </tr>
 				                                	</c:forEach>
 				                                </c:when>

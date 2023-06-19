@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
 	#memberList {text-align:center;}
 	#memberList>tbody>tr:hover {cursor:pointer;}
@@ -80,13 +80,13 @@
 			                                            <td class="memberId">${ m.memberId }</td>
 			                                            <td>${ m.email }</td>
 			                                            <td>${ m.phone }</td>
-			                                            <td>${ m.enrollDate }</td>
+			                                            <td><fmt:formatDate value="${m.enrollDate}" pattern="yyyy-MM-dd" /></td>
 			                                            <td>
 												            <c:choose>
 												                <c:when test="${m.status eq '탈퇴'}">
 												                    <span class="badge bg-danger">탈퇴회원</span>
 												                </c:when>
-												                <c:when test="${m.blacklistFlag eq 'BLACKLISTED'}">
+												                <c:when test="${m.status eq '블랙'}">
 												                    <span class="badge bg-dark">블랙회원</span>
 												                </c:when>
 												                <c:otherwise>

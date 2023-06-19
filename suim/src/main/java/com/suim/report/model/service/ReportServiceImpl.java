@@ -21,6 +21,18 @@ public class ReportServiceImpl implements ReportService {
 	public int insertReport(Report r) {
 		return reportDao.insertReport(sqlSession, r);
 	}
+	
+	// 블랙리스트 횟수 조회용
+	@Override
+	public int selectBlackList(String reportId) {
+		return reportDao.selectBlackList(sqlSession, reportId);
+	}
+	// 블랙리스트로 상태 변경용
+	@Override
+	public int updateBlackList(String reportId) {
+		return reportDao.updateBlackList(sqlSession, reportId);
+	}
+
 	@Override
 	public int insertRattachment(Rattachment ra) {
 		return reportDao.insertRattachment(sqlSession, ra);

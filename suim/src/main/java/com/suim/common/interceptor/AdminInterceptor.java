@@ -1,4 +1,4 @@
-package com.suim.admin.controller;
+package com.suim.common.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,13 +24,15 @@ public class AdminInterceptor implements HandlerInterceptor{
         if (loginUser != null) {
         	int result = adminMemberService.checkAdminLogin(loginUser.getEmail());
         	
-        	System.out.println(result);
-        	
         	if(result != 1) {
     			session.setAttribute("alertMsg", "관리자 권한이 없습니다.");
-        		response.sendRedirect("/admin/login"); // 인증되지 않은 경우 로그인 페이지로 이동
+        		response.sendRedirect("/member/login"); // 인증되지 않은 경우 로그인 페이지로 이동
         		return false;
         	}
+        } else {
+        	session.setAttribute("alertMsg", "관리자 권한이 없습니다.");
+    		response.sendRedirect("/member/login"); // 인증되지 않은 경우 로그인 페이지로 이동
+        	return false;
         }
         
         return true;

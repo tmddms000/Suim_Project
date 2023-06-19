@@ -33,8 +33,6 @@ public class ReportController {
                   
 	@Autowired
 	private ReportService reportService;
-	@Autowired
-	private AdminMemberService adminMemberService;
 	
 	@RequestMapping("insert.re")
 	public String insertReport(Report r,
@@ -47,10 +45,12 @@ public class ReportController {
 		String memberId = r.getMemberId();
 		int result = reportService.insertReport(r);
 		
+		System.out.println("r: " + r);	// r: Report(reportNo=0, reportTitle=xx, reportContent=<p>xx</p>, reportType=findBoard, reportId=dldldlxoghk, reportDate=null, reportStatus=null, memberId=tmddms000, typeNo=2200, thumbnail=null)
+		
 		if(result > 0) {
-			int reportCount = adminMemberService.selectBlackList(memberId);
+			int reportCount = reportService.selectBlackList(r.getReportId());
 			if(reportCount >= 5) {
-				adminMemberService.updateBlackList(memberId);
+				reportService.updateBlackList(r.getReportId());
 			}
 			
 	        response.setContentType("text/html; charset=UTF-8");
@@ -67,7 +67,6 @@ public class ReportController {
 			return null;
 			
 		} else {
-			
 			model.addAttribute("errorMsg", "신고 접수가 실패했습니다. 다시 작성해주세요.");
 			
 			return "common/errorPage";

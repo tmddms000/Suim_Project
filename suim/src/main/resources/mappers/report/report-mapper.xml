@@ -26,21 +26,36 @@
 		                   REPORT_TITLE, 
 		                   REPORT_CONTENT,
                            REPORT_TYPE,
+                           REPORT_ID,
                            REPORT_DATE,
                            REPORT_STATUS,
                            MEMBER_ID,
-                           REPORT_ID,
 						   TYPE_NO)
 				   VALUES(SEQ_REPORT_NO.NEXTVAL
 				   		, #{reportTitle}
 				   		, #{reportContent}
                         , #{reportType}
+                   		, #{reportId}
                         , DEFAULT
                         , DEFAULT
                         , #{memberId}
-                   		, 'admin1'
                    		, #{typeNo})
 	</insert>
+
+	<!-- 블랙리스트 처리용 쿼리문 -->
+	<select id="selectBlackList" parameterType="string" resultType="_int">
+         SELECT COUNT(*)
+           FROM REPORT R
+           JOIN MEMBER USING(MEMBER_ID)
+          WHERE REPORT_ID = #{reportId}
+          GROUP BY REPORT_ID
+	</select>
+	<!-- 상태값 블랙리스트로 변경용 -->
+	<update id="updateBlackList">
+		UPDATE MEMBER
+		   SET STATUS = '블랙'
+		 WHERE MEMBER_ID = #{reportId}
+	</update>
 	
 	<!-- 신고 파일첨부 쿼리문 -->
 	<insert id="rattachment" parameterType="rattachment">
