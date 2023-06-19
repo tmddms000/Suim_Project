@@ -118,8 +118,8 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int selectfListCount(HashMap<String, String> fin) {
-		return boardDao.selectfListCount(sqlSession, fin);
+	public int selectfcListCount(HashMap<String, String> fin) {
+		return boardDao.selectfcListCount(sqlSession, fin);
 	}
 
 	@Override

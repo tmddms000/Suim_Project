@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>마이페이지</title>
 <link href="/resources/css/user/mypage.css" rel="stylesheet" />
 <%@ include file="/WEB-INF/views/common/include.jsp"%>
 

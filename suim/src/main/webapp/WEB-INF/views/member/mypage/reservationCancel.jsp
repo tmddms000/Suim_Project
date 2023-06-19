@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>예약 취소</title>
 
 	<!-- 부트스트랩 -->
         <link href="/resources/css/common/styles.css" rel="stylesheet" />

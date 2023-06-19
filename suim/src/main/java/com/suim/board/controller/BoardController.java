@@ -366,6 +366,8 @@ public class BoardController {
 			fin.put("category", category);
 			fin.put("search", search);
 			
+			System.out.println(search);
+			
 			
 			
 
@@ -380,7 +382,10 @@ public class BoardController {
 
 			} 
 			else {
-				listCount = boardService.selectfListCount(fin);
+				listCount = boardService.selectfcListCount(fin);
+				
+				System.out.println(listCount);
+				
 				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 				flist = boardService.selectfList(pi, fin);
 				
