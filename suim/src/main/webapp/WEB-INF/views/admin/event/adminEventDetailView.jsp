@@ -73,7 +73,7 @@
                           	</td>
                          </tr>
                          
-                      	<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+                      	<c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
                          	<div align="center" style="display: inline-block;" align="right">
 				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>
