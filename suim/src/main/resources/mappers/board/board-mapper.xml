@@ -744,7 +744,45 @@ ORDER BY I.INR_NO DESC
 	</select>
 
 	
+		
+		<select id="selectfcListCount" resultType="_int">
+		SELECT COUNT(*)
+	    FROM FIND F
+	    JOIN MEMBER M ON (M.MEMBER_ID = F.MEMBER_ID)
+	    WHERE F.STATUS = 'Y'
+				    
+				    <choose>
+				        <when test='gender == "M"'>
+				            AND M.GENDER = 'M'
+				        </when>    
+				        <when test='gender == "F"'>
+				            AND M.GENDER = 'F'
+				        </when>
+				        <otherwise>
+				            AND M.GENDER IN ('M', 'F')
+				        </otherwise>
+				    </choose>
+				    
+				    <choose>
+				        <when test="category == '방구해요'">
+				            AND F.FIND_CATEGORY = '방구해요'
+				        </when>
+				        <when test="category == '세놓아요'">
+				            AND F.FIND_CATEGORY = '세놓아요'
+				        </when>
+				        <otherwise>
+				            AND F.FIND_CATEGORY IN ('방구해요', '세놓아요')
+				        </otherwise>
+				    </choose>
+				    
+				    <!-- 제목검색 시 -->
+				    AND F.FIND_TITLE LIKE '%' || #{search} || '%'
 
+				    ORDER BY F.FIND_NO DESC
+
+	
+			</select>
+	
 	
 
 	

@@ -96,7 +96,7 @@
     
 
 <div class="search-find" style="display: flex;">
-    <input type="text" placeholder="제목을 입력해주세요." name="search" value="" style="border: 2px solid pink; border-radius: 10px 0 0 10px; padding: 5px; flex: 1; margin-right: -2px;">
+    <input type="text"  id = "search" placeholder="제목을 입력해주세요." name="search" value="" style="border: 2px solid pink; border-radius: 10px 0 0 10px; padding: 5px; flex: 1; margin-right: -2px;">
     <button type="submit" style="border: 2px solid pink; border-radius: 0 10px 10px 0; background-color: white; margin-left: -2px;">
         <i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
     </button>
@@ -221,9 +221,12 @@
       </c:otherwise>
     </c:choose>
 
-    <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
-      <li class="page-item"><a class="page-link" href="list.fi?cPage=${p}&search=${param.search}&gender=${param.gender}&category=${param.category}" style="background-color: white; color: rgb(250, 107, 111);">${p}</a></li>
-    </c:forEach>
+    <c:set var="hasPosts" value="${not empty flist}" />
+    <c:if test="${hasPosts}">
+      <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+        <li class="page-item"><a class="page-link" href="list.fi?cPage=${p}&search=${param.search}&gender=${param.gender}&category=${param.category}" style="background-color: white; color: rgb(250, 107, 111);">${p}</a></li>
+      </c:forEach>
+    </c:if>
 
     <c:choose>
       <c:when test="${pi.currentPage eq pi.maxPage}">
@@ -235,6 +238,8 @@
     </c:choose>
   </ul>
 </div>
+
+
 
    </div>
     
@@ -270,7 +275,7 @@
          document.addEventListener("DOMContentLoaded", function() {
            var storedGender = localStorage.getItem("selectedGender");
            var storedCategory = localStorage.getItem("selectedCategory");
-
+           var storedSearch = localStorage.getItem("selectedSearch");
            if (storedGender) {
              document.getElementById("sex").value = storedGender;
            }
@@ -278,16 +283,21 @@
            if (storedCategory) {
              document.getElementById("condition").value = storedCategory;
            }
+           if (storedSearch) {
+               document.getElementById("search").value = storedSearch;
+             }
          });
 
          function updateTableList() {
            // 선택된 값 가져오기
            var gender = document.getElementById("sex").value;
            var category = document.getElementById("condition").value;
+           var search = document.getElementById("search").value;
 
            // 선택된 값 localStorage에 저장
            localStorage.setItem("selectedGender", gender);
            localStorage.setItem("selectedCategory", category);
+           localStorage.setItem("selectedSearch", search);
 
            // 선택된 값에 따라 데이터 처리 및 결과 노출
            var results = []; // 결과를 저장할 배열
@@ -326,6 +336,7 @@
          document.addEventListener("DOMContentLoaded", function() {
         	  var storedGender = localStorage.getItem("selectedGender");
         	  var storedCategory = localStorage.getItem("selectedCategory");
+        	  var storedSearch = localStorage.getItem("selectedSearch");
 
         	  // 이전에 저장된 옵션을 가져오고, 해당 옵션이 유효한 경우에만 선택합니다.
         	  if (storedGender && document.getElementById("sex").querySelector(`option[value="${storedGender}"]`)) {
@@ -335,14 +346,20 @@
         	  if (storedCategory && document.getElementById("condition").querySelector(`option[value="${storedCategory}"]`)) {
         	    document.getElementById("condition").value = storedCategory;
         	  }
+        	  
+        	  if (storedCategory && document.getElementById("search").querySelector(`option[value="${selectedSearch}"]`)) {
+          	    document.getElementById("search").value = storedCategory;
+          	  }
 
         	  // 폼 제출 시 선택된 옵션을 저장합니다.
         	  document.getElementById("enrollForm").addEventListener("submit", function() {
         	    var gender = document.getElementById("sex").value;
         	    var category = document.getElementById("condition").value;
+        	    var search = document.getElementById("search").value;
 
         	    localStorage.setItem("selectedGender", gender);
         	    localStorage.setItem("selectedCategory", category);
+        	    localStorage.setItem("selectedSearch", search);
         	  });
         	});
 
@@ -350,6 +367,7 @@
         	window.addEventListener("load", function() {
         	  localStorage.removeItem("selectedGender");
         	  localStorage.removeItem("selectedCategory");
+        	  localStorage.removeItem("selectedSearch");
         	});
         	
         	 function checkLogin() {
@@ -365,6 +383,7 @@
                      window.location.href = "/member/login"; // 로그인 페이지로 이동
                  }
              }
+        	 
 
 
       </script>  
