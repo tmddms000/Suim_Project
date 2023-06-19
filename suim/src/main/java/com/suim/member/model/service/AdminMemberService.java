@@ -24,6 +24,7 @@ public interface AdminMemberService {
 
 	ArrayList<Member> selectCategoryList(PageInfo pi, String category);
 
+
 	// 회원 작성하기 서비스
 	int insertMember(Member m);
 

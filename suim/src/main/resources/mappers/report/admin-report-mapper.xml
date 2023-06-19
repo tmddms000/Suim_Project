@@ -221,18 +221,20 @@
 		 WHERE 
 		 	<choose>
 		 		<when test='condition == "REPORT_TYPE"'>
-					<when test='REPORT_TYPE == "회원"'>
-					</when>
-					<when test='REPORT_TYPE == "셰어하우스"'>
-					</when>
-					<when test='REPORT_TYPE == "자유게시판"'>
-					</when>
-					<when test='REPORT_TYPE == "사람구해요"'>
-					</when>
-					<when test='REPORT_TYPE == "입주후기"'>
-					</when>
-					<when test='REPORT_TYPE == "채팅방"'>
-					</when>
+		 			<choose>
+						<when test='REPORT_TYPE == "회원"'>
+						</when>
+						<when test='REPORT_TYPE == "셰어하우스"'>
+						</when>
+						<when test='REPORT_TYPE == "자유게시판"'>
+						</when>
+						<when test='REPORT_TYPE == "사람구해요"'>
+						</when>
+						<when test='REPORT_TYPE == "입주후기"'>
+						</when>
+						<when test='REPORT_TYPE == "채팅방"'>
+						</when>
+					</choose>
 		 		</when>
 		 		<otherwise>
 		 			${condition} LIKE '%' || #{keyword} || '%'
