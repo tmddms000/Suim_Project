@@ -1,5 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<style>
+@keyframes vibrate {
+  0% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  25% {
+    transform: translate(2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+  50% {
+    transform: translate(2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  75% {
+    transform: translate(-2px, 2px);
+    background-color: rgb(250, 107, 111);
+  }
+  100% {
+    transform: translate(-2px, -2px);
+    background-color: rgb(250, 107, 111);
+  }
+}
+
+.vibrate {
+  animation: vibrate 0.1s infinite linear;
+}
+</style>
+
 
 <script type="text/javascript">
 		var socket = null;
@@ -71,7 +100,6 @@
 			}
 
 		function selectRecentNotification(data) {
-			console.log(data);
 			// 응답으로부터 필요한 데이터 추출
 			var notificationList = data.list;
 			var listCount = data.listCount;
@@ -114,6 +142,7 @@
 			var notificationText = '';
 		    if (postType === 'board') {
 		    	notificationText = '<a href="/detail.bo?bno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.bo?bno=' + postNo + '\', \'' + postNo + '\', \'board\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 자유게시판의 ' +  '<span id="title">' + title + '</span>'+  '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
+		    
 		    }
 		    if (postType === 'find') {
 		    	notificationText = '<a href="/detail.fi?fno=' + postNo + '" onclick="notificationDelete(\'' + '/detail.fi?fno=' + postNo + '\', \'' + postNo + '\', \'find\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 사람구해요의 ' +  '<span id="title">' + title + '</span>' + '에 댓글을 달았습니다.' + '<div class="content">"' + postContent + '"</div>' + '<div class="time">' + timeDifference + '</div>' + '</a>';
@@ -136,11 +165,6 @@
 		    
 		    if (postType === 'rezConfirm') {
 		    	notificationText = '<a href="/mypage/reservation" onclick="notificationDelete(\'/mypage/reservation\', \'' + postNo + '\', \'rezConfirm\', \'' + receiverId + '\')" class="notification">' + senderId + '님이 회원님의 <span id="title">"' + title + '"</span> 의 예약을 확정시켰습니다. <div class="time">' + timeDifference + '</div></a>';
-		    }
-		    
-
-		    else {
-		     
 		    }
 		    
 		    
@@ -292,16 +316,17 @@
 				    },
 				    dataType: 'json',
 				    success: function (response) {
-				      console.log(response);
 				      if (response > 1) {
 				        // 알림 목록 컨테이너
 				        var notificationListElement = $('#notificationList');
 						notificationListElement.empty()
 						
+						$('#notificationButton .notification-count').remove();
+						
 						var paginationContainer = $('#paginationContainer');
         				paginationContainer.empty();
         				
-        				$('#notificationButton .notification-count').remove();
+        				
 
 				        // 알림이 없을 때 메시지 표시
 				        var notificationItem = $('<li style="list-style-type: none; text-align:center; font-weight: bold;">').text('알림이 없습니다.');
@@ -339,7 +364,6 @@
 		
 		
 		$('#notificationButton').click(function(e) {
-		    console.log('click');
 		    e.stopPropagation();
 		    $('#notificationModal').toggle();
 		  });

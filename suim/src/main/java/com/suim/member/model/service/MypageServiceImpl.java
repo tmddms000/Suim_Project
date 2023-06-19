@@ -49,24 +49,20 @@ public class MypageServiceImpl implements MypageService {
 		return mypageDao.selectFindList(sqlSession, pi, memberId);
 	}
 
-	
-	
-	
 	@Override
 	public int selectHouseListCount(String memberId) {
 		return mypageDao.selectHouseListCount(sqlSession, memberId);
 	}
-	
+
 	@Override
 	public ArrayList<House> selectHouseList(PageInfo pi, String memberId) {
 		return mypageDao.selectHouseList(sqlSession, pi, memberId);
 	}
 
-
 	@Override
 	public int deleteBoard(int[] intArray, String memberId) {
 		return mypageDao.deleteBoard(sqlSession, intArray, memberId);
-		
+
 	}
 
 	@Override
@@ -88,7 +84,6 @@ public class MypageServiceImpl implements MypageService {
 	public ArrayList<Board> selectInreviewList(PageInfo pi, String memberId) {
 		return mypageDao.selectInreviewList(sqlSession, pi, memberId);
 	}
-	
 
 	@Override
 	public int selectRezListCount(String memberId) {
@@ -97,7 +92,7 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public ArrayList<Reservation> selectRezList(PageInfo pi, String memberId) {
-		return  mypageDao.selectRezList(sqlSession, pi, memberId);
+		return mypageDao.selectRezList(sqlSession, pi, memberId);
 	}
 
 	@Override
@@ -107,7 +102,7 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public ArrayList<Pay> selectPayList(PageInfo pi, String memberId) {
-		return  mypageDao.selectPayList(sqlSession, pi, memberId);
+		return mypageDao.selectPayList(sqlSession, pi, memberId);
 	}
 
 }

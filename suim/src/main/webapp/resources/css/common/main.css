@@ -117,9 +117,10 @@ li.item {
 }
 
 .branch-list .item .txt-bx .title {
-	font-size: 1.125rem;
-	color: #111;
-	font-weight: 500;
+	margin-top: 6px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
 }
 
 .main-title .link {

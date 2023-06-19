@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/resources/css/common/header.css" />
 
 
+
 <button id="notificationButton" style="display: none;">
 	<i class="fas fa-bell"></i>
 </button>
@@ -39,9 +40,9 @@
 				<li class="nav-item"><a href="/list.ho"
 					class="nav-link nav-text">방 찾기</a></li>
 
-				<li class="nav-item"><a href="#" class="nav-link nav-text">쉼</a>
+				<li class="nav-item"><a href="/suim" class="nav-link nav-text">쉼</a>
 					<ul>
-						<li><a href="">쉼 소개</a></li>
+						<li><a href="/suim">쉼 소개</a></li>
 					</ul></li>
 				<li class="nav-item"><a href="/list.bo"
 					class="nav-link nav-text">커뮤니티</a>

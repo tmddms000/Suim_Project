@@ -302,8 +302,7 @@
 		    <artifactId>spring-social-google</artifactId>
 	            <version>1.0.0.RELEASE</version>
 	    </dependency>
-		
-	
+	    
 	</dependencies>
 	<build>
 		<plugins>

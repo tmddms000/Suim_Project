@@ -45,7 +45,7 @@
 
 #notificationButton {
   position: fixed;
-  right: 10px;
+  right: 80px;
   bottom: 10px;
   width: 60px;
   height: 60px;
@@ -95,29 +95,11 @@
 }
 
 
-@keyframes vibrate {
-  0% {
-    transform: translate(-2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-  25% {
-    transform: translate(2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-  50% {
-    transform: translate(2px, 2px);
-    background-color: rgb(250, 107, 111);
-  }
-  75% {
-    transform: translate(-2px, 2px);
-    background-color: rgb(250, 107, 111);
-  }
-  100% {
-    transform: translate(-2px, -2px);
-    background-color: rgb(250, 107, 111);
-  }
-}
-
-.vibrate {
-  animation: vibrate 0.1s infinite linear;
+.delete-all-button {
+	background-color : rgb(250,107,111);
+	border-radius : 50px;
+	color : white;
+	border : 1px solid white;
+	width:  200px;
+	height : 30px;
 }

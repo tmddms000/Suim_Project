@@ -371,12 +371,10 @@ public class MypageController {
 	    
 		 listCount = mypageService.selectPayListCount(memberId);
 		 
-		 System.out.println(listCount);
 		 pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 
 		 ArrayList<Pay> list = mypageService.selectPayList(pi, memberId);
 		 
-		 System.out.println(list);
 		 model.addAttribute("pi", pi)
 		      .addAttribute("list", list);
 			

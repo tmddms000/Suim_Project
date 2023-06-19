@@ -83,10 +83,22 @@ public class AuthController {
 
 	// 회원가입 페이지 이동
 	@RequestMapping("join")
-	public String signUp(Model theModel) {
+	public String signUp(Model theModel, String agree1, String agree2) {
+		
+		
+		if(agree1 == null || agree2 == null) {
+			session.setAttribute("toastError", "동의약관을 진행해야합니다.");
+			return  "redirect:/member/term";
+		}
 
-		theModel.addAttribute("member", new SignUp());
-		return "member/signup";
+		if(agree1.equals(agree2)) {
+			theModel.addAttribute("member", new SignUp());
+			return "member/signup";
+		} else {
+			session.setAttribute("toastError", "동의약관을 진행해야합니다.");
+			return  "redirect:/member/term";
+		}
+		
 	}
 
 	@ResponseBody
@@ -223,7 +235,6 @@ public class AuthController {
 			        session = request.getSession(true);
 			        
 			        if(saveId != null && saveId.equals("y")) {
-			        	System.out.println(saveId);
 						Cookie cookie = new Cookie("saveId", m.getMemberId());
 						cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
 						
@@ -311,8 +322,6 @@ public class AuthController {
 	@RequestMapping(value = "loginNaver", method = { RequestMethod.GET, RequestMethod.POST })
 	public String userNaverLoginPro(Model model, @RequestParam Map<String, Object> paramMap, @RequestParam String code,
 			@RequestParam String state, HttpSession session) throws Exception {
-
-		System.out.println("잘 넘어오나?");
 		OAuth2AccessToken oauthToken = naverLoginBO.getAccessToken(session, code, state);
 		String apiResult = naverLoginBO.getUserProfile(oauthToken);
 

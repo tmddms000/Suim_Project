@@ -83,6 +83,7 @@
 			<mapping path="/member/verifySuccess"/>
 			<mapping path="/member/findId"/>
 			<mapping path="/member/findPw"/>
+			<mapping path="/member/term"/>
 			
 			<beans:bean class="com.suim.common.interceptor.AuthInterceptor" 
 															id="AuthInterceptor" />

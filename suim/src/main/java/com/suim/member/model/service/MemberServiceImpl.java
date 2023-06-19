@@ -26,8 +26,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	public MemberServiceImpl(SqlSessionTemplate sqlSession, MemberDao memberDao) {
-	    this.sqlSession = sqlSession;
-	    this.memberDao = memberDao;
+		this.sqlSession = sqlSession;
+		this.memberDao = memberDao;
 	}
 
 	@Override
@@ -138,7 +138,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.googleConnectionCheck(sqlSession, email);
 	}
 
-
 	@Override
 	public int setGoogleConnection(Member m) {
 		return memberDao.setGoogleConnection(sqlSession, m);
@@ -158,13 +157,5 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectMember(String memberId) {
 		return memberDao.selectMember(sqlSession, memberId);
 	}
-
-	
-	
-	
-
-
-
-
 
 }

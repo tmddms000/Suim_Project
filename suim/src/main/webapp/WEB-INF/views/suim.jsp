@@ -11,9 +11,7 @@
 	href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 <style>
-body {
-	background-color: rgb(248, 249, 250);
-}
+
 
 .green-text {
 	font-size: 20px;
@@ -160,7 +158,6 @@ li.item {
 	justify-content: space-around;
 	align-items: center;
 	padding: 5%;
-	background-color : rgb(230,240,250);
 }
 
 .num-item {
@@ -182,10 +179,7 @@ li.item {
 }
 
 .num-title {
-
 	font-size : 60px;
-	color : #FA5A51;
-	background-color : rgb(230,240,250);
 }
 
 #num-unit {
@@ -193,36 +187,136 @@ li.item {
 	color: dimgray;
 }
 
+h1{
+  font-size:60px;
+  font-weight:bold;
+  text-align:center;
+  color: rgb(240, 60, 20);
+  letter-spacing:0px;
+  transition:1s;
+  -webkit-transition:1s;
+  -ms-transition:1s;
+  position: relative;
+  padding:10px;
+ 
+}
+
+h1:before,
+h1:after{
+  content:"";
+  position: absolute;
+  height: 7px;
+  width: 0px;
+  background:rgb(240, 60, 20);
+  transition:300ms;
+  -webkit-transition:1s;
+  -ms-transition:1s;
+  opacity:0.3;
+  left:50%;
+}
+
+h1:before{
+  bottom:0;
+ 
+}
+
+h1:after{
+  top:0;
+  
+}
+
+h1:hover{
+  letter-spacing:30px;
+}
+
+h1:hover:before,
+h1:hover:after{
+   width: 95%;
+    opacity:1;
+  left:0;
+
+}
+h1:hover ~ h2{
+  opacity:0;
+}
+
+h1 span {
+  position: relative;
+  top: 20px;
+  display: inline-block;
+  animation: bounce .3s ease infinite alternate;
+  font-family: 'Titan One', cursive;
+  font-size: 80px;
+  color: #FFF;
+  text-shadow: 0 1px 0 #CCC,
+               0 2px 0 #CCC,
+               0 3px 0 #CCC,
+               0 4px 0 #CCC,
+               0 5px 0 #CCC,
+               0 6px 0 transparent,
+               0 7px 0 transparent,
+               0 8px 0 transparent,
+               0 9px 0 transparent,
+               0 10px 10px rgba(0, 0, 0, .4);
+}
+
+h1 span:nth-child(2) { animation-delay: .1s; }
+h1 span:nth-child(3) { animation-delay: .2s; }
+h1 span:nth-child(4) { animation-delay: .3s; }
+h1 span:nth-child(5) { animation-delay: .4s; }
+h1 span:nth-child(6) { animation-delay: .5s; }
+h1 span:nth-child(7) { animation-delay: .6s; }
+h1 span:nth-child(8) { animation-delay: .7s; }
+
+@keyframes bounce {
+  100% {
+    top: -20px;
+    text-shadow: 0 1px 0 #CCC,
+                 0 2px 0 #CCC,
+                 0 3px 0 #CCC,
+                 0 4px 0 #CCC,
+                 0 5px 0 #CCC,
+                 0 6px 0 #CCC,
+                 0 7px 0 #CCC,
+                 0 8px 0 #CCC,
+                 0 9px 0 #CCC,
+                 0 50px 25px rgba(0, 0, 0, .2);
+  }
+}
+
 
 </style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+		
+		<section class="section main-search wow fadeInUp" style="visibility: visible; animation-name: fadeInUp; margin-top : 150px;">
+		<div class="container">
 
-	<section class="section main-search wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-		<div class="text-center num-title">지금 쉼은?</div>
-		<div class="num-container" id="num-container">	
+		  <h1>쉼(SUIM) 은 지금!</h1>	
+			<div class="num-container" id="num-container">	
 			<div class="num-item">
-				<h4 class="in-title">총 회원 수</h4>
+				<h4 class="in-title"><i class="fa-solid fa-users"></i> 총 회원 수</h4>
 				<span class="nums" data-count="${count.MEMBER_COUNT}">0</span><span id="num-unit">명</span><br>
 			</div>
 			<div class="num-item">
-				<h4 class="in-title">셰어하우스</h4>
+				<h4 class="in-title"><i class="fa-solid fa-house"></i> 셰어하우스</h4>
 				<span class="nums" data-count="${count.HOUSE_COUNT}">0</span><span id="num-unit">개</span><br>
 			</div>
 			<div class="num-item">
-				<h4 class="in-title">입주 후기</h4>
+				<h4 class="in-title">입주 후기 <i class="fa-solid fa-newspaper"></i></h4>
 				<span class="nums" data-count="${count.INREVIEW_COUNT}">0</span><span id="num-unit">개</span><br>
 			</div>
 			<div class="num-item">
-				<h4 class="in-title">만족도</h4>
-				<span class="nums" data-count="95">0</span><span id="num-unit">%</span><br>
+				<h4 class="in-title">만족도 <i class="fa-solid fa-star"></i></h4>
+				<span class="nums" data-count="100">0</span><span id="num-unit">%</span><br>
 			</div>
 		</div>
+		</div>
 	</section>
-
-	<section class="projects-section bg-white" id="projects">
-		<div class="container px-4 px-lg-5">
+	
+		<section class="bg-white" id="projects" style="margin-top : 50px; margin-bottom: 50px;">
+		<div class="container">
 			<!-- Featured Project Row-->
 			<div class="row gx-0 justify-content-center">
 				<div class="col-lg-6">
@@ -233,9 +327,9 @@ li.item {
 					<div class="bg-black text-center h-100 project">
 						<div class="d-flex h-100">
 							<div class="project-text w-100 my-auto text-center text-lg-right">
-								<h4 class="text-white">쉐어하우스 쉼(SUIM)</h4>
-								<p class="mb-0 text-white-50">쉐어하우스 쉼(SUIM)은 2023년에 개설된 국내
-									최대 규모의 쉐어하우스 커뮤니티에요.</p>
+								<h4 class="text-white">셰어하우스 쉼(SUIM)</h4>
+								<p class="mb-0 text-white-50">셰어하우스 쉼(SUIM)은 2023년에 개설된 국내
+									최대 규모의 셰어하우스 커뮤니티에요.</p>
 							</div>
 						</div>
 					</div>
@@ -251,7 +345,7 @@ li.item {
 					<div class="bg-black text-center h-100 project">
 						<div class="d-flex h-100">
 							<div class="project-text w-100 my-auto text-center text-lg-left">
-								<h4 class="text-white">쉼 쉐어하우스에서는?</h4>
+								<h4 class="text-white">셰어하우스 쉼에서는?</h4>
 								<p class="mb-0 text-white-50">같이 살 하우스메이트를 구할 수 있어요!</p>
 							</div>
 						</div>
@@ -277,53 +371,9 @@ li.item {
 			</div>
 		</div>
 	</section>
-
-	<!-- 추가사항 -->
-	<section class="contact-section bg-warning">
-		<div class="container px-4 px-lg-5 text-center">후기사진, 게시판 등등 추가
-			할 곳</div>
-	</section>
+	
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
-
-	<!-- 메인페이지 스크립트 -->
-	<script>
-                document.addEventListener('DOMContentLoaded', () => {
-            
-                    new TypeIt('#text', {
-                    speed: 100,
-                    startDelay: 900,
-                    afterComplete: function (instance) { //
-                            instance.destroy();
-                        } 
-                    })
-                    .pause(1000)
-                    .delete(16, { delay : 1000 })
-                    .type('라고 고민될땐?', { delay : 1000 })
-                    .move(5)
-                    .delete(10)
-                    .type('지금 당장 가입해보세요. ')
-                    .type('<span style="color: #fa6b6f;">"쉼"</span>', { delay : 1000 })
-                    .go();
-                    
-                });
-                
-                new Swiper('.swiper-container', {
-                	  autoplay: {
-                	    delay: 3000
-                	  },
-                	  loop: true,
-                	  centeredSlides: true,
-                	  pagination: {
-                	    el: '.swiper-pagination',
-                	    clickable: true
-                	  },
-                	  navigation: {
-                	    prevEl: '.swiper-button-prev',
-                	    nextEl: '.swiper-button-next'
-                	  }
-                	});
-         </script>
 
 	<script>
 	function isInViewport(element) {
@@ -334,7 +384,7 @@ li.item {
 	}
 
 	// Scroll event listener
-	$(window).on('scroll', function() {
+	$(document).ready(function() {
 	    if (isInViewport($('.nums'))) {
 	        $('.nums').each(function () {
 	            const $this = $(this),

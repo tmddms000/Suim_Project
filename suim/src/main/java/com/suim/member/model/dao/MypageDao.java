@@ -18,7 +18,6 @@ import com.suim.pay.model.vo.Pay;
 @Repository
 public class MypageDao {
 
-
 	public int selectBoardListCount(SqlSessionTemplate sqlSession, String memberId) {
 		return sqlSession.selectOne("mypageMapper.selectBoardListCount", memberId);
 
@@ -43,37 +42,32 @@ public class MypageDao {
 	public ArrayList<Board> selectFindList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectFindList", memberId, rowBounds);
+
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectFindList", memberId, rowBounds);
 	}
-	
-	
-	
-	
-	
+
 	public int selectHouseListCount(SqlSessionTemplate sqlSession, String memberId) {
 		return sqlSession.selectOne("mypageMapper.selectHouseListCount", memberId);
 	}
-	
-	
+
 	public ArrayList<House> selectHouseList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
-		
+
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
 
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectHouseList", memberId, rowBounds);
-		
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectHouseList", memberId, rowBounds);
+
 	}
-	
+
 	public int deleteBoard(SqlSessionTemplate sqlSession, int[] intArray, String memberId) {
 		Map<String, Object> member = new HashMap<>();
 		member.put("memberId", memberId);
 		member.put("intArray", intArray);
-		
+
 		return sqlSession.update("mypageMapper.deleteBoard", member);
 	}
 
@@ -82,13 +76,13 @@ public class MypageDao {
 	}
 
 	public ArrayList<MyWish> selectWishList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
-		
+
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectWishList", memberId, rowBounds);
+
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectWishList", memberId, rowBounds);
 	}
 
 	public int selectInreviewCount(SqlSessionTemplate sqlSession, String memberId) {
@@ -98,39 +92,38 @@ public class MypageDao {
 	public ArrayList<Board> selectInreviewList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
-		
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectInreviewList", memberId, rowBounds);
+
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectInreviewList", memberId, rowBounds);
 	}
-	
+
 	public int selectRezListCount(SqlSessionTemplate sqlSession, String memberId) {
 		return sqlSession.selectOne("mypageMapper.selectRezListCount", memberId);
 	}
-	
+
 	public ArrayList<Reservation> selectRezList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
-		
+
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
 
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectRezList", memberId, rowBounds);
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectRezList", memberId, rowBounds);
 	}
-	
+
 	public int selectPayListCount(SqlSessionTemplate sqlSession, String memberId) {
 		return sqlSession.selectOne("mypageMapper.selectPayListCount", memberId);
 	}
-	
+
 	public ArrayList<Pay> selectPayList(SqlSessionTemplate sqlSession, PageInfo pi, String memberId) {
-		
+
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit(); // offset : 건너뛸 숫자
 		int limit = pi.getBoardLimit(); // limit : 조회할 갯수
-		
+
 		RowBounds rowBounds = new RowBounds(offset, limit);
 
-		return (ArrayList)sqlSession.selectList("mypageMapper.selectPayList", memberId, rowBounds);
+		return (ArrayList) sqlSession.selectList("mypageMapper.selectPayList", memberId, rowBounds);
 	}
-	
 
 }
