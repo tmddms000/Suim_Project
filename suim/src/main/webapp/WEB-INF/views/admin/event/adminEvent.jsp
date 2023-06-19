@@ -19,7 +19,7 @@
 	}
 </style>
 <c:choose>
-<c:when test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+<c:when test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
 	<%@ include file="../common/include.jsp" %>
 
 	<div class="container-xxl position-relative bg-white d-flex p-0">
@@ -72,7 +72,7 @@
         
 					        	<thead>
 					        		<tr>
-					        			<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+					        			<c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
 					        			<div align="right" style="margin:0px">
 							    					<a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium;" href="enrollForm.ev">
 							       	 					이벤트 글작성

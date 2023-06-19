@@ -11,7 +11,7 @@
 <%@ include file="../common/include.jsp" %>
 
 <%-- <c:if test="${ not empty loginUser and loginUser.memberId eq ('관리자아이디') }"> --%>
-<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+<c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
 <div class="container-xxl position-relative bg-white d-flex p-0">
     <!-- Spinner Start -->
 		
