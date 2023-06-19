@@ -26,7 +26,7 @@
 /* 공지사항 웹페이지의 공지사항 목록 번호 */
 #eventNo {
     
-    color: aqua;
+ 
     border-style: solid;
     
     
@@ -46,7 +46,7 @@
     
     font-weight: normal;
     border: none;
-    width: 100px;
+  
     box-sizing: border-box;
 }
 .eventContent * {
@@ -75,10 +75,11 @@ table {
 
 /* 공지사항 상세테이블의 theader 안의 것들 */
 .contentHeader {
-    border-bottom-color: #d63384;
+  
     height: 20%;
     font-weight: bold;
-    border-bottom: 2px solid blue;
+ 	border:green;
+    border-right : none;
 }
 
 /* 그냥 영역용css(공지사항 상세내용 영역을 가운데 두기 위한 목적이므로 지우면 안 됨) */

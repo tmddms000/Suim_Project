@@ -77,10 +77,10 @@ footer {
 
 /* 공지사항 상세테이블의 theader 안의 것들 */
 .contentHeader {
-    border-bottom-color: #d63384;
+    border-bottom-color: green;
     height: 20%;
     font-weight: bold;
-    border-bottom: 2px solid blue;
+    border-bottom: 2px solid green;
 }
 
 /* 그냥 영역용css(공지사항 상세내용 영역을 가운데 두기 위한 목적이므로 지우면 안 됨) */
@@ -93,4 +93,17 @@ footer {
 }
 .detail_faq {
     border : 1px solid pink;
+}
+
+
+p {
+	display : none;
+}
+
+#faqDiv {
+	margin-top : 150px;
+}
+
+.faqTitle {
+	text-align: left;
 }

@@ -42,6 +42,29 @@
             footer {
                 margin-top: auto;
             }
+            
+             .contentHeader {
+        	border-bottom-color: green;
+        	border-left-color: green;
+        	border-right-color: green;
+        	border-top-color: green;
+        }
+        
+        #ee {
+        	border-left-color : 1px solid green;
+        	border-right-color: 1px solid green;
+        }
+        
+        #noticeFileAndContent {
+        border-bottom: none;
+        border-left: green;
+        border-right: green;
+        }
+        
+        .noticeContent {
+        	border-left: green;
+        	border-right: green;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +81,7 @@
             <div class="table-wrapper">
             
             <div style="display:inline-block">
-                <div id="noticeBold" class="table-title">
+                <div id="noticeBold" class="table-title" style="margin-bottom: 40px;">
                     	SUIM 공지사항
                 </div>
             
@@ -69,8 +92,9 @@
                     <thead>
                         <tr class="table-header">
                             <td id="noticeNo" class="nListNo contentHeader" hidden>No</td>
-                            <td class="title contentHeader">
-                                <div style = "padding-left : 10% ">${n.noticeTitle}</div>
+                            <td class="title contentHeader"  style="flex; text-align : left;">
+                            	<div style="color: black; font-size: larger;">제목</div>
+                                <div>${n.noticeTitle}</div>
                             </td>              
                             <td class="createDate contentHeader" style="width:15%;">
                                 <div class="text-center">작성일자</div>
@@ -86,10 +110,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                   
                         <tr rowspan="3">
                           	
                           
-                            <td class="noticeContent" colspan="3" id="noticeFileAndContent">
+                            <td  colspan="3" id="noticeFileAndContent">
                                <c:forEach items="${nAttach}" var="nAttach">
 		                          <img src="${nAttach.changeName }" style= "width : 100%;" name="nno">
 		                          
@@ -100,7 +125,7 @@
                             
                         </tr>
                         <tr rowspan="3" height="400px;">
-                        	<td class="noticeContent">
+                        	<td class="noticeContent" colspan="3" style="text-align : left;">
                           		${ n.noticeContent }
                           	</td>
                          </tr>

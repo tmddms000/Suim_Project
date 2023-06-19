@@ -23,6 +23,6 @@ public interface EventService {
 
 	ArrayList<Event> selectCategoryList(PageInfo pi, String category);
 
-
+	
 	
 }

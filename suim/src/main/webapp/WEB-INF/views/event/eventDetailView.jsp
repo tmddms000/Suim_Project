@@ -42,6 +42,18 @@
             footer {
                 margin-top: auto;
             }
+            
+        .contentHeader {
+        	border-bottom-color: green;
+        	border-left-color: green;
+        	border-right-color: green;
+        	border-top-color: green;
+        }
+        
+        
+        
+        
+            
     </style>
 </head>
 <body>
@@ -51,14 +63,14 @@
    
     <!--공지사항(Content) 영역 -->
 
-    <div id="eventDiv" class="container main">
+    <div id="eventDiv" class="container main" style="margin-top:150px;">
         <div class="col-lg-12">
     
     
             <div class="table-wrapper">
             
             <div style="display:inline-block">
-                <div id="eventBold" class="table-title">
+                <div id="eventBold" class="table-title"  style="margin-bottom: 40px;">
                     	SUIM 이벤트
                 </div>
             
@@ -68,10 +80,11 @@
                 <table id="eventDetailTable" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td id="eventNo" class="nListNo contentHeader" hidden>No</td>
-                            <td class="title contentHeader">
-                            	<div style="padding-left: 10%; color: black; font-size: larger;">제목</div>
-                                <div style = "padding-left : 10% ">${e.eventTitle}</div>
+                           
+                            <td class="title contentHeader" style="flex; text-align : left;">
+                            
+                            	<div style="color: black; font-size: larger;">제목</div>
+                                <div>${e.eventTitle}</div>
                             </td>              
                             <td class="createDate contentHeader" style="width:15%;">
                                 <div class="text-center">작성일자</div>
@@ -101,7 +114,7 @@
                             
                         </tr>
                         <tr rowspan="3">
-                        	<td class="eventContent">
+                        	<td  colspan="3" class="eventContent">
                           		${ e.eventContent }
                           	</td>
                          </tr>

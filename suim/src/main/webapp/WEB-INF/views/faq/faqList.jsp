@@ -38,6 +38,8 @@
             footer {
                 margin-top: auto;
             }
+            
+            
 
         </style>
 </head>
@@ -47,24 +49,17 @@
     <!-- 헤더 부분 끝 -->
    
     <!-- 자주 묻는 질문 리스트 (Content) 영역 -->
-    <div id="faq" class="container main">
+    <div id="faq" class="container main" style="margin-top : 150px;">
     <form action="faqList.no">
         <div class="col-lg-12">
     
     
             <div class="table-wrapper">
                 <div id="faq_header" class="table-title">
-                    자주 묻는 질문
+					자주 묻는 질문
                 </div>
             
-                <div id="nListSearch" class="search-box">
-                    <form>
-                        <input type="text" placeholder="지역명, 주변명 입력">
-                        <button type="submit">
-                            <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                        </button>
-                    </form>
-                </div>
+                
                 
                 <table id="faq-table" class="table">
                     <tbody>
@@ -74,81 +69,69 @@
                             #faq-table 의 네비게이션바 역할
                         -->
                         <tr class="table-header">
-                            <th>
-                                분류
+                            <th style="text-align : left;">
+								분류
                             </th>
-                            <th>
-                                자주 묻는 질문 주제
-                            </th>
-                            <th>
-                                <div>조회수</div>
-                            </th>
+                            <th style="text-align : left;">
+								자주 묻는 질문 주제
+                            </th>   
                         </tr>
 
                         <!-- 본격 faq 목록들 -->
                         <tr id="faq_table_body">
 
-                            <tr class="table-row detail_faq" style="background-color:none;">
-                                <td class="detail_Category">[회원가입]</td>
-                                <td class="faqTitle">
-                                    <a href="faq_howToSignUp">회원가입은 어떻게 하나요?</a>
-                                </td>
-                                <td class="page_views">{26} 회</td>
-                            </tr>
+							
+	                            <tr class="table-row detail_faq" style="background-color:none;">
+	                                <td class="detail_Category">[회원가입]</td>
+	                                <td class="faqTitle">
+										<a href="faq_howToSignUp">회원가입은 어떻게 하나요?</a>
+	                                </td>
+	                            </tr>
+                           
+                            
 
-                            <tr class="table-row detail_faq" style="background-color:none;">
-                                <td class="detail_Category">[계약관련]</td>
-                                <td class="faqTitle">
-                                    <a href="">이 방의 판매자와 대화하고 싶어요</a>
-                                </td>
-                                <td class="page_views">{26} 회</td>
-                            </tr>
+							
+	                            <tr class="table-row detail_faq" style="background-color:none;">
+	                                <td class="detail_Category">[계약관련]</td>
+	                                <td class="faqTitle"><a href="faq_howTo1to1">이 방의 판매자와 대화하고 싶어요</a>
+	                                </td>
+	                            </tr>
+                            
                         
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[신고 문의]</td>
                                 <td class="title">
-                                    <a href="">계약 사기를 당했어요</a>
+                                    <a href="faq_emergency">계약 사기를 당했어요</a>
                                 </td>
-                                <td class="page_views">{26} 회</td>
                             </tr>
 
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[이벤트 문의]</td>
                                 <td class="faqTitle">
-                                    <a href="">이벤트 당첨자는 공지사항에서 확인할 수 있나요?</a>
+                                    <a href="faq_eventReward">이벤트 당첨자는 공지사항에서 확인할 수 있나요?</a>
                                 </td>
-                                <td class="page_views">{25} 회</td>
                             </tr>
 
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[채팅 문의]</td>
                                 <td class="faqTitle">
-                                    <a href="">채팅 기록은 나중에 확인 가능한가요?</a>
+                                    <a href="faq_afterChat">채팅 기록은 나중에 확인 가능한가요?</a>
                                 </td>
-                                <td class="page_views">{20} 회</td>
                             </tr>
 
                             <tr class="table-row detail_faq" style="background-color:none;">
                                 <td class="detail_Category">[로그인 문의]</td>
                                 <td class="faqTitle">
-                                    <a href="">아이디와 비밀번호를 까먹었어요</a>
+                                    <a href="faq_iForgetIdAndPassword">아이디와 비밀번호를 까먹었어요</a>
                                 </td>
-                                <td class="page_views">{25} 회</td>
                             </tr>
                         </tr>
                     </tbody>
                 </table>
                 
-                <!-- 페이지네이션 영역 시작 -->
-                <div class="pagination" >
-                    <a href="#" class="previous">이전</a>
-                    <a href="#" class="page-link active">1</a>
-                    <a href="#" class="page-link">2</a>
-                    <a href="#" class="page-link">3</a>
-                    <a href="#" class="page-link">4</a>
-                    <a href="#" class="page-link">5</a>
-                    <a href="#" class="next">다음</a>
-                </div>
+               
+                
+              
                 
                 <!-- 페이지네이션 영역 끝 -->
 
@@ -156,6 +139,10 @@
         </div>
     </form>
     </div>
+    
+     <script>
+      
+                </script>
 <!-- 본문 영역 종료-->
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
     

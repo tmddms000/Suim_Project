@@ -114,9 +114,9 @@
 		        });
 		         
 		         $(function() {
-		          	$("#event-table>tbody>tr").click(function() {
-		          		let eno = $(this).children(".eno").text();
-		          		location.href = "admin/detail.ev?eno=" + eno; //
+		          	$("#notice-table>tbody>tr").click(function() {
+		          		let nno = $(this).children(".nno").text();
+		          		location.href = "admin/detail.no?nno=" + nno; //
 		          	});
 		          });
 		</script>
@@ -127,15 +127,15 @@
 			<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
 				<ul class="pagination justify-content-center">
 					<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
-						<a class="page-link" href="<c:url value='/admin.ev?cPage=${pi.currentPage - 1}&category=${category}'/>">&lt;</a>
+						<a class="page-link" href="<c:url value='/admin.no?cPage=${pi.currentPage - 1}&category=${category}'/>">&lt;</a>
 					</li>
 					<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
 						<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
-							<a class="page-link" href="<c:url value='/admin.ev?cPage=${p}&category=${category}'/>">${p}</a>
+							<a class="page-link" href="<c:url value='/admin.no?cPage=${p}&category=${category}'/>">${p}</a>
 						</li>
 					</c:forEach>
 					<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
-						<a class="page-link" href="<c:url value='/admin.ev?cPage=${pi.currentPage + 1}&category=${category}'/>">&gt;</a>
+						<a class="page-link" href="<c:url value='/admin.no?cPage=${pi.currentPage + 1}&category=${category}'/>">&gt;</a>
 					</li>
 				</ul>
 			</nav>

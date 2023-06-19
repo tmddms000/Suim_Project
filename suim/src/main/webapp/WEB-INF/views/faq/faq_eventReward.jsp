@@ -21,7 +21,7 @@
          <!-- 1:1문의 js -->
          <script src="js/chatbot.js"></script>
          <!-- faq css -->
-         <link href="/resources/css/faq/faqList.css" rel="stylesheet" />
+          <link href="/resources/css/faq/faqList.css" rel="stylesheet" />
          
  <style>
      
@@ -38,17 +38,10 @@
      margin-top: auto;
  }
  
- #faqDiv {
-	margin-top : 150px;
- }
- 
- #contentHeader {
- 	border-bottom-color: green;
- }
- 
- .faqTitle {
+  .faqTitle {
  	text-align: left;
  }
+ 
 
  </style>
 
@@ -60,7 +53,7 @@
    
     <!-- faq (Content) 영역 -->
 
-    <div id="faqDiv" class="container main">
+    <div id="faqDiv" class="container main" style="margin-top : 150px;">
         <div class="col-lg-12">
     
     
@@ -78,7 +71,7 @@
                             -->
                             <td class="faqList title contentHeader">
                                 <div class="faqTitle">
-                                    <b>회원가입은 어떻게 하나요?</b>
+                                    <b>내가 원하는 방의 판매자와 소통하고 싶어요.</b>
                                 </div>
                             </td>                   
                         </tr>
@@ -87,26 +80,15 @@
                         
                         <tr id="faqDetailContent" style="height : 400px;">
                             <td class="faqAnswer">
-                            <!-- 회원가입입력양식 화면 사진을 보여줌-->
-                               <img src="/resources/img/faq/FAQ - knowhowMemberSignUp.png" alt="회원가입 입력양식 화면">
-                               
-                               <br/>
-                               
-                               	<a href="/member/join">회원가입 바로가기</a>
-                               <br/>
-                               
-                               		위 링크를 클릭 하시면 회원가입 페이지로 이동하실 수 있습니다.
-				                               우측상단의 버튼을 누르고
-				                               회원의 정보를 입력하시면 됩니다.
+                            	
+                               		원하시는 방의 판매자와 대화하고 싶으시다면 해당 방의 판매자와 1:1 채팅으로 연락이 가능합니다.
                                <br/>   
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 
-                
-                
-
+               
             </div>
             
             <div align="center">
@@ -116,8 +98,6 @@
             </div>
         </div>
         
-       
-                
     </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

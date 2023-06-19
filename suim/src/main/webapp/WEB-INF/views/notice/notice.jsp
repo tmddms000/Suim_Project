@@ -52,7 +52,7 @@
    
     <!--공지사항(Content) 영역 -->
 
-    <div id="noticeDiv" class="container main">
+    <div id="noticeDiv" class="container main" style="margin-top : 150px;">
         <div class="col-lg-12">
     
     
@@ -61,14 +61,7 @@
                     	우주 공지사항
                 </div>
             
-                <div id="nListSearch" class="search-box">
-                    <form>
-                        <input type="text" placeholder="지역명, 주변명 입력">
-                        <button type="submit">
-                            <i class="fa fa-search" style="color : rgb(249,88,10)"></i>
-                        </button>
-                    </form>
-                </div>
+               
                 		
 				
                 <!-- 공지사항은 관리자만 작성 가능하므로 관리자로 로그인했을 경우에만 버튼이 보이게끔 -->
@@ -76,7 +69,10 @@
                 
                 <%-- <c:if test="${ not empty loginUser and loginUser.memberId eq ('관리자아이디') }"> --%>
                 <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
-                <button id="insertNoticeButton" class="btn btn-secondary" type="button" onclick="location.href='enrollForm.no';">글작성</button>
+                
+                <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" onclick="location.href='enrollForm.no';">
+		       	 글작성
+	 		</a>
 				 </c:if>
 				
 		

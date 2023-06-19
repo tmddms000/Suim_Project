@@ -78,7 +78,23 @@
 
 		}
 
-
+		.title {
+			text-align: left;
+			width : 70%;
+		}
+		
+		.eventView {
+			border-bottom-color: green;
+			text-align: center;
+		}
+		
+		.eventCategory {
+			border-bottom-color: green;
+		}
+		
+		.createDate {
+			text-align: center;
+		}
 
 
 </style>     
@@ -93,29 +109,19 @@
 
 		<div class="container main" style="margin-top: 120px;">
         <h1>이벤트</h1>
-        <br><br><br><br>
+        
 
 
 
 		
-	    <form id="enrollForm" method="get" action="" enctype="multipart/form-data">     
-		    <div class="search-filter">
-		    
-		    	<div class="search-find" style="">
-			    	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
-					    <button type="submit">
-					   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
-					    </button>
-				</div>   
-			</div>
-		</form>
+	   
 
         
 
 
 
         <h2></h2>
-        <br><br><br>
+        
 		
 
 
@@ -126,16 +132,16 @@
 	 		</a>
 		</c:if>
 		        
-
+					<%--
 					<select id="categorySelect" name="categorySelect">
 
 					
 						<!-- 기본적으로 카테고리를 선택 안 할 시 유효한 모든 진행중인 이벤트들을 조회함 -->
-						<option value="">진행중인 이벤트</option>
-        				<option value="자유게시판">자유게시판 이벤트</option>
-        				<option value="house">house 이벤트</option>
+						<option value="진행중인 이벤트">진행중인 이벤트</option>
+        			
         				<option value="종료된 이벤트">종료된 이벤트</option>
         			</select>
+        			--%>
         <table id="event-table" class="table">
         
         	<thead>
@@ -143,10 +149,10 @@
         			
         		
             	<tr class="table-header">
-	                <td class="eListNo">No</td>
-					<td>카테고리</td>
+	                <td class="eListNo" hidden>No</td>
+					<td style="width : 10%;" class="eventCategory">카테고리</td>
 	                <td class="title">제목</td>
-	                <td class="eventDate">작성일</td>
+	                <td class="createDate">작성일</td>
 	                <td class="eventView">조회수</td>
             	</tr>
          	</thead>
@@ -156,13 +162,13 @@
          		<c:forEach var="e" items="${ list }">
          		
 		            <tr class="table-row" style="background-color:none;">
-		            	<td class="eListNo, eno">${ e.eventNo }</td>
-		            	<td>${e.eventCategory }</td>
+		            	<td class="eListNo, eno" hidden>${ e.eventNo }</td>
+		            	<td class="eventCategory">${e.eventCategory }</td>
 		            	<td class="title">
 		                	${ e.eventTitle }
 		                </td>
 		                <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></td>
-		                <td class="eventView">${ e.eventView }</td>
+		                <td class="eventView" style="width : 20%;">${ e.eventView }</td>
 		            </tr>
 		            
             	</c:forEach>

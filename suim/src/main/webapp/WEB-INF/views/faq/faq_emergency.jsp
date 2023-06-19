@@ -38,17 +38,10 @@
      margin-top: auto;
  }
  
- #faqDiv {
-	margin-top : 150px;
- }
- 
- #contentHeader {
- 	border-bottom-color: green;
- }
- 
- .faqTitle {
+  .faqTitle {
  	text-align: left;
  }
+ 
 
  </style>
 
@@ -60,7 +53,7 @@
    
     <!-- faq (Content) 영역 -->
 
-    <div id="faqDiv" class="container main">
+    <div id="faqDiv" class="container main" style="margin-top : 150px;">
         <div class="col-lg-12">
     
     
@@ -78,7 +71,7 @@
                             -->
                             <td class="faqList title contentHeader">
                                 <div class="faqTitle">
-                                    <b>회원가입은 어떻게 하나요?</b>
+                                    <b>계약 사기를 당한 거 같습니다.</b>
                                 </div>
                             </td>                   
                         </tr>
@@ -87,26 +80,15 @@
                         
                         <tr id="faqDetailContent" style="height : 400px;">
                             <td class="faqAnswer">
-                            <!-- 회원가입입력양식 화면 사진을 보여줌-->
-                               <img src="/resources/img/faq/FAQ - knowhowMemberSignUp.png" alt="회원가입 입력양식 화면">
-                               
-                               <br/>
-                               
-                               	<a href="/member/join">회원가입 바로가기</a>
-                               <br/>
-                               
-                               		위 링크를 클릭 하시면 회원가입 페이지로 이동하실 수 있습니다.
-				                               우측상단의 버튼을 누르고
-				                               회원의 정보를 입력하시면 됩니다.
+                            	
+                               		관리자에게 1:1 문의를 주시고, 문의 시 현재 상황을 자세히 설명해주세요.
                                <br/>   
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 
-                
-                
-
+               
             </div>
             
             <div align="center">
@@ -114,10 +96,9 @@
             		<a href="faqList">FAQ 목록</a>
             	</button>
             </div>
+            
         </div>
         
-       
-                
     </div>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
