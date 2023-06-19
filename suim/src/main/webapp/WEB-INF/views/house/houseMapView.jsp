@@ -742,7 +742,7 @@
                                                 <!--입주일 선택-->
                                                	<div class="dateWrap">
                                                   <h5 class="filterTitle"><strong>입주예정일</strong></h5>
-                                                   <input type="date" class="text-input" name="openDate" max="2099-12-31" placeholder="ex)2023-06-01">
+                                                   <input type="date" id="openDate" class="text-input" name="openDate" max="2099-12-31" placeholder="ex)2023-06-01">
                                                 </div>
                                                 <!--입주일 선택 끝-->
                                             </div>
@@ -823,6 +823,26 @@
             }
         }
     </script>
+    
+    <!-- 오늘날짜 이전 날짜 선택 막기 -->
+    <script>
+		function updateMinDate() {
+			  var now = Date.now();
+			  var timeOff = new Date().getTimezoneOffset() * 60000;
+			  var today = new Date(now - timeOff).toISOString().split("T")[0];
+	
+			  document.getElementById("openDate").setAttribute("min", today);
+			}
+	
+			document.getElementById("openDate").addEventListener("change", updateMinDate);
+	
+			// 페이지 로드 시 최소값 업데이트
+			updateMinDate();
+	
+			// 매일 자정마다 최소값 업데이트
+		setInterval(updateMinDate, 24 * 60 * 60 * 1000);
+	</script>
+	
 	
 	
 	

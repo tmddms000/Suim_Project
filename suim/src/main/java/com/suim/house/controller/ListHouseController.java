@@ -1,6 +1,6 @@
 package com.suim.house.controller;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +66,7 @@ public class ListHouseController {
 			
 			ArrayList<Region> region = listHouseService.regionSelectList(searchKeyword);
 		    ArrayList<House> list = listHouseService.selectList(minValue,maxValue,genderDivisions,houseType,maxResident,floor,openDate);
-		     
+
 		    if (region.isEmpty()) {
 		        mv.addObject("regionEmpty", true);
 		        
@@ -107,7 +107,7 @@ public class ListHouseController {
 		   
 		    mv.addObject("list", list);
 		    mv.addObject("searchKeyword",searchKeyword);
-		    	
+
 		    mv.setViewName("house/houseMapView"); 
 		    
 		    return mv;
