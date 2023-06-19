@@ -78,9 +78,9 @@
                      <div class="nav-item dropdown">
                         <a href="event.ev" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-calendar-event-fill"></i>이벤트 관리</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="admin.ev" class="dropdown-item">이벤트 관리</a>
-                        	<a href="enrollForm.ev" class="dropdown-item">이벤트 게시글 작성</a>
-                            <a href="event.ev" class="dropdown-item">이벤트 목록 바로가기</a>
+                            <a href="/admin.ev" class="dropdown-item">이벤트 관리</a>
+                        	<a href="/enrollForm.ev" class="dropdown-item">이벤트 게시글 작성</a>
+                            <a href="/event.ev" class="dropdown-item">이벤트 목록 바로가기</a>
                         </div>
                     </div>
                     
@@ -88,9 +88,9 @@
                     <div class="nav-item dropdown">
                     	<a href="admin.no" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-megaphone-fill"></i>공지사항 관리</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="admin.no" class="dropdown-item">공지사항 관리</a>
-                        	<a href="enrollForm.no" class="dropdown-item">공지사항 게시글 작성</a>
-                            <a href="notice.no" class="dropdown-item">공지사항 목록 바로가기</a>  
+                            <a href="/admin.no" class="dropdown-item">공지사항 관리</a>
+                        	<a href="/enrollForm.no" class="dropdown-item">공지사항 게시글 작성</a>
+                            <a href="/notice.no" class="dropdown-item">공지사항 목록 바로가기</a>  
                         </div>
                     </div>
                 </div>
