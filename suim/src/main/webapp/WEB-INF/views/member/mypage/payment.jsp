@@ -152,7 +152,8 @@
                     		<td class="hno" style="display: none;">${p.houseNo}</td>
                     		<td class="pay">${ p.paymentDate }</td>
             				<td class="houseName">${ p.houseName }</td>
-                    		<td class="payPrice">${ p.price }만원</td>
+                    		<td class="payPrice">${(p.price/10000).intValue()}만원</td>
+                    							
                     		<td class="rezRequestDate-cell">
 							  <c:choose>
 							    <c:when test="${p.paymentStatus eq 'Y'}">
