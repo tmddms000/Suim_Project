@@ -215,6 +215,7 @@
 		JOIN PHOTO P USING (HOUSE_NO)  
 		WHERE H.HOUSE_STATUS = 'Y'   
 		AND W.MEMBER_ID = #{memberId}
+		AND P.FILE_LEVEL = 'Y'
 	</select>
 
 
@@ -224,6 +225,7 @@
 		JOIN PHOTO P USING (HOUSE_NO)  
 		WHERE H.HOUSE_STATUS = 'Y'   
 		AND W.MEMBER_ID = #{memberId}
+		AND P.FILE_LEVEL = 'Y'
 	</select>
 	
 	

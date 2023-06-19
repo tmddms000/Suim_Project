@@ -93,3 +93,22 @@ a.page-link {
 	font-size: 12px;
 }
 }
+
+.delete-btn {
+	
+	background: rgb(250,107,111);
+    color: white;
+    border: 1px solid rgb(250,107,111);
+    width: 55px;
+    border-radius: 5px;
+	
+}
+
+.write-btn {
+	
+	background: rgb(250,107,111);
+    color: white;
+    border: 1px solid rgb(250,107,111);
+    width: 55px;
+    border-radius: 5px;
+}

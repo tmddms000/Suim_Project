@@ -51,7 +51,6 @@ public class MainController {
 		ArrayList<Find> flist = mainService.selectfList();
 		ArrayList<InReview> ilist = mainService.selectiList();
 
-		System.out.println(list);
 		List<Find> filteredList = flist.stream().filter(find -> find.getThumbnail() != null)
 				.collect(Collectors.toList());
 

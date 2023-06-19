@@ -86,15 +86,15 @@
       <nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
         <ul class="pagination justify-content-center">
           <li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
-            <a class="page-link" href="<c:url value='/mypage/board?page=${pi.currentPage - 1}'/>">이전</a>
+            <a class="page-link" href="<c:url value='/mypage/wish?page=${pi.currentPage - 1}'/>">이전</a>
           </li>
           <c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
             <li class="page-item ${pi.currentPage == p ? 'active' : ''}">
-              <a class="page-link" href="<c:url value='/mypage/board?page=${p}'/>"><c:out value="${p}"/></a>
+              <a class="page-link" href="<c:url value='/mypage/wish?page=${p}'/>"><c:out value="${p}"/></a>
             </li>
           </c:forEach>
           <li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
-            <a class="page-link" href="<c:url value='/mypage/board?page=${pi.currentPage + 1}'/>">다음</a>
+            <a class="page-link" href="<c:url value='/mypage/wish?page=${pi.currentPage + 1}'/>">다음</a>
           </li>
         </ul>
       </nav>

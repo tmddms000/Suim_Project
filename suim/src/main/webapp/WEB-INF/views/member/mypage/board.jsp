@@ -156,9 +156,9 @@ $(document).ready(function() {
         if (type === 'find') {
             window.location.href = '/enrollForm.fi';
         }
-    }
+    } // 대괄호 추가
 
- // 삭제 버튼 클릭 이벤트
+    // 삭제 버튼 클릭 이벤트
     $(document).off('click', 'button.delete-btn').on('click', 'button.delete-btn', function() {
         var checkedCheckboxes = $('tbody input[type="checkbox"]:checked');
         var deleteIds = [];
@@ -200,6 +200,7 @@ $(document).ready(function() {
             });
         }
     });
+});
 
 </script>
 

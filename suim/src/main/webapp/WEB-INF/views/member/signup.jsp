@@ -112,13 +112,12 @@
 							<form:errors class="form-error" path="phone"/>
 						</div>
 						<div class="col-sm-3 p-0">
-							<button type="button" class="join-btn" id="phoneDuplicateButton">인증하기</button>
+							<button type="button" class="join-btn" id="phoneDuplicateButton">중복확인</button>
 						</div>
 					</div>
 
 					<div class="form-group row mb-3">
-						<label for="area" class="col-sm-4 col-form-label text-end">희망지역<span
-							class="text-red">*</span></label>
+						<label for="area" class="col-sm-4 col-form-label text-end">희망지역</label>
 						<div class="col-sm-5">
 							<input type="text" class="form-control" name="area"
 								id="area" placeholder="희망지역을 입력해주세요" disabled>

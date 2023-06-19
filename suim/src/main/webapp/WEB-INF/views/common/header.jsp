@@ -102,6 +102,7 @@
 			<div class="offcanvas offcanvas-end" tabindex="-1"
 				id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 				<div class="offcanvas-header">
+				
 					<c:choose>
 						<c:when test="${ empty loginUser }">
 							<div class="offcanvas-title" id="offcanvasNavbarLabel"></div>
@@ -110,6 +111,7 @@
 					<a type="button" class="navbar-toggler-icon text-reset"
 						data-bs-dismiss="offcanvas" aria-label="Close"
 						style="width: 32px; height: 32px"></a>
+						<a class="nav-item"><i class="fa-solid fa-gear fa-spin fa-2xl" style="color: #636669;"></i></a>
 				</div>
 				<div class="offcanvas-body">
 					<c:choose>

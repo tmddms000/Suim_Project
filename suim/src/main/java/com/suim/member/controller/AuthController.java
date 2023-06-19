@@ -154,11 +154,14 @@ public class AuthController {
 		Email email = new Email(mailKey, member.getEmail());
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
+		
 
-		if (member.getArea() != null) {
+		if(member.getArea() != null && !member.getArea().equals("")) {
 			double[] area = MainController.getCoordinates(member.getArea());
+			if(area != null) {
 			member.setLongitude(area[0]);
 			member.setLatitude(area[1]);
+			}
 		}
 
 		CompletableFuture.runAsync(() -> {
@@ -510,10 +513,12 @@ public class AuthController {
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
 
-		if (member.getArea() != null) {
+		if(member.getArea() != null && !member.getArea().equals("")) {
 			double[] area = MainController.getCoordinates(member.getArea());
+			if(area != null) {
 			member.setLongitude(area[0]);
 			member.setLatitude(area[1]);
+			}
 		}
 
 		CompletableFuture.runAsync(() -> {

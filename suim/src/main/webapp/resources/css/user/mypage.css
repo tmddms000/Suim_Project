@@ -737,3 +737,12 @@ margin-bottom : 20px;
     font-size: 12px;
     color: #212121;
 }
+
+.wishBtn {
+	
+	background: rgb(250,107,111);
+    color: white;
+    border: 1px solid rgb(250,107,111);
+    height : 30px;
+    border-radius: 5px;
+}
