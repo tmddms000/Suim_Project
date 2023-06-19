@@ -40,5 +40,5 @@ public class Member {
 	private double latitude;
 	private double longitude;
 	
-	private int memberAuth;
+	private int adminAuth;
 }

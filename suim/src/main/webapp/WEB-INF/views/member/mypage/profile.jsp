@@ -77,7 +77,16 @@
       </table>
       <div class="d-flex justify-content-center" style="margin-bottom: 20px;">
         <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal" style="width: 48%; margin-right : 5px;">수정하기</a>
-        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" style="width: 48%;">탈퇴하기</a>
+       
+        <c:choose>
+			<c:when test="${loginUser.adminAuth eq 1 }">
+				 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" style="width: 48%; pointer-events : none; background : gray">탈퇴하기</a>
+			</c:when>
+			
+			<c:otherwise>
+			 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" style="width: 48%;">탈퇴하기</a>
+			</c:otherwise>
+		</c:choose>
       </div>
     </div>
   </div>

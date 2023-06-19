@@ -120,7 +120,7 @@
 						<label for="area" class="col-sm-4 col-form-label text-end">희망지역</label>
 						<div class="col-sm-5">
 							<input type="text" class="form-control" name="area"
-								id="area" placeholder="희망지역을 입력해주세요" disabled>
+								id="area" placeholder="희망지역을 입력해주세요" readonly onclick="triggerSearch();">
 							<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
 								추천해드려요!</p>
 						</div>
@@ -456,6 +456,12 @@
             phoneInputEl.focus();
         }
         });
+    	
+    	
+    	function triggerSearch() {
+		    document.getElementById("area").blur(); // input 박스의 포커스 해제
+		    searchAddr(); // 검색 함수 호출
+		}
 	</script>
 
 	<script src="/resources/js/user/signup.js"></script>

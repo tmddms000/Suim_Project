@@ -56,6 +56,10 @@
   <location>/WEB-INF/views/common/404error.jsp</location>
 </error-page>
 <error-page>
+  <error-code>405</error-code>
+  <location>/WEB-INF/views/common/405error.jsp</location>
+</error-page>
+<error-page>
   <error-code>500</error-code>
   <location>/WEB-INF/views/common/500error.jsp</location>
 </error-page>

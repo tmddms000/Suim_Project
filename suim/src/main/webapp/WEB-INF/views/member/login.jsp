@@ -77,7 +77,7 @@
             <div class="row justify-content-center">
                 <div class="col-sm-12 mt-3">
                     <div class="text-center">
-                        <a style="color: black; text-decoration: none;" href="./join" class="">회원가입</a>
+                        <a style="color: black; text-decoration: none;" href="/member/term" class="">회원가입</a>
                         <a style="color: black; text-decoration: none;" href="<c:url value='/member/findId' />" class="ml-4">아이디찾기</a>
                         <a style="color: black; text-decoration: none;" href="<c:url value='/member/findPw' />" class="ml-4">비밀번호찾기</a>
                     </div>

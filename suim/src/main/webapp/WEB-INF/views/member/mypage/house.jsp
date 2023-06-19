@@ -229,6 +229,7 @@ body {
 				console.log(data.tid);
 				var box = data.next_redirect_pc_url;
 				window.open(box);
+							
 			},
 			error : function(error) {
 				alert(error);

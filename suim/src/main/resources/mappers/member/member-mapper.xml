@@ -25,7 +25,7 @@
 		<result column="GOOGLELOGIN" property="googleLogin" />
 		<result column="LATITUDE" property="latitude" />
 		<result column="LONGITUDE" property="longitude" />
-		<result column="MEMBER_AUTH" property="memberAuth" />
+		<result column="ADMIN_AUTH" property="adminAuth" />
 	</resultMap>
 
 	<!-- 로그인용 쿼리문 -->

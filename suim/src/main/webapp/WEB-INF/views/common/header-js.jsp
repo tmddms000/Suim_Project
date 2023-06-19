@@ -173,7 +173,7 @@
 		    notificationListElement.prepend(notificationItem);
 		    
 		    
-		    var countElement = $('<span style="font-size: 14px; ">').addClass('notification-count').text(listCount);
+		    var countElement = $('<span style="font-size: 10px; ">').addClass('notification-count').text(listCount);
 		      $('#notificationButton .notification-count').remove();
 		      $('#notificationButton').append(countElement);
 		      createPagination(pi.startPage, pi.endPage, pi.currentPage, pi.maxPage);

@@ -18,230 +18,228 @@
 	<!-- 총 갯수 구하는 쿼리문 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*)
-		  FROM REPORT
+		FROM REPORT
 	</select>
-	
+
 	<!-- 리스트를 구해주는 쿼리문 -->
 	<select id="selectList" resultMap="adminReportResultSet">
-<!-- 
-		SELECT REPORT_NO
-			 , REPORT_TITLE
-			 , REPORT_CONTENT
-			 , REPORT_TYPE
-			 , REPORT_ID
-			 , REPORT_DATE
-			 , REPORT_STATUS
-		  FROM REPORT
-         ORDER BY REPORT_DATE DESC
--->
+		<!-- SELECT REPORT_NO , REPORT_TITLE , REPORT_CONTENT , REPORT_TYPE , REPORT_ID 
+			, REPORT_DATE , REPORT_STATUS FROM REPORT ORDER BY REPORT_DATE DESC -->
 		<!-- 신고 목록에 이미지 노출용 쿼리문 -->
 		SELECT
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME,
-			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-			FROM REPORT R
-			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
-			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
-			GROUP BY
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME
-			ORDER BY R.REPORT_NO DESC
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME,
+		REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM REPORT R
+		JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+		LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+		GROUP BY
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME
+		ORDER BY R.REPORT_NO DESC
 	</select>
-	
+
 	<!-- 카테고리용 총 갯수 구하는 쿼리문 -->
-	<select id="selectCategoryListCount" parameterType="string" resultType="_int">
+	<select id="selectCategoryListCount" parameterType="string"
+		resultType="_int">
 		SELECT COUNT(*)
-		  FROM REPORT
-		 WHERE REPORT_STATUS = #{category}
+		FROM REPORT
+		WHERE REPORT_STATUS = #{category}
 	</select>
-	
+
 	<!-- 카테고리용 리스트를 구해주는 쿼리문 -->
-	<select id="selectCategoryList" parameterType="string" resultMap="adminReportResultSet">
-         SELECT
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME,
-			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-			FROM REPORT R
-			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
-			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
-			WHERE REPORT_STATUS = #{category}   
-			GROUP BY
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME
-			ORDER BY R.REPORT_NO DESC
+	<select id="selectCategoryList" parameterType="string"
+		resultMap="adminReportResultSet">
+		SELECT
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME,
+		REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM REPORT R
+		JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+		LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+		WHERE REPORT_STATUS = #{category}
+		GROUP BY
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME
+		ORDER BY R.REPORT_NO DESC
 	</select>
-	
+
 	<!-- 블랙리스트 처리용 쿼리문 -->
 	<select id="selectBlackList">
 		SELECT MEMBER_ID, COUNT(*)
-		  FROM REPORT
-		 WHERE MEMBER_ID = #{memberId}
-		 GROUP BY MEMBER_ID
+		FROM REPORT
+		WHERE MEMBER_ID = #{memberId}
+		GROUP BY MEMBER_ID
 		HAVING REPORT_COUNT(*) >= 3
 	</select>
-	
+
 	<!-- 등록용 쿼리문 -->
 	<insert id="insertReport" parameterType="report">
-		INSERT INTO REPORT(REPORT_NO
-						, REPORT_TITLE
-						, REPORT_CONTENT
-						, REPORT_TYPE
-						, REPORT_ID)
-				   VALUES(SEQ_BNO.NEXTVAL
-				   		, #{reportTitle}
-				   		, #{reportContent}
-				   		, #{reportType}
-				   		, #{reportId})
+		INSERT INTO
+		REPORT(REPORT_NO
+		, REPORT_TITLE
+		, REPORT_CONTENT
+		, REPORT_TYPE
+		, REPORT_ID)
+		VALUES(SEQ_BNO.NEXTVAL
+		, #{reportTitle}
+		, #{reportContent}
+		, #{reportType}
+		, #{reportId})
 	</insert>
-	
+
 	<!-- 신고 상세 조회용 쿼리문 -->
-	<select id="selectReport" parameterType="_int" resultMap="adminReportResultSet">
+	<select id="selectReport" parameterType="_int"
+		resultMap="adminReportResultSet">
 		SELECT
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME,
-			    REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
-			FROM REPORT R
-			JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
-			LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
-			WHERE R.REPORT_NO = #{reportNo}
-			GROUP BY
-			    R.REPORT_NO,
-			    R.REPORT_TITLE,
-			    R.REPORT_CONTENT,
-			    R.REPORT_TYPE,
-			    R.REPORT_ID,
-			    R.REPORT_DATE,
-			    REPORT_STATUS,
-			    R.MEMBER_ID,
-			    M.NICKNAME,
-			    RA.ORIGIN_NAME,
-			    RA.CHANGE_NAME
-			ORDER BY R.REPORT_NO DESC
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME,
+		REGEXP_SUBSTR(R.REPORT_CONTENT, '&lt;img[^&gt;]+src\s*=\s*"([^"]+)"', 1, 1, NULL, 1) AS THUMBNAIL
+		FROM REPORT R
+		JOIN MEMBER M ON (M.MEMBER_ID = R.MEMBER_ID)
+		LEFT JOIN RATTACHMENT RA ON (RA.REPORT_NO = R.REPORT_NO)
+		WHERE R.REPORT_NO = #{reportNo}
+		GROUP BY
+		R.REPORT_NO,
+		R.REPORT_TITLE,
+		R.REPORT_CONTENT,
+		R.REPORT_TYPE,
+		R.REPORT_ID,
+		R.REPORT_DATE,
+		REPORT_STATUS,
+		R.MEMBER_ID,
+		M.NICKNAME,
+		RA.ORIGIN_NAME,
+		RA.CHANGE_NAME
+		ORDER BY R.REPORT_NO DESC
 	</select>
 
 	<!-- 신고 삭제용 쿼리문 -->
 	<update id="deleteReport" parameterType="_int">
 		UPDATE REPORT
-		   SET REPORT_STATUS = 'N'
-		 WHERE REPORT_NO = #{reportNo}
+		SET REPORT_STATUS = 'N'
+		WHERE REPORT_NO = #{reportNo}
 	</update>
-	
+
 	<!-- 신고 수정용 쿼리문 -->
 	<update id="updateReport" parameterType="report">
 		UPDATE REPORT
-		   SET REPORT_TITLE = #{reportTitle}
-		     , REPORT_CONTENT = #{reportContent}
-		     , REPORT_TYPE = #{reportType}
-		     , REPORT_ID = #{reportId}
-		 WHERE REPORT_NO = #{reportNo}
+		SET REPORT_TITLE = #{reportTitle}
+		, REPORT_CONTENT = #{reportContent}
+		, REPORT_TYPE = #{reportType}
+		, REPORT_ID = #{reportId}
+		WHERE REPORT_NO = #{reportNo}
 	</update>
 
 	<!-- 승인/반려용 쿼리문 -->
 	<update id="updateReportStatus" parameterType="report">
 		UPDATE REPORT
-		   SET REPORT_STATUS = #{reportStatus}
-		 WHERE REPORT_NO = #{reportNo}
+		SET REPORT_STATUS = #{reportStatus}
+		WHERE REPORT_NO = #{reportNo}
 	</update>
-	
+
 	<!-- 전체선택용 승인/반려용 쿼리문 -->
 	<update id="updateStatusAll" parameterType="hashMap">
 		UPDATE REPORT
-		   SET REPORT_STATUS = #{reportStatus}
-		 WHERE REPORT_NO IN
-			 <foreach item="reportNo" collection="intArray" open="(" separator="," close=")">
-		        #{reportNo}
-		    </foreach>
+		SET REPORT_STATUS = #{reportStatus}
+		WHERE REPORT_NO IN
+		<foreach item="reportNo" collection="intArray" open="("
+			separator="," close=")">
+			#{reportNo}
+		</foreach>
 	</update>
-	
-	
-	
+
+
+
 	<!-- 검색용 count 쿼리문 -->
-	<select id="selectSearchCount" parameterType="hashmap" resultType="_int">
+	<select id="selectSearchCount" parameterType="hashmap"
+		resultType="_int">
 		SELECT COUNT(*)
-		  FROM REPORT R
-		  JOIN MEMBER USING (MEMBER_ID)
-		 WHERE ${condition} LIKE '%' || #{keyword} || '%'
+		FROM REPORT R
+		JOIN MEMBER USING (MEMBER_ID)
+		WHERE ${condition} LIKE '%' || #{keyword} || '%'
 	</select>
 	<!-- 검색용 쿼리문 -->
-	<select id="selectSearchList" parameterType="hashmap" resultMap="adminReportResultSet">
+	<select id="selectSearchList" parameterType="hashmap"
+		resultMap="adminReportResultSet">
 		SELECT REPORT_NO
-			 , REPORT_TITLE
-			 , REPORT_CONTENT
-			 , REPORT_TYPE
-			 , REPORT_ID
-			 , REPORT_DATE
-			 , REPORT_STATUS
-		  FROM REPORT
-		  JOIN MEMBER USING (MEMBER_ID)
-		 WHERE 
-		 	<choose>
-		 		<when test='condition == "REPORT_TYPE"'>
-		 			<choose>
-						<when test='REPORT_TYPE == "회원"'>
-						</when>
-						<when test='REPORT_TYPE == "셰어하우스"'>
-						</when>
-						<when test='REPORT_TYPE == "자유게시판"'>
-						</when>
-						<when test='REPORT_TYPE == "사람구해요"'>
-						</when>
-						<when test='REPORT_TYPE == "입주후기"'>
-						</when>
-						<when test='REPORT_TYPE == "채팅방"'>
-						</when>
-					</choose>
-		 		</when>
-		 		<otherwise>
-		 			${condition} LIKE '%' || #{keyword} || '%'
-		 		</otherwise>
-		 	</choose>
-		 ORDER BY REPORT_NO DESC
+		, REPORT_TITLE
+		, REPORT_CONTENT
+		, REPORT_TYPE
+		, REPORT_ID
+		, REPORT_DATE
+		, REPORT_STATUS
+		FROM REPORT
+		JOIN MEMBER USING (MEMBER_ID)
+		WHERE
+		<choose>
+			<when test='condition == "REPORT_TYPE"'>
+				<choose>
+					<when test='REPORT_TYPE == "회원"'>
+					</when>
+					<when test='REPORT_TYPE == "셰어하우스"'>
+					</when>
+					<when test='REPORT_TYPE == "자유게시판"'>
+					</when>
+					<when test='REPORT_TYPE == "사람구해요"'>
+					</when>
+					<when test='REPORT_TYPE == "입주후기"'>
+					</when>
+					<when test='REPORT_TYPE == "채팅방"'>
+					</when>
+				</choose>
+			</when>
+			<otherwise>
+				${condition} LIKE '%' || #{keyword} || '%'
+			</otherwise>
+		</choose>
+		ORDER BY REPORT_NO DESC
 	</select>
-	
+
 
 </mapper>

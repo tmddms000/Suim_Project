@@ -21,26 +21,25 @@
 <c:set var="currentPath" value="${pageContext.request.servletPath}" />
 <style>
 .shareBtn {
-    padding: 6px;
-    height: 20px;
-    background: rgb(250,107,111);
-    border : rgb(250,107,111);
-    border-radius: 2px;
-    font-style: normal;
-    font-size: 12px;
-    font-weight: 500;
-    color: #fff;
-    line-height: 9px;
-    margin-right: 14px;
+	padding: 6px;
+	height: 20px;
+	background: rgb(250, 107, 111);
+	border: rgb(250, 107, 111);
+	border-radius: 2px;
+	font-style: normal;
+	font-size: 12px;
+	font-weight: 500;
+	color: #fff;
+	line-height: 9px;
+	margin-right: 14px;
 }
 
-.share-content{
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    color: #828282;
+.share-content {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 12px;
+	color: #828282;
 }
-
 </style>
 
 
@@ -208,10 +207,11 @@
 								alt="">
 						</div>
 						<div class="txt-bx" style="padding-top: 16px;">
-						
-							<button class="shareBtn">셰어하우스</button><span class="share-content">${house.resGender}</span>
+
+							<button class="shareBtn">셰어하우스</button>
+							<span class="share-content">${house.resGender}</span>
 							<div class="title">${house.houseName}</div>
-							
+
 
 							<c:set var="deposit" value="${house.deposit}" />
 							<c:set var="rent" value="${house.rent}" />
@@ -252,7 +252,7 @@
 
 	</div>
 
-	<section style="height: 250px; margin-bottom: 150px; margin-top : 50px;">
+	<section style="height: 250px; margin-bottom: 150px; margin-top: 50px;">
 		<div class="container">
 			<div class="text-center"
 				style="font-size: 32px; margin-bottom: 30px;">
@@ -281,11 +281,14 @@
 				<button class="slider__next"></button>
 			</div>
 		</div>
+		
 	</section>
 
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 
+
 	<script src="/resources/js/common/main.js"></script>
+
 
 </body>
 </html>
