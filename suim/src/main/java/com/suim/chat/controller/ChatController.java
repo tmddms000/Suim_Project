@@ -29,14 +29,23 @@ public class ChatController {
 	@RequestMapping("house.ch")
 	public ModelAndView selectChat(ModelAndView mv, String muser, HttpSession session) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			mv.setViewName("redirect:/member/login");
+			return mv;
+		}
+		
 		String cuser = loginUser.getNickName();
 		ChatList c = null;
 
-		ChatList ch = chatService.selectCheck(muser, cuser);
+		ChatList ch1 = chatService.selectCheck(muser, cuser);
+		ChatList ch2 = chatService.selectCheck(cuser, muser);
 
-		if (ch != null) {
+		if (ch1 != null || ch2 !=null) {
 			c = chatService.selectOne(cuser);
 		} else {
+			
 			c = chatService.insertChat(muser, cuser);
 		}
 
@@ -64,6 +73,13 @@ public class ChatController {
 	@RequestMapping("chat.ch")
 	public ModelAndView selectChat(ModelAndView mv, HttpSession session) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+		if (loginUser == null) {
+			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
+			mv.setViewName("redirect:/member/login");
+			return mv;
+		}
+		
 		String muser = loginUser.getNickName();
 		ChatList c = chatService.selectOne(muser);
 		ArrayList<ChatList> list = chatService.selectList();

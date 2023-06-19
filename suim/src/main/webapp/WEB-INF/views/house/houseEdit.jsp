@@ -129,32 +129,41 @@ input[type="submit"], button {
 						이름:</label> <input type="text" id="roomName" name="houseName"
 					value="${h.houseName }" required></li>
 
-				<li><label for="gender"><span class="red_txt">*</span>성별:</label><br>
-					<input type="radio" id="genderMale" name="resGender" value="남성전용"
-					required checked="${h.resGender == '남성전용'}"> <label
-					for="genderMale">남성전용&nbsp;</label> <input type="radio"
-					id="genderFemale" name="resGender" value="여성전용"
-					checked="${h.resGender == '여성전용'}"> <label
-					for="genderFemale">여성전용&nbsp;</label> <input type="radio"
-					id="genderCoed" name="resGender" value="남녀공용"
-					checked="${h.resGender == '남녀공용'}"> <label for="genderCoed">남녀공용</label>
+				<li>
+				    <label for="gender">
+				        <span class="red_txt">*</span>성별:
+				    </label><br>
+				    <input type="radio" id="genderMale" name="resGender" value="남성전용" required ${h.resGender == '남성전용' ? 'checked' : ''}>
+				    <label for="genderMale">남성전용&nbsp;</label>
+				    <input type="radio" id="genderFemale" name="resGender" value="여성전용" ${h.resGender == '여성전용' ? 'checked' : ''}>
+				    <label for="genderFemale">여성전용&nbsp;</label>
+				    <input type="radio" id="genderCoed" name="resGender" value="남녀공용" ${h.resGender == '남녀공용' ? 'checked' : ''}>
+				    <label for="genderCoed">남녀공용</label>
 				</li>
 
-				<li><label for="minStay"> <span class="red_txt">*</span>주거유형
-				</label> <select name="resType" id="minStay" required>
-						<option value="">선택하세요</option>
-						<option value="아파트" selected="${h.resType == '아파트'}">아파트</option>
-						<option value="오피스텔" selected="${h.resType == '오피스텔'}">오피스텔</option>
-						<option value="원룸" selected="${h.resType == '원룸'}">원룸</option>
-				</select></li>
+				<li>
+				    <label for="resType">
+				        <span class="red_txt">*</span>주거유형
+				    </label>
+				    <select name="resType" id="resType" required>
+				        <option value="">선택하세요</option>
+				        <option value="아파트" ${h.resType == '아파트' ? 'selected' : ''}>아파트</option>
+				        <option value="오피스텔" ${h.resType == '오피스텔' ? 'selected' : ''}>오피스텔</option>
+				        <option value="원룸" ${h.resType == '원룸' ? 'selected' : ''}>원룸</option>
+				    </select>
+				</li>
 
-				<li><label for="floor"> <span class="red_txt">*</span>층수
-				</label> <select name="floor" id="floor" required>
-						<option value="">선택하세요</option>
-						<option value="반지하" selected="${h.floor == '반지하'}">반지하</option>
-						<option value="옥탑" selected="${h.floor == '옥탑'}">옥탑</option>
-						<option value="지상" selected="${h.floor == '지상'}">지상</option>
-				</select></li>
+				<li>
+				    <label for="floor">
+				        <span class="red_txt">*</span>층수
+				    </label>
+				    <select name="floor" id="floor" required>
+				        <option value="">선택하세요</option>
+				        <option value="반지하" ${h.floor == '반지하' ? 'selected' : ''}>반지하</option>
+				        <option value="옥탑" ${h.floor == '옥탑' ? 'selected' : ''}>옥탑</option>
+				        <option value="지상" ${h.floor == '지상' ? 'selected' : ''}>지상</option>
+				    </select>
+				</li>
 
 				<li><label for="rent"><span class="red_txt">*</span>월세(관리비
 						포함):</label> <input type="number" id="rent" name="rent" min="0" value="${h.rent}"

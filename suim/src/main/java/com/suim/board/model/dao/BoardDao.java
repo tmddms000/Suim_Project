@@ -86,7 +86,9 @@ public class BoardDao {
 	public int selectfListCount(SqlSessionTemplate sqlSession) {
 		return sqlSession.selectOne("boardMapper.selectfListCount");
 	}
-	public int selectfListCount(SqlSessionTemplate sqlSession, HashMap<String, String> fin) {selectiListCoun}
+	public int selectfListCount(SqlSessionTemplate sqlSession, HashMap<String, String> fin) {
+		return sqlSession.selectOne("boardMapper.selectfListCount");
+	}
 	
 	public ArrayList<Find> selectfList(SqlSessionTemplate sqlSession, PageInfo pi) {
 		

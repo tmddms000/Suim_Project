@@ -55,6 +55,4 @@ public interface ListHouseService {
 	// 중심좌표 셰어하우스 이름 키워드 검색
 	ArrayList<House> keyCenterAd(String searchKeyword);
 	
-	// 로그인 유저의 예약 번호 받아오기
-	int loginRno(Map<String, Object> rezCheck);
 }
