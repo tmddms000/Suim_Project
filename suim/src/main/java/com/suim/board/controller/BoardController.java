@@ -652,7 +652,7 @@ public class BoardController {
 		
 		@RequestMapping("detail.in")
 		public ModelAndView selectInReview(ModelAndView mv, int ino, HttpSession session) {
-
+			
 		    // 이미 조회한 게시글인지 확인하기 위해 세션 사용
 		    Set<Integer> viewedPosts = (Set<Integer>) session.getAttribute("viewedPosts");
 		    if (viewedPosts == null) {
