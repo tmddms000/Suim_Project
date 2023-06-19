@@ -68,7 +68,7 @@ public class BoardController {
 		ArrayList<Board> list = boardService.selectList(pi);
 		ArrayList<Board> blist = boardService.selectbList();
 		
-	
+		System.out.println(list);
 		
 
 		mv.addObject("pi", pi)
@@ -125,7 +125,7 @@ public class BoardController {
 								  String filePath,
 								  HttpSession session) {
 			
-			String a = filePath;
+			
 			int result = boardService.deleteBoard(bno);
 			
 			if(result > 0) { // 삭제 처리 성공
@@ -155,9 +155,9 @@ public class BoardController {
 		@RequestMapping(value = "rlist.bo", produces = "application/json; charset=UTF-8")
 		public String ajaxSelectReplyList(int bno) {
 			
-			ArrayList<Reply> list = boardService.selectReplyList(bno);
+			ArrayList<Reply> rlist = boardService.selectReplyList(bno);
 
-			return new Gson().toJson(list);
+			return new Gson().toJson(rlist);
 		}
 		
 		@ResponseBody
@@ -596,52 +596,25 @@ public class BoardController {
 
 	//-----------------------이용후기--------------------------------
 		@RequestMapping("list.in")
-		public ModelAndView selectiList(@RequestParam(defaultValue="") String gender, 
-										@RequestParam(defaultValue="")String category,
-										@RequestParam(defaultValue="")String search,
+		public ModelAndView selectiList(
 										@RequestParam(value="cPage", defaultValue="1") int currentPage,
 										HttpServletRequest request,
-				ModelAndView mv) throws UnsupportedEncodingException {
+				ModelAndView mv) {
 
 			
-			int listCount = 0;
-			PageInfo pi = null;
+			int listCount = boardService.selectiListCount();
+			
+			System.out.println(listCount);
+			
 			int pageLimit = 10;
 			int boardLimit = 9;
-			ArrayList<InReview> ilist = new ArrayList<InReview>();
-			String uriWithQueryString = request.getRequestURI() + "?" + request.getQueryString();
 			
-			
-			
-			HashMap<String, String> fin = new HashMap<>();
-			//fin.put("gender", gender);
-			//fin.put("category", category);
-			//fin.put("search", search);
-			
-			
-			
+			PageInfo pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
+			ArrayList<InReview> ilist = boardService.selectiList(pi);
 
-			if(gender.equals("") && category.equals("") && search.equals("")) { // 전체조회로직
-				
-				// fin 이 필요 없는 로직
-				listCount = boardService.selectiListCount(); // 수정
-				
-				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-				ilist = boardService.selectiList(pi);
 
-				
-			} 
-			else {
-				listCount = boardService.selectiListCount(fin);
-				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
-				ilist = boardService.selectiList(pi, fin);
-				
-				
-			}
-			
 			mv.addObject("pi", pi) 
 			  .addObject("ilist", ilist)
-			  .addObject("url", uriWithQueryString)
 			  .setViewName("board/inReview-board");
 			
 			

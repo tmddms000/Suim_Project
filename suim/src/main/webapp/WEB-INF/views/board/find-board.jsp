@@ -94,12 +94,14 @@
    <form id="enrollForm" method="get" action="list.fi" enctype="multipart/form-data">     
     <div class="search-filter">
     
-    	<div class="search-find" style="">
-    	<input type="text" placeholder="제목을 입력해주세요." name="search" value="">
-		    <button type="submit">
-		   		<i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
-		    </button>
-		</div>   
+
+<div class="search-find" style="display: flex;">
+    <input type="text" placeholder="제목을 입력해주세요." name="search" value="" style="border: 2px solid pink; border-radius: 10px 0 0 10px; padding: 5px; flex: 1; margin-right: -2px;">
+    <button type="submit" style="border: 2px solid pink; border-radius: 0 10px 10px 0; background-color: white; margin-left: -2px;">
+        <i class="fa fa-search" style="color: rgb(249, 88, 10)"></i>
+    </button>
+</div>
+
 		
     <label for="sex">성별:</label>
     <select id="sex" name="gender" style="border-radius: 8px;">
@@ -234,10 +236,11 @@
   </ul>
 </div>
 
-   
+   </div>
     
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <script>
+    
+     <script>
         // 버튼 요소를 선택합니다.
         const button = document.querySelector('.btn-secondary');
 

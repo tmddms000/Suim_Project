@@ -188,14 +188,9 @@ public class BoardServiceImpl implements BoardService {
 	//------------------이용후기-------------------------
 	@Override
 	public int selectiListCount() {
-		return boardDao.selectfListCount(sqlSession);
+		return boardDao.selectiListCount(sqlSession);
 	}
 
-
-	@Override
-	public int selectiListCount(HashMap<String, String> fin) {
-		return boardDao.selectiListCount(sqlSession, fin);
-	}
 
 	@Override
 	public ArrayList<InReview> selectiList(PageInfo pi) {
