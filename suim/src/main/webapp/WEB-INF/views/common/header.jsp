@@ -92,6 +92,13 @@
 						방 등록 <i class="fa-solid fa-right-from-bracket"></i>
 					</button>
 				</li>
+				<c:choose>
+					<c:when test="${ loginUser ne null and memberAuth eq 1 }">
+						<li class="nav-item" style="margin-top: 35px;margin-left: 10px;">
+							<a href="/admin/dashboard"><i class="fa-solid fa-gear fa-spin fa-2xl" style="color: #636669;"></i></a>
+						</li>
+					</c:when>
+				</c:choose>
 			</ul>
 
 			<button class="navbar-toggler" type="button"

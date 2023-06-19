@@ -15,6 +15,7 @@
                     </form>
                     -->
                     <div class="navbar-nav align-items-center ms-auto">
+
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa fa-bell me-lg-2"></i>
@@ -39,6 +40,7 @@
                                 <a href="#" class="dropdown-item text-center">See all notifications</a>
                             </div>
                         </div>
+                        -->
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <c:choose>
@@ -52,10 +54,20 @@
 							<span class="d-none d-lg-inline-flex">${ loginUser.nickName }</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                                <a href="#" class="dropdown-item">My Profile</a>
-                                <a href="#" class="dropdown-item">Settings</a>
-                                <a href="#" class="dropdown-item">Log Out</a>
+                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); logout();">로그아웃</a>
                             </div>
+                            <script>
+	                            function logout() {
+	                		        $.ajax({
+	                		            url: '/member/logout',
+	                		            method: 'POST',
+	                		            success: function(response) {
+	                		            	alert("로그아웃 되었습니다.");
+	                		                location.reload(true);
+	                		            }
+	                		        });
+	                		    }
+                            </script>
                         </div>
                     </div>
                 </nav>

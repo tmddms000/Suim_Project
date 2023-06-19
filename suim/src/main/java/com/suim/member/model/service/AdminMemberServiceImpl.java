@@ -48,7 +48,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return adminMemberDao.selectCategoryList(sqlSession, pi, category);
 	}
 
-
 	@Override
 	public int insertMember(Member m) {
 		return adminMemberDao.insertMember(sqlSession, m);

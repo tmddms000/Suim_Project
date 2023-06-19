@@ -214,14 +214,14 @@
         	            	// 응답 받은 경우
         	                // 화면에서 해당 데이터의 상태 업데이트
         	                if (response === 'Y') {
-        		            	alert("승인되었습니다.");
+        	                	alert("승인되었습니다.");
         		            	location.reload();
         		            } else {
         		            	alert("승인에 실패했습니다.");
         		            }
         	            },
         	            error: function() {
-    		            	alert("승인에 실패했습니다.");
+        	            	alert("승인에 실패했습니다.");
         	            }
         	            
         	        });
@@ -263,7 +263,7 @@
 	    		            }
 	    	            },
 	    	            error: function() {
-			            	alert("반려에 실패했습니다.");
+	    	            	alert("반려에 실패했습니다.");
 	    	            }
 	    	        });
 	    	    });

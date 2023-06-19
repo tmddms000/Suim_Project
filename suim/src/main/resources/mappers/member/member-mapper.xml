@@ -25,14 +25,17 @@
 		<result column="GOOGLELOGIN" property="googleLogin" />
 		<result column="LATITUDE" property="latitude" />
 		<result column="LONGITUDE" property="longitude" />
+		<result column="MEMBER_AUTH" property="memberAuth" />
 	</resultMap>
 
 	<!-- 로그인용 쿼리문 -->
 	<select id="loginMember" parameterType="member"
 		resultMap="memberResultSet">
-		SELECT * FROM MEMBER
-		WHERE MEMBER_ID = #{memberId}
-		AND STATUS = '일반'
+   		SELECT M.*, MA.ADMIN_AUTH
+          FROM MEMBER M
+          JOIN MEMBER_AUTH MA ON (M.EMAIL = MA.EMAIL)
+		 WHERE M.MEMBER_ID = #{memberId}
+		   AND M.STATUS = '일반'
 	</select>
 	
 	<select id="selectMember" parameterType="String"

@@ -53,9 +53,8 @@
 								<div class="select">
 				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;height: 36px;">
 				                        <option value="REPORT_TITLE">제목</option>
-				                        <option value="REPORT_CONTENT">내용</option>
 				                        <option value="REPORT_TYPE">유형</option>
-				                        <option value="REPORT_ID">신고자</option>
+				                        <option value="REPORT_ID">신고당한사람</option>
 				                    </select>
 				                </div>
 								<input class="form-control border-0" type="search" placeholder="Search" name="keyword">
@@ -237,7 +236,7 @@
         		            }
         	            },
         	            error: function() {
-    		            	alert("승인에 실패했습니다.");
+        	            	alert("승인에 실패했습니다.");
         	            }
         	            
         	        });
@@ -279,7 +278,7 @@
 	    		            }
 	    	            },
 	    	            error: function() {
-			            	alert("반려에 실패했습니다.");
+	    	            	alert("반려에 실패했습니다.");
 	    	            }
 	    	        });
 	    	    });
