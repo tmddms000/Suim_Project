@@ -58,7 +58,7 @@
     
             <div class="table-wrapper">
                 <div id="noticeBold" class="table-title">
-                    	우주 공지사항
+                    	SUIM 공지사항
                 </div>
             
                
@@ -79,7 +79,7 @@
                 <table id="notice-table" class="table">
                     <thead>
                         <tr class="table-header">
-                            <td class="nListNo">No</td>
+                            <td class="nListNo" style="border-bottom-color : green;">No</td>
                             <td class="title">제목</td>
                             <td class="createDate">작성일</td>
                         </tr>
@@ -87,8 +87,8 @@
                     <tbody>
                     	<c:forEach var="n" items="${ list }">
 	                        <tr class="table-row" style="background-color:none;">
-	                            <td class="nListNo, nno">${ n.noticeNo }</td>
-	                            <td class="title">
+	                            <td class="nListNo, nno" style="border-bottom-color : green;">${ n.noticeNo }</td>
+	                            <td class="title" style="text-align : left; padding-left : 50px;">
 	                                ${ n.noticeTitle }
 	                            </td>
 	                            <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${n.noticeDate }" /></td>

@@ -124,7 +124,7 @@
                            
                             
                         </tr>
-                        <tr rowspan="3" height="400px;">
+                        <tr rowspan="3" height="100px;">
                         	<td class="noticeContent" colspan="3" style="text-align : left;">
                           		${ n.noticeContent }
                           	</td>

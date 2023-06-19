@@ -52,7 +52,7 @@
                 </table>
                 <br>
 
-                <div align="center">
+                <div style="padding-left : 120px;">
                     <button type="submit" class="btn btn-primary">등록하기</button>
                     <button type="reset" class="btn btn-danger">취소하기</button>
                 </div>

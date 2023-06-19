@@ -43,7 +43,7 @@
                     
                     <div class="col-12">
                         <div class="bg-light rounded h-100 p-4" width="">
-                            <h6 class="mb-4">이벤트 관리</h6>
+                            <h6 class="mb-4">공지사항 관리</h6>
 
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a
