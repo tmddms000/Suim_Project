@@ -19,16 +19,16 @@ public class AdminDashboardDao {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMember");
 	}
 
-	public Dashboard selectMemberGender(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberGender");
+	public ArrayList<Dashboard> selectMemberGender(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberGender");
 	}
 
-	public Dashboard selectMemberHouseTopN(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberHouseTopN");
+	public ArrayList<Dashboard> selectMemberHouseTopN(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberHouseTopN");
 	}
 
-	public Dashboard selectMemberInreviewTopN(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectMemberInreviewTopN");
+	public ArrayList<Dashboard> selectMemberInreviewTopN(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectMemberInreviewTopN");
 	}
 
 	public int selectHouseCount(SqlSessionTemplate sqlSession) {
@@ -51,12 +51,12 @@ public class AdminDashboardDao {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectHouseMonth");
 	}
 
-	public Dashboard selectHouseDate(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectHouseDate");
+	public ArrayList<Dashboard> selectHouseDate(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectHouseDate");
 	}
 
-	public Dashboard selectRegionTopN(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectRegionTopN");
+	public ArrayList<Dashboard> selectRegionTopN(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectRegionTopN");
 	}
 
 	public Dashboard selectEnrollMemberRate(SqlSessionTemplate sqlSession) {
@@ -67,8 +67,8 @@ public class AdminDashboardDao {
 		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMemberMonthRate");
 	}
 
-	public Dashboard selectEnrollMemberDate(SqlSessionTemplate sqlSession) {
-		return (Dashboard)sqlSession.selectOne("adminDashboardMapper.selectEnrollMemberDate");
+	public ArrayList<Dashboard> selectEnrollMemberDate(SqlSessionTemplate sqlSession) {
+		return (ArrayList)sqlSession.selectList("adminDashboardMapper.selectEnrollMemberDate");
 	}
 
 	public Dashboard selectLeaveMemberRate(SqlSessionTemplate sqlSession) {

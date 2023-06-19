@@ -45,6 +45,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		return dashboard;
 	}
 	*/
+	/*
 	public Dashboard getDashboardData() {
 		
 		Dashboard dashboard = new Dashboard();
@@ -68,29 +69,30 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 		
 		return dashboard;
 	}
-/*
+	*/
+
 	@Override
-	public ArrayList<Member> selectMemberAll() {
+	public int selectMemberAll() {
 		return adminDashboardDao.selectMemberAll(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectEnrollMember() {
+	public Dashboard selectEnrollMember() {
 		return adminDashboardDao.selectEnrollMember(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberGender() {
+	public ArrayList<Dashboard> selectMemberGender() {
 		return adminDashboardDao.selectMemberGender(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberHouseTopN() {
+	public ArrayList<Dashboard> selectMemberHouseTopN() {
 		return adminDashboardDao.selectMemberHouseTopN(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectMemberInreviewTopN() {
+	public ArrayList<Dashboard> selectMemberInreviewTopN() {
 		return adminDashboardDao.selectMemberInreviewTopN(sqlSession);
 	}
 
@@ -105,48 +107,47 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
 	}
 
 	@Override
-	public ArrayList<Member> selectReservationRate() {
+	public Dashboard selectReservationRate() {
 		return adminDashboardDao.selectReservationRate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectEmptyRate() {
+	public Dashboard selectEmptyRate() {
 		return adminDashboardDao.selectEmptyRate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectHouseMonth() {
+	public Dashboard selectHouseMonth() {
 		return adminDashboardDao.selectHouseMonth(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectHouseDate() {
+	public ArrayList<Dashboard> selectHouseDate() {
 		return adminDashboardDao.selectHouseDate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Region> selectRegionTopN() {
+	public ArrayList<Dashboard> selectRegionTopN() {
 		return adminDashboardDao.selectRegionTopN(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectEnrollMemberRate() {
+	public Dashboard selectEnrollMemberRate() {
 		return adminDashboardDao.selectEnrollMemberRate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectEnrollMemberMonthRate() {
+	public Dashboard selectEnrollMemberMonthRate() {
 		return adminDashboardDao.selectEnrollMemberMonthRate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectEnrollMemberDate() {
+	public ArrayList<Dashboard> selectEnrollMemberDate() {
 		return adminDashboardDao.selectEnrollMemberDate(sqlSession);
 	}
 
 	@Override
-	public ArrayList<Member> selectLeaveMemberRate() {
+	public Dashboard selectLeaveMemberRate() {
 		return adminDashboardDao.selectLeaveMemberRate(sqlSession);
 	}
-*/
 }

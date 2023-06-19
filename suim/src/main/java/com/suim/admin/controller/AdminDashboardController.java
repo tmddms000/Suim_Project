@@ -21,26 +21,26 @@ public class AdminDashboardController {
 	
 	@RequestMapping("/dashboard")
 	public String showDashboard(Model model) {
-		
+		/*
 		Dashboard dashboard = adminDashboardService.getDashboardData();
 		
 		model.addAttribute("dashboard", dashboard);
-		System.out.println(dashboard);
-		/*
+		*/
+		
 		// 전체 회원 수 조회
-		ArrayList<Member> selectMemberAll = adminDashboardService.selectMemberAll();
+		int selectMemberAll = adminDashboardService.selectMemberAll();
 		
 		// 신규 가입 회원 수(월별)
-		int selectEnrollMember = adminDashboardService.selectEnrollMember();
+		Dashboard selectEnrollMember = adminDashboardService.selectEnrollMember();
 		
 		// 성별별 회원 수 조회
-		int selectMemberGender = adminDashboardService.selectMemberGender();
+		ArrayList<Dashboard> selectMemberGender = adminDashboardService.selectMemberGender();
 		
 		// 예약 TOP 3 회원 조회
-		ArrayList<Member> selectMemberHouseTopN = adminDashboardService.selectMemberHouseTopN();
+		ArrayList<Dashboard> selectMemberHouseTopN = adminDashboardService.selectMemberHouseTopN();
 		
 		// 후기 TOP 3 회원 조회
-		ArrayList<Member> selectMemberInreviewTopN = adminDashboardService.selectMemberInreviewTopN();
+		ArrayList<Dashboard> selectMemberInreviewTopN = adminDashboardService.selectMemberInreviewTopN();
 		
 		// 결제된 방 수
 		int selectHouseCount = adminDashboardService.selectHouseCount();
@@ -49,33 +49,52 @@ public class AdminDashboardController {
 		int selectReservationCount = adminDashboardService.selectReservationCount();
 		
 		// 예약률
-		int selectReservationRate = adminDashboardService.selectReservationRate();
+		Dashboard selectReservationRate = adminDashboardService.selectReservationRate();
 		
 		// 공실률
-		int selectEmptyRate = adminDashboardService.selectEmptyRate();
+		Dashboard selectEmptyRate = adminDashboardService.selectEmptyRate();
 		
 		// 매출 분석
 		// 월별 매출
-		int selectHouseMonth = adminDashboardService.selectHouseMonth();
+		Dashboard selectHouseMonth = adminDashboardService.selectHouseMonth();
 		
 		// 최근 등록된 쉐어하우스 10개
-		int selectHouseDate = adminDashboardService.selectHouseDate();
+		ArrayList<Dashboard> selectHouseDate = adminDashboardService.selectHouseDate();
 		
 		// 쉐어하우스 많은 지역 TOP 3
-		ArrayList<Region> selectRegionTopN = adminDashboardService.selectRegionTopN();
+		ArrayList<Dashboard> selectRegionTopN = adminDashboardService.selectRegionTopN();
 		
 		// 전체 회원 수 대비 신규 가입 회원 수 비율
-		double selectEnrollMemberRate = adminDashboardService.selectEnrollMemberRate();
+		Dashboard selectEnrollMemberRate = adminDashboardService.selectEnrollMemberRate();
 		
 		// 전달 대비 신규 가입 회원 비율
-		double selectEnrollMemberMonthRate = adminDashboardService.selectEnrollMemberMonthRate();
+		Dashboard selectEnrollMemberMonthRate = adminDashboardService.selectEnrollMemberMonthRate();
 		
 		// 회원가입 일별 회원 수 조회
-		int selectEnrollMemberDate = adminDashboardService.selectEnrollMemberDate();
+		ArrayList<Dashboard> selectEnrollMemberDate = adminDashboardService.selectEnrollMemberDate();
 		
 		// 회원탈퇴율
-		double selectLeaveMemberRate = adminDashboardService.selectLeaveMemberRate();
-		 */
+		Dashboard selectLeaveMemberRate = adminDashboardService.selectLeaveMemberRate();
+		
+		System.out.println(selectLeaveMemberRate);
+		
+		model.addAttribute("selectMemberAll", selectMemberAll)
+			 .addAttribute("selectEnrollMember", selectEnrollMember)
+			 .addAttribute("selectMemberGender", selectMemberGender)
+			 .addAttribute("selectMemberHouseTopN", selectMemberHouseTopN)
+			 .addAttribute("selectMemberInreviewTopN", selectMemberInreviewTopN)
+			 .addAttribute("selectHouseCount", selectHouseCount)
+			 .addAttribute("selectReservationCount", selectReservationCount)
+			 .addAttribute("selectReservationRate", selectReservationRate)
+			 .addAttribute("selectEmptyRate", selectEmptyRate)
+			 .addAttribute("selectHouseMonth", selectHouseMonth)
+			 .addAttribute("selectHouseDate", selectHouseDate)
+			 .addAttribute("selectRegionTopN", selectRegionTopN)
+			 .addAttribute("selectEnrollMemberRate", selectEnrollMemberRate)
+			 .addAttribute("selectEnrollMemberMonthRate", selectEnrollMemberMonthRate)
+			 .addAttribute("selectEnrollMemberDate", selectEnrollMemberDate)
+			 .addAttribute("selectLeaveMemberRate", selectLeaveMemberRate);
+			 
 		
 		return "admin/dashboard";
 	}

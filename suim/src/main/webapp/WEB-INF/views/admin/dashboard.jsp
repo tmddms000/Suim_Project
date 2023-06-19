@@ -30,8 +30,8 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-line fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">뭐넣지?</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">전체 회원 수 조회</p>
+                                <h6 class="mb-0">${ selectMemberAll }</h6>
                             </div>
                         </div>
                     </div>
@@ -39,8 +39,8 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-bar fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">무엇?</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">결제된 방 수</p>
+                                <h6 class="mb-0">${ selectHouseCount }</h6>
                             </div>
                         </div>
                     </div>
@@ -48,8 +48,8 @@
                         <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                             <i class="fa fa-chart-area fa-3x text-primary"></i>
                             <div class="ms-3">
-                                <p class="mb-2">넣지?</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <p class="mb-2">예약된 방 수</p>
+                                <h6 class="mb-0">${ selectReservationCount }</h6>
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <i class="fa fa-chart-pie fa-3x text-primary"></i>
                             <div class="ms-3">
                                 <p class="mb-2">매출?</p>
-                                <h6 class="mb-0">$1234</h6>
+                                <h6 class="mb-0"> </h6>
                             </div>
                         </div>
                     </div>
@@ -111,6 +111,20 @@
             <!-- 차트 시작 -->
 			<script>
 			  const ctx_gender = document.getElementById('genderChart');
+			  
+			  <c:forEach var="dashboard" items="${selectMemberGender}">
+			    <c:choose>
+			      <c:when test="${dashboard.gender == 'M'}">
+			        maleCount = ${dashboard.memberCount};
+			      </c:when>
+			      <c:when test="${dashboard.gender == 'F'}">
+			        femaleCount = ${dashboard.memberCount};
+			      </c:when>
+			    </c:choose>
+			  </c:forEach>
+			  
+			  
+			  
 			
 			  new Chart(ctx_gender, {
 			    type: 'doughnut',
@@ -118,7 +132,9 @@
 			      labels: ['남성', '여성'],
 			      datasets: [{
 			        label: '성비',
-			        data: [1, 3],
+			        data: [
+			        	maleCount, femaleCount
+					],
 			        borderWidth: 1
 			      }]
 			    },
