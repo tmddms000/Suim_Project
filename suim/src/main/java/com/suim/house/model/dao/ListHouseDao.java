@@ -104,7 +104,6 @@ public class ListHouseDao {
 		// 중심좌표 셰어하우스 이름 키워드 검색
 		public ArrayList<House> keyCenterAd(SqlSessionTemplate sqlSession, String searchKeyword){
 			return (ArrayList)sqlSession.selectList("listHouseMapper.keyCenterAd", searchKeyword);
-
 		}
 	
 }

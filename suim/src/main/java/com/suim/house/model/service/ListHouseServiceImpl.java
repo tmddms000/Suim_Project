@@ -82,7 +82,6 @@ public class ListHouseServiceImpl implements ListHouseService{
 	@Override
 	public ArrayList<House> keyCenterAd(String searchKeyword) {
 		return listHouseDao.keyCenterAd(sqlSession, searchKeyword);
-
 	}
 
 }
