@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="adminReservationMapper">
+
+	<resultMap id="adminRezResultMap" type="reservation">
+		<result column="REZ_NO" property="rezNo"/>
+		<result column="REZ_DATE" property="rezDate"/>
+		<result column="REZ_HOUR" property="rezHour"/>
+		<result column="SEND_MEMBER_ID" property="sendMemberId"/>
+		<result column="REC_MEMBER_ID" property="recMemberId"/>
+		<result column="REZ_STATUS" property="rezStatus"/>
+		<result column="REZ_REQUEST_DATE" property="rezRequestDate"/>
+		<result column="CANCEL_CONTENT" property="cancelContent"/>
+		<result column="DEL_STATUS" property="delStatus"/>
+		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="HOUSE_NAME" property="houseName"/>
+		<result column="NICKNAME" property="nickName"/>
+	</resultMap>
+	
+	<!-- 예약 리스트 -->
+	<select id="adminRezCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVATION
+	</select>
+	
+	<select id="adminRezList" resultMap="adminRezResultMap">
+		SELECT R.*, H.HOUSE_NAME
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		ORDER BY REZ_NO DESC
+	</select>
+	
+	<!-- 예약 상세페이지 -->
+	<select id="adminRezDetail" parameterType="_int" resultMap="adminRezResultMap">
+		SELECT R.*, H.HOUSE_NAME
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		WHERE R.REZ_NO = #{rno}
+		ORDER BY REZ_NO DESC
+	</select>
+	
+	<update id="adminRezUpdate" parameterType="java.util.Map">
+		UPDATE RESERVATION
+		SET REZ_DATE = #{rezDate},
+		REZ_HOUR = #{rezHour},
+		REZ_STATUS = #{rezStatus},
+		DEL_STATUS = #{delStatus},
+		CANCEL_CONTENT = #{cancelContent}
+		WHERE REZ_NO = #{rezNo}
+	</update>
+	
+	<!-- 예약페이지 조건검색 -->
+	<select id="adminRezDeSearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		WHERE 1 = 1
+		<if test="rezStatus != 'all'">
+			AND R.REZ_STATUS = #{rezStatus}
+		</if>
+		<if test="del != 'all'">
+			AND R.DEL_STATUS = #{del}
+		</if>
+		<if test="dc == 'before'">
+		   AND R.REZ_DATE &lt; #{currentDate}
+		 </if>
+		 <if test="dc == 'after'">
+		   AND R.REZ_DATE &gt; #{currentDate}
+		 </if>
+		 <if test="dc == 'today'">
+		   AND R.REZ_DATE = #{currentDate}
+		 </if>
+	</select>
+	
+	<select id="adminRezDeSearch" resultMap="adminRezResultMap">
+		SELECT R.*, H.HOUSE_NAME
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		WHERE 1 = 1
+		<if test="rezStatus != 'all'">
+			AND R.REZ_STATUS = #{rezStatus}
+		</if>
+		<if test="del != 'all'">
+			AND R.DEL_STATUS = #{del}
+		</if>
+		<if test="dc == 'before'">
+		   AND R.REZ_DATE &lt; #{currentDate}
+		 </if>
+		 <if test="dc == 'after'">
+		   AND R.REZ_DATE &gt; #{currentDate}
+		 </if>
+		 <if test="dc == 'today'">
+		   AND R.REZ_DATE = #{currentDate}
+		 </if>
+		ORDER BY REZ_NO DESC
+	</select>
+	
+	<!-- 키워드 검색 -->
+	<select id="adminRezKeySearchCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		WHERE 1 = 1
+		<if test="condition == 'rezTitle'">
+			AND H.HOUSE_NAME LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'sendMemberId'">
+			AND R.SEND_MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'recMemberId'">
+			AND R.REC_MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+	</select>
+	
+	<select id="adminRezKeySearch" resultMap="adminRezResultMap">
+		SELECT R.*, H.HOUSE_NAME
+		FROM RESERVATION R
+		JOIN HOUSE H ON (R.HOUSE_NO = H.HOUSE_NO)
+		WHERE 1 = 1
+		<if test="condition == 'rezTitle'">
+			AND H.HOUSE_NAME LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'sendMemberId'">
+			AND R.SEND_MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="condition == 'recMemberId'">
+			AND R.REC_MEMBER_ID LIKE '%' || #{keyword} || '%'
+		</if>
+		ORDER BY REZ_NO DESC
+	</select>
+	
+	<!-- 복구, 삭제 -->
+	<update id="deleteRezBoard" parameterType="_int">
+		UPDATE RESERVATION
+		SET DEL_STATUS = 'Y'
+		WHERE REZ_NO = #{rno}
+	</update>
+	
+	<update id="deleteRezCanBoard" parameterType="_int">
+		UPDATE RESERVATION
+		SET DEL_STATUS = 'N'
+		WHERE REZ_NO = #{rno}
+	</update>
+	
+</mapper>

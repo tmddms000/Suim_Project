@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>셰어하우스 리스트</title>
 <link rel="icon" type="image/x-icon" href="/resources/img/common/favicon.png" />
 
         <!-- 나중에 한번에 include 할 부분 -->
