@@ -238,8 +238,6 @@ public class AdminHouseController {
 		
 		ArrayList<House> list = adminHouseService.selectSearchList(map, pi);
 		
-		System.out.println(list);
-
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .setViewName("admin/house/house");

@@ -34,7 +34,7 @@
                     <a href="/admin/dashboard" class="nav-item nav-link ${pageType eq 'dashboard' ? 'active' : ''}"><i class="fa fa-tachometer-alt me-2"></i>대시보드</a>
        				<a href="/admin/list.me" class="nav-item nav-link ${pageType eq 'member/member' ? 'active' : ''}"><i class="far fa-file-alt me-2"></i>회원 관리</a>
                     <a href="/admin/list.ho" class="nav-item nav-link ${pageType eq 'house/house' ? 'active' : ''}"><i class="fa fa-laptop me-2"></i>쉐어하우스 관리</a>
-                    <a href="/adminRez.ho" class="nav-item nav-link ${pageType eq 'board/reservation' ? 'active' : ''}"><i class="fa fa-calendar me-2"></i>예약 관리</a>
+                    <a href="/admin/adminRez.ho" class="nav-item nav-link ${pageType eq 'board/reservation' ? 'active' : ''}"><i class="fa fa-calendar me-2"></i>예약 관리</a>
                     
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-keyboard me-2"></i>커뮤니티 관리</a>

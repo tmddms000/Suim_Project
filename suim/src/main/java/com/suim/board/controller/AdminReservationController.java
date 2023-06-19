@@ -21,6 +21,7 @@ import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
 import com.suim.house.model.vo.Reservation;
 
+@RequestMapping("/admin")
 @Controller
 public class AdminReservationController {
 	

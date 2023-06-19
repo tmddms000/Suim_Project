@@ -57,10 +57,10 @@
                     
                      <div class="col-12">
                         <div class="bg-light rounded h-100 p-4" width="">
-                            <h6 class="mb-4">사람구해요 게시판 관리</h6>
+                            <h6 class="mb-4">예약 관리</h6>
 
 							<div align="right" class="searchForm">
-							<form class="d-md-flex ms-4" action="/adminRezKeySearch.bo" method="get">
+							<form class="d-md-flex ms-4" action="/admin/adminRezKeySearch.bo" method="get">
 								<div class="select">
 				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;">
 				                        <option value="rezTitle">셰어하우스 이름</option>
@@ -74,7 +74,7 @@
                                 </button>
                     		</form>
 							</div>
-							<form id="enrollForm" method="get" action="/adminRezDeSearch.bo" enctype="multipart/form-data">     
+							<form id="enrollForm" method="get" action="/admin/adminRezDeSearch.bo" enctype="multipart/form-data">     
 								<div class="search-filter">
 								    <label for="rezStatus">예약상태:</label>
 								    <select id="rezStatus" name="rezStatus" style="border-radius: 8px;">
