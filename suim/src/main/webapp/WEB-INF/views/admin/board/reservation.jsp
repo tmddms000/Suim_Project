@@ -111,7 +111,7 @@
                             <div class="tab-content pt-3" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 									<div class="table-responsive">
-										<form action="/adminRezDelete.bo" method="post" >
+										<form action="/admin/adminRezDelete.bo" method="post" >
 		                                <table class="table" id="rezBoardList">
 		                                    <thead>
 		                                        <tr>
@@ -176,7 +176,7 @@
                 $("#rezBoardList>tbody>tr").on("click", function(event) {
                     if (event.target.type !== "checkbox") {
                         let rno = $(this).children(".rno").text();
-                        location.href = "adminRezDetail.ho?rno=" + rno;
+                        location.href = "/admin/adminRezDetail.ho?rno=" + rno;
                     }
                 });
             });
@@ -209,15 +209,15 @@
 				<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
 					<ul class="pagination justify-content-center">
 						<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezList.bo?currentPage=${pi.currentPage - 1}'/>">&lt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRez.ho?currentPage=${pi.currentPage - 1}'/>">&lt;</a>
 						</li>
 						<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
 							<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
-								<a class="page-link" href="<c:url value='adminRezList.bo?currentPage=${p}'/>">${p}</a>
+								<a class="page-link" href="<c:url value='/admin/adminRez.ho?currentPage=${p}'/>">${p}</a>
 							</li>
 						</c:forEach>
 						<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezList.bo?currentPage=${pi.currentPage + 1}'/>">&gt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRez.ho?currentPage=${pi.currentPage + 1}'/>">&gt;</a>
 						</li>
 					</ul>
 				</nav>
@@ -226,15 +226,15 @@
 				<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
 					<ul class="pagination justify-content-center">
 						<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezDeSearch.bo?currentPage=${pi.currentPage - 1}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">&lt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRezDeSearch.bo?currentPage=${pi.currentPage - 1}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">&lt;</a>
 						</li>
 						<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
 							<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
-								<a class="page-link" href="<c:url value='adminRezDeSearch.bo?currentPage=${p}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">${p}</a>
+								<a class="page-link" href="<c:url value='/admin/adminRezDeSearch.bo?currentPage=${p}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">${p}</a>
 							</li>
 						</c:forEach>
 						<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezDeSearch.bo?currentPage=${pi.currentPage + 1}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">&gt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRezDeSearch.bo?currentPage=${pi.currentPage + 1}&rezStatus=${rezStatus}&dc=${dc}&del=${del}'/>">&gt;</a>
 						</li>
 					</ul>
 				</nav>
@@ -243,15 +243,15 @@
 				<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
 					<ul class="pagination justify-content-center">
 						<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezKeySearch.bo?currentPage=${pi.currentPage - 1}&condition=${condition}&keyword=${keyword}'/>">&lt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRezKeySearch.bo?currentPage=${pi.currentPage - 1}&condition=${condition}&keyword=${keyword}'/>">&lt;</a>
 						</li>
 						<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
 							<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
-								<a class="page-link" href="<c:url value='adminRezKeySearch.bo?currentPage=${p}&condition=${condition}&keyword=${keyword}'/>">${p}</a>
+								<a class="page-link" href="<c:url value='/admin/adminRezKeySearch.bo?currentPage=${p}&condition=${condition}&keyword=${keyword}'/>">${p}</a>
 							</li>
 						</c:forEach>
 						<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
-							<a class="page-link" href="<c:url value='adminRezKeySearch.bo?currentPage=${pi.currentPage + 1}&condition=${condition}&keyword=${keyword}'/>">&gt;</a>
+							<a class="page-link" href="<c:url value='/admin/adminRezKeySearch.bo?currentPage=${pi.currentPage + 1}&condition=${condition}&keyword=${keyword}'/>">&gt;</a>
 						</li>
 					</ul>
 				</nav>

@@ -87,7 +87,7 @@ public class AdminReservationController {
 		
 			model.addAttribute("rno", rezNo);
 			
-			return "redirect:/adminRezDetail.ho";
+			return "redirect:/admin/adminRezDetail.ho";
 			
 		} else {
 			
@@ -212,7 +212,7 @@ public class AdminReservationController {
 					
 				}
 				
-				return "redirect:/adminRez.ho";
+				return "redirect:/admin/adminRez.ho";
 				
 			}
 		

@@ -72,7 +72,7 @@
 			<a id="backButton" class="btn btn-secondary" style="float:right; background-color: rgb(250, 107, 111);" href="adminRez.ho">목록으로</a>
      
             <br><br>
-			<form action="adminRezUpdate.ho" method="post">
+			<form action="/admin/adminRezUpdate.ho" method="post">
 			<input type="hidden" name="rezNo" id="rezNo" value="${r.rezNo}" >
             <table id="contentArea" align="center" class="table">
                 <tr>

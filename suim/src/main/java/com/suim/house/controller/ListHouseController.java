@@ -148,7 +148,8 @@ public class ListHouseController {
 	// 예약 신청(등록) 컨트롤러
 	@RequestMapping("enrollReservation.rez")
 	public String reservationInsert(Model model, HttpServletRequest request, HttpSession session,
-									Date rezDate, String rezHour, int houseNo, String sendMemberId, String recMemberId) {
+									@DateTimeFormat(pattern = "yyyy-MM-dd")Date rezDate, String rezHour, int houseNo,
+									String sendMemberId, String recMemberId) {
 		
 		 Map<String, Object> reservation = new HashMap<>();
 				 reservation.put("rezDate", rezDate);
