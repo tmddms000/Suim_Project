@@ -68,7 +68,7 @@
                 <!-- 클릭 시 insert.no 로 넘어감 -->
                 
                 <%-- <c:if test="${ not empty loginUser and loginUser.memberId eq ('관리자아이디') }"> --%>
-                <c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+                <c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
                 
                 <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" onclick="location.href='enrollForm.no';">
 		       	 글작성

@@ -126,7 +126,7 @@
 
 
 		<!-- 관리자만 글 작성 가능하게 해야함 -->
-		<c:if test="${ not empty loginUser and loginUser.memberId eq ('admin1') }">
+		<c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
 		    <a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium; margin-left: 1220px;" href="enrollForm.ev">
 		       	 글작성
 	 		</a>
