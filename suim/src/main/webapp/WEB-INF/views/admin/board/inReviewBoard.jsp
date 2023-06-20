@@ -151,12 +151,14 @@
             <script>
             
             $(function() {
-                $("#inrBoardList>tbody>tr").on("click", function(event) {
-                    if (event.target.type !== "checkbox") {
-                        let ino = $(this).children(".ino").text();
-                        location.href = "adminInrDetail.bo?ino=" + ino;
-                    }
-                });
+                if (${ not empty list }) {
+	                $("#inrBoardList>tbody>tr").on("click", function(event) {
+	                    if (event.target.type !== "checkbox") {
+	                        let ino = $(this).children(".ino").text();
+	                        location.href = "adminInrDetail.bo?ino=" + ino;
+	                    }
+	                });
+                }
             });
             
             

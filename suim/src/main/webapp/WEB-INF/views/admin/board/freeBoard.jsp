@@ -153,12 +153,14 @@
             <script>
             
             $(function() {
-                $("#freeBoardList>tbody>tr").on("click", function(event) {
-                    if (event.target.type !== "checkbox") {
-                        let bno = $(this).children(".bno").text();
-                        location.href = "adminDetail.bo?bno=" + bno;
-                    }
-                });
+                if (${ not empty list }) {
+	                $("#freeBoardList>tbody>tr").on("click", function(event) {
+	                    if (event.target.type !== "checkbox") {
+	                        let bno = $(this).children(".bno").text();
+	                        location.href = "adminDetail.bo?bno=" + bno;
+	                    }
+	                });
+                }
             });
             
             

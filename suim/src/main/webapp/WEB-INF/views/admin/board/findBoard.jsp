@@ -179,12 +179,14 @@
 
             <script>
             $(function() {
-                $("#findBoardList>tbody>tr").on("click", function(event) {
-                    if (event.target.type !== "checkbox") {
-                        let fno = $(this).children(".fno").text();
-                        location.href = "adminFindDetail.bo?fno=" + fno;
-                    }
-                });
+                if (${ not empty list }) {
+	                $("#findBoardList>tbody>tr").on("click", function(event) {
+	                    if (event.target.type !== "checkbox") {
+	                        let fno = $(this).children(".fno").text();
+	                        location.href = "adminFindDetail.bo?fno=" + fno;
+	                    }
+	                });
+                }
             });
             
             

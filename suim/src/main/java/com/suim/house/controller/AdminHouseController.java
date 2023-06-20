@@ -137,23 +137,31 @@ public class AdminHouseController {
 	    for (int i = 0; i < idArray.length; i++) {
 	        if (houseStatus.equals("심사완료")) {
 	            // Call the mailSendAsync method
-	            mailSendAsync(h[i].getHouseName(), email[i], true);
+	            mailSendAsync(h[i].getHouseName(), email[i], true, h[i].getHouseNo());
 	        } else if (houseStatus.equals("반려")) {
 	            // Call the mailSendAsync method
-	            mailSendAsync(h[i].getHouseName(), email[i], false);
+	            mailSendAsync(h[i].getHouseName(), email[i], false, h[i].getHouseNo());
 	        }
 	    }
 	    
 	    return result > 0 ? "Y" : "N";
 	}
 
-	private void mailSendAsync(String houseName, String email, boolean isApproved) {
+	private void mailSendAsync(String houseName, String email, boolean isApproved, int hno) {
 	    CompletableFuture.runAsync(() -> {
 	        try {
 	            MailHandler sendMail = new MailHandler(mailSender);
-	            
-	            String approvalMessage = isApproved ? "심사가 완료되었습니다." : "심사가 반려되었습니다.";
-	            String contentMessage = isApproved ? "결제를 진행해 주세요." : "하우스 정보를 다시 수정해 주세요.";
+	            House h = houseService.selectHouse(hno);
+				
+	            String approvalMessage = "";
+	            String contentMessage = "";
+				if(h.getAge() > 0){
+					approvalMessage = isApproved ? "재심사가 완료되었습니다." : "심사가 반려되었습니다.";
+	            	contentMessage = isApproved ? "확인해주세요." : "하우스 정보를 다시 수정해 주세요.";
+				} else {
+		            approvalMessage = isApproved ? "심사가 완료되었습니다." : "심사가 반려되었습니다.";
+		            contentMessage = isApproved ? "결제를 진행해 주세요." : "하우스 정보를 다시 수정해 주세요.";
+				}
 	            
 	            // HTML content for the email
 	            String htmlContent = "<html>"
@@ -166,7 +174,7 @@ public class AdminHouseController {
 	                    + "</style>"
 	                    + "</head>"
 	                    + "<body>"
-	                    + "<h3>심사 " + approvalMessage + "</h3>"
+	                    + "<h3>" + approvalMessage + "</h3>"
 	                    + "<div class='message'>"
 	                    + "<p>안녕하세요, 쉼입니다.</p>"
 	                    + "<p>" + houseName + "의  " + approvalMessage + "</p>"
@@ -190,20 +198,6 @@ public class AdminHouseController {
 	    });
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// 검색용
 	@RequestMapping("search.ho")
 	public ModelAndView selectSearch(String condition, String keyword, 
@@ -224,7 +218,6 @@ public class AdminHouseController {
 		
 		
 		ArrayList<House> list = adminHouseService.selectSearchList(map, pi);
-		
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .setViewName("admin/house/house");
