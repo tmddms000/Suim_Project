@@ -100,7 +100,16 @@
 							                </td>
 							                <td class="createDate"><fmt:formatDate pattern="yyyy-MM-dd" value="${e.eventDate }" /></td>
 							                <td class="eventView">${ e.eventView }</td>
-							                <td class="eventStatus" style="text-align : center;">${ e.eventStatus }</td>
+							                <td class="eventStatus" style="text-align : center;">
+							                <c:choose>
+							                	<c:when test="${e.eventCategory eq ('종료된 이벤트') }">
+							                		종료
+							                	</c:when>
+							                	<c:otherwise>
+							                		진행
+							                	</c:otherwise>
+							                </c:choose>
+							                </td>
 							            </tr>    
 							            
 					             	</c:forEach>
