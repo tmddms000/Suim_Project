@@ -28,4 +28,16 @@ public class ReportDao {
 	public int insertRattachment(SqlSessionTemplate sqlSession, Rattachment ra) {
 		return sqlSession.insert("reportMapper.rattachment", ra);
 	}
+	
+	public Integer hasDuplicateReport(SqlSessionTemplate sqlSession, Report r) {
+		return sqlSession.selectOne("reportMapper.hasDuplicateReport", r);
+	}
+
+	public int selectY(SqlSessionTemplate sqlSession, String reportId) {
+		return sqlSession.selectOne("reportMapper.selectY", reportId);
+	}
+	
+	public Report selectReport(SqlSessionTemplate sqlSession, int reportNo) {
+		return sqlSession.selectOne("reportMapper.selectReport", reportNo);
+	}
 }

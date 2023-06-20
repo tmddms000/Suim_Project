@@ -37,6 +37,7 @@ public interface AdminReportService {
 	
 	// 신고 수정 서비스
 	int updateReport(Report r);
+	
 
 	// 승인/반려 처리용
 	int updateReportStatus(Report r);
@@ -47,4 +48,5 @@ public interface AdminReportService {
 	// 검색용
 	int selectSearchCount(HashMap<String, String> map);
 	ArrayList<Report> selectSearchList(HashMap<String, String> map, PageInfo pi);
+	
 }

@@ -37,4 +37,19 @@ public class ReportServiceImpl implements ReportService {
 	public int insertRattachment(Rattachment ra) {
 		return reportDao.insertRattachment(sqlSession, ra);
 	}
+
+	@Override
+	public Integer hasDuplicateReport(Report r) {
+		return reportDao.hasDuplicateReport(sqlSession, r);
+	}
+	
+	@Override
+	public int selectY(String reportId) {
+		return reportDao.selectY(sqlSession, reportId);
+	}
+	
+	@Override
+	public Report selectReport(int reportNo) {
+		return reportDao.selectReport(sqlSession, reportNo);
+	}
 }

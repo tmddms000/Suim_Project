@@ -1,10 +1,7 @@
 package com.suim.report.controller;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,13 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.suim.common.model.vo.PageInfo;
 import com.suim.common.template.Pagination;
-import com.suim.member.model.vo.Member;
 import com.suim.report.model.service.AdminReportService;
+import com.suim.report.model.service.ReportService;
 import com.suim.report.model.vo.Report;
 
 @RequestMapping("/admin")
@@ -31,6 +27,9 @@ public class AdminReportController {
 
 	@Autowired
 	private AdminReportService adminReportService;
+	@Autowired
+	private ReportService reportService;
+	
 	
 	// 신고 리스트 조회 포워딩용
 	@RequestMapping("list.re")
@@ -166,6 +165,21 @@ public class AdminReportController {
 			intArray[i] = Integer.parseInt(idArray[i]);
 		}
 		int result = adminReportService.updateStatusAll(intArray, reportStatus);
+		
+		
+		// 블랙리스트 처리
+		int reportNum = intArray[0];
+		Report r = reportService.selectReport(reportNum);
+		int reportCount = reportService.selectBlackList(r.getReportId()); 
+		int selectY = reportService.selectY(r.getReportId());
+		
+		System.out.println(reportCount);
+		System.out.println(selectY);
+		
+		if(reportCount >= 3 && selectY >= 3) {
+			reportService.updateBlackList(r.getReportId());
+		}
+		
 		return result > 0 ? "Y" : "N";
 	}
 	

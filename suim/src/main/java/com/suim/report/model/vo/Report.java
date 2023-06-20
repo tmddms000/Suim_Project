@@ -21,4 +21,6 @@ public class Report {
 	private int typeNo;
 	
 	private String thumbnail;
+	
+	private int isDuplicate;
 }

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
-import com.suim.member.model.service.AdminMemberService;
 import com.suim.report.model.service.ReportService;
 import com.suim.report.model.vo.Rattachment;
 import com.suim.report.model.vo.Report;
@@ -42,36 +41,35 @@ public class ReportController {
 							Model model
 							,HttpServletResponse response) {
 		
-		String memberId = r.getMemberId();
-		int result = reportService.insertReport(r);
+		// 중복신고 처리
+		Integer isDuplicate = reportService.hasDuplicateReport(r);
+
+		System.out.println(isDuplicate);
 		
-		System.out.println("r: " + r);	// r: Report(reportNo=0, reportTitle=xx, reportContent=<p>xx</p>, reportType=findBoard, reportId=dldldlxoghk, reportDate=null, reportStatus=null, memberId=tmddms000, typeNo=2200, thumbnail=null)
-		
-		if(result > 0) {
-			int reportCount = reportService.selectBlackList(r.getReportId());
-			if(reportCount >= 5) {
-				reportService.updateBlackList(r.getReportId());
+		if(isDuplicate == null) {
+			int result = reportService.insertReport(r);
+
+			if(result > 0) {
+				response.setContentType("text/html; charset=UTF-8");
+		        try {
+		            PrintWriter out = response.getWriter();
+		            out.println("<script>");
+		            out.println("alert('신고가 접수되었습니다.');");
+		            out.println("window.close();");
+		            out.println("</script>");
+		            out.flush();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
 			}
 			
-	        response.setContentType("text/html; charset=UTF-8");
-	        try {
-	            PrintWriter out = response.getWriter();
-	            out.println("<script>");
-	            out.println("alert('신고가 접수되었습니다.');");
-	            out.println("window.close();");
-	            out.println("</script>");
-	            out.flush();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-			return null;
-			
+	        return null;
 		} else {
-			model.addAttribute("errorMsg", "신고 접수가 실패했습니다. 다시 작성해주세요.");
-			
+			model.addAttribute("errorMsg", "이미 신고가 접수되었습니다.");
 			return "common/errorPage";
 		}
 	}
+	
 	public String saveFile(MultipartFile upfile, HttpSession session) {
 		
 		String originName = upfile.getOriginalFilename(); // "bono.jpg"

@@ -103,6 +103,7 @@
 		                                            <th scope="col">월세</th>
 		                                            <th scope="col">주거성별</th>
 		                                            <th scope="col">주거형태</th>
+		                                            <th scope="col">작성자</th>
 		                                        </tr>
 		                                    </thead>
 		                                    <tbody>
@@ -118,6 +119,7 @@
 				                                            <td>${ h.rent }</td>
 				                                            <td>${ h.resGender }</td>
 				                                            <td>${ h.resType }</td>
+				                                            <td>${ h.memberId }</td>
 				                                        </tr>
 				                                	</c:forEach>
 				                                </c:when>
