@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -241,49 +242,57 @@ public class ListHouseController {
 		    
 		}
 		
-		// 셰어하우스 예약 취소
 		@RequestMapping("rezCancel.rez")
 		public ModelAndView rezCancel(ModelAndView mv, HttpServletRequest request, HttpSession session,
-									int rezNo, String cancelContent, String sendMemberId, String recMeberId, String houseName) {
-					
-			Map<String, Object> rezCancel = new HashMap<>();
-				rezCancel.put("rezNo", rezNo);
-				rezCancel.put("cancelContent", cancelContent);
-				
-			int result = listHouseService.rezCancel(rezCancel);
-			
-			String se = listHouseService.memberEmail(sendMemberId);
-			
-			String re = listHouseService.memberEmail(recMeberId);
-	
-			try {
-				MailHandler sendMail = new MailHandler(mailSender);
-				sendMail.setText("<h1>예약이 취소되었습니다.</h1>" +"<br><br>" + "<h3>취소사유 :</h3>" + "<br>" + cancelContent);
-				sendMail.setFrom("suimm012@gmail.com", "쉼");
-				sendMail.setSubject(houseName + "의 예약이 취소되었습니다.");
-				sendMail.setTo(se);
-				sendMail.send();
-				sendMail.setTo(re);
-				sendMail.send();
-				
-			} catch (MessagingException e) {
-				log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-			} catch (Exception e) {
-				log.error("기타 에러 발생: {}", e.getMessage());
-			}
-			
-			
-			if (result > 0) { // 성공
+		                              int rezNo, String cancelContent, String sendMemberId, String recMeberId, String houseName) {
+		    Map<String, Object> rezCancel = new HashMap<>();
+		    rezCancel.put("rezNo", rezNo);
+		    rezCancel.put("cancelContent", cancelContent);
+
+		    int result = listHouseService.rezCancel(rezCancel);
+
+		    String se = listHouseService.memberEmail(sendMemberId);
+		    String re = listHouseService.memberEmail(recMeberId);
+
+		    // Call the mailSendAsync method for sending cancellation emails
+		    mailSendAsync(houseName, se, re, cancelContent);
+
+		    if (result > 0) { // 성공
 		        session.setAttribute("canMsg", "예약이 취소되었습니다.");
 		    } else { // 실패
 		        session.setAttribute("canMsg", "예약 취소에 실패하였습니다.");
 		    }
-		
-			String cancel = request.getHeader("Referer");
-			
+
+		    String cancel = request.getHeader("Referer");
 		    mv.setViewName("redirect:" + cancel);
 
 		    return mv;
-		
-		}	
+		}
+
+		private void mailSendAsync(String houseName, String sendEmail, String recEmail, String cancelContent) {
+		    CompletableFuture.runAsync(() -> {
+		        try {
+		            MailHandler sendMail = new MailHandler(mailSender);
+		            sendMail.setText("<h1>예약이 취소되었습니다.</h1>"
+		                    + "<br><br>"
+		                    + "<h3>취소사유 :</h3>"
+		                    + "<br>" + cancelContent);
+		            sendMail.setFrom("suimm012@gmail.com", "쉼");
+		            sendMail.setSubject(houseName + "의 예약이 취소되었습니다.");
+		            sendMail.setTo(sendEmail);
+		            sendMail.send();
+		            sendMail.setTo(recEmail);
+		            sendMail.send();
+		        } catch (MessagingException e) {
+		            log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+		        } catch (Exception e) {
+		            log.error("기타 에러 발생: {}", e.getMessage());
+		        }
+		    });
+		}
+
+
+
+
+
 }

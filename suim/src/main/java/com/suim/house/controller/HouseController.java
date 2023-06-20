@@ -133,9 +133,9 @@ public class HouseController {
 	    
 	    if(h.getHouseAddress() != null) {
 			double[] area = MainController.getCoordinates(h.getHouseAddress());
-			h.setLatitude(area[0]);
-			h.setLongitude(area[1]);
-		}
+			h.setLongitude(area[0]);
+			h.setLatitude(area[1]);
+		}	
 	    
 	    int result2 = houseService.enrollHouse(h);
 	    
@@ -234,7 +234,6 @@ public class HouseController {
 	    
 	    if(h.getHouseAddress() != null) {
 			double[] area = MainController.getCoordinates(h.getHouseAddress());
-
 			h.setLongitude(area[0]);
 			h.setLatitude(area[1]);
 		}

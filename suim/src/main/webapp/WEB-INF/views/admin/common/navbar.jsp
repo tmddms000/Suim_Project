@@ -55,7 +55,9 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                                 <a href="#" class="dropdown-item" onclick="event.preventDefault(); logout();">로그아웃</a>
+                                <a href="#" class="dropdown-item" id="sendNotificationBtn">알림보내기</a>
                             </div>
+                            
                             <script>
 	                            function logout() {
 	                		        $.ajax({
@@ -67,6 +69,31 @@
 	                		            }
 	                		        });
 	                		    }
+	                            
+	                            $(document).ready(function() {
+	                            	  $("#sendNotificationBtn").click(function() {
+	                            	    var message = prompt("보낼 메시지를 입력 :");
+
+	                            	    if (message) {
+	                            	      $.ajax({
+	                            	        url: "/admin/alarm.me",
+	                            	        type: "POST",
+	                            	        data: {
+	                            	          message: message,
+	                            	          role: "admin" // Set the custom variable value here
+	                            	        },
+	                            	        success: function() {
+	                            	          // Handle the success response if needed
+	                            	        },
+	                            	        error: function() {
+	                            	          // Handle the error response if needed
+	                            	        }
+	                            	      });
+	                            	    }
+	                            	  });
+	                            	});
+	                            
+	                            
                             </script>
                         </div>
                     </div>

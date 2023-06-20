@@ -80,14 +80,13 @@
 						</div>
 	
 						<div class="form-group row mb-3">
-							<label for="area" class="col-sm-4 col-form-label text-end">희망지역<span
-								class="text-red">*</span></label>
-							<div class="col-sm-5">
-								<input type="text" class="form-control" name="area"
-									id="area" placeholder="희망지역을 입력해주세요" disabled>
-								<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
-									추천해드려요!</p>
-							</div>
+						<label for="area" class="col-sm-4 col-form-label text-end">희망지역</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" name="area"
+								id="area" placeholder="희망지역을 입력해주세요" readonly onclick="triggerSearch();">
+							<p class="good-text" id="info_area">희망지역의 쉐어하우스를 우선적으로
+								추천해드려요!</p>
+						</div>
 							<div class="col-sm-3 p-0">
 								<button type="button" class="join-btn" onclick="searchAddr();">
 									<i class="fa-solid fa-magnifying-glass" style="font-size: 12px"></i>
@@ -293,6 +292,12 @@
             phoneInputEl.focus();
         }
         });
+    	
+    	
+    	function triggerSearch() {
+		    document.getElementById("area").blur(); // input 박스의 포커스 해제
+		    searchAddr(); // 검색 함수 호출
+		}
 	</script>
 
 	<script src="/resources/js/user/signup.js"></script>

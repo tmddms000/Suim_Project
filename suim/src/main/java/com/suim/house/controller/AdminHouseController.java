@@ -3,6 +3,7 @@ package com.suim.house.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -116,106 +117,92 @@ public class AdminHouseController {
 		}
 	}
 	
-	// 전체 선택 승인/반려용
 	@ResponseBody
 	@RequestMapping("updateStatusAll.ho")
-	public String updateStatusAll(String houseNo, 
-								String houseStatus,
-								HttpServletRequest request) {
-		
-		String[] idArray = houseNo.split(",");
-		int[] intArray = new int[idArray.length];
-		String[] email = new String[idArray.length];
-		House [] h = new House[idArray.length];
-		for (int i = 0; i < idArray.length; i++) {
-			intArray[i] = Integer.parseInt(idArray[i]);
-			h[i] = houseService.selectHouse(intArray[i]);
-			email[i] = adminHouseService.selectEmail(h[i].getMemberId());
-			
-		}
-		int result = adminHouseService.updateStatusAll(intArray, houseStatus);
-		for (int i = 0; i < idArray.length; i++) {
-			if(houseStatus.equals("심사완료")) {
-				  try {
-					    MailHandler sendMail = new MailHandler(mailSender);
-					    
-					    // HTML 형식으로 메일 내용을 작성합니다.
-					    String htmlContent = "<html>"
-					            + "<head>"
-					            + "<style>"
-					            + "body { font-family: Arial, sans-serif; }"
-					            + "h3 { color: #333; }"
-					            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
-					            + ".payment-button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; }"
-					            + "</style>"
-					            + "</head>"
-					            + "<body>"
-					            + "<h3>심사가 완료되었습니다.</h3>"
-					            + "<div class='message'>"
-					            + "<p>안녕하세요, 쉼입니다.</p>"
-					            + "<p>" + h[i].getHouseName() + "의 심사가 완료되었습니다.</p>"
-					            + "<p>마이페이지 셰어하우스 목록에서 결제를 진행해 주세요.</p>"
-					            + "<p>결제가 지연될 경우 반려 처리될 수 있습니다.</p>"
-					            + "<p>감사합니다.</p>"
-					            + "</div>"
-					            + "</body>"
-					            + "</html>";
+	public String updateStatusAll(String houseNo, String houseStatus, HttpServletRequest request) {
 
-					    sendMail.setText(htmlContent);
-					    sendMail.setFrom("suimm012@gmail.com", "쉼");
-					    sendMail.setSubject(h[i].getHouseName() + "의 심사가 완료되었습니다.");
-					    sendMail.setTo(email[i]);
-					    sendMail.send();
-					                
-					} catch (MessagingException e) {
-					    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-					} catch (Exception e) {
-					    log.error("기타 에러 발생: {}", e.getMessage());
-					}
-				  
-			} else if(houseStatus.equals("반려")) {
-			
-					  try {
-						    MailHandler sendMail = new MailHandler(mailSender);
-						    
-						    // HTML 형식으로 메일 내용을 작성합니다.
-						    String htmlContent = "<html>"
-						            + "<head>"
-						            + "<style>"
-						            + "body { font-family: Arial, sans-serif; }"
-						            + "h3 { color: #333; }"
-						            + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
-						            + ".payment-button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; }"
-						            + "</style>"
-						            + "</head>"
-						            + "<body>"
-						            + "<h3>심사가 반려되었습니다.</h3>"
-						            + "<div class='message'>"
-						            + "<p>안녕하세요, 쉼입니다.</p>"
-						            + "<p>" + h[i].getHouseName() + "의 심사가 반려되었습니다.</p>"
-						            + "<p>마이페이지 셰어하우스 목록에서 하우스 정보를 다시 수정해 주세요.</p>"
-						            + "<p>궁금하신 사항이 있으면 채널톡의 관리자에게 문의해 주세요.</p>"
-						            + "<p>감사합니다.</p>"
-						            + "</div>"
-						            + "</body>"
-						            + "</html>";
-
-						    sendMail.setText(htmlContent);
-						    sendMail.setFrom("suimm012@gmail.com", "쉼");
-						    sendMail.setSubject(h[i].getHouseName() + "의 심사가 반려되었습니다.");
-						    sendMail.setTo(email[i]);
-						    sendMail.send();
-						                
-						} catch (MessagingException e) {
-						    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-						} catch (Exception e) {
-						    log.error("기타 에러 발생: {}", e.getMessage());
-						}
-			}
-			
-		}
-		return result > 0 ? "Y" : "N";
+	    String[] idArray = houseNo.split(",");
+	    int[] intArray = new int[idArray.length];
+	    String[] email = new String[idArray.length];
+	    House[] h = new House[idArray.length];
+	    
+	    for (int i = 0; i < idArray.length; i++) {
+	        intArray[i] = Integer.parseInt(idArray[i]);
+	        h[i] = houseService.selectHouse(intArray[i]);
+	        email[i] = adminHouseService.selectEmail(h[i].getMemberId());
+	    }
+	    
+	    int result = adminHouseService.updateStatusAll(intArray, houseStatus);
+	    
+	    for (int i = 0; i < idArray.length; i++) {
+	        if (houseStatus.equals("심사완료")) {
+	            // Call the mailSendAsync method
+	            mailSendAsync(h[i].getHouseName(), email[i], true);
+	        } else if (houseStatus.equals("반려")) {
+	            // Call the mailSendAsync method
+	            mailSendAsync(h[i].getHouseName(), email[i], false);
+	        }
+	    }
+	    
+	    return result > 0 ? "Y" : "N";
 	}
+
+	private void mailSendAsync(String houseName, String email, boolean isApproved) {
+	    CompletableFuture.runAsync(() -> {
+	        try {
+	            MailHandler sendMail = new MailHandler(mailSender);
+	            
+	            String approvalMessage = isApproved ? "심사가 완료되었습니다." : "심사가 반려되었습니다.";
+	            String contentMessage = isApproved ? "결제를 진행해 주세요." : "하우스 정보를 다시 수정해 주세요.";
+	            
+	            // HTML content for the email
+	            String htmlContent = "<html>"
+	                    + "<head>"
+	                    + "<style>"
+	                    + "body { font-family: Arial, sans-serif; }"
+	                    + "h3 { color: #333; }"
+	                    + ".message { margin-top: 20px; padding: 10px; background-color: #f9f9f9; border: 1px solid #ddd; }"
+	                    + ".payment-button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; }"
+	                    + "</style>"
+	                    + "</head>"
+	                    + "<body>"
+	                    + "<h3>심사 " + approvalMessage + "</h3>"
+	                    + "<div class='message'>"
+	                    + "<p>안녕하세요, 쉼입니다.</p>"
+	                    + "<p>" + houseName + "의  " + approvalMessage + "</p>"
+	                    + "<p>마이페이지 셰어하우스 목록에서 " + contentMessage + "</p>"
+	                    + "<p>궁금하신 사항이 있으면 채널톡의 관리자에게 문의해 주세요.</p>"
+	                    + "<p>감사합니다.</p>"
+	                    + "</div>"
+	                    + "</body>"
+	                    + "</html>";
+
+	            sendMail.setText(htmlContent);
+	            sendMail.setFrom("suimm012@gmail.com", "쉼");
+	            sendMail.setSubject(houseName + "의 " + approvalMessage);
+	            sendMail.setTo(email);
+	            sendMail.send();
+	        } catch (MessagingException e) {
+	            log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+	        } catch (Exception e) {
+	            log.error("기타 에러 발생: {}", e.getMessage());
+	        }
+	    });
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// 검색용
 	@RequestMapping("search.ho")

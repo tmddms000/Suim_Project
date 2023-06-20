@@ -156,9 +156,6 @@ public class MainController {
 				JsonObject address = document.getAsJsonObject("address");
 				double longitude = address.get("x").getAsDouble();
 				double latitude = address.get("y").getAsDouble();
-				
-				System.out.println(longitude);
-				System.out.println(latitude);
 
 				coordinates = new double[] { longitude, latitude };
 			}

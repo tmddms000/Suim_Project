@@ -1,6 +1,7 @@
 package com.suim.member.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.suim.common.model.vo.PageInfo;
+import com.suim.common.socket.EchoHandler;
 import com.suim.common.template.Pagination;
 import com.suim.member.model.service.AdminMemberService;
 import com.suim.member.model.vo.Member;
@@ -26,6 +30,9 @@ public class AdminMemberController {
 
 	@Autowired
 	private AdminMemberService adminMemberService;
+	
+	@Autowired
+	private EchoHandler EchoHandler;
 	
 	
 	@RequestMapping("list.me")
@@ -242,6 +249,17 @@ public class AdminMemberController {
 		mv.addObject("m", m).setViewName("admin/member/member_detail");
 		
 		return mv;
+	}
+	
+	@ResponseBody
+	@RequestMapping("alarm.me")
+	public String alarm(String message, String role) throws JsonProcessingException {
+	    Map<String, String> data = new HashMap<>();
+	    data.put("message", message);
+	    data.put("role", role);
+	    String jsonData = new ObjectMapper().writeValueAsString(data);
+	    EchoHandler.adminBroadcastMessage(jsonData);
+	    return message;
 	}
 	
 	

@@ -1,14 +1,18 @@
 package com.suim.common.socket;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHandler;
@@ -26,6 +30,7 @@ public class EchoHandler extends TextWebSocketHandler {
 	private List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
 	// 1:1로 할 경우
 	private Map<String, WebSocketSession> userSessionsMap = new HashMap<String, WebSocketSession>();
+	
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {//클라이언트와 서버가 연결
@@ -47,6 +52,19 @@ public class EchoHandler extends TextWebSocketHandler {
             }
         }
     }
+	
+	
+	public void adminBroadcastMessage(String jsonData) {
+	    for (WebSocketSession session : sessions) {
+	        try {
+	            session.sendMessage(new TextMessage(jsonData));
+	            log.info("메세지 보냄");
+	        } catch (IOException e) {
+	            // Handle exception
+	        }
+	    }
+	}
+	
 	
 	
 	
