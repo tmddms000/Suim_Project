@@ -352,7 +352,9 @@
 				</div>
 				<!-- 테이블 끝 -->
 				<br>
-                <a class="btn btn-secondary" style="float:right;" href="list.me">목록으로</a>
+				<div align="center">
+                <a class="btn btn-secondary" style="text-align:center;" href="list.me">목록으로</a>
+                </div>
             </div>
             <br><br>    
             <!-- Table End -->
@@ -376,6 +378,9 @@
 
             <br>
 
+            <c:choose>
+				<c:when test="${listCount ne 0}">
+
 					<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
 						<ul class="pagination justify-content-center">
 							<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
@@ -391,6 +396,9 @@
 							</li>
 						</ul>
 					</nav>
+
+				</c:when>
+			</c:choose>
 
 
             <br clear="both"><br>

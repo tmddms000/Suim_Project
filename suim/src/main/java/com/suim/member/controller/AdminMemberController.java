@@ -103,11 +103,11 @@ public class AdminMemberController {
 			list = adminMemberService.selectCategoryMember(pi, memberId, category);
 		}
 		
-		System.out.println("listCount: " + listCount);
-		
+
 		mv.addObject("m", m);
 		mv.addObject("list", list);
 		mv.addObject("pi", pi);
+		mv.addObject("listCount", listCount);
 		mv.setViewName("admin/member/member_detail");
 		
 		model.addAttribute("id", memberId);
