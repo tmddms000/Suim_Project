@@ -174,7 +174,7 @@ public class AdminHouseController {
 	                    + "</style>"
 	                    + "</head>"
 	                    + "<body>"
-	                    + "<h3>심사 " + approvalMessage + "</h3>"
+	                    + "<h3>" + approvalMessage + "</h3>"
 	                    + "<div class='message'>"
 	                    + "<p>안녕하세요, 쉼입니다.</p>"
 	                    + "<p>" + houseName + "의  " + approvalMessage + "</p>"
