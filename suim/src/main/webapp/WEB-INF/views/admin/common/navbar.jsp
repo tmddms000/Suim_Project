@@ -41,6 +41,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                                 <a href="#" class="dropdown-item" onclick="event.preventDefault(); logout();">로그아웃</a>
+                                <a href="/" class="dropdown-item">메인페이지로 이동</a>
                             </div>
                             
                             <script>
