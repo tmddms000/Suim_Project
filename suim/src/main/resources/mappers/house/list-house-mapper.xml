@@ -86,7 +86,7 @@
 	   	 	</if>
 	   	 	AND p.FILE_LEVEL = 'Y'
 	   	 	AND h.HOUSE_STATUS = 'Y'
-	   	 	AND h.ENROLL_STATUS = '등록완료'
+	   	 	AND (h.ENROLL_STATUS = '등록완료' OR (h.ENROLL_STATUS = '심사완료' AND (h.AGE > 0 OR h.DEPOSIT = 0)))	 	
 	    </where>
 	    ORDER BY HOUSE_NO DESC
 	</select>
@@ -189,8 +189,8 @@
 		SELECT HOUSE_ADDRESS, LATITUDE, LONGITUDE
 		FROM HOUSE
 		WHERE HOUSE_NAME LIKE '%' || #{searchKeyword} || '%' AND ROWNUM = 1
-			  AND ENROLL_STATUS = '등록완료'
 			  AND HOUSE_STATUS = 'Y'
+			  AND (ENROLL_STATUS = '등록완료' OR (ENROLL_STATUS = '심사완료' AND (AGE > 0 OR DEPOSIT = 0)))	 	
 	</select>
 	
 	
