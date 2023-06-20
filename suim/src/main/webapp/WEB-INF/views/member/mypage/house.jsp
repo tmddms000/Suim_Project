@@ -1,23 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>마이페이지</title>
 <link href="/resources/css/user/mypage.css" rel="stylesheet" />
-
 <%@ include file="/WEB-INF/views/common/include.jsp"%>
-
-
-
 <style>
 body {
-	background-color: #f8f9fa;
+	background-color: #F8F9FA;
 }
-
-
 #myhouse-container {
 	width: 1100px;
 	height: 500px;
@@ -29,40 +22,34 @@ body {
 	display: flex;
 	justify-content: flex-start;
 }
-
 #myhouse-row {
 	display: flex;
 	justify-content: flex-start;
 	overflow: auto;
 }
-
 #myhouse-row::-webkit-scrollbar {
 	width: 0.2em; /* 스크롤바의 너비 */
 }
-
 #myhouse-row::-webkit-scrollbar-track {
-	background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
+	background: #F1F1F1; /* 스크롤바 트랙의 배경색 */
 }
 /* 스크롤바의 슬라이더(바) 스타일 설정 */
 #myhouse-row::-webkit-scrollbar-thumb {
 	background: #888; /* 스크롤바 슬라이더의 배경색 */
 }
-
 .btn {
 	width: 65px;
 	height: 25px;
 	padding: 0px;
 }
-
 /* 스크롤바 없애기; */
 /*
 	#myhouse-row::-webkit-scrollbar {
-    width: 0.5em; 
-    background-color: transparent; 
+    width: 0.5em;
+    background-color: transparent;
 	}
-
 	#myhouse-row::-webkit-scrollbar-thumb {
-		background-color: transparent; 
+		background-color: transparent;
 	}
 	*/
 .card {
@@ -70,7 +57,6 @@ body {
 	width: 500px;
 	height: 200px;
 }
-
 .img-fluid {
 	border-radius: 5px;
 	display: flex;
@@ -78,7 +64,6 @@ body {
 	width: 150px;
 	height: 150px;
 }
-
 .myhouse-img-div {
 	padding: 0px;
 	margin-left: 12px;
@@ -87,30 +72,24 @@ body {
 	display: flex;
 	align-items: center;
 }
-
 .card-body {
 	height: 200px;
 }
-
 .card-text {
 	margin-bottom: 7px;
 }
-
 #pagingArea {
 	width: fit-content;
 	margin: auto;
 }
-
 .pagination {
 	padding-top: 15px;
 }
-
 .card-form {
 	display: flex;
 	justify-content: center;
 	margin-top: 5px;
 }
-
 .card-form form {
 	width: 65px;
 	height: 25px;
@@ -118,15 +97,10 @@ body {
 	margin-left: 5px;
 }
 </style>
-
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
-
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
-
-
-
 	<div id="myhouse-container" class="container">
 		<div id="myhouse-row" class="row">
 			<c:choose>
@@ -183,13 +157,11 @@ body {
 									</c:choose>
 											<p class="card-text">${ h.houseDate }</p>
 											<div class="card-form">
-
 												<form action="/myhouseRez.ho" method="post">
 													<input type="hidden" name="houseNo" value="${h.houseNo}">
 													<c:if test="${h.enrollStatus eq '등록완료'}">
 														<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
 													</c:if>
-
 													<c:if test="${h.enrollStatus eq '심사완료'}">
 														<c:choose>
 															<c:when test="${h.age > 0}">
@@ -255,7 +227,6 @@ body {
 			</ul>
 		</div>
 	</c:if>
-
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
 <script>
@@ -273,7 +244,6 @@ body {
 				console.log(data.tid);
 				var box = data.next_redirect_pc_url;
 				window.open(box);
-
 			},
 			error : function(error) {
 				alert(error);
@@ -281,7 +251,4 @@ body {
 		});
 	}
 </script>
-
-
-
 </html>

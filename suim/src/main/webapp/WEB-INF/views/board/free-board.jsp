@@ -108,7 +108,7 @@
 				        <td class="bno">${b.boardNo}</td>
 				        <td>${b.boardDate}</td>
 				        <td>
-				            ${b.boardTitle}
+				            <c:out value="${b.boardTitle}"/>
 				            <span id="rcount">(${b.replyCount})</span>
 				            <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
 							<c:if test="${not empty b.boardDate and b.boardDate == today}">

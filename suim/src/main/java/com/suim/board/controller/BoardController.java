@@ -362,7 +362,7 @@ public class BoardController {
 			fin.put("gender", gender);
 			fin.put("category", category);
 			fin.put("search", search);
-						
+
 			if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
 				
 				// fin 이 필요 없는 로직
@@ -376,6 +376,7 @@ public class BoardController {
 			else {
 				listCount = boardService.selectfcListCount(fin);
 				
+
 				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 				flist = boardService.selectfList(pi, fin);
 				

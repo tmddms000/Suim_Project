@@ -84,5 +84,6 @@ public class AdminReportServiceImpl implements AdminReportService {
 		return adminReportDao.selectSearchList(sqlSession, map, pi);
 	}
 
+
 	
 }

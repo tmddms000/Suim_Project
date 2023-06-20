@@ -13,4 +13,11 @@ public interface ReportService {
 	int updateBlackList(String reportId);
 	
 	int insertRattachment(Rattachment ra);
+	
+	// 중복 신고 여부를 확인하는 메서드
+	Integer hasDuplicateReport(Report r);
+	
+	int selectY(String reportId);
+	
+	Report selectReport(int reportNo);
 }

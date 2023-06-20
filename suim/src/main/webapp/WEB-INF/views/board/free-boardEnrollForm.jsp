@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
  
 <head>
 <meta charset="UTF-8">
@@ -56,8 +59,12 @@
                 <table align="center">
 
                     <tr>
-                        <th><label for="title">제목</label></th>
-                        <td><input type="text" id="title" class="form-control" name="boardTitle" value="" required></td>
+	                        <th><label for="title">제목</label></th>
+					<td>
+					  <input type="text" id="title" class="form-control" name="boardTitle" value="<c:out value="${param.boardTitle}"/>">
+					</td>		
+
+
                     </tr>
                     
                     <tr>
@@ -178,6 +185,10 @@
 
 	    	            return true;
 	    	        }
+	    	        
+	    	        var userInput = document.getElementById('title').value;
+	    	        var escapedInput = encodeURIComponent(userInput);
+	    	        document.getElementById('title').value = escapedInput;
 	          
 	         
       </script>

@@ -160,14 +160,14 @@
 	        	            	// 응답 받은 경우
 	        	                // 화면에서 해당 데이터의 상태 업데이트
 	        	                if (response === 'Y') {
-	        	                	session.setAttribute("toastSuccess", "탈퇴되었습니다.");
+	        	                	alert("탈퇴되었습니다.");
 	        		            	location.reload();
 	        		            } else {
-	        		            	session.setAttribute("toastError", "회원 탈퇴에 실패했습니다.");
+	        		            	alert("회원 탈퇴에 실패했습니다.");
 	        		            }
 	        	            },
 	        	            error: function() {
-	        	            	session.setAttribute("toastError", "회원 탈퇴에 실패했습니다.");
+	        	            	alert("회원 탈퇴에 실패했습니다.");
 	        	            }
 	        	            
 	        	        });
@@ -205,14 +205,14 @@
 	        	            	// 응답 받은 경우
 	        	                // 화면에서 해당 데이터의 상태 업데이트
 	        	                if (response === 'Y') {
-	        	                	session.setAttribute("toastSuccess", "일반회원으로 변경되었습니다.");
+	        	                	alert("일반회원으로 변경되었습니다.");
 	        		            	location.reload();
 	        		            } else {
-	        		            	session.setAttribute("toastError", "일반회원 변경에 실패했습니다.");
+	        		            	alert("일반회원 변경에 실패했습니다.");
 	        		            }
 	        	            },
 	        	            error: function() {
-	        	            	session.setAttribute("toastError", "일반회원 변경에 실패했습니다.");
+	        	            	alert("일반회원 변경에 실패했습니다.");
 	        	            }
 	        	            
 	        	        });

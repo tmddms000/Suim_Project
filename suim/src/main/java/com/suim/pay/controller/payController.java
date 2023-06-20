@@ -13,8 +13,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import org.json.simple.parser.JSONParser;
@@ -123,7 +121,7 @@ public class payController {
 	                    ArrayList<Pay> pi = payService.selectPay(p);
 	                    Pay latestPay = pi.get(pi.size() - 1); // 가장 최근에 추가된 Pay 객체를 가져옵니다.
 	                    int pno = latestPay.getPaymentNo(); // pno 값을 가져옵니다.
-	
+
 	                   
 	                } else { // 실패 => 에러 메시지를 모델에 추가하고 에러 페이지로 이동합니다.
 	                    model.addAttribute("errorMsg", "결제 실패");
@@ -161,83 +159,117 @@ public class payController {
 	@RequestMapping(value = "update")
 	@ResponseBody
 	public ModelAndView updatePay(@RequestParam("hno") int hno,
-	                              @RequestParam("pg_token") String pgToken,
-	                              HttpSession session,
-	                              ModelAndView mv) throws UnsupportedEncodingException {
-	    int result = payService.updatePay(hno);
+						  @RequestParam("pg_token") String pgToken,
+	                        HttpSession session,
+	                        ModelAndView mv) throws UnsupportedEncodingException {
+		int result = payService.updatePay(hno);
+		
+		if (result > 0 /*|| result2 > 0*/) {
+		   
+		    House h = houseService.selectHouse(hno);
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+		    String email = loginUser.getEmail();
+			
+			  try {
+				    MailHandler sendMail = new MailHandler(mailSender);
+				   
+				    // HTML 형식으로 메일 내용을 작성합니다.
+				    String htmlContent = "<html>"
+				            + "<head>"
+				            + "<style>"
+				            + "body { font-family: Arial, sans-serif; }"
+				            + "h3 { color: #333; }"
+				            + ".message { margin-top: 20px; padding: 10px; background-color: #F9F9F9; border: 1px solid #ddd; }"
+				            + "</style>"
+				            + "</head>"
+				            + "<body>"
+				            + "<h3>결제가 완료되었습니다.</h3>"
+				            + "<div class='message'>"
+				            + "<p>안녕하세요, 쉼입니다.</p>"
+				            + "<p>" + h.getHouseName() + "의 결제가 완료되었습니다.</p>"
+				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+				            + "<p>감사합니다.</p>"
+				            + "</div>"
+				            + "</body>"
+				            + "</html>";
+				    sendMail.setText(htmlContent);
+				    sendMail.setFrom("suimm012@gmail.com", "쉼");
+				    sendMail.setSubject(h.getHouseName() + "의 결제가 완료되었습니다.");
+				    sendMail.setTo(email);
+				    sendMail.send();
+				               
+				} catch (MessagingException e) {
+				    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+				} catch (Exception e) {
+				    log.error("기타 에러 발생: {}", e.getMessage());
+				}
+		      
+			  mv.setViewName("common/paySuccess");
 
-	    if (result > 0 /*|| result2 > 0*/) {
-	        House h = houseService.selectHouse(hno);
-	        Member loginUser = (Member) session.getAttribute("loginUser");
-	        String email = loginUser.getEmail();
-
-	        // Call the mailSendAsync method for sending the payment completion email
-	        mailSendAsync(h.getHouseName(), email, "결제가 완료되었습니다.");
-
-	        mv.setViewName("redirect:mypage/house");
-	    } else {
-	        session.setAttribute("alertMsg", "결제가 실패되었습니다.");
-	        mv.setViewName("redirect:mypage/house");
-	    }
-	    return mv;
+		   
+		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+			
+			session.setAttribute("alertMsg", "결제가 실패되었습니다.");
+			
+			mv.setViewName("redirect:mypage/house");
+		}
+		return mv;
 	}
-
 	@RequestMapping(value = "cancel")
-	public String cancelPay(int hno, HttpSession session, Model model) {
-	    int result = payService.cancelPay(tid);
-
-	    if (result > 0) {
-	        session.setAttribute("alertMsg", "결제가 취소되었습니다.");
-	        House h = houseService.selectHouse(hno);
-	        Member loginUser = (Member) session.getAttribute("loginUser");
-	        String email = loginUser.getEmail();
-
-	        // Call the mailSendAsync method for sending the payment cancellation email
-	        mailSendAsync(h.getHouseName(), email, "결제가 취소되었습니다.");
-
-	        return "redirect:/mypage/house";
-	    } else {
-	        model.addAttribute("errorMsg", "결제가 실패 했습니다.");
-	        return "common/errorPage";
-	    }
-	}
-
-	private void mailSendAsync(String houseName, String email, String message) {
-	    CompletableFuture.runAsync(() -> {
-	        try {
-	            MailHandler sendMail = new MailHandler(mailSender);
-
-	            // HTML format for the email content
-	            String htmlContent = "<html>"
-	                    + "<head>"
-	                    + "<style>"
-	                    + "body { font-family: Arial, sans-serif; }"
-	                    + "h3 { color: #333; }"
-	                    + ".message { margin-top: 20px; padding: 10px; background-color: #F9F9F9; border: 1px solid #ddd; }"
-	                    + "</style>"
-	                    + "</head>"
-	                    + "<body>"
-	                    + "<h3>" + message + "</h3>"
-	                    + "<div class='message'>"
-	                    + "<p>안녕하세요, 쉼입니다.</p>"
-	                    + "<p>" + houseName + "의 " + message + "</p>"
-	                    + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
-	                    + "<p>감사합니다.</p>"
-	                    + "</div>"
-	                    + "</body>"
-	                    + "</html>";
-
-	            sendMail.setText(htmlContent);
-	            sendMail.setFrom("suimm012@gmail.com", "쉼");
-	            sendMail.setSubject(houseName + "의 " + message);
-	            sendMail.setTo(email);
-	            sendMail.send();
-
-	        } catch (MessagingException e) {
-	            log.error("메일 전송 중 에러 발생: {}", e.getMessage());
-	        } catch (Exception e) {
-	            log.error("기타 에러 발생: {}", e.getMessage());
-	        }
-	    });
+	public String cancelPay(int hno, HttpSession session,
+				            Model model) {
+		
+		
+		int result = payService.cancelPay(tid);
+		if (result > 0 ) {
+		    session.setAttribute("alertMsg", "결제가 취소되었습니다.");
+		   
+		    House h = houseService.selectHouse(hno);
+		    Member loginUser = (Member) session.getAttribute("loginUser");
+		    String email = loginUser.getEmail();
+			
+			  try {
+				    MailHandler sendMail = new MailHandler(mailSender);
+				   
+				    // HTML 형식으로 메일 내용을 작성합니다.
+				    String htmlContent = "<html>"
+				            + "<head>"
+				            + "<style>"
+				            + "body { font-family: Arial, sans-serif; }"
+				            + "h3 { color: #333; }"
+				            + ".message { margin-top: 20px; padding: 10px; background-color: #F9F9F9; border: 1px solid #ddd; }"
+				            + "</style>"
+				            + "</head>"
+				            + "<body>"
+				            + "<h3>결제가 취소되었습니다.</h3>"
+				            + "<div class='message'>"
+				            + "<p>안녕하세요, 쉼입니다.</p>"
+				            + "<p>" + h.getHouseName() + "의 결제가 취소되었습니다.</p>"
+				            + "<p>더욱 편안한 셰어하우스가 될 수 있도록 최선을 다하겠습니다.</p>"
+				            + "<p>감사합니다.</p>"
+				            + "</div>"
+				            + "</body>"
+				            + "</html>";
+				   
+				    sendMail.setText(htmlContent);
+				    sendMail.setFrom("suimm012@gmail.com", "쉼");
+				    sendMail.setSubject(h.getHouseName() + "의 결제가 취소되었습니다.");
+				    sendMail.setTo(email);
+				    sendMail.send();
+				               
+				} catch (MessagingException e) {
+				    log.error("메일 전송 중 에러 발생: {}", e.getMessage());
+				} catch (Exception e) {
+				    log.error("기타 에러 발생: {}", e.getMessage());
+				}
+		 
+		    return "redirect:/mypage/house";
+		   
+		} else { // 실패 => 에러 문구를 담아서 에러페이지로 포워딩
+			
+			model.addAttribute("errorMsg", "결제가 실패 했습니다.");
+			
+			return "common/errorPage";
+		}
 	}
 }

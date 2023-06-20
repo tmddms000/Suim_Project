@@ -91,4 +91,6 @@ public class AdminReportDao {
 		
 		return (ArrayList)sqlSession.selectList("adminReportMapper.selectSearchList", map, rowBounds);
 	}
+
+	
 }

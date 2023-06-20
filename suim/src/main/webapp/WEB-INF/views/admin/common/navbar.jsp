@@ -21,9 +21,11 @@
                                 <i class="fa fa-bell me-lg-2"></i>
                                 <span class="d-none d-lg-inline-flex">알림</span>
                             </a>
+                            <!-- 
                             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                                  <a href="#" class="dropdown-item" id="sendNotificationBtn">알림보내기</a>                  
                             </div>
+                            -->
                         </div>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
