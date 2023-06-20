@@ -14,9 +14,9 @@
 	form button {border:none!important;}
 	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
 </style>
-
+<c:if test="${ not empty loginUser and loginUser.email eq (('oox14@naver.com') or ('suimm012@gmail.com')) }">
 	<%@ include file="../common/include.jsp" %>
-
+ 
 	<div class="container-xxl position-relative bg-white d-flex p-0">
 	
         <!-- Spinner Start -->
@@ -65,6 +65,13 @@
 							         <div class="table-responsive">			
 					        <table id="notice-table" class="table">
 			                    <thead>
+			                    	<tr>
+			                    		<div align="right" style="margin:0px">
+							    					<a class="btn btn-secondary" style="display: inline-block; vertical-align: middle; line-height: 20px; background-color: rgb(250,107,111); height: 20px; text-decoration: none; color: #fff; padding: 0 10px; font-size: medium;" href="enrollForm.no">
+							       	 					공지사항 글작성
+						 							</a>
+						 				</div>
+						 			</tr>
 			                        <tr class="table-header">
 			                            <td class="nListNo">No</td>
 			                            <td class="title">제목</td>
@@ -151,3 +158,4 @@
         <!-- Content End -->
 
 	</div>
+</c:if>

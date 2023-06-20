@@ -73,7 +73,7 @@
 								분류
                             </th>
                             <th style="text-align : left;">
-								자주 묻는 질문 주제
+								제목
                             </th>   
                         </tr>
 

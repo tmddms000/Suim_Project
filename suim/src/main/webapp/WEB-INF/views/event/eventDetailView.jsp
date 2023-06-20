@@ -50,6 +50,8 @@
         	border-top-color: green;
         }
         
+       
+        
         
         
         
@@ -80,11 +82,11 @@
                 <table id="eventDetailTable" class="table">
                     <thead>
                         <tr class="table-header">
-                           
+                           <td hidden></td>
                             <td class="title contentHeader" style="flex; text-align : left;">
                             
                             	<div style="color: black; font-size: larger;">제목</div>
-                                <div>${e.eventTitle}</div>
+                                <div style="border-bottom-color: green;">${e.eventTitle}</div>
                             </td>              
                             <td class="createDate contentHeader" style="width:15%;">
                                 <div class="text-center">작성일자</div>
@@ -141,7 +143,7 @@
                     </tbody>
                 </table>
                 
-               <c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
+               <c:if test="${ not empty loginUser and loginUser.email eq (('oox14@naver.com') or ('suimm012@gmail.com')) }">
                          	<div align="center" style="display: inline-block;" align="right">
 				                <!-- 수정하기, 삭제하기 버튼은 이 글이 본인이 작성한 글일 경우에만 보여져야 함 -->
 				                <a class="btn btn-primary" onclick="postFormSubmit(1);">수정하기</a>

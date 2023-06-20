@@ -11,7 +11,7 @@
   
   
     
-    <c:if test="${ not empty loginUser and loginUser.memberId eq ('google969548') }">
+      <c:if test="${ not empty loginUser and loginUser.email eq (('oox14@naver.com') or ('suimm012@gmail.com')) }">
 <div class="container-xxl position-relative bg-white d-flex p-0">
  <%@ include file="../common/sidebar.jsp" %>
 	    <div class="content">
@@ -28,12 +28,13 @@
 	                <table>
 	                    <tr>
 	                        <th><label for="title">제목</label></th>
-	                        <td><input type="text" id="title" class="form-control" name="eventTitle" value="${ e.eventTitle }"></td>
+	                        <td><input type="text" id="title" class="form-control" name="eventTitle" value="${ e.eventTitle }" required></td>
 	                    </tr>
 	                    <tr>
+	                    	<th><label for="category">이벤트 카테고리</label></th>
 		                    <td>
 	                    		<select id="category" name="eventCategory" required>
-	                    			<option value="">이벤트를 선택</option>
+	                    			<option value="">이벤트 선택</option>
 						            <option value="자유게시판">자유게시판 이벤트</option>
 						            <option value="house">house 이벤트</option>
 						            <option value="테스트 작성용 카테고리">테스트 작성용 이벤트 카테고리</option>
@@ -70,13 +71,13 @@
 	                    </tr>
 	                    <tr>
 	                        <th><label for="content">내용</label></th>
-	                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="eventContent">${e.eventContent }</textarea></td>
+	                        <td><textarea id="content" class="form-control" rows="10" style="resize:none;" name="eventContent" required>${e.eventContent }</textarea></td>
 	
 	                    </tr>
 	                </table>
 	                <br>
 	
-	                <div align="center">
+	                <div align="left" style="">
 	                    <button type="submit" class="btn btn-primary">등록하기</button>
 	                    
 	                    <!-- 취소 버튼 누르면 이벤트 게시판 화면으로 이동 -->
