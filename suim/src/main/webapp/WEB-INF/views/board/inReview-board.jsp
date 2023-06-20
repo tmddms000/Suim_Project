@@ -135,10 +135,12 @@
 								<span style="font-size: 18px; font-weight: bold;"> [후기] </span>
 								<c:choose>
 									<c:when test="${fn:length(i.inrTitle) > 15}">
-			      ${fn:substring(i.inrTitle, 0, 15)}...
+
+			      <c:out value="${fn:substring(i.inrTitle, 0, 15)}..."/>
 			    </c:when>
 									<c:otherwise>
-			      ${i.inrTitle}
+			      <c:out value="${i.inrTitle}"/>
+
 			    </c:otherwise>
 								</c:choose>
 							</h5>

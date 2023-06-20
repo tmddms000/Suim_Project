@@ -186,7 +186,7 @@
                     게시글이 없습니다.
                 </c:if>
                 <c:if test="${not empty fb.findTitle}">
-                    ${fb.findTitle}
+                    <c:out value="${fb.findTitle}"/>
                     <span id="rcount">(${fb.freplyCount})</span>
                     <fmt:formatDate var="today" pattern="yyyy-MM-dd" value="<%= new Date() %>" />
                     <c:if test="${not empty fb.findDate and fb.findDate == today}">
