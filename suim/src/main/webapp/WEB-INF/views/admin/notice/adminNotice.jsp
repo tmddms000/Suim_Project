@@ -14,9 +14,9 @@
 	form button {border:none!important;}
 	.searchForm>form>input, .searchForm>form>div {display:inline-block;}
 </style>
-<c:if test="${ not empty loginUser and loginUser.email eq (('oox14@naver.com') or ('suimm012@gmail.com')) }">
+
 	<%@ include file="../common/include.jsp" %>
- 
+ <c:if test="${ not empty loginUser and loginUser.email eq (('oox14@naver.com') or ('suimm012@gmail.com')) }">
 	<div class="container-xxl position-relative bg-white d-flex p-0">
 	
         <!-- Spinner Start -->
@@ -48,16 +48,12 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq 'A'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev">전체</a></li>
+									data-toggle="tab" href="/admin.no">공지사항 관리 바로가기</a></li>
 								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq '자유게시판'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=자유게시판">자유게시판</a></li>
-								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq 'house'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=house">house</a></li>
-								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq '종료된이벤트'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=종료된이벤트">종료된이벤트</a></li>
+									class="nav-link <c:if test="${category eq '일반 사용자용 공지사항 바로가기'}">active</c:if>"
+									data-toggle="tab" href="notice.no">일반 공지사항 바로가기</a></li>
+								
+								
 								
 							</ul>
 					        <div class="tab-content pt-3" id="nav-tabContent">

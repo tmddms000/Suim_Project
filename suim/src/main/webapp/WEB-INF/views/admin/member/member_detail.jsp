@@ -146,10 +146,10 @@
 					                                            <th scope="row">프로필 사진</th>
 					                                            <c:choose>
 													        		<c:when test="${not empty m.changeName}">
-								                                		<td><img src="${ m.changeName }" style="border-radius:200px;"></img></td>
+								                                		<td><img src="${ m.changeName }" style="border-radius:200px;width:280;height:280;"></img></td>
 								                                	</c:when>
 															        <c:otherwise>
-															            <td><img src="/resources/img/common/default_profile.png"  style="border-radius:200px;"></img></td>
+															            <td><img src="/resources/img/common/default_profile.png" style="border-radius:200px; width:280;height:280;"></img></td>
 															        </c:otherwise>
 															    </c:choose>
 					                                        </tr>
@@ -352,7 +352,9 @@
 				</div>
 				<!-- 테이블 끝 -->
 				<br>
-                <a class="btn btn-secondary" style="float:right;" href="list.me">목록으로</a>
+				<div align="center">
+                <a class="btn btn-secondary" style="text-align:center;" href="list.me">목록으로</a>
+                </div>
             </div>
             <br><br>    
             <!-- Table End -->
@@ -373,6 +375,31 @@
                     }
 	            });
 			</script>
+
+            <br>
+
+            <c:choose>
+				<c:when test="${listCount ne 0}">
+
+					<nav id="pagingArea" style="margin-top: 30px; margin-bottom: 30px;">
+						<ul class="pagination justify-content-center">
+							<li class="page-item ${pi.currentPage == 1 ? 'disabled' : ''}">
+								<a class="page-link" href="<c:url value='/admin/detail.me?id=${id}&category=${category}&currentPage=${pi.currentPage - 1}'/>">&lt;</a>
+							</li>
+							<c:forEach var="p" begin="${pi.startPage}" end="${pi.endPage}" step="1">
+								<li class="page-item ${pi.currentPage == p ? 'active' : ''}">
+									<a class="page-link" href="<c:url value='/admin/detail.me?id=${id}&category=${category}&currentPage=${p}'/>">${p}</a>
+								</li>
+							</c:forEach>
+							<li class="page-item ${pi.currentPage == pi.maxPage || pi.listCount == 0 ? 'disabled' : ''}">
+								<a class="page-link" href="<c:url value='/admin/detail.me?id=${id}&category=${category}&currentPage=${pi.currentPage + 1}'/>">&gt;</a>
+							</li>
+						</ul>
+					</nav>
+
+				</c:when>
+			</c:choose>
+
 
             <br clear="both"><br>
             

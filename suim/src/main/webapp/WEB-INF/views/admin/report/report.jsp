@@ -53,7 +53,6 @@
 								<div class="select">
 				                    <select class="form-select form-select-sm mb-3" name="condition" style="margin-bottom: unset !important;height: 36px;">
 				                        <option value="REPORT_TITLE">제목</option>
-				                        <option value="REPORT_TYPE">유형</option>
 				                        <option value="REPORT_ID">신고당한사람</option>
 				                    </select>
 				                </div>
@@ -92,6 +91,7 @@
 		                                            <th scope="col">유형</th>
 		                                            <th scope="col">제목</th>
 		                                            <th scope="col">신고당한사람</th>
+		                                            <th scope="col">신고자</th>
 		                                            <th scope="col">신고일</th>
 		                                            <th scope="col">상태</th>
 		                                        </tr>
@@ -119,6 +119,7 @@
 								                            </td>
 				                                            <td>${ r.reportTitle }</td>
 				                                            <td>${ r.reportId }</td>
+				                                            <td>${ r.memberId }</td>
 				                                            <td>${ r.reportDate }</td>
 				                                            <td class="report-status">
 				                                            	<c:choose>

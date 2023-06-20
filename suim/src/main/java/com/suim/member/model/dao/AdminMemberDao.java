@@ -75,7 +75,7 @@ public class AdminMemberDao {
 		map.put("memberId", memberId);
 		map.put("category", category);
 		map.put("rowBounds", rowBounds);
-		return sqlSession.selectList("adminMemberMapper.selectCategoryMember", map);
+		return sqlSession.selectList("adminMemberMapper.selectCategoryMember", map, rowBounds);
 	}
 	
 	public int deleteMember(SqlSessionTemplate sqlSession, String memberId) {
