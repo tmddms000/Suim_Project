@@ -53,16 +53,11 @@
 							<ul class="nav nav-tabs">
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq 'A'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev">전체</a></li>
+									data-toggle="tab" href="/admin.ev">이벤트 관리 메인 바로가기</a></li>
 								<li class="nav-item"><a
 									class="nav-link <c:if test="${category eq '자유게시판'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=자유게시판">자유게시판</a></li>
-								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq 'house'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=house">house</a></li>
-								<li class="nav-item"><a
-									class="nav-link <c:if test="${category eq '종료된이벤트'}">active</c:if>"
-									data-toggle="tab" href="/admin.ev?cPage=1&category=종료된이벤트">종료된이벤트</a></li>
+									data-toggle="tab" href="event.ev">일반 사용자용 이벤트 바로가기</a></li>
+								
 								
 							</ul>
 					        <div class="tab-content pt-3" id="nav-tabContent">
@@ -86,7 +81,7 @@
 						                <td class="title">제목</td>
 						                <td class="eventDate">작성일</td>
 						                <td class="eventView">조회수</td>
-						                <td class="eventStatus" style="text-align : center;">이벤트 진행 여부</td>
+						                <td class="eventStatus" style="text-align : center;">유효한 이벤트</td>
 					            	</tr>
 					         	</thead>
 					         	<tbody>
