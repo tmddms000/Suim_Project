@@ -19,7 +19,7 @@
          <!-- jQuery CDN -->
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
          <!-- 1:1문의 js -->
-         <script src="js/chatbot.js"></script>
+         <script src="/resources/js/common/chatbot.js"></script>
          <!-- faq css -->
          <link href="/resources/css/faq/faqList.css" rel="stylesheet" />
          
@@ -92,7 +92,7 @@
                                
                                <br/>
                                
-                               	<a href="/member/join">회원가입 바로가기</a>
+                               	<a href="/member/term">회원가입 바로가기</a>
                                <br/>
                                
                                		위 링크를 클릭 하시면 회원가입 페이지로 이동하실 수 있습니다.

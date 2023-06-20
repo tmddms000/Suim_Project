@@ -18,12 +18,8 @@
 			</div>
 			<div class="col-md-2"></div>
 			<div class="col-md-2">
-				<div style="margin-left: 20px;">
-					<a href="#"
-						style="border: 1px solid white; text-decoration: none; color: white; padding: 1;">쉼
-						가입하기</a>
-				</div>
-				<div class="py-4">
+				
+				<div class="py-4" style="margin-top : 30px;">
 					<a href="" onclick="event.preventDefault(); alert('서비스 준비중입니다.');">
 					  <img src="/resources/img/common/facebook.png" style="width: 32px; height: 32px;">
 					</a>&nbsp;
