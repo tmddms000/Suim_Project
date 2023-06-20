@@ -397,9 +397,9 @@
 						</ul>
 					</nav>
 
+
 				</c:when>
 			</c:choose>
-
 
             <br clear="both"><br>
             
