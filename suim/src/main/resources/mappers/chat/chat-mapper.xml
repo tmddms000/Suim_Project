@@ -79,6 +79,7 @@
 		SELECT *
 		FROM CHAT_LOG
 		WHERE CHAT_NO = #{rno}
+		ORDER BY SEND_DATE ASC
 	</select>
 	
 	 <select id="selectRead" parameterType="java.util.Map" resultType="int">

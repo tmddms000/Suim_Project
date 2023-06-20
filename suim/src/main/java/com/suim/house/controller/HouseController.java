@@ -209,6 +209,7 @@ public class HouseController {
 		
 	    House h = houseService.selectHouse(hno);
 	    
+	    
 	    if (!h.getEnrollStatus().equals("등록완료")) {
 	    	session.setAttribute("alertMsg", "현재 심사중입니다.");
 	    	mv.setViewName("redirect:/mypage/house");
@@ -241,7 +242,9 @@ public class HouseController {
 	    h.setHouseNo(hno);
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    h.setMemberId(loginUser.getMemberId());
-
+	    int age = h.getAge();
+	    h.setAge(++age);
+	    
 	    int result2 = houseService.updateHouse(h);
 
 	    int result = result2;

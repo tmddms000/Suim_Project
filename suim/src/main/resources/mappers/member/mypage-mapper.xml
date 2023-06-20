@@ -262,7 +262,7 @@
 	<!-- 내가 쓴 셰어하우스 리스트 select 쿼리문 -->
 	<select id="selectHouseList" resultMap="myHouseResultMap">
 	   SELECT h.HOUSE_NO, h.HOUSE_NAME, h.HOUSE_ADDRESS, h.DEPOSIT, h.RENT, h.ENTER_DATE, h.MAX_ENTER_DATE, h.MIN_STAY, h.MAX_STAY, h.ROOM_PEOPLE, h.INC_FURNITURE, h.HOUSE_CONTENT, h.RES_GENDER, h.RES_TYPE, h.FLOOR, h.HOUSE_STATUS, h.HOUSE_DATE, h.MEMBER_ID, p.CHANGE_NAME
-	   , h.ENROLL_STATUS 
+	   , h.ENROLL_STATUS, h.AGE 
 	    FROM HOUSE h
 	    JOIN PHOTO p ON h.HOUSE_NO = p.HOUSE_NO
 	    WHERE h.HOUSE_STATUS = 'Y'

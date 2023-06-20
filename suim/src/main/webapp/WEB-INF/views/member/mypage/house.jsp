@@ -1,16 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <title>마이페이지</title>
 <link href="/resources/css/user/mypage.css" rel="stylesheet" />
+
 <%@ include file="/WEB-INF/views/common/include.jsp"%>
+
+
+
 <style>
 body {
-	background-color: #F8F9FA;
+	background-color: #f8f9fa;
 }
+
+
 #myhouse-container {
 	width: 1100px;
 	height: 500px;
@@ -22,34 +29,40 @@ body {
 	display: flex;
 	justify-content: flex-start;
 }
+
 #myhouse-row {
 	display: flex;
 	justify-content: flex-start;
 	overflow: auto;
 }
+
 #myhouse-row::-webkit-scrollbar {
 	width: 0.2em; /* 스크롤바의 너비 */
 }
+
 #myhouse-row::-webkit-scrollbar-track {
-	background: #F1F1F1; /* 스크롤바 트랙의 배경색 */
+	background: #f1f1f1; /* 스크롤바 트랙의 배경색 */
 }
 /* 스크롤바의 슬라이더(바) 스타일 설정 */
 #myhouse-row::-webkit-scrollbar-thumb {
 	background: #888; /* 스크롤바 슬라이더의 배경색 */
 }
+
 .btn {
 	width: 65px;
 	height: 25px;
 	padding: 0px;
 }
+
 /* 스크롤바 없애기; */
 /*
 	#myhouse-row::-webkit-scrollbar {
-    width: 0.5em;
-    background-color: transparent;
+    width: 0.5em; 
+    background-color: transparent; 
 	}
+
 	#myhouse-row::-webkit-scrollbar-thumb {
-		background-color: transparent;
+		background-color: transparent; 
 	}
 	*/
 .card {
@@ -57,6 +70,7 @@ body {
 	width: 500px;
 	height: 200px;
 }
+
 .img-fluid {
 	border-radius: 5px;
 	display: flex;
@@ -64,6 +78,7 @@ body {
 	width: 150px;
 	height: 150px;
 }
+
 .myhouse-img-div {
 	padding: 0px;
 	margin-left: 12px;
@@ -72,24 +87,30 @@ body {
 	display: flex;
 	align-items: center;
 }
+
 .card-body {
 	height: 200px;
 }
+
 .card-text {
 	margin-bottom: 7px;
 }
+
 #pagingArea {
 	width: fit-content;
 	margin: auto;
 }
+
 .pagination {
 	padding-top: 15px;
 }
+
 .card-form {
 	display: flex;
 	justify-content: center;
 	margin-top: 5px;
 }
+
 .card-form form {
 	width: 65px;
 	height: 25px;
@@ -97,10 +118,15 @@ body {
 	margin-left: 5px;
 }
 </style>
+
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/common/header.jsp" />
+
 	<%@ include file="/WEB-INF/views/member/mypage/mypage-header.jsp"%>
+
+
+
 	<div id="myhouse-container" class="container">
 		<div id="myhouse-row" class="row">
 			<c:choose>
@@ -121,37 +147,54 @@ body {
 										<div class="card-body text-center">
 											<h5 class="card-title">${h.houseName}</h5>
 											<p class="card-text">${h.houseAddress}</p>
-											<c:if test="${h.enrollStatus ne '등록완료'}">
-												<p class="card-text">${ h.enrollStatus }</p>
-											</c:if>
-											<c:if test="${h.enrollStatus eq '등록완료'}">
-												<c:choose>
-													<c:when test="${h.deposit == 0}">
-														<p class="card-text">없음 /
-															${(h.rent/10000).intValue()}만원</p>
-													</c:when>
+									<c:choose>
+									    <c:when test="${h.enrollStatus eq '등록완료'}">
+									        <c:choose>
 													<c:when test="${h.rent == 0}">
 														<p class="card-text">${(h.deposit/10000).intValue()}만원
 															/ 없음</p>
-													</c:when>
-													<c:when test="${h.deposit == 0} && ${h.rent == 0}">
-														<p class="card-text">없음 / 없음</p>
 													</c:when>
 													<c:otherwise>
 														<p class="card-text">${(h.deposit/10000).intValue()}만원
 															/ ${(h.rent/10000).intValue()}만원</p>
 													</c:otherwise>
 												</c:choose>
-											</c:if>
+									    </c:when>
+									    <c:otherwise>
+									        <c:choose>
+									            <c:when test="${h.enrollStatus eq '심사완료' && h.age > 0}">
+									                <c:choose>
+									                    <c:when test="${h.deposit == 0}">
+									                        <p class="card-text">없음 / ${(h.rent/10000).intValue()}만원</p>
+									                    </c:when>
+									                    <c:otherwise>
+									                        <p class="card-text">${(h.deposit/10000).intValue()}만원 / ${(h.rent/10000).intValue()}만원</p>
+									                    </c:otherwise>
+									                </c:choose>
+									            </c:when>
+									            <c:when test="${h.enrollStatus eq '심사완료' && h.deposit == 0}">
+									                <p class="card-text">없음 / ${(h.rent/10000).intValue()}만원</p>
+									            </c:when>
+									            <c:otherwise>
+									                <p class="card-text">${h.enrollStatus}</p>
+									            </c:otherwise>
+									        </c:choose>
+									    </c:otherwise>
+									</c:choose>
 											<p class="card-text">${ h.houseDate }</p>
 											<div class="card-form">
+
 												<form action="/myhouseRez.ho" method="post">
 													<input type="hidden" name="houseNo" value="${h.houseNo}">
 													<c:if test="${h.enrollStatus eq '등록완료'}">
 														<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
 													</c:if>
+
 													<c:if test="${h.enrollStatus eq '심사완료'}">
 														<c:choose>
+															<c:when test="${h.age > 0}">
+																<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
+															</c:when>	
 															<c:when test="${h.deposit == 0}">
 																<button type="submit" class="btn btn-primary btn-sm">예약확인</button>
 															</c:when>
@@ -212,6 +255,7 @@ body {
 			</ul>
 		</div>
 	</c:if>
+
 	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
 </body>
 <script>
@@ -229,7 +273,7 @@ body {
 				console.log(data.tid);
 				var box = data.next_redirect_pc_url;
 				window.open(box);
-							
+
 			},
 			error : function(error) {
 				alert(error);
@@ -237,4 +281,7 @@ body {
 		});
 	}
 </script>
+
+
+
 </html>

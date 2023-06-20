@@ -68,9 +68,6 @@ public class BoardController {
 		ArrayList<Board> list = boardService.selectList(pi);
 		ArrayList<Board> blist = boardService.selectbList();
 		
-		System.out.println(list);
-		
-
 		mv.addObject("pi", pi)
 		  .addObject("list", list)
 		  .addObject("blist", blist)
@@ -365,12 +362,7 @@ public class BoardController {
 			fin.put("gender", gender);
 			fin.put("category", category);
 			fin.put("search", search);
-			
-			System.out.println(search);
-			
-			
-			
-
+						
 			if(gender.equals("all") && category.equals("all") && search.equals("")) { // 전체조회로직
 				
 				// fin 이 필요 없는 로직
@@ -383,8 +375,6 @@ public class BoardController {
 			} 
 			else {
 				listCount = boardService.selectfcListCount(fin);
-				
-				System.out.println(listCount);
 				
 				pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 				flist = boardService.selectfList(pi, fin);
@@ -608,8 +598,6 @@ public class BoardController {
 
 			
 			int listCount = boardService.selectiListCount();
-			
-			System.out.println(listCount);
 			
 			int pageLimit = 10;
 			int boardLimit = 9;

@@ -27,6 +27,7 @@
 		<result column="LATITUDE" property="latitude" />
 		<result column="LONGITUDE" property="longitude" />
 		<result column="NICKNAME" property="nickName" />
+		<result column="AGE" property="age" />
 
 	</resultMap>
 
@@ -150,7 +151,8 @@
 		ENROLL_STATUS = '심사중',
 		MEMBER_ID = #{memberId},
 		LATITUDE = #{latitude},
-		LONGITUDE = #{longitude}
+		LONGITUDE = #{longitude},
+		AGE = #{age}
 		
 		WHERE HOUSE_NO = #{houseNo}
 	</update>
@@ -170,5 +172,6 @@
     SET HOUSE_STATUS = 'N'
     WHERE HOUSE_NO = #{hno}
 	</update>
+	
 	
 </mapper>

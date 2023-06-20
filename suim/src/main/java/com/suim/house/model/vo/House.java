@@ -31,6 +31,7 @@ public class House {
     private String enrollStatus; // 등록 상태
     private double latitude;
     private double longitude;
+    private int age;
 
 
     
