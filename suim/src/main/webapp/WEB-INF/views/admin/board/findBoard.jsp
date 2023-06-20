@@ -27,7 +27,13 @@
 	.delConDiv{
 		text-align: right;
 	}
-</style>
+	img {
+		width : 500px;
+		height : 500px;
+		object-fit: cover;
+	}
+	
+	</style>
 
 	<%@ include file="../common/include.jsp" %>
 
@@ -264,6 +270,7 @@
 					</ul>
 				</nav>
 			</c:if>
+			
 			
 			
 			
