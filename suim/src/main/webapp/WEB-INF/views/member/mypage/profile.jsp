@@ -19,7 +19,9 @@
 <div class="container bg-white mb-4" style="margin-top : 50px;">
   <div class="row justify-content-center text-center">
     <div class="col-xl-4 text-center">
-      <h1>내 정보</h1>
+      <h1>내 정보</h1> 
+      
+  
       <table class="table table-responsive">
         <tbody>
           <tr>
@@ -67,14 +69,41 @@
           </c:if>
           <tr>
             <td><i class="fa-solid fa-coins"></i><strong> 보유 포인트</strong></td>
-            <td><c:out value="${loginUser.memberPoint}" />원 보유중 <a href="<c:url value='/' />">사용하기</a></td>
+            <td><c:out value="${loginUser.memberPoint}" />원 보유중 <a href="<c:url value='/event.ev' />">사용하기</a></td>
           </tr>
           <tr>
             <td><i class="fa-solid fa-calendar"></i><strong> 최근 로그인 날짜</strong></td>
             <td><fmt:formatDate value="${loginUser.loginDate}" pattern="yy/MM/dd aa h시 mm분" /></td>
           </tr>
+          
+          <tr>
+ 
+          <td>
+			  <div class="form-check">
+			    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" ${result == 1 ? 'checked' : ''}>
+			    <label class="form-check-label" for="flexRadioDefault1">
+			      알림 켜기
+			    </label>
+			  </div>
+			</td>
+			s
+			<td>
+			  <div class="form-check">
+			    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" ${result != 1 ? 'checked' : ''}>
+			    <label class="form-check-label" for="flexRadioDefault2">
+			      알림 끄기
+			    </label>
+			  </div>
+			</td>
+				
+          </tr>
         </tbody>
       </table>
+      
+      
+      
+      
+      
       <div class="d-flex justify-content-center" style="margin-bottom: 20px;">
         <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal" style="width: 48%; margin-right : 5px;">수정하기</a>
        
@@ -87,6 +116,8 @@
 			 <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" style="width: 48%;">탈퇴하기</a>
 			</c:otherwise>
 		</c:choose>
+		
+
       </div>
     </div>
   </div>
@@ -141,6 +172,8 @@ var confirmed = confirm("정말로 삭제하시겠습니까? 삭제 시 되돌�
   }
   
 }
+
+
 </script>
 
 
@@ -162,6 +195,30 @@ var confirmed = confirm("정말로 삭제하시겠습니까? 삭제 시 되돌�
     const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
     document.getElementById("formattedPhone").textContent = formattedPhoneNumber;
   };
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('.form-check-input').on('change', function() {
+      var setAlarmValue = $(this).val(); // Assuming the form check inputs have a value attribute
+      var email = '${loginUser.email}'; // Replace with the actual memberId value
+      
+      // AJAX request
+      $.ajax({
+        type: 'POST',
+        url: '/mypage/setAlarm',
+        data: {
+        	email: email,
+        },
+        success: function(response) {
+        	console.log(response);
+        },
+        error: function(xhr, status, error) {
+          console.log('An error occurred during the AJAX request.');
+        }
+      });
+    });
+  });
 </script>
 
 

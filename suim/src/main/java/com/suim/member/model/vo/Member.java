@@ -41,4 +41,5 @@ public class Member {
 	private double longitude;
 	
 	private int adminAuth;
+	private int setAlarm;
 }

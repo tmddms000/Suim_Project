@@ -58,4 +58,8 @@ public interface MypageService {
 	// 결제내역 리스트 조회
 	ArrayList<Pay> selectPayList(PageInfo pi, String memberId);
 
+	int selectAlarmCheck(String email);
+	
+	int updateAlarmCheck(String email);
+
 }

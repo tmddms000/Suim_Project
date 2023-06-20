@@ -38,7 +38,7 @@
 
 		$(document).ready(function(){ //페이지가 새로고침 되면 웹소켓을 연결시킨다.
 			
-		if(${loginUser != null}){
+		if(${loginUser != null} && ${loginUser.setAlarm == 1}){
 			connectWs();
 			addMessageToNotificationList('${loginUser.memberId}');
 			$('#notificationButton').show();

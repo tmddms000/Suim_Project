@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -91,6 +92,11 @@ public class MypageController {
 
 		if (memberService.nickCheck(m.getNickName()) > 0 && !loginUser.getNickName().equals(m.getNickName())) {
 			session.setAttribute("toastError", "현재 사용중이거나 중복된 닉네임입니다.");
+			return "redirect:" + session.getAttribute("originalUrl");
+		}
+		
+		if(!Pattern.matches("^(?!\\s)(.{1,6})$", m.getNickName())) {
+			session.setAttribute("toastError", "닉네임은 공백포함 6글자 이하로 해야합니다.");
 			return "redirect:" + session.getAttribute("originalUrl");
 		}
 
@@ -254,7 +260,7 @@ public class MypageController {
 
 	// 마이페이지의 내 정보 조회로 이동합니다.
 	@GetMapping("profile")
-	public String mypageProfile(HttpServletRequest request) {
+	public String mypageProfile(HttpServletRequest request, Model model) {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			session.setAttribute("alertMsg", "로그인 후 이용 가능합니다.");
@@ -263,6 +269,9 @@ public class MypageController {
 		
 		
 		session.setAttribute("originalUrl", request.getRequestURI());
+		int result = mypageService.selectAlarmCheck(loginUser.getEmail());
+		model.addAttribute("result", result);
+		
 		return "member/mypage/profile";
 	}
 
@@ -402,6 +411,20 @@ public class MypageController {
 		 return "member/mypage/payment";
 		
 
+	}
+	
+	@ResponseBody
+	@RequestMapping("setAlarm")
+	public int setAlarm(String email) {
+		int result = mypageService.updateAlarmCheck(email);
+		Member loginUser = new Member();
+		
+		loginUser.setMemberId(((Member)session.getAttribute("loginUser")).getMemberId());
+		
+		loginUser = memberService.loginMember(loginUser);
+		
+		session.setAttribute("loginUser", loginUser);
+		return result;
 	}
 
 }

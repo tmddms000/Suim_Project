@@ -105,4 +105,14 @@ public class MypageServiceImpl implements MypageService {
 		return mypageDao.selectPayList(sqlSession, pi, memberId);
 	}
 
+	@Override
+	public int selectAlarmCheck(String email) {
+		return mypageDao.selectAlarmCheck(sqlSession, email);
+	}
+
+	@Override
+	public int updateAlarmCheck(String email) {
+		return mypageDao.updateAlarmCheck(sqlSession, email);
+	}
+
 }
