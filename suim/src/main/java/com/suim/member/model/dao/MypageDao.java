@@ -126,4 +126,13 @@ public class MypageDao {
 		return (ArrayList) sqlSession.selectList("mypageMapper.selectPayList", memberId, rowBounds);
 	}
 
+	public int selectAlarmCheck(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.selectOne("mypageMapper.selectAlarmCheck", email);
+	}
+	
+	
+	public int updateAlarmCheck(SqlSessionTemplate sqlSession, String email) {
+		return sqlSession.update("mypageMapper.updateAlarmCheck", email);
+	}
+
 }

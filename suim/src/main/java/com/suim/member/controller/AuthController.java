@@ -70,7 +70,7 @@ public class AuthController {
 	private GoogleConnectionFactory googleConnectionFactory;
 	@Autowired
 	private EchoHandler echoHandler;
-	
+
 	@Autowired
 	public AuthController(MemberService memberService, BCryptPasswordEncoder bcryptPasswordEncoder,
 			JavaMailSender mailSender, NaverLoginBO naverLoginBO, HttpSession session) {
@@ -84,21 +84,20 @@ public class AuthController {
 	// 회원가입 페이지 이동
 	@RequestMapping("join")
 	public String signUp(Model theModel, String agree1, String agree2) {
-		
-		
-		if(agree1 == null || agree2 == null) {
+
+		if (agree1 == null || agree2 == null) {
 			session.setAttribute("toastError", "동의약관을 진행해야합니다.");
-			return  "redirect:/member/term";
+			return "redirect:/member/term";
 		}
 
-		if(agree1.equals(agree2)) {
+		if (agree1.equals(agree2)) {
 			theModel.addAttribute("member", new SignUp());
 			return "member/signup";
 		} else {
 			session.setAttribute("toastError", "동의약관을 진행해야합니다.");
-			return  "redirect:/member/term";
+			return "redirect:/member/term";
 		}
-		
+
 	}
 
 	@ResponseBody
@@ -148,13 +147,12 @@ public class AuthController {
 
 		member.setNickName(nickName);
 		member.setMemberPwd(encPwd);
-		
 
-		if(member.getArea() != null || !member.getArea().equals("")) {
+		if (member.getArea() != null || !member.getArea().equals("")) {
 			double[] area = MainController.getCoordinates(member.getArea());
-			if(area != null) {
-			member.setLongitude(area[0]);
-			member.setLatitude(area[1]);
+			if (area != null) {
+				member.setLongitude(area[0]);
+				member.setLatitude(area[1]);
 			}
 		}
 
@@ -163,8 +161,6 @@ public class AuthController {
 		Email email = new Email(mailKey, member.getEmail());
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
-
-
 
 		CompletableFuture.runAsync(() -> {
 			try {
@@ -203,8 +199,6 @@ public class AuthController {
 	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response, String saveId,
 			HttpServletRequest request) {
 		Member loginUser = memberService.loginMember(m);
-		
-		
 
 		if (loginUser == null) {
 			session.setAttribute("toastError", "로그인 할 수 없는 계정입니다.");
@@ -213,57 +207,51 @@ public class AuthController {
 		}
 
 		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
-			
+
 			int result = memberService.checkEmailLogin(loginUser.getEmail());
 
-		
-				if (result > 0) {
-			        String sessionIdToInvalidate = CustomHttpSessionListener.getSessionIdForUser(loginUser.getMemberId());
-			        
-			        
-			        if (sessionIdToInvalidate != null) {
-			            // Retrieve the previous session
-			            HttpSession previousSession = CustomHttpSessionListener.getSessionById(sessionIdToInvalidate);
-			          
-			            if (previousSession != null) {
-			            	echoHandler.broadcastMessage("다중 로그인이 감지되어 로그아웃 됩니다.");
-			            	log.info("message 들어옴?");
-			                // Invalidate the previous session
-			                previousSession.invalidate();
-			                CustomHttpSessionListener.expireSession(sessionIdToInvalidate);
-			            }
-			        }
+			if (result > 0) {
+				String sessionIdToInvalidate = CustomHttpSessionListener.getSessionIdForUser(loginUser.getMemberId());
 
-			        // Record the previous session for the logged-in user
-			        CustomHttpSessionListener.recordPreviousSession(loginUser.getMemberId(), session.getId());
+				if (sessionIdToInvalidate != null) {
+					// Retrieve the previous session
+					HttpSession previousSession = CustomHttpSessionListener.getSessionById(sessionIdToInvalidate);
 
-			        // Create a new session for the logged-in user
-			        session.invalidate();
-			        session = request.getSession(true);
-			        
-			        if(saveId != null && saveId.equals("y")) {
-						Cookie cookie = new Cookie("saveId", m.getMemberId());
-						cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
-						
-						response.addCookie(cookie);
-						
-					} else { 
-						Cookie cookie = new Cookie("saveId", m.getMemberId()); 
-						cookie.setMaxAge(0); 
-						
-						response.addCookie(cookie);
+					if (previousSession != null) {
+						echoHandler.broadcastMessage("다중 로그인이 감지되어 로그아웃 됩니다.");
+						log.info("message 들어옴?");
+						// Invalidate the previous session
+						previousSession.invalidate();
+						CustomHttpSessionListener.expireSession(sessionIdToInvalidate);
 					}
-			        
-			        
-			        
+				}
 
-			        // Set session attributes and perform any necessary actions
-			        session.setAttribute("loginUser", loginUser);
-			        session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
-			        memberService.updateLoginDate(loginUser.getMemberId());
+				// Record the previous session for the logged-in user
+				CustomHttpSessionListener.recordPreviousSession(loginUser.getMemberId(), session.getId());
 
-			        return "redirect:/";
-			    } else {
+				// Create a new session for the logged-in user
+				session.invalidate();
+				session = request.getSession(true);
+
+				if (saveId != null && saveId.equals("y")) {
+					Cookie cookie = new Cookie("saveId", m.getMemberId());
+					cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
+
+					response.addCookie(cookie);
+
+				} else {
+					Cookie cookie = new Cookie("saveId", m.getMemberId());
+					cookie.setMaxAge(0);
+
+					response.addCookie(cookie);
+				}
+				// Set session attributes and perform any necessary actions
+				session.setAttribute("loginUser", loginUser);
+				session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
+				memberService.updateLoginDate(loginUser.getMemberId());
+
+				return "redirect:/";
+			} else {
 				session.setAttribute("toastError", "이메일 인증이 되지 않았습니다");
 
 				String mailKey = new TempKey().getKey(30, false);
@@ -510,12 +498,12 @@ public class AuthController {
 
 		member.setNickName(nickName);
 		member.setMemberPwd(encPwd);
-		
-		if(member.getArea() != null && !member.getArea().equals("")) {
+
+		if (member.getArea() != null && !member.getArea().equals("")) {
 			double[] area = MainController.getCoordinates(member.getArea());
-			if(area != null) {
-			member.setLongitude(area[0]);
-			member.setLatitude(area[1]);
+			if (area != null) {
+				member.setLongitude(area[0]);
+				member.setLatitude(area[1]);
 			}
 		}
 
@@ -524,7 +512,6 @@ public class AuthController {
 		Email email = new Email(mailKey, member.getEmail());
 		int result2 = memberService.insertEmail(email);
 		int result3 = memberService.setEmailCode(email);
-
 
 		CompletableFuture.runAsync(() -> {
 			try {
@@ -581,13 +568,11 @@ public class AuthController {
 		}
 		return result;
 	}
-	
+
 	@GetMapping("term")
 	public String joinTerm() {
 		return "/member/term";
 	}
-	
-	
 
 	// Auth 관련 메소드들
 

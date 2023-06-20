@@ -313,7 +313,24 @@
 			AND p.PAYMENT_STATUS IN ('Y','N')
 		 ORDER BY p.PAYMENT_NO DESC
 	</select>
+	
+	<select id="selectAlarmCheck" parameterType="String" resultType="int">
+	SELECT SET_ALARM
+	FROM MEMBER_AUTH
+	WHERE EMAIL = #{email}
+	</select>
 
+
+
+	<update id="updateAlarmCheck" parameterType="String">
+	UPDATE MEMBER_AUTH
+	SET SET_ALARM = CASE
+	    WHEN SET_ALARM = 0 THEN 1
+	    WHEN SET_ALARM = 1 THEN 0
+	    ELSE SET_ALARM
+	    END
+	WHERE EMAIL = #{email}
+	</update>
 
 
 
