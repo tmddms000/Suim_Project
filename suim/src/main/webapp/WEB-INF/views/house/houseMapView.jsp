@@ -228,7 +228,7 @@
 		if ("${searchKeyword}" == "") {
 			
 			var map = new kakao.maps.Map(document.getElementById('map'), {
-	            center: new kakao.maps.LatLng("37.5666805", "126.9784147"),
+	            center: new kakao.maps.LatLng("37.5339677", "126.897079"),
 	            level: 5
 	        });
 		} else {
@@ -237,7 +237,7 @@
 				 
 				 if ("${centerAdEmpty}" === "true") {
 					 var map = new kakao.maps.Map(document.getElementById('map'), {
-				            center: new kakao.maps.LatLng("37.5666805", "126.9784147"),
+				            center: new kakao.maps.LatLng("37.5339677", "126.897079"),
 				            level: 5
 				     	});
 					 	alert("검색 결과가 없습니다.");
@@ -297,6 +297,7 @@
 
 		  // 0.5초 후에 loadMarkers 함수를 실행합니다.
 		  timeoutId = setTimeout(function() {
+
 		    loadMarkers();
 		  }, 500);
 		  
@@ -749,7 +750,7 @@
                                         </fieldset>
                                         <hr>
                                         <div class="applyWrap">
-                                            <input type="reset" id="reset" value="초기화">       
+                                            <input type="reset" id="reset" value="초기화" onclick="resetAndSearch()">       
                                             <input type="button" id="close" value="닫기" onClick="toggleContent()">                               
                                         </div>
                                     </div>
@@ -842,6 +843,15 @@
 			// 매일 자정마다 최소값 업데이트
 		setInterval(updateMinDate, 24 * 60 * 60 * 1000);
 	</script>
+	<!-- 초기화 이후 검색효과 -->
+	<script>
+      function resetAndSearch() {
+    	  
+        localStorage.clear();
+  
+        window.location.href = 'list.ho';
+      }
+    </script>
 	
 	
 	

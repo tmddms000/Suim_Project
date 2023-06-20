@@ -173,12 +173,14 @@
 
             <script>
             $(function() {
-                $("#rezBoardList>tbody>tr").on("click", function(event) {
-                    if (event.target.type !== "checkbox") {
-                        let rno = $(this).children(".rno").text();
-                        location.href = "/admin/adminRezDetail.ho?rno=" + rno;
-                    }
-                });
+                if (${ not empty list }) {
+	                $("#rezBoardList>tbody>tr").on("click", function(event) {
+	                    if (event.target.type !== "checkbox") {
+	                        let rno = $(this).children(".rno").text();
+	                        location.href = "/admin/adminRezDetail.ho?rno=" + rno;
+	                    }
+	                });
+                }
             });
             
             
