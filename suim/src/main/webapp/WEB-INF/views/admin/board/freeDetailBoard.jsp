@@ -280,6 +280,18 @@
 	    });
 	});
     </script>
+	   <script>
+	    document.addEventListener("DOMContentLoaded", function() {
+	      var paragraphs = document.getElementsByTagName("p");
+	
+	      for (var i = 0; i < paragraphs.length; i++) {
+	        var images = paragraphs[i].getElementsByTagName("img");
+	        for (var j = 0; j < images.length; j++) {
+	          images[j].setAttribute("style", "width: 500px; height: 300px;");
+	        }
+	      }
+	    });
+	  </script>
 
 		<br clear="both"><br>
             
