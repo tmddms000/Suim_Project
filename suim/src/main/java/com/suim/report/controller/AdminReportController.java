@@ -173,8 +173,6 @@ public class AdminReportController {
 		int reportCount = reportService.selectBlackList(r.getReportId()); 
 		int selectY = reportService.selectY(r.getReportId());
 		
-		System.out.println(reportCount);
-		System.out.println(selectY);
 		
 		if(reportCount >= 3 && selectY >= 3) {
 			reportService.updateBlackList(r.getReportId());

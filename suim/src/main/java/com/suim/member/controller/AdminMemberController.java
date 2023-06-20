@@ -102,8 +102,12 @@ public class AdminMemberController {
 			pi = Pagination.getPageInfo(listCount, currentPage, pageLimit, boardLimit);
 			list = adminMemberService.selectCategoryMember(pi, memberId, category);
 		}
+		
+		System.out.println("listCount: " + listCount);
+		
 		mv.addObject("m", m);
 		mv.addObject("list", list);
+		mv.addObject("pi", pi);
 		mv.setViewName("admin/member/member_detail");
 		
 		model.addAttribute("id", memberId);
