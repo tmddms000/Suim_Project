@@ -42,16 +42,19 @@ public class EchoHandler extends TextWebSocketHandler {
 	}
 	
 	
-	public void broadcastMessage(String message) {
-        for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(message));
-                log.info("메세지 보냄");
-            } catch (IOException e) {
-                // Handle exception
-            }
-        }
-    }
+	public void broadcastMessage(String memberId, String message) {
+	    for (WebSocketSession session : sessions) {
+	        Member loggedUser = (Member) session.getAttributes().get("loginUser");
+	        if (loggedUser != null && loggedUser.getMemberId().equals(memberId)) {
+	            try {
+	                session.sendMessage(new TextMessage(message));
+	                log.info("메세지 보냄");
+	            } catch (IOException e) {
+	                // Handle exception
+	            }
+	        }
+	    }
+	}
 	
 	
 	public void adminBroadcastMessage(String jsonData) {

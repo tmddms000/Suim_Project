@@ -86,7 +86,7 @@
 			    </label>
 			  </div>
 			</td>
-			s
+			
 			<td>
 			  <div class="form-check">
 			    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" ${result != 1 ? 'checked' : ''}>

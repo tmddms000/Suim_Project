@@ -197,79 +197,67 @@ public class AuthController {
 	// 일반 로그인
 	@PostMapping("doLogin")
 	public String loginMember(Member m, HttpSession session, Model model, HttpServletResponse response, String saveId,
-			HttpServletRequest request) {
-		Member loginUser = memberService.loginMember(m);
+	        HttpServletRequest request) {
+	    Member loginUser = memberService.loginMember(m);
 
-		if (loginUser == null) {
-			session.setAttribute("toastError", "로그인 할 수 없는 계정입니다.");
-			return "redirect:/member/login";
+	    if (loginUser == null) {
+	        session.setAttribute("toastError", "로그인 할 수 없는 계정입니다.");
+	        return "redirect:/member/login";
+	    }
 
-		}
+	    if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
 
-		if (bcryptPasswordEncoder.matches(m.getMemberPwd(), loginUser.getMemberPwd())) {
+	        int result = memberService.checkEmailLogin(loginUser.getEmail());
+	        if (result > 0) {
+	            String memberId = loginUser.getMemberId();
+	            String sessionIdToInvalidate = CustomHttpSessionListener.getSessionIdForUser(memberId);
 
-			int result = memberService.checkEmailLogin(loginUser.getEmail());
+	            if (sessionIdToInvalidate != null) {
+	                // Retrieve the previous session
+	                HttpSession previousSession = CustomHttpSessionListener.getSessionById(sessionIdToInvalidate);
 
-			if (result > 0) {
-				String sessionIdToInvalidate = CustomHttpSessionListener.getSessionIdForUser(loginUser.getMemberId());
+	                if (previousSession != null) {
+	                    // Send message to the previous user
+	                    String message = "다중 로그인이 감지되어 로그아웃 됩니다.";
+	                    echoHandler.broadcastMessage(memberId, message);
+	                    log.info("메세지 보냄");
 
-				if (sessionIdToInvalidate != null) {
-					// Retrieve the previous session
-					HttpSession previousSession = CustomHttpSessionListener.getSessionById(sessionIdToInvalidate);
+	                    // Invalidate the previous session
+	                    previousSession.invalidate();
+	                    CustomHttpSessionListener.expireSession(sessionIdToInvalidate);
+	                }
+	            }
 
-					if (previousSession != null) {
-						echoHandler.broadcastMessage("다중 로그인이 감지되어 로그아웃 됩니다.");
-						log.info("message 들어옴?");
-						// Invalidate the previous session
-						previousSession.invalidate();
-						CustomHttpSessionListener.expireSession(sessionIdToInvalidate);
-					}
-				}
+	            // Record the previous session for the logged-in user
+	            CustomHttpSessionListener.recordPreviousSession(memberId, session.getId());
 
-				// Record the previous session for the logged-in user
-				CustomHttpSessionListener.recordPreviousSession(loginUser.getMemberId(), session.getId());
+	            // Create a new session for the logged-in user
+	            session.invalidate();
+	            session = request.getSession(true);
+	        }
 
-				// Create a new session for the logged-in user
-				session.invalidate();
-				session = request.getSession(true);
+	        if (saveId != null && saveId.equals("y")) {
+	            Cookie cookie = new Cookie("saveId", m.getMemberId());
+	            cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
+	            response.addCookie(cookie);
+	        } else {
+	            Cookie cookie = new Cookie("saveId", m.getMemberId());
+	            cookie.setMaxAge(0);
+	            response.addCookie(cookie);
+	        }
 
-				if (saveId != null && saveId.equals("y")) {
-					Cookie cookie = new Cookie("saveId", m.getMemberId());
-					cookie.setMaxAge(24 * 60 * 60 * 1); // 유효기간 1일 (초단위)
+	        // Set session attributes and perform any necessary actions
+	        session.setAttribute("loginUser", loginUser);
+	        session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
+	        memberService.updateLoginDate(loginUser.getMemberId());
 
-					response.addCookie(cookie);
-
-				} else {
-					Cookie cookie = new Cookie("saveId", m.getMemberId());
-					cookie.setMaxAge(0);
-
-					response.addCookie(cookie);
-				}
-				// Set session attributes and perform any necessary actions
-				session.setAttribute("loginUser", loginUser);
-				session.setAttribute("toastSuccess", "로그인에 성공했습니다.");
-				memberService.updateLoginDate(loginUser.getMemberId());
-
-				return "redirect:/";
-			} else {
-				session.setAttribute("toastError", "이메일 인증이 되지 않았습니다");
-
-				String mailKey = new TempKey().getKey(30, false);
-				Email email = new Email(mailKey, loginUser.getEmail());
-
-				int result3 = memberService.setEmailCode(email);
-				CompletableFuture<Void> emailTask = mailSendAsync(mailKey, loginUser.getEmail());
-
-				session.setAttribute("verifyPage", "이메일 인증");
-				return "redirect:/member/verifyPage";
-			}
-		} else {
-			session.setAttribute("toastError", "비밀번호를 확인해주세요.");
-			return "redirect:/member/login";
-
-		}
-
+	        return "redirect:/";
+	    } else {
+	        session.setAttribute("toastError", "비밀번호를 확인해주세요.");
+	        return "redirect:/member/login";
+	    }
 	}
+
 
 	// 메일 전송됐다고 알려지는 창
 	@RequestMapping("verifyPage")
